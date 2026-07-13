@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Faithful Circle Quilt Guild</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#23395b">
+<style>
+:root{
+  --navy:#23395b; --plum:#7a3e65; --rose:#c96b79; --gold:#d7a84b;
+  --green:#4f7a5a; --red:#b84a4a; --cream:#fbf6ec; --card:#fffdf8;
+  --text:#29242a; --muted:#756b72; --line:#eadfce; --blue:#4776a8;
+}
+*{box-sizing:border-box}
+html{background:var(--cream)}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    linear-gradient(135deg,rgba(122,62,101,.035) 25%,transparent 25%) 0 0/34px 34px,
+    linear-gradient(225deg,rgba(215,168,75,.045) 25%,transparent 25%) 0 0/34px 34px,
+    var(--cream);
+  color:var(--text);margin:0;padding-bottom:34px
+}
+header{
+  color:white;padding:calc(18px + env(safe-area-inset-top)) 18px 22px;
+  background:linear-gradient(135deg,var(--navy),var(--plum));
+  position:relative;overflow:hidden
+}
+header:after{
+  content:"";position:absolute;right:-35px;top:-45px;width:150px;height:150px;
+  background:repeating-conic-gradient(from 45deg,rgba(255,255,255,.12) 0 12.5%,transparent 0 25%);
+  border-radius:24px;transform:rotate(14deg)
+}
+.brand{position:relative;z-index:1;display:flex;gap:13px;align-items:center}
+.logo{
+  width:52px;height:52px;border-radius:14px;background:#fff4d8;color:var(--plum);
+  display:grid;place-items:center;font-size:29px;box-shadow:0 5px 14px rgba(0,0,0,.18)
+}
+header h1{font-size:23px;line-height:1.1;margin:0;max-width:270px}
+header p{margin:5px 0 0;opacity:.88;font-size:13px}
+main{padding:14px;max-width:760px;margin:auto}
+.card{
+  background:var(--card);padding:16px;border-radius:17px;margin-bottom:14px;
+  box-shadow:0 3px 12px rgba(71,52,61,.09);border:1px solid rgba(215,168,75,.18)
+}
+h2,h3{margin:0 0 12px;color:var(--navy)}
+.dashboard{margin-top:-12px;position:relative;z-index:2}
+.welcome{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:12px}
+.welcome h2{margin:0;font-size:20px}
+.today{font-size:12px;color:var(--muted);white-space:nowrap;margin-top:3px}
+.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{border-radius:15px;padding:14px 12px;color:white;min-height:88px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.12);right:-14px;bottom:-18px}
+.stat b{font-size:28px;display:block;line-height:1}
+.stat span{font-size:12px;opacity:.94;display:block;margin-top:8px;font-weight:700}
+.stat small{font-size:11px;opacity:.78}
+.s1{background:linear-gradient(135deg,#4776a8,#315b87)}
+.s2{background:linear-gradient(135deg,#7a3e65,#9b557e)}
+.s3{background:linear-gradient(135deg,#4f7a5a,#6e9877)}
+.s4{background:linear-gradient(135deg,#c88737,#d7a84b)}
+.quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.quick-actions button{margin:0}
+label{display:block;font-weight:700;margin-top:12px}
+select,input,button,textarea{
+  width:100%;padding:12px;font-size:16px;margin-top:7px;border:1px solid #d9ccbb;
+  border-radius:11px;background:white;color:var(--text)
+}
+button{font-weight:750;cursor:pointer}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.mode-row button{font-size:17px}
+.in-active{background:var(--green);color:white;border-color:var(--green)}
+.out-active{background:var(--red);color:white;border-color:var(--red)}
+.green{background:var(--green);color:white;border-color:var(--green)}
+.red{background:var(--red);color:white;border-color:var(--red)}
+.primary{background:var(--plum);color:white;border-color:var(--plum)}
+.gold{background:var(--gold);color:#342713;border-color:var(--gold)}
+.ghost{background:#fffaf2;color:var(--navy)}
+.qty-wrap{display:grid;grid-template-columns:72px 1fr 72px;gap:8px;align-items:center;margin-top:8px}
+.qty-wrap button{font-size:28px;padding:7px}
+.big{font-size:32px;text-align:center;font-weight:800;padding:9px;border:1px solid var(--line);border-radius:11px;background:#fffaf2}
+.inventory-group{border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
+.inventory-group:first-child{border-top:0;padding-top:0;margin-top:0}
+.inv-title{display:flex;justify-content:space-between;font-weight:800;color:var(--plum)}
+.inv-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eadfce}
+.inv-row:last-child{border-bottom:0}
+.badge{font-weight:800;border-radius:999px;padding:4px 10px;background:#f3e8ef;color:var(--plum)}
+.history-item{border-top:1px solid var(--line);padding:12px 0}
+.history-item:first-child{border-top:0}
+.history-top{display:flex;justify-content:space-between;gap:10px}
+.history-title{font-weight:800}.history-meta{font-size:13px;color:var(--muted);margin-top:3px}
+.in-text{color:var(--green)}.out-text{color:var(--red)}
+.actions{display:flex;gap:7px;margin-top:8px}
+.actions button{padding:7px;font-size:14px;margin:0}
+.small{font-size:13px;color:var(--muted)}
+.notice{padding:10px;border-radius:10px;background:#fff1c7;margin-top:10px;display:none}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.empty{color:var(--muted);text-align:center;padding:15px}
+.section-title{display:flex;align-items:center;gap:8px}
+.section-title .icon{font-size:22px}
+@media(max-width:480px){
+  header h1{font-size:21px}.card{padding:14px}.filters{grid-template-columns:1fr}
+  .row.stack-mobile{flex-direction:column}.row.stack-mobile>*{width:100%}
+}
+</style>
+</head>
+<body>
+<div id="welcomeScreen" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(145deg,#23395b,#7a3e65);color:white;display:flex;align-items:center;justify-content:center;padding:24px">
+  <div style="max-width:420px;text-align:center">
+    <img src="icons/icon-192.png" alt="Faithful Circle icon" style="width:116px;height:116px;border-radius:28px;box-shadow:0 12px 34px rgba(0,0,0,.28)">
+    <h1 style="font-size:31px;line-height:1.05;margin:20px 0 8px">Faithful Circle<br>Quilt Guild</h1>
+    <div style="color:#ffe7ac;font-size:18px;font-style:italic">Stitching Comfort • Sharing Hope</div>
+    <p style="opacity:.9;line-height:1.5">A simple way to manage the quilts that bring warmth and hope to our community.</p>
+    <button style="border:0;background:#d7a84b;color:#30230f;font-weight:800;padding:14px 24px;border-radius:999px;margin-top:16px;width:100%" onclick="document.getElementById('welcomeScreen').style.display='none';sessionStorage.setItem('fcqgSeen','1')">Enter Inventory</button>
+  </div>
+</div>
+<header>
+  <div class="brand">
+    <div class="logo">🧵</div>
+    <div>
+      <h1>Faithful Circle Quilt Guild</h1>
+      <p>Stitching Comfort • Sharing Hope</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="card dashboard">
+  <div class="welcome">
+    <div>
+      <h2>Guild Dashboard</h2>
+      <div class="small">A quick look at your charity quilt activity</div>
+    </div>
+    <div class="today" id="todayText"></div>
+  </div>
+  <div class="summary">
+    <div class="stat s1"><b id="onHand">0</b><span>Available Now</span><small>Currently in storage</small></div>
+    <div class="stat s2"><b id="charitiesServed">0</b><span>Charities Served</span><small>With recorded activity</small></div>
+    <div class="stat s3"><b id="totalIn">0</b><span>Total Quilts In</span><small>All recorded arrivals</small></div>
+    <div class="stat s4"><b id="totalOut">0</b><span>Total Quilts Out</span><small>All recorded distributions</small></div>
+  </div>
+  <div class="quick-actions">
+    <button class="green" onclick="goToRecord('IN')">＋ Quilts In</button>
+    <button class="red" onclick="goToRecord('OUT')">− Quilts Out</button>
+  </div>
+</section>
+
+<section class="card" id="recordCard">
+  <div class="section-title"><span class="icon">🪡</span><h2>Record Quilts</h2></div>
+  <div class="row mode-row">
+    <button id="inBtn" class="in-active" onclick="setMode('IN')">Quilts In</button>
+    <button id="outBtn" onclick="setMode('OUT')">Quilts Out</button>
+  </div>
+
+  <label id="dateLabel">Date In</label>
+  <input id="date" type="date">
+
+  <label>Charity</label>
+  <select id="charity"></select>
+  <div class="row stack-mobile">
+    <input id="newCharity" placeholder="New charity name">
+    <button class="ghost" onclick="addCharity()">Add Charity</button>
+  </div>
+
+  <label>Size</label>
+  <select id="size"></select>
+  <div class="row stack-mobile">
+    <input id="newSize" placeholder="New size name">
+    <button class="ghost" onclick="addSize()">Add Size</button>
+  </div>
+
+  <label>Quantity</label>
+  <div class="qty-wrap">
+    <button onclick="chg(-1)">−</button>
+    <div class="big" id="qty">1</div>
+    <button onclick="chg(1)">+</button>
+  </div>
+
+  <label>Note <span class="small">(optional)</span></label>
+  <input id="note" placeholder="Delivery, event, correction, etc.">
+
+  <div id="warning" class="notice"></div>
+  <div id="status" class="notice" style="background:#e7f6ec"></div>
+  <button id="saveBtn" class="green" onclick="saveTransaction()">Add to Inventory</button>
+</section>
+
+<section class="card">
+  <div class="section-title"><span class="icon">🧺</span><h3>Current Inventory</h3></div>
+  <div id="inventory"></div>
+</section>
+
+<section class="card">
+  <div class="section-title"><span class="icon">📖</span><h3>History</h3></div>
+  <div class="filters">
+    <select id="filterCharity" onchange="renderHistory()"></select>
+    <select id="filterType" onchange="renderHistory()">
+      <option value="">All activity</option>
+      <option value="IN">Quilts In</option>
+      <option value="OUT">Quilts Out</option>
+    </select>
+  </div>
+  <div id="history"></div>
+</section>
+
+<section class="card">
+  <div class="section-title"><span class="icon">⚙️</span><h3>Manage Lists</h3></div>
+  <p class="small">Delete unused charities or sizes. Items already used in history cannot be deleted until those transactions are changed or removed.</p>
+  <div class="row stack-mobile">
+    <select id="manageCharity"></select>
+    <button class="ghost" onclick="deleteCharity()">Delete Charity</button>
+  </div>
+  <div class="row stack-mobile">
+    <select id="manageSize"></select>
+    <button class="ghost" onclick="deleteSize()">Delete Size</button>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title"><span class="icon">💾</span><h3>Backup</h3></div>
+  <p class="small">Export a backup file before moving the app to another phone or clearing browser data.</p>
+  <div class="row stack-mobile">
+    <button class="ghost" onclick="exportData()">Export Backup</button>
+    <button class="ghost" onclick="document.getElementById('importFile').click()">Import Backup</button>
+  </div>
+  <input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importData(event)">
+</section>
+</main>
+
+<script>
+const KEY="cqt_v3";
+let qty=1, mode="IN", editId=null;
+let storageWorks=true;
+
+function todayLocal(){
+  const d=new Date(), off=d.getTimezoneOffset();
+  return new Date(d.getTime()-off*60000).toISOString().slice(0,10);
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function safeParse(s,fallback){try{return JSON.parse(s)}catch{return fallback}}
+function storageGet(key){try{return localStorage.getItem(key)}catch(e){storageWorks=false;return null}}
+function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch(e){storageWorks=false;return false}}
+function showStatus(msg,isError=false){
+  const el=document.getElementById("status"); if(!el)return;
+  el.textContent=msg; el.style.background=isError?"#fde8e8":"#e7f6ec"; el.style.display="block";
+  clearTimeout(showStatus.timer); showStatus.timer=setTimeout(()=>el.style.display="none",3000);
+}
+let data=safeParse(storageGet(KEY),null);
+if(!data) data=safeParse(storageGet("cqt_v2"),null);
+if(!data){
+  const old=safeParse(storageGet("cqt"),null);
+  data={charities:["Children's Hospital","Veterans","Shelter"],sizes:["Baby","Lap","Throw"],transactions:[]};
+  if(old){
+    if(Array.isArray(old.charities)) data.charities=old.charities;
+    if(old.inv){
+      Object.keys(old.inv).forEach(k=>{
+        const split=k.split(" | ");
+        data.transactions.push({id:uid(),date:todayLocal(),type:"IN",charity:split[0]||"Unknown",
+          size:split[1]||"Other",qty:Number(old.inv[k])||0,note:"Imported from original app"});
+      });
+    }
+  }
+}
+if(!Array.isArray(data.charities)) data.charities=[];
+if(!Array.isArray(data.transactions)) data.transactions=[];
+if(!Array.isArray(data.sizes)||!data.sizes.length){
+  data.sizes=[...new Set(data.transactions.map(t=>t.size).filter(Boolean))];
+  if(!data.sizes.length)data.sizes=["Baby","Lap","Throw"];
+}
+function persist(){storageSet(KEY,JSON.stringify(data))}
+persist();
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
+function fmtDate(s){
+  if(!s)return "";
+  const [y,m,d]=s.split("-").map(Number);
+  return new Date(y,m-1,d).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+}
+function fillCharities(selected){
+  data.charities=[...new Set(data.charities.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  const options=data.charities.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  const sel=document.getElementById("charity"); sel.innerHTML=options;
+  if(selected&&data.charities.includes(selected))sel.value=selected;
+  const f=document.getElementById("filterCharity"),current=f.value;
+  f.innerHTML='<option value="">All charities</option>'+options;
+  if(data.charities.includes(current))f.value=current;
+  const m=document.getElementById("manageCharity");
+  if(m){const old=m.value;m.innerHTML=options;if(data.charities.includes(old))m.value=old}
+}
+function fillSizes(selected){
+  data.sizes=[...new Set((data.sizes||[]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  const options=data.sizes.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
+  const sel=document.getElementById("size"); sel.innerHTML=options;
+  if(selected&&data.sizes.includes(selected))sel.value=selected;
+  const m=document.getElementById("manageSize");
+  if(m){const old=m.value;m.innerHTML=options;if(data.sizes.includes(old))m.value=old}
+}
+function addCharity(){
+  const n=document.getElementById("newCharity").value.trim(); if(!n)return;
+  if(!data.charities.includes(n))data.charities.push(n);
+  document.getElementById("newCharity").value=""; persist();fillCharities(n);renderAll();
+}
+function addSize(){
+  const n=document.getElementById("newSize").value.trim(); if(!n)return;
+  if(!data.sizes.includes(n))data.sizes.push(n);
+  document.getElementById("newSize").value=""; persist();fillSizes(n);renderAll();
+}
+function deleteCharity(){
+  const n=document.getElementById("manageCharity").value;if(!n)return;
+  if(data.transactions.some(t=>t.charity===n)){alert("This charity is used in transaction history. Edit or delete those transactions first.");return}
+  if(confirm(`Delete charity "${n}"?`)){data.charities=data.charities.filter(x=>x!==n);persist();renderAll()}
+}
+function deleteSize(){
+  const n=document.getElementById("manageSize").value;if(!n)return;
+  if(data.transactions.some(t=>t.size===n)){alert("This size is used in transaction history. Edit or delete those transactions first.");return}
+  if(confirm(`Delete size "${n}"?`)){data.sizes=data.sizes.filter(x=>x!==n);persist();renderAll()}
+}
+function setMode(m){
+  mode=m;
+  document.getElementById("inBtn").className=m==="IN"?"in-active":"";
+  document.getElementById("outBtn").className=m==="OUT"?"out-active":"";
+  document.getElementById("dateLabel").textContent=m==="IN"?"Date In":"Date Out";
+  const b=document.getElementById("saveBtn");
+  b.textContent=editId?"Save Changes":(m==="IN"?"Add to Inventory":"Remove from Inventory");
+  b.className=m==="IN"?"green":"red";
+  document.getElementById("warning").style.display="none";
+}
+function goToRecord(m){setMode(m);document.getElementById("recordCard").scrollIntoView({behavior:"smooth",block:"start"})}
+function chg(d){qty=Math.max(1,qty+d);document.getElementById("qty").textContent=qty}
+function balances(){
+  const map={};
+  data.transactions.forEach(t=>{const k=t.charity+"|"+t.size;map[k]=(map[k]||0)+(t.type==="IN"?t.qty:-t.qty)});
+  return map;
+}
+function available(charity,size,excludeId=null){
+  return data.transactions.filter(t=>t.id!==excludeId&&t.charity===charity&&t.size===size)
+    .reduce((n,t)=>n+(t.type==="IN"?t.qty:-t.qty),0);
+}
+function saveTransaction(){
+  const charity=document.getElementById("charity").value;
+  const size=document.getElementById("size").value;
+  const date=document.getElementById("date").value||todayLocal();
+  const note=document.getElementById("note").value.trim();
+  const warn=document.getElementById("warning");
+  if(!charity){warn.textContent="Please select or add a charity.";warn.style.display="block";return}
+  if(!size){warn.textContent="Please select or add a size.";warn.style.display="block";return}
+  if(mode==="OUT"){
+    const have=available(charity,size,editId);
+    if(qty>have){warn.textContent=`Only ${have} ${size} quilt${have===1?"":"s"} available for ${charity}.`;warn.style.display="block";return}
+  }
+  const tx={id:editId||uid(),date,type:mode,charity,size,qty,note};
+  if(editId){const i=data.transactions.findIndex(t=>t.id===editId);if(i>=0)data.transactions[i]=tx}
+  else data.transactions.push(tx);
+  editId=null;qty=1;document.getElementById("qty").textContent=qty;
+  document.getElementById("note").value="";warn.style.display="none";
+  persist();setMode(mode);renderAll();
+  showStatus(storageWorks?"Saved successfully.":"Added for this session. Open in Safari or an app that allows storage to keep entries permanently.");
+}
+function editTx(id){
+  const t=data.transactions.find(x=>x.id===id);if(!t)return;
+  editId=id;qty=t.qty;setMode(t.type);fillCharities(t.charity);
+  document.getElementById("date").value=t.date;document.getElementById("size").value=t.size;
+  document.getElementById("qty").textContent=qty;document.getElementById("note").value=t.note||"";
+  document.getElementById("recordCard").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function deleteTx(id){
+  const t=data.transactions.find(x=>x.id===id);if(!t)return;
+  if(confirm(`Delete this ${t.type==="IN"?"in":"out"} transaction for ${t.qty} ${t.size} quilt${t.qty===1?"":"s"}?`)){
+    data.transactions=data.transactions.filter(x=>x.id!==id);persist();renderAll()
+  }
+}
+function renderInventory(){
+  const b=balances(),groups={};
+  Object.keys(b).forEach(k=>{const [charity,size]=k.split("|"),n=b[k];if(n!==0)(groups[charity]??=[]).push({size,n})});
+  const names=Object.keys(groups).sort();
+  document.getElementById("inventory").innerHTML=names.length?names.map(c=>{
+    const total=groups[c].reduce((s,x)=>s+x.n,0);
+    return `<div class="inventory-group"><div class="inv-title"><span>${esc(c)}</span><span class="badge">${total}</span></div>`+
+      groups[c].sort((a,b)=>a.size.localeCompare(b.size)).map(x=>`<div class="inv-row"><span>${esc(x.size)}</span><b>${x.n}</b></div>`).join("")+
+      `</div>`;
+  }).join(""):'<div class="empty">No quilts currently in storage.</div>';
+}
+function renderTotals(){
+  const tin=data.transactions.filter(t=>t.type==="IN").reduce((s,t)=>s+t.qty,0);
+  const tout=data.transactions.filter(t=>t.type==="OUT").reduce((s,t)=>s+t.qty,0);
+  const served=new Set(data.transactions.map(t=>t.charity).filter(Boolean)).size;
+  document.getElementById("totalIn").textContent=tin;
+  document.getElementById("totalOut").textContent=tout;
+  document.getElementById("onHand").textContent=tin-tout;
+  document.getElementById("charitiesServed").textContent=served;
+}
+function renderHistory(){
+  const fc=document.getElementById("filterCharity").value;
+  const ft=document.getElementById("filterType").value;
+  const tx=[...data.transactions].filter(t=>(!fc||t.charity===fc)&&(!ft||t.type===ft))
+    .sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+  document.getElementById("history").innerHTML=tx.length?tx.map(t=>`
+    <div class="history-item">
+      <div class="history-top"><div>
+        <div class="history-title ${t.type==="IN"?"in-text":"out-text"}">${t.type==="IN"?"+":"−"}${t.qty} ${esc(t.size)}</div>
+        <div class="history-meta">${esc(t.charity)} · ${fmtDate(t.date)}</div>
+        ${t.note?`<div class="history-meta">${esc(t.note)}</div>`:""}
+      </div><b class="${t.type==="IN"?"in-text":"out-text"}">${t.type}</b></div>
+      <div class="actions"><button class="ghost" onclick="editTx('${t.id}')">Edit</button><button class="ghost" onclick="deleteTx('${t.id}')">Delete</button></div>
+    </div>`).join(""):'<div class="empty">No matching history.</div>';
+}
+function renderAll(){
+  fillCharities(document.getElementById("charity")?.value);
+  fillSizes(document.getElementById("size")?.value);
+  renderTotals();renderInventory();renderHistory();
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`Faithful_Circle_Quilt_Guild_Backup_${todayLocal()}.json`;a.click();URL.revokeObjectURL(a.href);
+}
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const incoming=JSON.parse(r.result);
+      if(!Array.isArray(incoming.charities)||!Array.isArray(incoming.transactions))throw Error();
+      if(!Array.isArray(incoming.sizes)||!incoming.sizes.length){
+        incoming.sizes=[...new Set(incoming.transactions.map(t=>t.size).filter(Boolean))];
+        if(!incoming.sizes.length)incoming.sizes=["Baby","Lap","Throw"];
+      }
+      if(confirm("Replace the current app data with this backup?")){data=incoming;persist();renderAll()}
+    }catch{alert("That file is not a valid Charity Quilt Tracker backup.")}
+    e.target.value="";
+  };
+  r.readAsText(f);
+}
+document.getElementById("date").value=todayLocal();
+document.getElementById("todayText").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+fillCharities();fillSizes();setMode("IN");renderAll();
+if(!storageWorks)showStatus("This viewer blocks permanent storage. Entries will work now, but may not remain after closing the file.",true);
+</script>
+<footer style="text-align:center;color:#756b72;font-size:12px;padding:8px 14px 30px">🧵 Made with ❤️ for the Faithful Circle Quilt Guild · Version 1.0</footer>
+<script>if(sessionStorage.getItem('fcqgSeen')){document.getElementById('welcomeScreen').style.display='none'};if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
+</body>
+</html>
