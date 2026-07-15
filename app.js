@@ -72,7 +72,7 @@ function applyNames(){
   el('splashItemName').textContent=data.itemName;
   el('splashManager').textContent=splashSecondLine();
   el('splashMessage').innerHTML=`Keeping track of ${esc(lowerName())}…<br>one quilt at a time.`;
-  el('splashVersion').textContent=`${data.appName} · Update 7.3`;
+  el('splashVersion').textContent=`${data.appName} · Update 7.4`;
   el('orgNameInput').value=data.orgName;
   el('appNameInput').value=data.appName;
   el('itemNameInput').value=data.itemName;
@@ -410,7 +410,7 @@ function makeOnePagePDF(){
   };
   drawRows(inventoryRows,36,48);
   drawRows(needsRows,318,48);
-  text(36,24,`Update 7.3 - ${pdfFit(data.appName,72)}`,6.5,false);
+  text(36,24,`Update 7.4 - ${pdfFit(data.appName,72)}`,6.5,false);
 
   const content=commands.join('\n')+'\n';
   const objects=[
@@ -432,12 +432,145 @@ function makeOnePagePDF(){
   for(let i=0;i<pdf.length;i++)bytes[i]=pdf.charCodeAt(i)&255;
   return bytes;
 }
-function exportMeetingPDF(){
+function pdfWrap(v,maxChars){
+  const words=pdfPlain(v).trim().split(/\s+/).filter(Boolean),lines=[];
+  let line='';
+  words.forEach(word=>{
+    if(word.length>maxChars){
+      if(line){lines.push(line);line=''}
+      for(let i=0;i<word.length;i+=maxChars)lines.push(word.slice(i,i+maxChars));
+      return;
+    }
+    const next=line?`${line} ${word}`:word;
+    if(next.length<=maxChars)line=next;
+    else{if(line)lines.push(line);line=word}
+  });
+  if(line)lines.push(line);
+  return lines.length?lines:[''];
+}
+function makeFullPDF(){
+  const generated=new Date().toLocaleString();
+  const pages=[];
+  let page=null,currentSection='';
+  const newPage=()=>{
+    page={commands:[],y:704};pages.push(page);
+    const text=(x,y,value,size=8,bold=false)=>page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
+    const line=(x1,y1,x2,y2,w=.5)=>page.commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
+    text(36,754,pdfFit(data.appName,68),16,true);
+    text(36,738,pdfFit(`${data.orgName} - ${data.itemName} Inventory and Needs Report`,96),9,false);
+    text(36,726,`Generated ${generated}`,7,false);
+    line(36,716,576,716,.7);
+    return page;
+  };
+  const text=(x,y,value,size=8,bold=false)=>page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
+  const line=(x1,y1,x2,y2,w=.5)=>page.commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
+  const rect=(x,y,w,h)=>page.commands.push(`0.6 w ${x} ${y} ${w} ${h} re S`);
+  const sectionHeader=(label,continued=false)=>{
+    const title=continued?`${label} (continued)`:label;
+    text(36,page.y,title,11,true);line(36,page.y-6,576,page.y-6,.7);page.y-=22;
+  };
+  const ensure=(height)=>{
+    if(page.y-height<48){newPage();if(currentSection)sectionHeader(currentSection,true)}
+  };
+  const addParagraph=(value,{size=8,bold=false,indent=0,after=4,lineHeight=null}={})=>{
+    const lh=lineHeight||Math.max(10,size+3);
+    const maxChars=Math.max(12,Math.floor((540-indent)/(size*.56)));
+    const lines=pdfWrap(value,maxChars);
+    ensure(lines.length*lh+after);
+    lines.forEach((part,i)=>{text(36+indent,page.y-i*lh,part,size,bold)});
+    page.y-=lines.length*lh+after;
+  };
+  const beginSection=label=>{
+    currentSection=label;
+    ensure(30);
+    sectionHeader(label,false);
+  };
+
+  newPage();
+  const metricY=656,metricH=36,metricW=166;
+  [[36,'Total On Hand',totalOnHand()],[223,'Upcoming Needs',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
+    rect(x,metricY,metricW,metricH);text(x+9,metricY+20,String(num),15,true);text(x+49,metricY+21,label,8,true);
+  });
+  page.y=632;
+
+  beginSection('INVENTORY ON HAND');
+  const groups=inventoryGroups();
+  if(!groups.length)addParagraph('No charities available.');
+  groups.forEach(g=>{
+    addParagraph(g.charity,{size:9,bold:true,after:2});
+    if(g.sizes.length)g.sizes.forEach(x=>addParagraph(`${x.s}: ${x.n}`,{indent:16,after:1}));
+    else addParagraph('None on hand: 0',{indent:16,after:1});
+    addParagraph(`Total for ${g.charity}: ${g.total}`,{indent:16,bold:true,after:6});
+  });
+  addParagraph(`Grand Total: ${totalOnHand()}`,{size:9,bold:true,after:10});
+
+  beginSection('UPCOMING NEEDS');
+  const needs=upcoming().sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size));
+  if(!needs.length)addParagraph('No upcoming needs.');
+  needs.forEach(n=>{
+    const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);
+    addParagraph(`${fmtMonth(n.month)} - ${n.charity}`,{size:9,bold:true,after:2});
+    addParagraph(`${n.size} | Need: ${n.qty} | On Hand: ${stock} | Shortage: ${short}`,{indent:16,after:n.note?1:6});
+    if(n.note)addParagraph(`Note: ${n.note}`,{indent:16,size:7.5,after:6});
+  });
+
+  beginSection('ADJUSTED TRANSACTIONS');
+  const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)||a.charity.localeCompare(b.charity));
+  if(!adjustments.length)addParagraph('No adjusted transactions.');
+  adjustments.forEach(t=>{
+    addParagraph(`${fmtDate(t.date)} - ${t.charity}`,{size:9,bold:true,after:2});
+    addParagraph(`${t.size} | Change: ${value(t)>0?'+':''}${value(t)}`,{indent:16,after:t.note?1:6});
+    if(t.note)addParagraph(`Note: ${t.note}`,{indent:16,size:7.5,after:6});
+  });
+
+  pages.forEach((p,i)=>{
+    p.commands.push(`0.5 w 36 34 m 576 34 l S`);
+    p.commands.push(`BT /F1 6.5 Tf 1 0 0 1 36 22 Tm (${pdfEscape(`Update 7.4 - ${pdfFit(data.appName,70)}`)}) Tj ET`);
+    p.commands.push(`BT /F1 6.5 Tf 1 0 0 1 520 22 Tm (${pdfEscape(`Page ${i+1} of ${pages.length}`)}) Tj ET`);
+  });
+
+  const pageCount=pages.length;
+  const pageIds=pages.map((_,i)=>5+i*2);
+  const objects=[];
+  objects[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objects[2]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(' ')}] /Count ${pageCount} >>`;
+  objects[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  objects[4]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+  pages.forEach((p,i)=>{
+    const pageId=5+i*2,contentId=pageId+1;
+    const content=p.commands.join('\n')+'\n';
+    objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId]=`<< /Length ${content.length} >>\nstream\n${content}endstream`;
+  });
+  let pdf='%PDF-1.4\n%1234\n';
+  const offsets=[0];
+  for(let i=1;i<objects.length;i++){
+    offsets[i]=pdf.length;
+    pdf+=`${i} 0 obj\n${objects[i]}\nendobj\n`;
+  }
+  const xref=pdf.length;
+  pdf+=`xref\n0 ${objects.length}\n0000000000 65535 f \n`;
+  for(let i=1;i<objects.length;i++)pdf+=`${String(offsets[i]).padStart(10,'0')} 00000 n \n`;
+  pdf+=`trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  const bytes=new Uint8Array(pdf.length);
+  for(let i=0;i<pdf.length;i++)bytes[i]=pdf.charCodeAt(i)&255;
+  return bytes;
+}
+function exportFullPDF(){
+  renderReports();
+  const bytes=makeFullPDF();
+  downloadBlob(`${filePart(data.itemName)}_Full_Report_${today()}.pdf`,new Blob([bytes],{type:'application/pdf'}));
+}
+function exportCompactPDF(){
   renderReports();
   const bytes=makeOnePagePDF();
-  downloadBlob(`${filePart(data.itemName)}_Meeting_Report_${today()}.pdf`,new Blob([bytes],{type:'application/pdf'}));
+  downloadBlob(`${filePart(data.itemName)}_Compact_Report_${today()}.pdf`,new Blob([bytes],{type:'application/pdf'}));
 }
-function printMeetingReport(){renderReports();window.print()}
+function clearPrintMode(){document.body.classList.remove('print-full','print-compact')}
+function printFullReport(){renderReports();clearPrintMode();document.body.classList.add('print-full');setTimeout(()=>{window.print();setTimeout(clearPrintMode,500)},50)}
+function printMeetingReport(){renderReports();clearPrintMode();document.body.classList.add('print-compact');setTimeout(()=>{window.print();setTimeout(clearPrintMode,500)},50)}
+function exportMeetingPDF(){exportCompactPDF()}
+window.addEventListener('afterprint',clearPrintMode);
 function renderAll(){refreshSelects();applyNames();renderHome();renderInventory();renderHistory();renderNeeds();renderReports()}
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -446,6 +579,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   el('txDate').value=today();el('needMonth').value=monthNow();
   save();renderAll();setMode('IN');
   if('serviceWorker' in navigator){
-    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.3').catch(()=>{}));
+    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.4').catch(()=>{}));
   }
 });

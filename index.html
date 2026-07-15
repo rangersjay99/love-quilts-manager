@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.3">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.3">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.3">
+<link rel="manifest" href="manifest-v7.json?v=7.4">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.4">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.4">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -101,21 +101,31 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .splash-version{margin-top:12px;font-size:11px;color:var(--muted)}
 @media(max-width:520px){.metric strong{font-size:26px}.row{grid-template-columns:1fr}}
 @media print{
-  @page{size:letter portrait;margin:.3in}
-  .splash,header,.bottom-nav,.no-print,#reports>.card:not(#meetingReport){display:none!important}
+  @page{size:letter portrait;margin:.45in}
+  .splash,header,.bottom-nav,.no-print,.actions{display:none!important}
   html,body{height:auto;min-height:0;background:#fff;padding:0;margin:0}
   main{max-width:none;padding:0;margin:0}.view{display:none!important}#reports.view{display:block!important}
-  #meetingReport{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
-  #meetingReport h1{font-size:18px;margin:0 0 2px}#meetingReport h2{font-size:12px;margin:8px 0 3px}
-  #meetingReport .print-meta{font-size:8px;color:#555;margin-bottom:6px}
-  #meetingReport .print-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0 7px}
-  #meetingReport .print-metric{border:1px solid #999;padding:4px;text-align:center}.print-metric b{display:block;font-size:15px}
-  #meetingReport table{font-size:8px;line-height:1.08}#meetingReport th,#meetingReport td{padding:2px 3px;border-bottom:1px solid #bbb}
-  #meetingReport .print-note{font-size:7px;color:#555;margin-top:3px}
-  #meetingReport .print-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
-  #meetingReport .print-columns>div{min-width:0}
-  #meetingReport .subtotal-row td{font-weight:800;background:#f3f3f3;border-top:1px solid #777}
-  #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
+  #meetingReport{display:none!important}
+  #reports>.card{display:block!important;box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0 0 18px!important;break-inside:auto}
+  #reports>.card h2,#reports>.card h3{break-after:avoid-page}
+  #reports table{font-size:10px;line-height:1.2}
+  #reports th,#reports td{padding:5px 4px}
+  #reports tr{break-inside:avoid-page}
+  body.print-compact #reports>.card{display:none!important}
+  body.print-compact #meetingReport{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
+  body.print-compact #meetingReport h1{font-size:18px;margin:0 0 2px}
+  body.print-compact #meetingReport h2{font-size:12px;margin:8px 0 3px}
+  body.print-compact #meetingReport .print-meta{font-size:8px;color:#555;margin-bottom:6px}
+  body.print-compact #meetingReport .print-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0 7px}
+  body.print-compact #meetingReport .print-metric{border:1px solid #999;padding:4px;text-align:center}
+  body.print-compact #meetingReport .print-metric b{display:block;font-size:15px}
+  body.print-compact #meetingReport table{font-size:8px;line-height:1.08}
+  body.print-compact #meetingReport th,body.print-compact #meetingReport td{padding:2px 3px;border-bottom:1px solid #bbb}
+  body.print-compact #meetingReport .print-note{font-size:7px;color:#555;margin-top:3px}
+  body.print-compact #meetingReport .print-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  body.print-compact #meetingReport .print-columns>div{min-width:0}
+  body.print-compact #meetingReport .subtotal-row td{font-weight:800;background:#f3f3f3;border-top:1px solid #777}
+  body.print-compact #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
 }
 </style>
 </head>
@@ -123,14 +133,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.3" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.4" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.3</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.4</div>
   </div>
 </div>
 
@@ -224,10 +234,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card"><h3>Upcoming Needs</h3><div id="reportNeeds"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
   <div class="card no-print">
-    <h3>Meeting Report and Exports</h3>
-    <p class="small">The clean PDF is a compact one-page meeting summary and does not include the website address. The detailed tables remain available above and in CSV.</p>
-    <button class="primary" onclick="exportMeetingPDF()">Download One-Page PDF Report</button>
-    <button class="ghost" onclick="printMeetingReport()">Print Compact Report</button>
+    <h3>Report Downloads</h3>
+    <p class="small">The full PDF includes all inventory, upcoming needs, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
+    <button class="primary" onclick="exportFullPDF()">Download Full PDF Report</button>
+    <button class="ghost" onclick="exportCompactPDF()">Download Compact One-Page PDF</button>
+    <div class="row"><button class="ghost" onclick="printFullReport()">Print Full Report</button><button class="ghost" onclick="printMeetingReport()">Print Compact Report</button></div>
     <div class="row"><button class="ghost" onclick="exportCSV()">Export CSV</button><button class="ghost" onclick="exportBackup()">Export Backup</button></div>
   </div>
   <div id="meetingReport" class="card print-only" aria-hidden="true"></div>
@@ -266,9 +277,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.3 · July 15, 2026</span>
+      <b>Version</b><span>Update 7.4 · July 15, 2026</span>
     </div>
-    <p class="small" style="margin-bottom:0">Update 7.3 adds customizable names and wording, a compact one-page meeting PDF, and keeps the Update 7.2 report totals and confirmation screens.</p>
+    <p class="small" style="margin-bottom:0">Update 7.4 restores the detailed full PDF report while keeping the compact one-page meeting report and all Update 7.3 customization features.</p>
   </div>
 </section>
 </main>
@@ -281,6 +292,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script src="app.js?v=7.3"></script>
+<script src="app.js?v=7.4"></script>
 </body>
 </html>
