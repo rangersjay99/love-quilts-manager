@@ -1,10 +1,11 @@
 {
-  "name": "Love Quilts",
+  "name": "Faithful Circle Quilters Love Quilts",
   "short_name": "Love Quilts",
+  "description": "Charity quilt inventory and needs planner",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#fbf6ec",
-  "theme_color": "#23395b",
+  "background_color": "#fffaf5",
+  "theme_color": "#6d3a78",
   "icons": [
     {
       "src": "icons/icon-192.png",
