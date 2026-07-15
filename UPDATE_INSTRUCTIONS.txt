@@ -1,22 +1,24 @@
-LOVE QUILTS MANAGER — UPDATE 7
+LOVE QUILTS MANAGER — UPDATE 7.1
+=================================
 
-What changed:
-- App name updated to Love Quilts Manager
-- Existing Love Quilts logo and app icons retained
-- Splash screen now identifies Update 7
-- Service-worker cache updated so the new version loads
-- Same Love Quilts storage key, so existing inventory and needs remain on the device
+This corrected package fixes both items reported after Update 7:
 
-UPLOAD TO GITHUB / NETLIFY:
-1. Open the existing project folder or repository.
-2. Replace these files with the Update 7 copies:
-   - index.html
-   - app.js
-   - sw.js
-   - manifest.json
-   - UPDATE_INSTRUCTIONS.txt
-3. Keep or replace the complete icons folder included in this ZIP. The icons are unchanged.
-4. Commit/upload the files and let Netlify redeploy.
-5. Open the app online once, then fully close and reopen the installed app.
+- Restores the colorful patchwork-heart Love Quilts logo
+- Uses new icon filenames so the old cached phone icon is not reused
+- Adds an updated README.md for the GitHub home page
+- Updates the service-worker cache to Update 7.1
+- Keeps the same app data storage key so existing records remain
 
-Do not delete the installed app or clear browser storage unless a backup has been exported.
+GITHUB UPDATE
+-------------
+1. Open the GitHub repository.
+2. Choose Add file > Upload files.
+3. Upload ALL files from this ZIP, including README.md and the complete icons folder.
+4. Commit the changes.
+5. Wait for Netlify to finish deploying.
+
+PHONE ICON
+----------
+After Netlify finishes, open the website once in Safari or Chrome and refresh it.
+
+If the old home-screen icon still appears, remove only the old home-screen shortcut and add the app to the home screen again. Export a backup first as an extra precaution. Removing the shortcut does not change the GitHub or Netlify files.
