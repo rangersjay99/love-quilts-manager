@@ -1,15 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.2
+LOVE QUILTS MANAGER — UPDATE 7.3
 =================================
 
-This package adds the requested report totals and confirmation pop-ups:
+This package adds the requested customization and compact report changes:
 
-- Inventory On Hand report is grouped by charity
-- Each charity has its own total
-- The report ends with a Grand Total
-- Quilts Out requires an “Are you sure?” confirmation before saving
-- Inventory adjustments require an “Are you sure?” confirmation before saving
-- Confirmations show current inventory, new inventory, and total quilts on hand before and after the change
-- Existing inventory, needs, settings, and logo are preserved
+- Organization name is customizable
+- App title is customizable
+- Program / quilt name is customizable (for example: Love Quilts, Quilts, Personal Quilts)
+- Saved names appear throughout the splash screen, app, reports, confirmations, backup names, and CSV names
+- Download One-Page PDF Report creates a clean PDF without the website address
+- The compact print report is arranged in two columns to help it fit on one page
+- Update 7.2 charity totals, grand total, and confirmation pop-ups are retained
+- Existing inventory and needs are preserved because the storage key remains love_quilts_v1
 
 GITHUB UPDATE
 -------------
@@ -18,11 +19,13 @@ GITHUB UPDATE
 3. Upload ALL files from this ZIP, including README.md and the complete icons folder.
 4. Choose to replace files with the same names.
 5. Commit the changes.
-6. Wait for Netlify to finish deploying and show the new deployment as Published.
+6. Wait for GitHub Pages to finish publishing.
 
 IPHONE REFRESH
 --------------
-Open the website in Safari after Netlify publishes it and refresh the page.
-The app should show “Update 7.2” on the welcome screen.
+1. Open the website in Safari after GitHub Pages publishes it.
+2. Refresh the page.
+3. The welcome screen should show “Update 7.3.”
+4. Open Settings > Names and Wording to personalize the app.
 
 Do not clear Safari website data because that could remove locally stored app records.
