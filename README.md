@@ -1,6 +1,6 @@
 # Love Quilts Manager
 
-**Current release: Update 7.1 — July 15, 2026**
+**Current release: Update 7.2 — July 15, 2026**
 
 Love Quilts Manager is a simple mobile-friendly inventory and needs-planning app for Faithful Circle Quilters.
 
@@ -21,13 +21,14 @@ Grassroots, SHP, St. Agnes, Bridges, and Project Holiday.
 
 Children's Large, Adult Large, and Medium.
 
-## Update 7.1
+## Update 7.2
 
-- Uses the Love Quilts Manager name
-- Restores the colorful patchwork-heart logo
-- Uses new icon filenames to prevent an old cached icon from being reused
-- Updates the splash screen and app cache
-- Preserves existing inventory and needs data
+- Groups the Inventory On Hand report by charity
+- Adds a total for each charity and a grand total
+- Adds an “Are you sure?” confirmation before recording Quilts Out
+- Adds an “Are you sure?” confirmation before saving inventory adjustments
+- Confirmation pop-ups show the current inventory, new inventory, and total quilts on hand before and after the change
+- Preserves existing inventory, needs, settings, and the patchwork-heart logo
 
 ## Installation
 

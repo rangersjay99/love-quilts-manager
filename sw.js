@@ -1,12 +1,12 @@
-const CACHE_NAME = "love-quilts-v7-1-logo-fix";
+const CACHE_NAME = "love-quilts-v7-2-reports-confirmations";
 const APP_SHELL = [
   "./",
-  "./index.html?v=7.1",
-  "./app.js?v=7.1",
-  "./manifest-v7.json?v=7.1",
-  "./icons/love-quilts-manager-180-v7.png?v=7.1",
-  "./icons/love-quilts-manager-192-v7.png?v=7.1",
-  "./icons/love-quilts-manager-512-v7.png?v=7.1"
+  "./index.html?v=7.2",
+  "./app.js?v=7.2",
+  "./manifest-v7.json?v=7.2",
+  "./icons/love-quilts-manager-180-v7.png?v=7.2",
+  "./icons/love-quilts-manager-192-v7.png?v=7.2",
+  "./icons/love-quilts-manager-512-v7.png?v=7.2"
 ];
 
 self.addEventListener("install", event => {
@@ -32,10 +32,10 @@ self.addEventListener("fetch", event => {
       fetch(request, {cache:"no-store"})
         .then(response => {
           const copy=response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.1",copy));
+          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.2",copy));
           return response;
         })
-        .catch(() => caches.match("./index.html?v=7.1"))
+        .catch(() => caches.match("./index.html?v=7.2"))
     );
     return;
   }

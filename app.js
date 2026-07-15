@@ -104,17 +104,31 @@ function invMap(exclude=null){
   return m;
 }
 function onHand(c,s,exclude=null){return invMap(exclude)[c+'|'+s]||0}
-function totalOnHand(){return Object.values(invMap()).reduce((a,b)=>a+b,0)}
+function totalOnHand(exclude=null){return Object.values(invMap(exclude)).reduce((a,b)=>a+b,0)}
+
+function confirmInventoryChange(type,c,s,change,exclude=null){
+  const current=onHand(c,s,exclude),next=current+change;
+  const totalCurrent=totalOnHand(exclude),totalNext=totalCurrent+change;
+  const amount=Math.abs(change);
+  const action=type==='OUT'?`Record ${amount} quilt${amount===1?'':'s'} out`:`Save inventory adjustment of ${change>0?'+':''}${change}`;
+  return confirm(`Are you sure?\n\n${action}\n${c} — ${s}\n\nCurrent inventory: ${current}\nNew inventory: ${next}\n\nTotal quilts on hand: ${totalCurrent} → ${totalNext}`);
+}
 
 function saveTransaction(){
   const c=el('txCharity').value,s=el('txSize').value,d=el('txDate').value||today(),noteText=el('txNote').value.trim();
   if(!c||!s)return notice('txNotice','Please select a charity and size.');
+  const current=onHand(c,s,editTxId);
   let adj=0;
-  if(mode==='OUT'&&qty>onHand(c,s,editTxId))return notice('txNotice',`Only ${onHand(c,s,editTxId)} ${s} quilt(s) are on hand for ${c}.`);
+  if(mode==='OUT'&&qty>current)return notice('txNotice',`Only ${current} ${s} quilt(s) are on hand for ${c}.`);
   if(mode==='ADJUST'){
-    adj=confirm(`Press OK to ADD ${qty}.\nPress Cancel to SUBTRACT ${qty}.`)?qty:-qty;
-    if(onHand(c,s,editTxId)+adj<0)return notice('txNotice','That adjustment would make inventory negative.');
+    adj=confirm(`Choose the adjustment direction:
+
+Press OK to ADD ${qty}.
+Press Cancel to SUBTRACT ${qty}.`)?qty:-qty;
+    if(current+adj<0)return notice('txNotice','That adjustment would make inventory negative.');
+    if(!confirmInventoryChange('ADJUST',c,s,adj,editTxId))return notice('txNotice','Adjustment canceled. No changes were saved.');
   }
+  if(mode==='OUT'&&!confirmInventoryChange('OUT',c,s,-qty,editTxId))return notice('txNotice','Quilts Out canceled. No changes were saved.');
   const r={id:editTxId||uid(),date:d,type:mode,charity:c,size:s,qty,adjustment:adj,note:noteText};
   if(editTxId){const i=data.transactions.findIndex(t=>t.id===editTxId);if(i>=0)data.transactions[i]=r}
   else data.transactions.push(r);
@@ -203,10 +217,16 @@ function renderHome(){
   el('homeOnHand').textContent=totalOnHand();el('homeNeeded').textContent=totalNeeded();el('homeShortage').textContent=shortageTotal();
 }
 function reportInventoryHTML(){
-  const rows=Object.entries(invMap()).filter(([,n])=>n!==0).sort();
-  return rows.length?`<table><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th></tr></thead><tbody>${
-    rows.map(([k,n])=>{const p=k.lastIndexOf('|'),c=k.slice(0,p),s=k.slice(p+1);return`<tr><td>${esc(c)}</td><td>${esc(s)}</td><td>${n}</td></tr>`}).join('')
-  }</tbody></table>`:'<div class="empty">No inventory recorded.</div>';
+  const inventory=invMap();
+  const charities=[...data.charities].sort((a,b)=>a.localeCompare(b));
+  if(!charities.length)return'<div class="empty">No charities available.</div>';
+  const body=charities.map(c=>{
+    const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));
+    const charityTotal=sizes.reduce((sum,x)=>sum+x.n,0);
+    const detail=sizes.length?sizes.map(x=>`<tr><td>${esc(c)}</td><td>${esc(x.s)}</td><td>${x.n}</td></tr>`).join(''):`<tr><td>${esc(c)}</td><td><span class="small">No quilts on hand</span></td><td>0</td></tr>`;
+    return`${detail}<tr class="subtotal-row"><td colspan="2">Total for ${esc(c)}</td><td>${charityTotal}</td></tr>`;
+  }).join('');
+  return`<table><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td colspan="2">Grand Total</td><td>${totalOnHand()}</td></tr></tfoot></table>`;
 }
 function reportNeedsHTML(){
   const list=upcoming().sort((a,b)=>a.month.localeCompare(b.month));
@@ -275,6 +295,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   el('txDate').value=today();el('needMonth').value=monthNow();
   save();renderAll();setMode('IN');
   if('serviceWorker' in navigator){
-    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.1').catch(()=>{}));
+    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.2').catch(()=>{}));
   }
 });

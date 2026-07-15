@@ -1,24 +1,28 @@
-LOVE QUILTS MANAGER — UPDATE 7.1
+LOVE QUILTS MANAGER — UPDATE 7.2
 =================================
 
-This corrected package fixes both items reported after Update 7:
+This package adds the requested report totals and confirmation pop-ups:
 
-- Restores the colorful patchwork-heart Love Quilts logo
-- Uses new icon filenames so the old cached phone icon is not reused
-- Adds an updated README.md for the GitHub home page
-- Updates the service-worker cache to Update 7.1
-- Keeps the same app data storage key so existing records remain
+- Inventory On Hand report is grouped by charity
+- Each charity has its own total
+- The report ends with a Grand Total
+- Quilts Out requires an “Are you sure?” confirmation before saving
+- Inventory adjustments require an “Are you sure?” confirmation before saving
+- Confirmations show current inventory, new inventory, and total quilts on hand before and after the change
+- Existing inventory, needs, settings, and logo are preserved
 
 GITHUB UPDATE
 -------------
 1. Open the GitHub repository.
 2. Choose Add file > Upload files.
 3. Upload ALL files from this ZIP, including README.md and the complete icons folder.
-4. Commit the changes.
-5. Wait for Netlify to finish deploying.
+4. Choose to replace files with the same names.
+5. Commit the changes.
+6. Wait for Netlify to finish deploying and show the new deployment as Published.
 
-PHONE ICON
-----------
-After Netlify finishes, open the website once in Safari or Chrome and refresh it.
+IPHONE REFRESH
+--------------
+Open the website in Safari after Netlify publishes it and refresh the page.
+The app should show “Update 7.2” on the welcome screen.
 
-If the old home-screen icon still appears, remove only the old home-screen shortcut and add the app to the home screen again. Export a backup first as an extra precaution. Removing the shortcut does not change the GitHub or Netlify files.
+Do not clear Safari website data because that could remove locally stored app records.
