@@ -53,7 +53,7 @@ function applyOrgName(){
   el('headerOrg').textContent=data.orgName;
   el('splashOrg').textContent=data.orgName;
   el('orgNameInput').value=data.orgName;
-  document.title=`${data.orgName} — Love Quilts`;
+  document.title=`${data.orgName} — Love Quilts Manager`;
 }
 function saveOrgName(){
   data.orgName=el('orgNameInput').value.trim()||DEFAULT_ORG;

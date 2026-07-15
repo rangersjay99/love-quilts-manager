@@ -1,9 +1,9 @@
-const CACHE_NAME = "love-quilts-v6";
+const CACHE_NAME = "love-quilts-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./app.js",
-  "./manifest.json",
+  "./app.js?v=7",
+  "./manifest.json?v=7",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];

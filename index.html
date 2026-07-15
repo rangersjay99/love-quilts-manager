@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#6d3a78">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Love Quilts">
-<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
+<link rel="manifest" href="manifest.json?v=7">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<title>Love Quilts</title>
+<title>Love Quilts Manager</title>
 <style>
 :root{
   --plum:#6d3a78;--plum-dark:#4f2859;--teal:#2f8f8a;--green:#2f7d4a;
@@ -94,6 +94,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .needle{position:absolute;right:16px;bottom:16px;width:5px;height:73px;border-radius:4px;background:linear-gradient(#e7e7ea,#8e8e96);transform:rotate(26deg);box-shadow:0 0 0 1px rgba(0,0,0,.08)}
 .needle:before{content:"";position:absolute;top:5px;left:-2px;width:8px;height:13px;border:2px solid var(--rose);border-radius:50%}
 .splash-title{font-family:Georgia,"Times New Roman",serif;font-size:clamp(43px,12vw,62px);font-style:italic;font-weight:700;line-height:1;color:var(--rose);margin-top:-4px}
+.splash-manager{margin-top:5px;color:var(--plum);font-size:18px;font-weight:900;letter-spacing:.22em;text-transform:uppercase}
 .splash-tag{margin-top:12px;color:var(--lavender);font-size:12px;font-weight:900;letter-spacing:.13em}
 .divider{display:flex;align-items:center;gap:10px;margin:17px auto 12px;max-width:300px;color:var(--rose)}
 .divider:before,.divider:after{content:"";height:1px;background:var(--lavender);flex:1}.divider span{font-size:18px}
@@ -106,24 +107,25 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 </style>
 </head>
 <body>
-<div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Love Quilts welcome screen">
+<div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Love Quilts Manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
     <div class="quilt-emblem" aria-hidden="true">
       <div class="heart-outline"></div><div class="star"></div><div class="needle"></div>
     </div>
     <div class="splash-title">Love Quilts</div>
+    <div class="splash-manager">Manager</div>
     <div class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div class="splash-version">Love Quilts Update 6</div>
+    <div class="splash-version">Love Quilts Manager · Update 7</div>
   </div>
 </div>
 
 <header>
   <div id="headerOrg" class="org">Faithful Circle Quilters</div>
-  <h1>Love Quilts</h1>
+  <h1>Love Quilts Manager</h1>
   <p>Inventory on hand and upcoming needs</p>
 </header>
 
@@ -251,6 +253,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Lists</button>
 </nav>
 
-<script src="app.js"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

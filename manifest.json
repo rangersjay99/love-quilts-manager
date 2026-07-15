@@ -1,7 +1,7 @@
 {
-  "name": "Faithful Circle Quilters Love Quilts",
+  "name": "Faithful Circle Quilters Love Quilts Manager",
   "short_name": "Love Quilts",
-  "description": "Charity quilt inventory and needs planner",
+  "description": "Simple charity quilt inventory, needs planning, and reporting manager",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#fffaf5",
