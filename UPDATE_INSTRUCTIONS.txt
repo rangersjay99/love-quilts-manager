@@ -1,0 +1,22 @@
+LOVE QUILTS MANAGER — UPDATE 7
+
+What changed:
+- App name updated to Love Quilts Manager
+- Existing Love Quilts logo and app icons retained
+- Splash screen now identifies Update 7
+- Service-worker cache updated so the new version loads
+- Same Love Quilts storage key, so existing inventory and needs remain on the device
+
+UPLOAD TO GITHUB / NETLIFY:
+1. Open the existing project folder or repository.
+2. Replace these files with the Update 7 copies:
+   - index.html
+   - app.js
+   - sw.js
+   - manifest.json
+   - UPDATE_INSTRUCTIONS.txt
+3. Keep or replace the complete icons folder included in this ZIP. The icons are unchanged.
+4. Commit/upload the files and let Netlify redeploy.
+5. Open the app online once, then fully close and reopen the installed app.
+
+Do not delete the installed app or clear browser storage unless a backup has been exported.
