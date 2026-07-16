@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.5
+LOVE QUILTS MANAGER — UPDATE 7.5.2
 =================================
 
 UPLOAD
@@ -13,7 +13,7 @@ IPHONE REFRESH
 --------------
 1. Open the website in Safari.
 2. Refresh the page.
-3. The welcome screen should show Update 7.5.
+3. The welcome screen should show Update 7.5.2.
 4. Do not clear Safari website data. Existing Update 7.4 records use the same storage key and remain available.
 
 NEW FEATURES
@@ -25,5 +25,9 @@ NEW FEATURES
 - Safe Start Fresh and reset controls
 - Confirmation before every delete/reset
 - iPhone splash-title wrapping fix
-- Designed by Jay footer on Home
+- Clearly visible Designed by Jay credit above the Home navigation bar
 - Reorganized Settings
+
+NEW IN 7.5.2
+- In Settings > Names and Wording, edit Splash Tagline and Splash Message.
+- Leave either field blank to use the automatic default wording.

@@ -1,6 +1,6 @@
 'use strict';
 
-const VERSION='7.5';
+const VERSION='7.5.2';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -10,6 +10,7 @@ const MAX_RECOVERY_BYTES=3000000;
 const DEFAULT_ORG='Faithful Circle Quilters';
 const DEFAULT_APP='Love Quilts Manager';
 const DEFAULT_ITEM='Love Quilts';
+const DEFAULT_SPLASH_TAG='MADE WITH LOVE, SHARED WITH CARE';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
 const DEFAULT_SIZES=["Children's Large",'Adult Large','Medium'];
 let mode='IN',qty=1,editTxId=null,editNeedId=null,externalTimer=null,externalReason='Automatic save';
@@ -48,6 +49,7 @@ function normalizeData(d={}){
   })):[];
   return{
     orgName:String(d.orgName||DEFAULT_ORG),appName:String(d.appName||DEFAULT_APP),itemName:String(d.itemName||DEFAULT_ITEM),
+    splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
     charities:unique([...(Array.isArray(d.charities)?d.charities:[]),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...DEFAULT_CHARITIES]),
     sizes:unique([...(Array.isArray(d.sizes)?d.sizes:[]),...tx.map(t=>t.size),...needs.map(n=>n.size),...DEFAULT_SIZES]),
     transactions:tx,needs
@@ -100,11 +102,18 @@ function applyNames(){
   data.orgName=(data.orgName||DEFAULT_ORG).trim()||DEFAULT_ORG;
   data.appName=(data.appName||DEFAULT_APP).trim()||DEFAULT_APP;
   data.itemName=(data.itemName||DEFAULT_ITEM).trim()||DEFAULT_ITEM;
+  data.splashTag=String(data.splashTag||'').trim();
+  data.splashMessage=String(data.splashMessage||'').trim();
+  const automaticSplashMessage=`Keeping track of ${lowerName()}…\none quilt at a time.`;
+  const shownSplashMessage=data.splashMessage||automaticSplashMessage;
   el('headerOrg').textContent=data.orgName;el('headerAppName').textContent=data.appName;
   el('splashOrg').textContent=data.orgName;el('splashItemName').textContent=data.itemName;el('splashManager').textContent=splashSecondLine();
-  el('splashMessage').innerHTML=`Keeping track of ${esc(lowerName())}…<br>one quilt at a time.`;
+  el('splashTag').textContent=data.splashTag||DEFAULT_SPLASH_TAG;
+  el('splashMessage').innerHTML=esc(shownSplashMessage).replace(/\n/g,'<br>');
   el('splashVersion').textContent=`${data.appName} · Update ${VERSION}`;
   el('orgNameInput').value=data.orgName;el('appNameInput').value=data.appName;el('itemNameInput').value=data.itemName;
+  el('splashTagInput').value=data.splashTag;el('splashTagInput').placeholder=DEFAULT_SPLASH_TAG;
+  el('splashMessageInput').value=data.splashMessage;el('splashMessageInput').placeholder=automaticSplashMessage;
   el('aboutAppName').textContent=data.appName;el('aboutItemName').textContent=data.itemName;el('aboutOrgName').textContent=data.orgName;
   el('homeRecordBtn').textContent=`Record ${data.itemName}`;el('recordHeading').textContent=`Record ${data.itemName}`;
   el('modeIn').textContent=`${data.itemName} In`;el('modeOut').textContent=`${data.itemName} Out`;
@@ -118,7 +127,8 @@ function applyNames(){
 }
 function saveNames(){
   data.orgName=el('orgNameInput').value.trim()||DEFAULT_ORG;data.appName=el('appNameInput').value.trim()||DEFAULT_APP;data.itemName=el('itemNameInput').value.trim()||DEFAULT_ITEM;
-  save('Names and wording changed');applyNames();renderAll();notice('nameNotice','Names and wording saved.',true);
+  data.splashTag=el('splashTagInput').value.trim();data.splashMessage=el('splashMessageInput').value.trim();
+  save('Names and splash wording changed');applyNames();renderAll();notice('nameNotice','Names and splash wording saved.',true);
 }
 function closeSplash(){el('splash').classList.add('hidden');document.body.style.overflow=''}
 function showView(id){
@@ -360,7 +370,7 @@ function makeOnePagePDF(){
   };
   drawRows(inventoryRows,36,48);
   drawRows(needsRows,318,48);
-  text(36,24,`Update 7.5 - ${pdfFit(data.appName,72)}`,6.5,false);
+  text(36,24,`Update 7.5.2 - ${pdfFit(data.appName,72)}`,6.5,false);
 
   const content=commands.join('\n')+'\n';
   const objects=[
@@ -475,7 +485,7 @@ function makeFullPDF(){
 
   pages.forEach((p,i)=>{
     p.commands.push(`0.5 w 36 34 m 576 34 l S`);
-    p.commands.push(`BT /F1 6.5 Tf 1 0 0 1 36 22 Tm (${pdfEscape(`Update 7.5 - ${pdfFit(data.appName,70)}`)}) Tj ET`);
+    p.commands.push(`BT /F1 6.5 Tf 1 0 0 1 36 22 Tm (${pdfEscape(`Update 7.5.2 - ${pdfFit(data.appName,70)}`)}) Tj ET`);
     p.commands.push(`BT /F1 6.5 Tf 1 0 0 1 520 22 Tm (${pdfEscape(`Page ${i+1} of ${pages.length}`)}) Tj ET`);
   });
 
@@ -529,7 +539,7 @@ function renderAll(){refreshSelects();applyNames();renderHome();renderInventory(
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.5 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.5.2 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.5').catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.5.2').catch(()=>{}));
 });
