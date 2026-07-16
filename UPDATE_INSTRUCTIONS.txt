@@ -1,11 +1,11 @@
-LOVE QUILTS MANAGER — UPDATE 7.5.2
+LOVE QUILTS MANAGER — UPDATE 7.5.3
 =================================
 
 UPLOAD
 ------
 1. Open the GitHub repository.
 2. Choose Add file > Upload files.
-3. Upload ALL files from this ZIP, including GOOGLE_BACKUP_SETUP.txt and the complete icons folder.
+3. Upload ALL files from this ZIP, including LICENSE.txt, GOOGLE_BACKUP_SETUP.txt, and the complete icons folder.
 4. Replace files with the same names and commit the changes.
 5. Wait for GitHub Pages to publish.
 
@@ -13,21 +13,13 @@ IPHONE REFRESH
 --------------
 1. Open the website in Safari.
 2. Refresh the page.
-3. The welcome screen should show Update 7.5.2.
-4. Do not clear Safari website data. Existing Update 7.4 records use the same storage key and remain available.
+3. The welcome screen should show Update 7.5.3.
+4. Do not clear Safari website data. Existing records use the same storage key and remain available.
 
-NEW FEATURES
+NEW IN 7.5.3
 ------------
-- Email/share full and compact PDF reports
-- Rolling local recovery backups and restore controls
-- Optional automatic Google Drive backup using Apps Script
-- Save/backup status display
-- Safe Start Fresh and reset controls
-- Confirmation before every delete/reset
-- iPhone splash-title wrapping fix
-- Clearly visible Designed by Jay credit above the Home navigation bar
-- Reorganized Settings
-
-NEW IN 7.5.2
-- In Settings > Names and Wording, edit Splash Tagline and Splash Message.
-- Leave either field blank to use the automatic default wording.
+- Copyright and permitted-use notices in the app and reports
+- Designed by Jay moved to the splash screen
+- LICENSE.txt added
+- Source-file copyright headers added
+- All Update 7.5.2 features retained

@@ -1,6 +1,9 @@
 'use strict';
 
-const VERSION='7.5.2';
+// Copyright © 2026 Jay. All rights reserved.
+// Personal and authorized guild use only. See LICENSE.txt.
+
+const VERSION='7.5.3';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -11,6 +14,8 @@ const DEFAULT_ORG='Faithful Circle Quilters';
 const DEFAULT_APP='Love Quilts Manager';
 const DEFAULT_ITEM='Love Quilts';
 const DEFAULT_SPLASH_TAG='MADE WITH LOVE, SHARED WITH CARE';
+const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
+const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
 const DEFAULT_SIZES=["Children's Large",'Adult Large','Medium'];
 let mode='IN',qty=1,editTxId=null,editNeedId=null,externalTimer=null,externalReason='Automatic save';
@@ -225,7 +230,7 @@ function reportInventoryHTML(){
 }
 function reportNeedsHTML(){const list=upcoming().sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity));return list.length?`<table><thead><tr><th>Month</th><th>Charity / Size</th><th>Need</th><th>On Hand</th><th>Shortage</th></tr></thead><tbody>${list.map(n=>{const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);return`<tr><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${stock}</td><td class="${short?'negative':''}">${short}</td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No upcoming needs.</div>'}
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
-function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(data.itemName)} Inventory and Needs Report · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div>`}
+function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(data.itemName)} Inventory and Needs Report · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`}
 function renderReports(){
   el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
   el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();
@@ -370,7 +375,9 @@ function makeOnePagePDF(){
   };
   drawRows(inventoryRows,36,48);
   drawRows(needsRows,318,48);
-  text(36,24,`Update 7.5.2 - ${pdfFit(data.appName,72)}`,6.5,false);
+  text(36,24,pdfFit(COPYRIGHT_PDF,82),6.2,false);
+  text(36,14,'Personal and authorized guild use only.',6.2,false);
+  text(500,14,`Update ${VERSION}`,6.2,false);
 
   const content=commands.join('\n')+'\n';
   const objects=[
@@ -485,8 +492,9 @@ function makeFullPDF(){
 
   pages.forEach((p,i)=>{
     p.commands.push(`0.5 w 36 34 m 576 34 l S`);
-    p.commands.push(`BT /F1 6.5 Tf 1 0 0 1 36 22 Tm (${pdfEscape(`Update 7.5.2 - ${pdfFit(data.appName,70)}`)}) Tj ET`);
-    p.commands.push(`BT /F1 6.5 Tf 1 0 0 1 520 22 Tm (${pdfEscape(`Page ${i+1} of ${pages.length}`)}) Tj ET`);
+    p.commands.push(`BT /F1 6.2 Tf 1 0 0 1 36 22 Tm (${pdfEscape(pdfFit(COPYRIGHT_PDF,82))}) Tj ET`);
+    p.commands.push(`BT /F1 6.2 Tf 1 0 0 1 36 12 Tm (${pdfEscape('Personal and authorized guild use only.')}) Tj ET`);
+    p.commands.push(`BT /F1 6.2 Tf 1 0 0 1 500 12 Tm (${pdfEscape(`Page ${i+1} of ${pages.length} - v${VERSION}`)}) Tj ET`);
   });
 
   const pageCount=pages.length;
@@ -539,7 +547,7 @@ function renderAll(){refreshSelects();applyNames();renderHome();renderInventory(
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.5.2 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.5.3 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.5.2').catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.5.3').catch(()=>{}));
 });

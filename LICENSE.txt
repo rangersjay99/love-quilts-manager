@@ -1,0 +1,24 @@
+LOVE QUILTS MANAGER — COPYRIGHT AND PERMITTED-USE NOTICE
+========================================================
+
+Copyright © 2026 Jay. All rights reserved.
+
+Love Quilts Manager, including its source code, design, documentation, reports, icons, and accompanying files, is proprietary software.
+
+PERMITTED USE
+-------------
+Permission is granted to Faithful Circle Quilters and other users specifically authorized by the copyright owner to use the application for personal, charitable, and noncommercial guild operations. Authorized users may keep reasonable backup copies needed for that use.
+
+RESTRICTIONS
+------------
+Without prior written permission from the copyright owner, you may not copy or redistribute the application to others; publish or post the source files; sell, rent, sublicense, or commercially exploit the application; remove or alter copyright notices; or distribute modified versions or derivative works.
+
+NO TRANSFER OF OWNERSHIP
+------------------------
+Possession of a copy or access to a hosted version does not transfer ownership of the software or its intellectual-property rights.
+
+NO WARRANTY
+-----------
+The software is provided “as is,” without warranties of any kind. The copyright owner is not liable for data loss, interruption, or other damages arising from use of the software. Users should maintain regular exported or external backups.
+
+For permissions beyond the uses stated above, obtain written authorization from the copyright owner.

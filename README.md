@@ -1,25 +1,21 @@
 # Love Quilts Manager
 
-**Current release: Update 7.5.2 — July 15, 2026**
+**Current release: Update 7.5.3 — July 16, 2026**
 
-Love Quilts Manager is a mobile-friendly inventory and needs-planning app for charity quilt programs. Existing Update 7.4 data is preserved through the unchanged `love_quilts_v1` storage key.
+Love Quilts Manager is a mobile-friendly inventory and needs-planning app for charity quilt programs. Existing data is preserved through the unchanged `love_quilts_v1` storage key.
 
-## Update 7.5.2
+## Update 7.5.3
 
-- Make both splash-screen phrases customizable in Settings: the small tagline and the larger two-line message
-- Leave either splash wording field blank to keep the automatic default wording
-- Email/share the full or compact PDF from an iPhone; computers fall back to downloading the PDF
-- Automatically save each change on the device
-- Keep up to 20 rolling local recovery copies with one-tap restore
-- Optional automatic Google Drive backup through Google Apps Script, without a Google Cloud billing project
-- Show local-save and external-backup status
-- Add safe reset choices: clear inventory only, start fresh while keeping names/lists, or reset the entire app
-- Require confirmation before every delete or reset; destructive resets require typed confirmation
-- Keep “Love Quilts” together on the iPhone splash screen with “Manager” on its own line
-- Add a clearly visible “Designed by Jay” credit just above the Home navigation bar
-- Move one-time naming controls lower in Settings
-- Retain the detailed multi-page full report and compact one-page meeting report
-- Keep generated reports free of the website address
+- Add visible copyright and permitted-use notices to the splash screen and About section
+- Move “Designed by Jay” from the Home screen to the splash screen
+- Add copyright notices to full, compact, printed, downloaded, and shared reports
+- Add copyright headers to the main source files
+- Include `LICENSE.txt` with the proprietary-use terms
+- Retain all Update 7.5.2 features, including customizable splash wording, report sharing, recovery copies, optional Google Apps Script backup, safer reset controls, and both report formats
+
+## Copyright and permitted use
+
+Copyright © 2026 Jay. Love Quilts Manager. All rights reserved. Personal and authorized guild use only. Copying, redistribution, resale, public republication, sublicensing, or creation of modified versions for distribution is not permitted without the copyright owner's prior written permission. See `LICENSE.txt`.
 
 ## Installation
 
