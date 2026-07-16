@@ -1,15 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.4
+LOVE QUILTS MANAGER — UPDATE 7.3
 =================================
 
-This package restores the detailed full report while keeping the compact report:
+This package adds the requested customization and compact report changes:
 
-- Download Full PDF Report is now the main report button
-- The full PDF includes all inventory, upcoming needs, and adjusted transactions
-- The full report may use multiple pages so information is not omitted
-- Download Compact One-Page PDF remains available for quick meetings
-- Full and compact print buttons are both retained
-- Generated PDFs do not include the website address
-- Update 7.3 customizable names and wording are retained
+- Organization name is customizable
+- App title is customizable
+- Program / quilt name is customizable (for example: Love Quilts, Quilts, Personal Quilts)
+- Saved names appear throughout the splash screen, app, reports, confirmations, backup names, and CSV names
+- Download One-Page PDF Report creates a clean PDF without the website address
+- The compact print report is arranged in two columns to help it fit on one page
+- Update 7.2 charity totals, grand total, and confirmation pop-ups are retained
 - Existing inventory and needs are preserved because the storage key remains love_quilts_v1
 
 GITHUB UPDATE
@@ -25,7 +25,7 @@ IPHONE REFRESH
 --------------
 1. Open the website in Safari after GitHub Pages publishes it.
 2. Refresh the page.
-3. The welcome screen should show “Update 7.4.”
-4. Open Reports to choose the full or compact report.
+3. The welcome screen should show “Update 7.3.”
+4. Open Settings > Names and Wording to personalize the app.
 
 Do not clear Safari website data because that could remove locally stored app records.

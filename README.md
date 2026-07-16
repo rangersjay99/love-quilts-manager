@@ -1,8 +1,8 @@
 # Love Quilts Manager
 
-**Current release: Update 7.4 — July 15, 2026**
+**Current release: Update 7.3 — July 15, 2026**
 
-Love Quilts Manager is a simple, mobile-friendly inventory and needs-planning app. The organization name, app title, and quilt-program name can be personalized for another guild, group, quilt show, or personal collection.
+Love Quilts Manager is a simple, mobile-friendly inventory and needs-planning app. The organization name, app title, and quilt-program name can now be personalized for another guild, group, quilt show, or personal collection.
 
 ## Main features
 
@@ -11,8 +11,7 @@ Love Quilts Manager is a simple, mobile-friendly inventory and needs-planning ap
 - Plan monthly needs by charity and quilt size
 - Flag adjusted transactions in history and reports
 - Export backups and transaction CSV files
-- Download a detailed full PDF report that can span multiple pages
-- Download a compact one-page meeting PDF
+- Download a clean, one-page PDF meeting report without the website address
 - Customize the organization name, app title, program/quilt name, charities, and quilt sizes
 
 ## Default charities
@@ -23,15 +22,13 @@ Grassroots, SHP, St. Agnes, Bridges, and Project Holiday.
 
 Children's Large, Adult Large, and Medium.
 
-## Update 7.4
+## Update 7.3
 
-- Restores the detailed full report as the main PDF download
-- Includes every inventory group, upcoming need, and adjusted transaction in the full PDF
-- Allows the full PDF to use multiple pages so information is not omitted
-- Keeps the compact one-page meeting PDF as a separate option
-- Keeps full-report and compact-report print buttons
-- Generated PDFs do not include the website address
-- Preserves Update 7.3 customizable names and wording
+- Adds customizable organization, app, and program/quilt names
+- Updates the splash screen, headings, buttons, reports, confirmations, exports, and About section to use the saved names
+- Adds a true one-page PDF meeting report download
+- Removes the website address from the generated PDF
+- Keeps the Update 7.2 charity totals, grand total, and confirmation pop-ups
 - Preserves existing inventory and needs by continuing to use the same `love_quilts_v1` browser storage key
 
 ## Installation
