@@ -1,36 +1,26 @@
 # Love Quilts Manager
 
-**Current release: Update 7.3 — July 15, 2026**
+**Current release: Update 7.5 — July 15, 2026**
 
-Love Quilts Manager is a simple, mobile-friendly inventory and needs-planning app. The organization name, app title, and quilt-program name can now be personalized for another guild, group, quilt show, or personal collection.
+Love Quilts Manager is a mobile-friendly inventory and needs-planning app for charity quilt programs. Existing Update 7.4 data is preserved through the unchanged `love_quilts_v1` storage key.
 
-## Main features
+## Update 7.5
 
-- Track quilts in, quilts out, and inventory adjustments
-- View total inventory on hand and upcoming needs
-- Plan monthly needs by charity and quilt size
-- Flag adjusted transactions in history and reports
-- Export backups and transaction CSV files
-- Download a clean, one-page PDF meeting report without the website address
-- Customize the organization name, app title, program/quilt name, charities, and quilt sizes
-
-## Default charities
-
-Grassroots, SHP, St. Agnes, Bridges, and Project Holiday.
-
-## Default sizes
-
-Children's Large, Adult Large, and Medium.
-
-## Update 7.3
-
-- Adds customizable organization, app, and program/quilt names
-- Updates the splash screen, headings, buttons, reports, confirmations, exports, and About section to use the saved names
-- Adds a true one-page PDF meeting report download
-- Removes the website address from the generated PDF
-- Keeps the Update 7.2 charity totals, grand total, and confirmation pop-ups
-- Preserves existing inventory and needs by continuing to use the same `love_quilts_v1` browser storage key
+- Email/share the full or compact PDF from an iPhone; computers fall back to downloading the PDF
+- Automatically save each change on the device
+- Keep up to 20 rolling local recovery copies with one-tap restore
+- Optional automatic Google Drive backup through Google Apps Script, without a Google Cloud billing project
+- Show local-save and external-backup status
+- Add safe reset choices: clear inventory only, start fresh while keeping names/lists, or reset the entire app
+- Require confirmation before every delete or reset; destructive resets require typed confirmation
+- Keep “Love Quilts” together on the iPhone splash screen with “Manager” on its own line
+- Add a subtle “Designed by Jay” credit on the Home screen only
+- Move one-time naming controls lower in Settings
+- Retain the detailed multi-page full report and compact one-page meeting report
+- Keep generated reports free of the website address
 
 ## Installation
 
-Upload all files and the complete `icons` folder to the GitHub repository. Replace files with the same names, commit the upload, and wait for GitHub Pages to publish the new version.
+Upload all files and the complete `icons` folder to the GitHub repository, replace files with the same names, and commit the upload. Do not clear Safari website data.
+
+For optional Google Drive backup, follow `GOOGLE_BACKUP_SETUP.txt`.

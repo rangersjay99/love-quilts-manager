@@ -1,0 +1,92 @@
+LOVE QUILTS MANAGER — OPTIONAL GOOGLE DRIVE AUTO BACKUP
+========================================================
+
+This uses a regular Google account and Google Apps Script. It does not require a Google Cloud billing project.
+
+PART 1 — CREATE THE GOOGLE SHEET
+--------------------------------
+1. Open Google Drive.
+2. Create a blank Google Sheet named: Love Quilts Backup
+3. In the sheet, choose Extensions > Apps Script.
+4. Delete the sample code and paste all code from the CODE section below.
+5. Change CHANGE-ME-1234 to a private backup code you choose. Use the same code later in Love Quilts Manager.
+6. Click Save.
+
+PART 2 — DEPLOY THE SCRIPT
+--------------------------
+1. In Apps Script, click Deploy > New deployment.
+2. Click the gear and choose Web app.
+3. Description: Love Quilts Backup
+4. Execute as: Me
+5. Who has access: Anyone
+6. Click Deploy and approve the requested Google Drive permission.
+7. Copy the Web app URL. It should end in /exec.
+
+PART 3 — CONNECT THE APP
+------------------------
+1. Open Love Quilts Manager > Settings.
+2. Under Automatic Google Drive Backup, paste the Web app URL.
+3. Enter the same backup code used in the script.
+4. Check Automatically send a backup after changes.
+5. Tap Save Backup Settings.
+6. Tap Send Backup Now.
+7. In Google Drive, look for a folder named Love Quilts Backups.
+
+The script maintains Latest_Love_Quilts_Backup.json and also creates one dated archive per day when changes are received.
+
+CODE — COPY EVERYTHING BELOW
+----------------------------
+const BACKUP_CODE = 'CHANGE-ME-1234';
+const FOLDER_NAME = 'Love Quilts Backups';
+const LATEST_NAME = 'Latest_Love_Quilts_Backup.json';
+
+function doGet() {
+  return ContentService.createTextOutput('Love Quilts backup service is running.');
+}
+
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const payload = JSON.parse(e.postData.contents || '{}');
+    if (!payload.backupCode || payload.backupCode !== BACKUP_CODE) {
+      return jsonResponse({ok:false, error:'Invalid backup code'});
+    }
+    if (!payload.data) {
+      return jsonResponse({ok:false, error:'No backup data received'});
+    }
+
+    const folder = getOrCreateFolder();
+    const content = JSON.stringify(payload.data, null, 2);
+    const latest = folder.getFilesByName(LATEST_NAME);
+    if (latest.hasNext()) latest.next().setContent(content);
+    else folder.createFile(LATEST_NAME, content, MimeType.PLAIN_TEXT);
+
+    const zone = Session.getScriptTimeZone() || 'America/New_York';
+    const day = Utilities.formatDate(new Date(), zone, 'yyyy-MM-dd');
+    const archiveName = 'Love_Quilts_Backup_' + day + '.json';
+    const archives = folder.getFilesByName(archiveName);
+    if (archives.hasNext()) archives.next().setContent(content);
+    else folder.createFile(archiveName, content, MimeType.PLAIN_TEXT);
+
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Backup Log') || SpreadsheetApp.getActiveSpreadsheet().insertSheet('Backup Log');
+    if (sheet.getLastRow() === 0) sheet.appendRow(['Received', 'Reason', 'On Hand', 'Upcoming Needs', 'Transactions', 'Needs']);
+    const summary = payload.summary || {};
+    sheet.appendRow([new Date(), payload.reason || '', summary.onHand || 0, summary.upcomingNeeds || 0, summary.transactions || 0, summary.needs || 0]);
+
+    return jsonResponse({ok:true, savedAt:new Date().toISOString()});
+  } catch (error) {
+    return jsonResponse({ok:false, error:String(error)});
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function getOrCreateFolder() {
+  const folders = DriveApp.getFoldersByName(FOLDER_NAME);
+  return folders.hasNext() ? folders.next() : DriveApp.createFolder(FOLDER_NAME);
+}
+
+function jsonResponse(value) {
+  return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
+}

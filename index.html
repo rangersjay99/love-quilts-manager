@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.3">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.3">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.3">
+<link rel="manifest" href="manifest-v7.json?v=7.5">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.5">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.5">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -75,6 +75,23 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .print-only{display:none}
 .about-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;font-size:14px}.about-grid b{color:var(--plum-dark)}
 
+
+.save-status{margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45;text-align:center}
+.home-credit{padding:3px 0 16px;text-align:center;color:#989198;font-size:11px;letter-spacing:.02em}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.status-box{padding:10px;border-radius:11px;background:var(--soft);font-size:12px;color:var(--muted);line-height:1.4}
+.status-box b{display:block;color:var(--plum-dark);font-size:13px;margin-bottom:2px}
+.recovery-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.recovery-item:first-child{border-top:0}
+.recovery-item button{min-height:38px;border:1px solid var(--plum);border-radius:9px;background:#fff;color:var(--plum);font-weight:800;padding:7px 11px}
+.switch-line{display:flex;align-items:center;gap:10px;margin-top:12px;font-weight:750}
+.switch-line input{width:23px;height:23px;min-height:0;margin:0}
+.inline-link{display:inline-block;margin-top:9px;color:var(--plum);font-weight:750}
+.danger-zone{border-color:#e7b8bd;background:#fffafa}
+.danger-zone h3{color:var(--red)}
+.danger-zone .danger{margin-top:9px}
+@media(max-width:520px){.status-grid{grid-template-columns:1fr}.splash-panel{padding-left:5px;padding-right:5px}}
+
 /* Welcome splash */
 .splash{
   position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
@@ -90,7 +107,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .splash-panel{width:min(100%,430px);text-align:center;padding:18px 18px 24px}
 .splash-org{font-family:Georgia,"Times New Roman",serif;font-size:clamp(28px,8vw,42px);font-style:italic;font-weight:700;line-height:1.05;color:var(--plum);text-wrap:balance}
 .splash-app-logo{width:168px;height:168px;object-fit:contain;border-radius:34px;margin:8px auto 10px;display:block;box-shadow:0 8px 22px rgba(110,35,77,.15)}
-.splash-title{font-family:Georgia,"Times New Roman",serif;font-size:clamp(38px,11vw,62px);font-style:italic;font-weight:700;line-height:1;color:var(--rose);margin-top:-4px;text-wrap:balance}
+.splash-title{font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,10vw,58px);font-style:italic;font-weight:700;line-height:1;color:var(--rose);margin-top:-4px;white-space:nowrap;text-wrap:nowrap}
 .splash-manager{margin-top:5px;color:var(--plum);font-size:clamp(14px,4.5vw,18px);font-weight:900;letter-spacing:.16em;text-transform:uppercase;text-wrap:balance}
 .splash-tag{margin-top:12px;color:var(--lavender);font-size:12px;font-weight:900;letter-spacing:.13em}
 .divider{display:flex;align-items:center;gap:10px;margin:17px auto 12px;max-width:300px;color:var(--rose)}
@@ -101,21 +118,31 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .splash-version{margin-top:12px;font-size:11px;color:var(--muted)}
 @media(max-width:520px){.metric strong{font-size:26px}.row{grid-template-columns:1fr}}
 @media print{
-  @page{size:letter portrait;margin:.3in}
-  .splash,header,.bottom-nav,.no-print,#reports>.card:not(#meetingReport){display:none!important}
+  @page{size:letter portrait;margin:.45in}
+  .splash,header,.bottom-nav,.no-print,.actions{display:none!important}
   html,body{height:auto;min-height:0;background:#fff;padding:0;margin:0}
   main{max-width:none;padding:0;margin:0}.view{display:none!important}#reports.view{display:block!important}
-  #meetingReport{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
-  #meetingReport h1{font-size:18px;margin:0 0 2px}#meetingReport h2{font-size:12px;margin:8px 0 3px}
-  #meetingReport .print-meta{font-size:8px;color:#555;margin-bottom:6px}
-  #meetingReport .print-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0 7px}
-  #meetingReport .print-metric{border:1px solid #999;padding:4px;text-align:center}.print-metric b{display:block;font-size:15px}
-  #meetingReport table{font-size:8px;line-height:1.08}#meetingReport th,#meetingReport td{padding:2px 3px;border-bottom:1px solid #bbb}
-  #meetingReport .print-note{font-size:7px;color:#555;margin-top:3px}
-  #meetingReport .print-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
-  #meetingReport .print-columns>div{min-width:0}
-  #meetingReport .subtotal-row td{font-weight:800;background:#f3f3f3;border-top:1px solid #777}
-  #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
+  #meetingReport{display:none!important}
+  #reports>.card{display:block!important;box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0 0 18px!important;break-inside:auto}
+  #reports>.card h2,#reports>.card h3{break-after:avoid-page}
+  #reports table{font-size:10px;line-height:1.2}
+  #reports th,#reports td{padding:5px 4px}
+  #reports tr{break-inside:avoid-page}
+  body.print-compact #reports>.card{display:none!important}
+  body.print-compact #meetingReport{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
+  body.print-compact #meetingReport h1{font-size:18px;margin:0 0 2px}
+  body.print-compact #meetingReport h2{font-size:12px;margin:8px 0 3px}
+  body.print-compact #meetingReport .print-meta{font-size:8px;color:#555;margin-bottom:6px}
+  body.print-compact #meetingReport .print-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0 7px}
+  body.print-compact #meetingReport .print-metric{border:1px solid #999;padding:4px;text-align:center}
+  body.print-compact #meetingReport .print-metric b{display:block;font-size:15px}
+  body.print-compact #meetingReport table{font-size:8px;line-height:1.08}
+  body.print-compact #meetingReport th,body.print-compact #meetingReport td{padding:2px 3px;border-bottom:1px solid #bbb}
+  body.print-compact #meetingReport .print-note{font-size:7px;color:#555;margin-top:3px}
+  body.print-compact #meetingReport .print-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  body.print-compact #meetingReport .print-columns>div{min-width:0}
+  body.print-compact #meetingReport .subtotal-row td{font-weight:800;background:#f3f3f3;border-top:1px solid #777}
+  body.print-compact #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
 }
 </style>
 </head>
@@ -123,14 +150,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.3" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.5" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.3</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.5</div>
   </div>
 </div>
 
@@ -149,6 +176,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <div class="metric"><strong id="homeNeeded">0</strong><span>Upcoming Needs</span></div>
       <div class="metric short"><strong id="homeShortage">0</strong><span>Shortage</span></div>
     </div>
+    <div id="homeSaveStatus" class="save-status">Saved automatically on this device.</div>
   </div>
   <div class="card">
     <h3>Choose an Action</h3>
@@ -160,6 +188,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     </div>
   </div>
   <div class="card"><h3>Next Needs</h3><div id="homeNeedsList"></div></div>
+  <div class="home-credit no-print">Designed by Jay</div>
 </section>
 
 <section id="inventory" class="view">
@@ -224,19 +253,60 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card"><h3>Upcoming Needs</h3><div id="reportNeeds"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
   <div class="card no-print">
-    <h3>Meeting Report and Exports</h3>
-    <p class="small">The clean PDF is a compact one-page meeting summary and does not include the website address. The detailed tables remain available above and in CSV.</p>
-    <button class="primary" onclick="exportMeetingPDF()">Download One-Page PDF Report</button>
-    <button class="ghost" onclick="printMeetingReport()">Print Compact Report</button>
+    <h3>Report Downloads</h3>
+    <p class="small">The full PDF includes all inventory, upcoming needs, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
+    <button class="primary" onclick="exportFullPDF()">Download Full PDF Report</button>
+    <button class="ghost" onclick="exportCompactPDF()">Download Compact One-Page PDF</button>
+    <div class="row"><button class="ghost" onclick="shareFullReport()">Email Full Report</button><button class="ghost" onclick="shareCompactReport()">Email Compact Report</button></div>
+    <div class="row"><button class="ghost" onclick="printFullReport()">Print Full Report</button><button class="ghost" onclick="printMeetingReport()">Print Compact Report</button></div>
     <div class="row"><button class="ghost" onclick="exportCSV()">Export CSV</button><button class="ghost" onclick="exportBackup()">Export Backup</button></div>
+    <div id="reportNotice" class="notice"></div>
   </div>
   <div id="meetingReport" class="card print-only" aria-hidden="true"></div>
 </section>
 
 <section id="settings" class="view">
   <div class="card">
+    <h2>Backup and Recovery</h2>
+    <p id="backupHelp" class="small">Every change is saved automatically on this device. Recovery copies help undo mistakes; exported backups protect against a lost phone or cleared Safari data.</p>
+    <div class="status-grid">
+      <div class="status-box"><b>Local Save</b><span id="localSaveStatus">Saved automatically</span></div>
+      <div class="status-box"><b>External Backup</b><span id="externalSaveStatus">Not connected</span></div>
+    </div>
+    <div class="row"><button class="ghost" onclick="exportBackup()">Export Backup</button><button class="ghost" onclick="document.getElementById('importFile').click()">Import Backup</button></div>
+    <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)">
+    <h3 style="margin-top:18px">Restore a Recent Version</h3>
+    <p class="small">The app keeps recent recovery copies on this device after changes.</p>
+    <div id="recoveryList"></div>
+    <button class="ghost" onclick="clearRecoveryHistory()">Clear Recovery History</button>
+    <div id="settingsNotice" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h2>Automatic Google Drive Backup</h2>
+    <p class="small">Paste the Google Apps Script web-app address after completing the included setup instructions. No Google Cloud billing project is required.</p>
+    <label>Apps Script Web App Address</label>
+    <input id="externalBackupUrl" inputmode="url" placeholder="https://script.google.com/macros/s/.../exec">
+    <label>Backup Code</label>
+    <input id="externalBackupCode" type="password" maxlength="80" placeholder="The same code used in the Google script">
+    <label class="switch-line"><input id="externalBackupEnabled" type="checkbox"> Automatically send a backup after changes</label>
+    <button class="primary" onclick="saveExternalBackupSettings()">Save Backup Settings</button>
+    <button class="ghost" onclick="sendExternalBackupNow()">Send Backup Now</button>
+    <a class="inline-link" href="GOOGLE_BACKUP_SETUP.txt" target="_blank" rel="noopener">Open Google backup setup instructions</a>
+    <div id="externalBackupNotice" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h2>Manage Lists</h2><p class="small">Add or remove charity and quilt-size choices. Items already used in records cannot be deleted.</p>
+    <label>Add Charity</label><div class="row"><input id="newCharity" placeholder="New charity name"><button class="ghost" onclick="addCharity()">Add Charity</button></div>
+    <label>Delete Charity</label><div class="row"><select id="deleteCharity"></select><button class="danger" onclick="removeCharity()">Delete</button></div>
+    <label>Add Size</label><div class="row"><input id="newSize" placeholder="New quilt size"><button class="ghost" onclick="addSize()">Add Size</button></div>
+    <label>Delete Size</label><div class="row"><select id="deleteSize"></select><button class="danger" onclick="removeSize()">Delete</button></div>
+  </div>
+
+  <div class="card">
     <h2>Names and Wording</h2>
-    <p class="small">Personalize the organization, app title, and the name used for the quilts being managed. Existing records are not changed.</p>
+    <p class="small">This is normally a one-time setup. Existing records are not changed.</p>
     <label>Organization Name</label>
     <input id="orgNameInput" maxlength="80" placeholder="Faithful Circle Quilters">
     <label>App Title</label>
@@ -246,29 +316,25 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <button class="primary" onclick="saveNames()">Save Names</button>
     <div id="nameNotice" class="notice"></div>
   </div>
-  <div class="card">
-    <h2>Manage Lists</h2><p class="small">Charities and sizes are managed here at the bottom of the app.</p>
-    <label>Add Charity</label><div class="row"><input id="newCharity" placeholder="New charity name"><button class="ghost" onclick="addCharity()">Add Charity</button></div>
-    <label>Delete Charity</label><div class="row"><select id="deleteCharity"></select><button class="danger" onclick="removeCharity()">Delete</button></div>
-    <label>Add Size</label><div class="row"><input id="newSize" placeholder="New quilt size"><button class="ghost" onclick="addSize()">Add Size</button></div>
-    <label>Delete Size</label><div class="row"><select id="deleteSize"></select><button class="danger" onclick="removeSize()">Delete</button></div>
+
+  <div class="card danger-zone">
+    <h3>Start Fresh and Reset</h3>
+    <p class="small">A recovery copy is created before each reset. Organization names, charities, and sizes are kept unless the entire app is reset.</p>
+    <button class="danger" onclick="clearInventoryCounts()">Clear Inventory Counts Only</button>
+    <button class="danger" onclick="startFreshForRealUse()">Start Fresh for Real Use</button>
+    <button class="danger" onclick="resetEntireApp()">Reset Entire App to Defaults</button>
+    <div id="dangerNotice" class="notice"></div>
   </div>
-  <div class="card">
-    <h3>Backup and Restore</h3><p id="backupHelp" class="small">Export a backup before changing phones or clearing Safari data.</p>
-    <button class="ghost" onclick="exportBackup()">Export Backup</button>
-    <button class="ghost" onclick="document.getElementById('importFile').click()">Import Backup</button>
-    <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)">
-    <div id="settingsNotice" class="notice"></div>
-  </div>
+
   <div class="card">
     <h3>About</h3>
     <div class="about-grid">
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.3 · July 15, 2026</span>
+      <b>Version</b><span>Update 7.5 · July 15, 2026</span>
     </div>
-    <p class="small" style="margin-bottom:0">Update 7.3 adds customizable names and wording, a compact one-page meeting PDF, and keeps the Update 7.2 report totals and confirmation screens.</p>
+    <p class="small" style="margin-bottom:0">Update 7.5 adds email sharing, rolling recovery copies, optional Google Apps Script backup, safer reset controls, the iPhone splash-title fix, and the home-screen credit while retaining both full and compact reports.</p>
   </div>
 </section>
 </main>
@@ -281,6 +347,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script src="app.js?v=7.3"></script>
+<script src="app.js?v=7.5"></script>
 </body>
 </html>

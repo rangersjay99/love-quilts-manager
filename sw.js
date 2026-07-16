@@ -1,12 +1,13 @@
-const CACHE_NAME = "love-quilts-v7-3-custom-names-meeting-report";
+const CACHE_NAME = "love-quilts-v7-5-backup-email-recovery";
 const APP_SHELL = [
   "./",
-  "./index.html?v=7.3",
-  "./app.js?v=7.3",
-  "./manifest-v7.json?v=7.3",
-  "./icons/love-quilts-manager-180-v7.png?v=7.3",
-  "./icons/love-quilts-manager-192-v7.png?v=7.3",
-  "./icons/love-quilts-manager-512-v7.png?v=7.3"
+  "./index.html?v=7.5",
+  "./app.js?v=7.5",
+  "./manifest-v7.json?v=7.5",
+  "./GOOGLE_BACKUP_SETUP.txt",
+  "./icons/love-quilts-manager-180-v7.png?v=7.5",
+  "./icons/love-quilts-manager-192-v7.png?v=7.5",
+  "./icons/love-quilts-manager-512-v7.png?v=7.5"
 ];
 
 self.addEventListener("install", event => {
@@ -32,10 +33,10 @@ self.addEventListener("fetch", event => {
       fetch(request, {cache:"no-store"})
         .then(response => {
           const copy=response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.3",copy));
+          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.5",copy));
           return response;
         })
-        .catch(() => caches.match("./index.html?v=7.3"))
+        .catch(() => caches.match("./index.html?v=7.5"))
     );
     return;
   }
