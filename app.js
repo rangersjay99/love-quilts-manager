@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.5.5';
+const VERSION='7.6.0';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -95,6 +95,7 @@ function save(reason='Saved automatically',options={}){
     if(snapshot)createRecoverySnapshot(reason,data);
     updateSaveStatus();renderRecoveryList();
     if(external)queueExternalBackup(reason);
+    if(options.firebase!==false&&typeof window.lqFirebaseQueueSave==='function')window.lqFirebaseQueueSave(clone(data),reason);
     return true;
   }catch(error){alert('The app could not save to this browser. Please export a backup and check browser storage settings.');return false}
 }
@@ -317,8 +318,11 @@ function sendExternalBackupNow(){sendExternalBackup(true,'Manual backup')}
 function updateSaveStatus(){
   const local=status.lastSavedAt?`Last saved ${fmtDateTime(status.lastSavedAt)}`:'Saved automatically on this device';
   const external=cloud.url?(cloud.lastSentAt?`Last backup request ${fmtDateTime(cloud.lastSentAt)}`:(cloud.enabled?'Connected; not sent yet':'Connected; automatic sending off')):'Not connected';
-  if(el('localSaveStatus'))el('localSaveStatus').textContent=local;if(el('externalSaveStatus'))el('externalSaveStatus').textContent=external;
-  if(el('homeSaveStatus'))el('homeSaveStatus').textContent=`${local} · External backup: ${external}`;
+  const firebase=window.lqFirebaseState?.message||'Sign in to start Firebase test sync';
+  if(el('localSaveStatus'))el('localSaveStatus').textContent=local;
+  if(el('externalSaveStatus'))el('externalSaveStatus').textContent=external;
+  if(el('firebaseSaveStatus'))el('firebaseSaveStatus').textContent=firebase;
+  if(el('homeSaveStatus'))el('homeSaveStatus').textContent=`${local} · Firebase: ${firebase}`;
 }
 function pdfPlain(v){
   return String(v??'')
@@ -545,9 +549,27 @@ window.addEventListener('afterprint',clearPrintMode);
 window.addEventListener('online',()=>queueExternalBackup('Internet connection restored'));
 function renderAll(){refreshSelects();applyNames();renderHome();renderInventory();renderHistory();renderNeeds();renderReports();renderRecoveryList();updateSaveStatus()}
 
+
+window.lqGetData=()=>clone(data);
+window.lqApplyRemoteData=(remoteData,reason='Firebase update')=>{
+  try{
+    const normalized=normalizeData(remoteData||{});
+    const current=JSON.stringify(data);
+    const incoming=JSON.stringify(normalized);
+    if(current===incoming)return false;
+    createRecoverySnapshot(`Before ${reason}`,data);
+    data=normalized;
+    localStorage.setItem(KEY,JSON.stringify(data));
+    status.lastSavedAt=new Date().toISOString();persistStatus();
+    renderAll();
+    return true;
+  }catch(error){console.error('Could not apply Firebase data.',error);return false}
+};
+window.lqRefreshSaveStatus=updateSaveStatus;
+
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.5.5 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Firebase test build opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.5.5').catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.6.0-test').catch(()=>{}));
 });
