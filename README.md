@@ -1,17 +1,16 @@
 # Love Quilts Manager
 
-**Current release: Update 7.5.3 — July 16, 2026**
+**Current release: Update 7.5.4 — July 16, 2026**
 
 Love Quilts Manager is a mobile-friendly inventory and needs-planning app for charity quilt programs. Existing data is preserved through the unchanged `love_quilts_v1` storage key.
 
-## Update 7.5.3
+## Update 7.5.4
 
-- Add visible copyright and permitted-use notices to the splash screen and About section
-- Move “Designed by Jay” from the Home screen to the splash screen
-- Add copyright notices to full, compact, printed, downloaded, and shared reports
-- Add copyright headers to the main source files
-- Include `LICENSE.txt` with the proprietary-use terms
-- Retain all Update 7.5.2 features, including customizable splash wording, report sharing, recovery copies, optional Google Apps Script backup, safer reset controls, and both report formats
+- Install the revised patchwork-heart logo on the splash screen and app icons
+- Fill the entire heart with quilt/fabric patterns
+- Route the red thread visibly through the sewing-needle eye
+- Correct the Month Needed field so it stays the same width and height as the other Needs Planner fields on phones
+- Retain all Update 7.5.3 copyright, report, backup, recovery, reset, and customization features
 
 ## Copyright and permitted use
 

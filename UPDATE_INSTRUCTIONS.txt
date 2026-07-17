@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.5.3
+LOVE QUILTS MANAGER — UPDATE 7.5.4
 =================================
 
 UPLOAD
@@ -13,13 +13,13 @@ IPHONE REFRESH
 --------------
 1. Open the website in Safari.
 2. Refresh the page.
-3. The welcome screen should show Update 7.5.3.
+3. The welcome screen should show Update 7.5.4.
 4. Do not clear Safari website data. Existing records use the same storage key and remain available.
 
-NEW IN 7.5.3
+NEW IN 7.5.4
 ------------
-- Copyright and permitted-use notices in the app and reports
-- Designed by Jay moved to the splash screen
-- LICENSE.txt added
-- Source-file copyright headers added
-- All Update 7.5.2 features retained
+- Revised patchwork-heart splash and app icon
+- Quilt patterns fill the complete heart
+- Red thread visibly passes through the needle eye
+- Month Needed field sizing corrected on phones
+- All Update 7.5.3 features retained

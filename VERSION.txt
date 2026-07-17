@@ -1,3 +1,7 @@
-Love Quilts Manager Update 7.5.3
+Love Quilts Manager Update 7.5.4
 Build date: 2026-07-16
 Copyright © 2026 Jay. All rights reserved.
+
+Changes:
+- Revised fully quilted heart logo with red thread through the needle
+- Corrected Month Needed field sizing on phones
