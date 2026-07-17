@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<!-- Copyright © 2026 Jay. All rights reserved. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6d3a78">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
+<link rel="manifest" href="manifest-v7.json?v=7.6.0-test">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.6.0-test">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.6.0-test">
+<title>Love Quilts Manager</title>
+<style>
+:root{
+  --plum:#6d3a78;--plum-dark:#4f2859;--teal:#2f8f8a;--green:#2f7d4a;
+  --red:#b53b47;--gold:#c99026;--blue:#2563a6;--ink:#25202a;
+  --muted:#706a73;--bg:#f8f4f7;--card:#fff;--line:#e5dce4;--soft:#f2eaf1;
+  --rose:#ca3f7a;--lavender:#9b78ad;--cream:#fffaf5;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;padding:0 0 calc(112px + env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}
+button{touch-action:manipulation}
+header{position:sticky;top:0;z-index:20;padding:calc(12px + env(safe-area-inset-top)) 16px 13px;color:#fff;background:linear-gradient(135deg,var(--plum),var(--plum-dark));box-shadow:0 3px 14px rgba(55,30,60,.18)}
+header .org{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.86}
+header h1{margin:2px 0 0;font-size:25px}
+header p{margin:4px 0 0;font-size:13px;opacity:.88}
+main{max-width:820px;margin:auto;padding:14px}
+.view{display:none}.view.active{display:block}
+.card{margin:0 0 14px;padding:16px;border:1px solid var(--line);border-radius:17px;background:var(--card);box-shadow:0 2px 10px rgba(61,39,63,.07)}
+h2,h3{margin:0 0 12px}.small{font-size:13px;color:var(--muted);line-height:1.4}
+.subtotal-row td{font-weight:800;background:var(--soft);border-top:2px solid var(--line)}
+tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);color:var(--plum-dark)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.metric{min-height:100px;padding:13px 6px;text-align:center;border-radius:14px;background:var(--soft)}
+.metric strong{display:block;font-size:29px;line-height:1;color:var(--plum)}
+.metric span{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+.metric.short strong{color:var(--red)}
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.home-actions button{min-height:76px;border:0;border-radius:15px;color:#fff;font-size:17px;font-weight:800;padding:12px}
+.btn-plum{background:var(--plum)}.btn-teal{background:var(--teal)}.btn-blue{background:var(--blue)}.btn-gold{background:var(--gold)}
+label{display:block;margin-top:12px;font-weight:750}
+input,select,textarea{width:100%;max-width:100%;min-width:0;min-height:48px;margin-top:7px;padding:13px;border:1px solid #cfc4ce;border-radius:12px;background:#fff;color:var(--ink)}
+#txDate,#needMonth{display:block;width:100%;max-width:100%;min-width:0;height:48px;min-height:48px;padding:10px 13px;line-height:1.2;font-size:16px;-webkit-appearance:none;appearance:none}
+#txDate::-webkit-date-and-time-value,#needMonth::-webkit-date-and-time-value{min-height:1.2em;margin:0;text-align:left;line-height:1.2}
+#txDate::-webkit-calendar-picker-indicator,#needMonth::-webkit-calendar-picker-indicator{margin:0;padding:2px}
+textarea{min-height:80px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mode-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.mode-row button{min-height:48px;border:1px solid var(--line);border-radius:12px;background:#fff;font-weight:800;font-size:clamp(12px,3.6vw,15px);padding:7px 4px;line-height:1.15}
+.mode-row .active-in{background:var(--green);color:#fff;border-color:var(--green)}
+.mode-row .active-out{background:var(--red);color:#fff;border-color:var(--red)}
+.mode-row .active-adjust{background:var(--gold);color:#fff;border-color:var(--gold)}
+.qty-wrap{display:grid;grid-template-columns:76px 1fr 76px;gap:8px;align-items:center;margin-top:8px}
+.qty-wrap button{min-height:56px;border:0;border-radius:13px;background:var(--soft);color:var(--plum);font-size:30px;font-weight:900}
+.qty{min-height:56px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:13px;font-size:30px;font-weight:900;background:#fff}
+.primary,.danger,.ghost{width:100%;min-height:50px;margin-top:12px;border-radius:12px;font-weight:850;padding:12px}
+.primary{border:0;color:#fff;background:var(--plum)}.danger{border:0;color:#fff;background:var(--red)}.ghost{border:1px solid var(--plum);color:var(--plum);background:#fff}
+.notice{display:none;margin-top:12px;padding:11px;border-radius:11px;background:#fff5d9;color:#5b4514;font-size:14px}
+.notice.show{display:block}.notice.good{background:#e6f5ea;color:#245f38}
+.section-note{margin:-3px 0 12px;padding:10px 11px;border-radius:10px;background:var(--soft);color:var(--muted);font-size:13px;line-height:1.4}
+.group,.item{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}.group:first-child,.item:first-child{border-top:0;padding-top:0;margin-top:0}
+.head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.title{font-weight:850}.meta{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
+.badge{flex:0 0 auto;min-width:38px;padding:5px 9px;text-align:center;border-radius:999px;font-weight:850;background:var(--soft)}
+.flag{display:inline-block;padding:3px 7px;border-radius:999px;background:#fff0dc;color:#87510f;font-weight:800;font-size:12px}
+.positive{color:var(--green)}.negative{color:var(--red)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.actions button{min-height:39px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:750}
+.planner{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.planner div{padding:9px;border-radius:10px;text-align:center;background:var(--soft)}
+.planner b{display:block;font-size:20px}.planner span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.empty{text-align:center;color:var(--muted);padding:16px 8px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;border-bottom:1px solid var(--line);text-align:left}th{font-size:12px;color:var(--muted)}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
+.bottom-nav button{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:800;min-height:50px;border-radius:10px;padding:6px 2px}
+.bottom-nav button.active{background:var(--soft);color:var(--plum)}.bottom-nav b{display:block;font-size:20px;line-height:1.1}
+.print-only{display:none}
+.about-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;font-size:14px}.about-grid b{color:var(--plum-dark)}
+
+
+.save-status{margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45;text-align:center}
+.splash-credit{margin-top:9px;color:var(--plum-dark);font-family:Georgia,"Times New Roman",serif;font-size:12px;font-weight:800;line-height:1.35;letter-spacing:.02em}
+.splash-credit span{display:block;margin-top:2px;color:var(--muted);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:10px;font-weight:650;letter-spacing:0}
+.report-copyright{margin:10px 0 4px;text-align:center;color:var(--muted);font-size:11px;line-height:1.4}
+.print-copyright{margin-top:8px;padding-top:5px;border-top:1px solid #bbb;text-align:center;color:#555;font-size:7px}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.status-box{padding:10px;border-radius:11px;background:var(--soft);font-size:12px;color:var(--muted);line-height:1.4}
+.status-box b{display:block;color:var(--plum-dark);font-size:13px;margin-bottom:2px}
+.recovery-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.recovery-item:first-child{border-top:0}
+.recovery-item button{min-height:38px;border:1px solid var(--plum);border-radius:9px;background:#fff;color:var(--plum);font-weight:800;padding:7px 11px}
+.switch-line{display:flex;align-items:center;gap:10px;margin-top:12px;font-weight:750}
+.switch-line input{width:23px;height:23px;min-height:0;margin:0}
+.inline-link{display:inline-block;margin-top:9px;color:var(--plum);font-weight:750}
+.danger-zone{border-color:#e7b8bd;background:#fffafa}
+.danger-zone h3{color:var(--red)}
+.danger-zone .danger{margin-top:9px}
+
+.firebase-gate{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(50,29,55,.72);backdrop-filter:blur(7px)}
+.firebase-gate.hidden{display:none}.firebase-gate-card{width:min(100%,410px);padding:22px;border-radius:18px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.firebase-gate-card h2{color:var(--plum)}.firebase-test-label{display:inline-block;margin-bottom:10px;padding:5px 9px;border-radius:999px;background:#fff0dc;color:#87510f;font-size:12px;font-weight:900;letter-spacing:.06em}
+.firebase-banner{margin:0;padding:9px 14px;background:#fff0dc;border-bottom:1px solid #e4c996;color:#66440c;font-size:12px;font-weight:750;text-align:center}
+.firebase-banner b{color:#8a4c00}.firebase-user-line{margin-top:8px;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.firebase-inline-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.firebase-inline-actions button{margin-top:0}
+
+@media(max-width:520px){
+  main{padding:12px}
+  .card{padding:14px;margin-bottom:12px}
+  .status-grid{grid-template-columns:1fr}
+  .splash-panel{padding-left:5px;padding-right:5px}
+  input,select,textarea{font-size:16px}
+  .row{gap:8px}
+  .row>button{margin-top:7px}
+}
+
+/* Welcome splash */
+.splash{
+  position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+  min-height:100dvh;padding:calc(22px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 18% 18%,rgba(202,63,122,.08),transparent 27%),
+    radial-gradient(circle at 82% 72%,rgba(109,58,120,.08),transparent 30%),
+    repeating-linear-gradient(45deg,rgba(155,120,173,.035) 0 1px,transparent 1px 24px),
+    var(--cream);
+  overflow:auto;
+}
+.splash.hidden{display:none}
+.splash-panel{width:min(100%,430px);text-align:center;padding:18px 18px 24px}
+.splash-org{font-family:Georgia,"Times New Roman",serif;font-size:clamp(28px,8vw,42px);font-style:italic;font-weight:700;line-height:1.05;color:var(--plum);text-wrap:balance}
+.splash-app-logo{width:168px;height:168px;object-fit:contain;border-radius:34px;margin:8px auto 10px;display:block;box-shadow:0 8px 22px rgba(110,35,77,.15)}
+.splash-title{font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,10vw,58px);font-style:italic;font-weight:700;line-height:1;color:var(--rose);margin-top:-4px;white-space:nowrap;text-wrap:nowrap}
+.splash-manager{margin-top:5px;color:var(--plum);font-size:clamp(14px,4.5vw,18px);font-weight:900;letter-spacing:.16em;text-transform:uppercase;text-wrap:balance}
+.splash-tag{margin-top:12px;color:var(--lavender);font-size:12px;font-weight:900;letter-spacing:.13em}
+.divider{display:flex;align-items:center;gap:10px;margin:17px auto 12px;max-width:300px;color:var(--rose)}
+.divider:before,.divider:after{content:"";height:1px;background:var(--lavender);flex:1}.divider span{font-size:18px}
+.splash-message{font-family:Georgia,"Times New Roman",serif;color:var(--plum);font-size:19px;line-height:1.35}
+.continue-btn{width:100%;max-width:340px;min-height:62px;margin-top:22px;border:0;border-radius:17px;background:var(--rose);color:#fff;font-weight:900;letter-spacing:.03em;box-shadow:0 7px 18px rgba(110,35,77,.23);outline:2px dashed rgba(255,255,255,.85);outline-offset:-7px}
+.continue-btn:active{transform:translateY(1px)}
+.splash-version{margin-top:12px;font-size:11px;color:var(--muted)}
+@media(max-width:520px){.metric strong{font-size:26px}.row{grid-template-columns:1fr}}
+@media print{
+  @page{size:letter portrait;margin:.45in}
+  .splash,header,.bottom-nav,.no-print,.actions{display:none!important}
+  html,body{height:auto;min-height:0;background:#fff;padding:0;margin:0}
+  main{max-width:none;padding:0;margin:0}.view{display:none!important}#reports.view{display:block!important}
+  #meetingReport{display:none!important}
+  #reports>.card{display:block!important;box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0 0 18px!important;break-inside:auto}
+  #reports>.card h2,#reports>.card h3{break-after:avoid-page}
+  #reports table{font-size:10px;line-height:1.2}
+  #reports th,#reports td{padding:5px 4px}
+  #reports tr{break-inside:avoid-page}
+  body.print-compact #reports>.card{display:none!important}
+  body.print-compact .report-copyright{display:none!important}
+  body.print-compact #meetingReport{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
+  body.print-compact #meetingReport h1{font-size:18px;margin:0 0 2px}
+  body.print-compact #meetingReport h2{font-size:12px;margin:8px 0 3px}
+  body.print-compact #meetingReport .print-meta{font-size:8px;color:#555;margin-bottom:6px}
+  body.print-compact #meetingReport .print-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0 7px}
+  body.print-compact #meetingReport .print-metric{border:1px solid #999;padding:4px;text-align:center}
+  body.print-compact #meetingReport .print-metric b{display:block;font-size:15px}
+  body.print-compact #meetingReport table{font-size:8px;line-height:1.08}
+  body.print-compact #meetingReport th,body.print-compact #meetingReport td{padding:2px 3px;border-bottom:1px solid #bbb}
+  body.print-compact #meetingReport .print-note{font-size:7px;color:#555;margin-top:3px}
+  body.print-compact #meetingReport .print-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  body.print-compact #meetingReport .print-columns>div{min-width:0}
+  body.print-compact #meetingReport .subtotal-row td{font-weight:800;background:#f3f3f3;border-top:1px solid #777}
+  body.print-compact #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
+}
+</style>
+</head>
+<body>
+<div id="firebaseGate" class="firebase-gate">
+  <div class="firebase-gate-card">
+    <span class="firebase-test-label">FIREBASE TEST — FAKE DATA ONLY</span>
+    <h2>Sign in to the Sync Test</h2>
+    <p class="small">This separate test copy does not read or upload the numbers in the regular Love Quilts app.</p>
+    <form id="firebaseLoginForm">
+      <label>Email</label><input id="firebaseEmail" type="email" autocomplete="username" required placeholder="Your Firebase account email">
+      <label>Password</label><input id="firebasePassword" type="password" autocomplete="current-password" required placeholder="Firebase password">
+      <button id="firebaseLoginBtn" class="primary" type="submit">Sign In</button>
+    </form>
+    <div id="firebaseLoginNotice" class="notice"></div>
+  </div>
+</div>
+<div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
+  <div class="splash-panel">
+    <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.6.0-test" alt="Patchwork heart logo">
+    <div id="splashItemName" class="splash-title">Love Quilts</div>
+    <div id="splashManager" class="splash-manager">Manager</div>
+    <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
+    <div class="divider"><span>♥</span></div>
+    <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
+    <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Firebase Test 7.6.0</div>
+    <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
+  </div>
+</div>
+
+<header>
+  <div id="headerOrg" class="org">Faithful Circle Quilters</div>
+  <h1 id="headerAppName">Love Quilts Manager</h1>
+  <p id="headerSubtitle">Inventory on hand and upcoming needs</p>
+</header>
+<div class="firebase-banner"><b>FIREBASE SYNC TEST</b> — Use fake numbers only · <span id="firebaseBannerStatus">Waiting for sign-in</span></div>
+
+<main>
+<section id="home" class="view active">
+  <div class="card">
+    <h2>At a Glance</h2>
+    <div class="grid3">
+      <div class="metric"><strong id="homeOnHand">0</strong><span>Total On Hand</span></div>
+      <div class="metric"><strong id="homeNeeded">0</strong><span>Upcoming Needs</span></div>
+      <div class="metric short"><strong id="homeShortage">0</strong><span>Shortage</span></div>
+    </div>
+    <div id="homeSaveStatus" class="save-status">Saved automatically on this device.</div>
+  </div>
+  <div class="card">
+    <h3>Choose an Action</h3>
+    <div class="home-actions">
+      <button id="homeRecordBtn" class="btn-plum" onclick="showView('inventory')">Record Love Quilts</button>
+      <button class="btn-teal" onclick="showView('needs')">Needs Planner</button>
+      <button class="btn-blue" onclick="showView('reports')">View Reports</button>
+      <button class="btn-gold" onclick="showView('settings')">Settings</button>
+    </div>
+  </div>
+  <div class="card"><h3>Next Needs</h3><div id="homeNeedsList"></div></div>
+</section>
+
+<section id="inventory" class="view">
+  <div class="card">
+    <h2 id="recordHeading">Record Love Quilts</h2>
+    <div id="inventoryNote" class="section-note">Choose Out only when items physically leave storage. Use Adjust for corrections; adjustments are visibly flagged.</div>
+    <div class="mode-row">
+      <button id="modeIn" class="active-in" onclick="setMode('IN')">Love Quilts In</button>
+      <button id="modeOut" onclick="setMode('OUT')">Love Quilts Out</button>
+      <button id="modeAdjust" onclick="setMode('ADJUST')">Adjust</button>
+    </div>
+    <label id="dateLabel">Date In</label><input id="txDate" type="date">
+    <label>Charity</label><select id="txCharity"></select>
+    <label>Size</label><select id="txSize"></select>
+    <label>Quantity</label>
+    <div class="qty-wrap"><button onclick="changeQty(-1)">−</button><div id="qtyDisplay" class="qty">1</div><button onclick="changeQty(1)">+</button></div>
+    <label>Note <span class="small">(optional)</span></label><textarea id="txNote" placeholder="Delivery, event, correction reason, etc."></textarea>
+    <div id="txNotice" class="notice"></div>
+    <button id="saveTxBtn" class="primary" onclick="saveTransaction()">Add to Inventory</button>
+    <button id="cancelTxBtn" class="ghost" style="display:none" onclick="cancelTxEdit()">Cancel Editing</button>
+  </div>
+  <div class="card"><h3>Current Inventory</h3><div id="inventoryList"></div></div>
+  <div class="card">
+    <h3>History</h3>
+    <div class="filters">
+      <select id="historyCharity" onchange="renderHistory()"></select>
+      <select id="historyType" onchange="renderHistory()">
+        <option value="">All activity</option><option id="historyInOption" value="IN">Love Quilts In</option>
+        <option id="historyOutOption" value="OUT">Love Quilts Out</option><option value="ADJUST">Adjustments</option>
+      </select>
+    </div>
+    <div id="historyList"></div>
+  </div>
+</section>
+
+<section id="needs" class="view">
+  <div class="card">
+    <h2>Needs Planner</h2>
+    <div id="needsNote" class="section-note">Enter the number needed by month. Current stock and shortage are calculated automatically.</div>
+    <label>Month Needed</label><input id="needMonth" type="month">
+    <label>Charity</label><select id="needCharity"></select>
+    <label>Size</label><select id="needSize"></select>
+    <label>Quantity Needed</label><input id="needQty" type="number" min="1" step="1" value="1">
+    <label>Note <span class="small">(optional)</span></label><input id="needNote" placeholder="Holiday delivery, annual event, etc.">
+    <div id="needNotice" class="notice"></div>
+    <button id="saveNeedBtn" class="primary" onclick="saveNeed()">Add Need</button>
+    <button id="cancelNeedBtn" class="ghost" style="display:none" onclick="cancelNeedEdit()">Cancel Editing</button>
+  </div>
+  <div class="card"><h3>Planned Needs</h3><div id="needsList"></div></div>
+</section>
+
+<section id="reports" class="view">
+  <div class="card">
+    <h2 id="reportHeading">Love Quilts Inventory and Needs Report</h2><p id="reportDate" class="small"></p>
+    <div class="grid3">
+      <div class="metric"><strong id="reportOnHand">0</strong><span>Total On Hand</span></div>
+      <div class="metric"><strong id="reportNeeded">0</strong><span>Upcoming Needs</span></div>
+      <div class="metric short"><strong id="reportShortage">0</strong><span>Shortage</span></div>
+    </div>
+  </div>
+  <div class="card"><h3>Inventory On Hand</h3><div id="reportInventory"></div></div>
+  <div class="card"><h3>Upcoming Needs</h3><div id="reportNeeds"></div></div>
+  <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
+  <div class="card no-print">
+    <h3>Report Downloads</h3>
+    <p class="small">The full PDF includes all inventory, upcoming needs, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
+    <button class="primary" onclick="exportFullPDF()">Download Full PDF Report</button>
+    <button class="ghost" onclick="exportCompactPDF()">Download Compact One-Page PDF</button>
+    <div class="row"><button class="ghost" onclick="shareFullReport()">Email Full Report</button><button class="ghost" onclick="shareCompactReport()">Email Compact Report</button></div>
+    <div class="row"><button class="ghost" onclick="printFullReport()">Print Full Report</button><button class="ghost" onclick="printMeetingReport()">Print Compact Report</button></div>
+    <div class="row"><button class="ghost" onclick="exportCSV()">Export CSV</button><button class="ghost" onclick="exportBackup()">Export Backup</button></div>
+    <div id="reportNotice" class="notice"></div>
+  </div>
+  <div class="report-copyright">© 2026 Jay. Love Quilts Manager. All rights reserved.<br>Personal and authorized guild use only.</div>
+  <div id="meetingReport" class="card print-only" aria-hidden="true"></div>
+</section>
+
+<section id="settings" class="view">
+  <div class="card">
+    <h2>Backup and Recovery</h2>
+    <p id="backupHelp" class="small">Every change is saved automatically on this device. Recovery copies help undo mistakes; exported backups protect against a lost phone or cleared Safari data.</p>
+    <div class="status-grid">
+      <div class="status-box"><b>Local Save</b><span id="localSaveStatus">Saved automatically</span></div>
+      <div class="status-box"><b>External Backup</b><span id="externalSaveStatus">Not connected</span></div>
+      <div class="status-box"><b>Firebase Test Sync</b><span id="firebaseSaveStatus">Waiting for sign-in</span></div>
+    </div>
+    <div class="row"><button class="ghost" onclick="exportBackup()">Export Backup</button><button class="ghost" onclick="document.getElementById('importFile').click()">Import Backup</button></div>
+    <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)">
+    <h3 style="margin-top:18px">Restore a Recent Version</h3>
+    <p class="small">The app keeps recent recovery copies on this device after changes.</p>
+    <div id="recoveryList"></div>
+    <button class="ghost" onclick="clearRecoveryHistory()">Clear Recovery History</button>
+    <div id="settingsNotice" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h2>Firebase Test Sync</h2>
+    <p class="small">This build uses a separate Firebase test area and separate browser storage. Only fake test entries should be used here.</p>
+    <div class="status-box"><b>Signed-in account</b><span id="firebaseAccountStatus">Not signed in</span></div>
+    <div class="firebase-inline-actions"><button class="ghost" type="button" onclick="window.lqFirebaseForceSync?.()">Sync Now</button><button class="ghost" type="button" onclick="window.lqFirebaseSignOut?.()">Sign Out</button></div>
+    <div id="firebaseSettingsNotice" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h2>Automatic Google Drive Backup</h2>
+    <p class="small">Paste the Google Apps Script web-app address after completing the included setup instructions. No Google Cloud billing project is required.</p>
+    <label>Apps Script Web App Address</label>
+    <input id="externalBackupUrl" inputmode="url" placeholder="https://script.google.com/macros/s/.../exec">
+    <label>Backup Code</label>
+    <input id="externalBackupCode" type="password" maxlength="80" placeholder="The same code used in the Google script">
+    <label class="switch-line"><input id="externalBackupEnabled" type="checkbox"> Automatically send a backup after changes</label>
+    <button class="primary" onclick="saveExternalBackupSettings()">Save Backup Settings</button>
+    <button class="ghost" onclick="sendExternalBackupNow()">Send Backup Now</button>
+    <a class="inline-link" href="GOOGLE_BACKUP_SETUP.txt" target="_blank" rel="noopener">Open Google backup setup instructions</a>
+    <div id="externalBackupNotice" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h2>Manage Lists</h2><p class="small">Add or remove charity and quilt-size choices. Items already used in records cannot be deleted.</p>
+    <label>Add Charity</label><div class="row"><input id="newCharity" placeholder="New charity name"><button class="ghost" onclick="addCharity()">Add Charity</button></div>
+    <label>Delete Charity</label><div class="row"><select id="deleteCharity"></select><button class="danger" onclick="removeCharity()">Delete</button></div>
+    <label>Add Size</label><div class="row"><input id="newSize" placeholder="New quilt size"><button class="ghost" onclick="addSize()">Add Size</button></div>
+    <label>Delete Size</label><div class="row"><select id="deleteSize"></select><button class="danger" onclick="removeSize()">Delete</button></div>
+  </div>
+
+  <div class="card">
+    <h2>Names and Wording</h2>
+    <p class="small">This is normally a one-time setup. Existing records are not changed.</p>
+    <label>Organization Name</label>
+    <input id="orgNameInput" maxlength="80" placeholder="Faithful Circle Quilters">
+    <label>App Title</label>
+    <input id="appNameInput" maxlength="80" placeholder="Love Quilts Manager">
+    <label>Program / Quilt Name</label>
+    <input id="itemNameInput" maxlength="60" placeholder="Love Quilts">
+    <label>Splash Tagline <span class="small">(optional)</span></label>
+    <input id="splashTagInput" maxlength="100" placeholder="MADE WITH LOVE, SHARED WITH CARE">
+    <label>Splash Message <span class="small">(optional)</span></label>
+    <textarea id="splashMessageInput" maxlength="180" placeholder="Keeping track of love quilts…&#10;one quilt at a time."></textarea>
+    <p class="small">Leave either splash field blank to use the automatic wording. Press Enter in the message box to create a second line.</p>
+    <button class="primary" onclick="saveNames()">Save Names and Splash Wording</button>
+    <div id="nameNotice" class="notice"></div>
+  </div>
+
+  <div class="card danger-zone">
+    <h3>Start Fresh and Reset</h3>
+    <p class="small">A recovery copy is created before each reset. Organization names, charities, and sizes are kept unless the entire app is reset.</p>
+    <button class="danger" onclick="clearInventoryCounts()">Clear Inventory Counts Only</button>
+    <button class="danger" onclick="startFreshForRealUse()">Start Fresh for Real Use</button>
+    <button class="danger" onclick="resetEntireApp()">Reset Entire App to Defaults</button>
+    <div id="dangerNotice" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h3>About</h3>
+    <div class="about-grid">
+      <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
+      <b>Program</b><span id="aboutItemName">Love Quilts</span>
+      <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
+      <b>Version</b><span>Firebase Test 7.6.0 · July 16, 2026</span>
+      <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
+      <b>Use</b><span>Personal and authorized guild use only.</span>
+    </div>
+    <p class="small">Firebase Test 7.6.0 is a separate test copy for verifying sign-in and live saving between devices. It uses fake test data only and does not read the regular app's local storage.</p>
+    <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
+  </div>
+</section>
+</main>
+
+<nav class="bottom-nav">
+  <button data-view="home" class="active" onclick="showView('home')"><b>⌂</b>Home</button>
+  <button data-view="inventory" onclick="showView('inventory')"><b>＋</b>Inventory</button>
+  <button data-view="needs" onclick="showView('needs')"><b>▦</b>Needs</button>
+  <button data-view="reports" onclick="showView('reports')"><b>▤</b>Reports</button>
+  <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
+</nav>
+
+<script type="module" src="firebase-sync.js?v=7.6.0-test"></script>
+<script src="app.js?v=7.6.0-test"></script>
+</body>
+</html>

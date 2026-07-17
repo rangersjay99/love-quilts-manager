@@ -1,0 +1,25 @@
+LOVE QUILTS MANAGER — FIREBASE SYNC TEST 7.6.0
+
+This is a separate test copy. Do not replace the files at the root of the repository.
+
+UPLOAD TO GITHUB
+1. Unzip the download on the computer.
+2. Open the faithful-circle-quilt-guild repository.
+3. Click Add file > Upload files.
+4. Drag the complete firebase-test folder onto the upload page.
+5. Commit the upload.
+6. Open:
+   https://rangersjay99.github.io/faithful-circle-quilt-guild/firebase-test/
+
+FIRST TEST
+1. Click through the splash screen.
+2. Sign in using your Firebase email and password.
+3. Use fake data only.
+4. Add a fake inventory transaction and wait for “All test changes synced.”
+5. Open the same address in a private window or another device.
+6. Sign in and verify the fake entry appears.
+
+SAFETY
+- The regular app's local-storage key is not used.
+- The regular app is not replaced.
+- Your wife's current app and real numbers should remain untouched.

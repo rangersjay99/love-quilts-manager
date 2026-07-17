@@ -1,0 +1,28 @@
+LOVE QUILTS MANAGER — FIREBASE SYNC TEST CHECKLIST
+
+SETUP
+[ ] The regular Love Quilts app still opens normally at the original address.
+[ ] The Firebase test opens only at /firebase-test/.
+[ ] The test screen says FIREBASE SYNC TEST and FAKE DATA ONLY.
+[ ] Sign-in works with your Firebase account.
+
+LIVE SYNC
+[ ] Add 2 fake Medium quilts for Grassroots.
+[ ] Confirm the status changes to All test changes synced.
+[ ] Open the test URL in a private window or second device.
+[ ] Sign in and confirm the fake inventory appears.
+[ ] Add a fake planned need on the second device.
+[ ] Confirm the first device updates without refreshing.
+[ ] Edit the fake transaction and confirm the other device updates.
+[ ] Delete a fake need and confirm it disappears on the other device.
+
+ACCOUNT AND SAFETY
+[ ] Sign out and confirm the sign-in screen returns.
+[ ] Sign back in and confirm the shared fake data returns.
+[ ] Confirm the regular app still has its original real/local numbers.
+[ ] Do not use the production migration until the wife's device backup is verified.
+
+NOTES
+____________________________________________________________
+____________________________________________________________
+____________________________________________________________

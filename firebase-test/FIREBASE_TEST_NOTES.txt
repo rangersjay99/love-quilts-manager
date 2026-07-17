@@ -1,0 +1,20 @@
+FIREBASE TEST NOTES
+
+Purpose
+- Verify Firebase email/password sign-in.
+- Verify live saving and updates between authorized devices.
+- Keep the regular Love Quilts Manager app and its real local data untouched.
+
+Test database path
+organizations/faithful-circle-love-quilts-test
+
+Data layout
+- settings/main
+- transactions/{transactionId}
+- needs/{needId}
+
+Important
+- This build uses separate browser-storage keys ending in firebase_test_v1.
+- Firestore persistent offline cache is intentionally off for the first test.
+- Use fake numbers only.
+- The final production migration will be a separate, confirmed step using a backup from the device holding the correct real numbers.

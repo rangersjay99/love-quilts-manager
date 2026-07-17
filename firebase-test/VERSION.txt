@@ -1,0 +1,6 @@
+Love Quilts Manager — Firebase Sync Test 7.6.0
+July 16, 2026
+
+Separate test build. Does not read the regular app's local-storage key.
+Firebase project: faithful-circle-love-quilts
+Test organization path: organizations/faithful-circle-love-quilts-test
