@@ -28,10 +28,11 @@ const firebaseConfig = {
   appId: '1:730320654272:web:9ef0ea1cd380fb053f8225'
 };
 
-const ORG_ID = 'faithful-circle-love-quilts';\nconst PENDING_KEY = 'love_quilts_firebase_pending_v1';
+const ORG_ID = 'faithful-circle-love-quilts';
+const PENDING_KEY = 'love_quilts_firebase_pending_v1';
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app); // Memory cache only for the first sync test.
+const db = getFirestore(app);
 
 const orgRef = doc(db, 'organizations', ORG_ID);
 const settingsRef = doc(db, 'organizations', ORG_ID, 'settings', 'main');
@@ -47,23 +48,76 @@ let applyingRemote = false;
 let initialCloudReady = false;
 let cloudInitialized = false;
 let remoteApplyTimer = null;
-let remote = {
-  settings: null,
-  transactions: [],
-  needs: [],
-  settingsReady: false,
-  transactionsReady: false,
-  needsReady: false,
-  settingsPending: false,
-  transactionsPending: false,
-  needsPending: false
-};
+let remote = blankRemote();
 let lastRemoteData = null;
+let authStateResolved = false;
 
 const byId = id => document.getElementById(id);
 const clone = value => JSON.parse(JSON.stringify(value));
 const stable = value => JSON.stringify(value);
 const cleanString = value => String(value ?? '');
+pendingSave = loadPendingSave();
+
+function blankRemote() {
+  return {
+    org: null,
+    settings: null,
+    transactions: [],
+    needs: [],
+    orgReady: false,
+    settingsReady: false,
+    transactionsReady: false,
+    needsReady: false,
+    orgPending: false,
+    settingsPending: false,
+    transactionsPending: false,
+    needsPending: false,
+    orgFromCache: true,
+    settingsFromCache: true,
+    transactionsFromCache: true,
+    needsFromCache: true
+  };
+}
+
+function safeParse(value) {
+  try { return JSON.parse(value); } catch { return null; }
+}
+
+function loadPendingSave() {
+  const saved = safeParse(localStorage.getItem(PENDING_KEY));
+  if (!saved || !saved.data) return null;
+  return {
+    data: saved.data,
+    reason: cleanString(saved.reason || 'Saved while offline'),
+    force: !!saved.force,
+    initialize: !!saved.initialize
+  };
+}
+
+function persistPendingSave() {
+  try {
+    if (pendingSave) localStorage.setItem(PENDING_KEY, JSON.stringify(pendingSave));
+    else localStorage.removeItem(PENDING_KEY);
+  } catch (error) {
+    console.warn('Could not store pending Firebase save.', error);
+  }
+}
+
+function showGate(mode = 'signin', message = '') {
+  const gate = byId('firebaseGate');
+  const signIn = byId('firebaseSignInPanel');
+  const loading = byId('firebaseLoadingPanel');
+  const loadingStatus = byId('firebaseLoadingStatus');
+  if (gate) gate.classList.remove('hidden');
+  if (signIn) signIn.style.display = mode === 'signin' ? 'block' : 'none';
+  if (loading) loading.style.display = mode === 'loading' ? 'block' : 'none';
+  if (loadingStatus && message) loadingStatus.textContent = message;
+}
+
+function releaseGate() {
+  const gate = byId('firebaseGate');
+  if (gate) gate.classList.add('hidden');
+}
 
 function setState(message, kind = 'normal') {
   window.lqFirebaseState = { message, kind, email: currentUser?.email || '' };
@@ -71,6 +125,8 @@ function setState(message, kind = 'normal') {
   if (banner) banner.textContent = currentUser ? `${message} · ${currentUser.email}` : message;
   const account = byId('firebaseAccountStatus');
   if (account) account.textContent = currentUser?.email || 'Not signed in';
+  const loadingStatus = byId('firebaseLoadingStatus');
+  if (loadingStatus && !byId('firebaseGate')?.classList.contains('hidden')) loadingStatus.textContent = message;
   if (typeof window.lqRefreshSaveStatus === 'function') window.lqRefreshSaveStatus();
 }
 
@@ -80,7 +136,7 @@ function showNotice(id, message, good = false) {
   box.textContent = message;
   box.className = `notice show${good ? ' good' : ''}`;
   clearTimeout(box.noticeTimer);
-  box.noticeTimer = setTimeout(() => { box.className = 'notice'; }, 6000);
+  box.noticeTimer = setTimeout(() => { box.className = 'notice'; }, 7000);
 }
 
 function waitForBridge() {
@@ -153,42 +209,65 @@ function composeRemoteData() {
 }
 
 function allRemoteReady() {
-  return remote.settingsReady && remote.transactionsReady && remote.needsReady;
+  return remote.orgReady && remote.settingsReady && remote.transactionsReady && remote.needsReady;
 }
 
 function hasPendingWrites() {
-  return remote.settingsPending || remote.transactionsPending || remote.needsPending;
+  return remote.orgPending || remote.settingsPending || remote.transactionsPending || remote.needsPending;
 }
 
-function scheduleRemoteApply(reason = 'a Firebase update') {
+function updateInitializationPanel() {
+  const panel = byId('firebaseInitializePanel');
+  const button = byId('firebaseInitializeButton');
+  if (panel) panel.style.display = currentUser && initialCloudReady && !cloudInitialized ? 'block' : 'none';
+  if (button) button.disabled = !currentUser || !initialCloudReady || cloudInitialized || syncing;
+}
+
+function scheduleRemoteApply(reason = 'a shared-device update') {
   if (!allRemoteReady() || hasPendingWrites()) return;
   clearTimeout(remoteApplyTimer);
   remoteApplyTimer = setTimeout(async () => {
     await waitForBridge();
     const cloudData = normalizeAppData(composeRemoteData());
-    lastRemoteData = clone(cloudData);
+    const cloudHasData = !!remote.settings || cloudData.transactions.length > 0 || cloudData.needs.length > 0;
+    const waitingForServer = !cloudHasData && !remote.org?.initialized && (
+      remote.orgFromCache || remote.settingsFromCache || remote.transactionsFromCache || remote.needsFromCache
+    );
+    if (waitingForServer) {
+      setState(navigator.onLine ? 'Connecting to Firebase…' : 'Offline — using data saved on this device');
+      if (!navigator.onLine) releaseGate();
+      return;
+    }
+    cloudInitialized = remote.org?.initialized === true || cloudHasData;
     initialCloudReady = true;
-
-    const cloudIsEmpty = !remote.settings && cloudData.transactions.length === 0 && cloudData.needs.length === 0;
-    cloudInitialized = !cloudIsEmpty;
+    lastRemoteData = clone(cloudData);
     updateInitializationPanel();
-    if (cloudIsEmpty) {
-      lastRemoteData = null;
-      setState('Shared inventory is not initialized', 'warning');
+
+    if (!cloudInitialized) {
+      setState('Shared inventory is ready to be created');
+      releaseGate();
       return;
     }
 
-    if (syncing || pendingSave) return;
+    if (syncing) return;
+    if (pendingSave) {
+      setState('Uploading changes saved on this device…');
+      releaseGate();
+      flushSave();
+      return;
+    }
+
     const localData = normalizeAppData(window.lqGetData());
     if (stable(localData) !== stable(cloudData)) {
       applyingRemote = true;
       window.lqApplyRemoteData(cloudData, reason);
       applyingRemote = false;
-      setState('Cloud update received');
+      setState('Shared inventory loaded');
     } else {
       setState('All changes synced');
     }
-  }, 120);
+    releaseGate();
+  }, 150);
 }
 
 function stopRealtime() {
@@ -196,20 +275,11 @@ function stopRealtime() {
     try { fn(); } catch { /* no-op */ }
   });
   unsubscribe = [];
-  remote = {
-    settings: null,
-    transactions: [],
-    needs: [],
-    settingsReady: false,
-    transactionsReady: false,
-    needsReady: false,
-    settingsPending: false,
-    transactionsPending: false,
-    needsPending: false
-  };
+  remote = blankRemote();
   lastRemoteData = null;
   initialCloudReady = false;
-  cloudInitialized = false;\n  updateInitializationPanel();
+  cloudInitialized = false;
+  updateInitializationPanel();
 }
 
 function handleFirestoreError(error) {
@@ -217,36 +287,50 @@ function handleFirestoreError(error) {
   const code = error?.code || '';
   if (code.includes('permission-denied')) {
     setState('Access blocked by Firestore rules', 'error');
-    showNotice('firebaseSettingsNotice', 'Firestore denied access. Recheck that both UIDs were published in the Rules tab.');
+    showNotice('firebaseSettingsNotice', 'Firestore denied access. Recheck that both approved account UIDs are in the published Rules.');
+    showGate('loading', 'Access was blocked by Firestore rules. Sign out and recheck the Rules.');
   } else {
     setState('Firebase connection error', 'error');
     showNotice('firebaseSettingsNotice', 'Firebase could not connect. Check the internet connection and try again.');
+    showGate('loading', 'Firebase could not connect. Check the internet connection, or sign out and try again.');
   }
 }
 
 function startRealtime() {
   stopRealtime();
-  setState('Connecting to Firebase…');
+  setState('Loading shared inventory…');
+  showGate('loading', 'Loading shared inventory…');
+
+  unsubscribe.push(onSnapshot(orgRef, { includeMetadataChanges: true }, snapshot => {
+    remote.org = snapshot.exists() ? snapshot.data() : null;
+    remote.orgReady = true;
+    remote.orgPending = snapshot.metadata.hasPendingWrites;
+    remote.orgFromCache = snapshot.metadata.fromCache;
+    scheduleRemoteApply('shared inventory information');
+  }, handleFirestoreError));
 
   unsubscribe.push(onSnapshot(settingsRef, { includeMetadataChanges: true }, snapshot => {
     remote.settings = snapshot.exists() ? snapshot.data() : null;
     remote.settingsReady = true;
     remote.settingsPending = snapshot.metadata.hasPendingWrites;
-    scheduleRemoteApply('a Firebase settings update');
+    remote.settingsFromCache = snapshot.metadata.fromCache;
+    scheduleRemoteApply('shared settings');
   }, handleFirestoreError));
 
   unsubscribe.push(onSnapshot(transactionsRef, { includeMetadataChanges: true }, snapshot => {
     remote.transactions = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
     remote.transactionsReady = true;
     remote.transactionsPending = snapshot.metadata.hasPendingWrites;
-    scheduleRemoteApply('a Firebase inventory update');
+    remote.transactionsFromCache = snapshot.metadata.fromCache;
+    scheduleRemoteApply('shared inventory');
   }, handleFirestoreError));
 
   unsubscribe.push(onSnapshot(needsRef, { includeMetadataChanges: true }, snapshot => {
     remote.needs = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
     remote.needsReady = true;
     remote.needsPending = snapshot.metadata.hasPendingWrites;
-    scheduleRemoteApply('a Firebase needs update');
+    remote.needsFromCache = snapshot.metadata.fromCache;
+    scheduleRemoteApply('shared needs');
   }, handleFirestoreError));
 }
 
@@ -284,15 +368,16 @@ async function commitOperations(operations) {
 }
 
 async function flushSave() {
-  if (syncing || !pendingSave || !currentUser || !initialCloudReady) return;\n  if (!cloudInitialized && !pendingSave.initialize) return;
+  if (syncing || !pendingSave || !currentUser || !initialCloudReady) return;
+  if (!cloudInitialized && !pendingSave.initialize) return;
   const task = pendingSave;
-  pendingSave = null;
   syncing = true;
-  setState('Saving changes…');
+  setState(task.initialize ? 'Creating real shared inventory…' : 'Saving changes…');
+  updateInitializationPanel();
 
   try {
     const localData = normalizeAppData(task.data);
-    const baseline = lastRemoteData || normalizeAppData({});
+    const baseline = task.initialize ? normalizeAppData({}) : (lastRemoteData || normalizeAppData({}));
     const operations = [];
     const localSettings = normalizeSettings(localData);
     const oldSettings = normalizeSettings(baseline);
@@ -319,7 +404,8 @@ async function flushSave() {
       type: 'set',
       ref: orgRef,
       data: {
-        productionMode: true, initialized: true,
+        productionMode: true,
+        initialized: true,
         schemaVersion: 1,
         lastUpdatedAt: serverTimestamp(),
         lastUpdatedByUid: currentUser.uid,
@@ -329,24 +415,31 @@ async function flushSave() {
     });
 
     await commitOperations(operations);
+    pendingSave = null;
+    persistPendingSave();
+    cloudInitialized = true;
     lastRemoteData = clone(localData);
     setState('All changes synced');
+    updateInitializationPanel();
+    if (task.initialize) showNotice('firebaseSettingsNotice', 'Real shared inventory created.', true);
   } catch (error) {
     console.error('Could not save Firebase production data:', error);
+    pendingSave = task;
+    persistPendingSave();
+    if (task.initialize) cloudInitialized = false;
     if (error?.code === 'permission-denied') {
-      pendingSave = null;
       setState('Save blocked by Firestore rules', 'error');
-      showNotice('firebaseSettingsNotice', 'The save was blocked. Recheck the published Firestore Rules and the two account UIDs.');
+      showNotice('firebaseSettingsNotice', 'The save was blocked. Recheck the published Firestore Rules and both account UIDs. Your local copy is safe.');
     } else {
-      pendingSave = task;
-      setState(navigator.onLine ? 'Firebase save failed — retrying' : 'Offline — saved on this device', 'error');
-      showNotice('firebaseSettingsNotice', 'The local test copy is safe. Firebase will retry after the connection is restored.');
+      setState(navigator.onLine ? 'Firebase save failed — will retry' : 'Offline — saved on this device', 'error');
+      showNotice('firebaseSettingsNotice', 'The local copy is safe. Firebase will retry after the connection is restored.');
     }
+    updateInitializationPanel();
   } finally {
     syncing = false;
-    if (pendingSave) {
+    if (pendingSave && cloudInitialized) {
       clearTimeout(saveTimer);
-      saveTimer = setTimeout(flushSave, 1000);
+      saveTimer = setTimeout(flushSave, 1500);
     } else {
       scheduleRemoteApply('a completed Firebase sync');
     }
@@ -355,9 +448,19 @@ async function flushSave() {
 
 window.lqFirebaseQueueSave = (snapshot, reason = 'Saved from Love Quilts Manager') => {
   if (applyingRemote) return;
-  if (!cloudInitialized) { setState('Shared inventory is not initialized', 'warning'); updateInitializationPanel(); return; }\n  pendingSave = { data: normalizeAppData(snapshot), reason, force: false };
+  pendingSave = { data: normalizeAppData(snapshot), reason, force: false, initialize: false };
+  persistPendingSave();
   if (!currentUser) {
-    setState('Sign in to sync changes');
+    setState('Saved locally — sign in to sync');
+    return;
+  }
+  if (!initialCloudReady) {
+    setState('Saved locally — waiting for Firebase');
+    return;
+  }
+  if (!cloudInitialized) {
+    setState('Saved locally — create shared inventory to sync');
+    updateInitializationPanel();
     return;
   }
   setState(navigator.onLine ? 'Waiting to sync…' : 'Offline — saved on this device');
@@ -370,8 +473,18 @@ window.lqFirebaseForceSync = () => {
     showNotice('firebaseSettingsNotice', 'Sign in before syncing.');
     return;
   }
+  if (!initialCloudReady) {
+    showNotice('firebaseSettingsNotice', 'Firebase is still loading. Try again in a moment.');
+    return;
+  }
+  if (!cloudInitialized) {
+    showNotice('firebaseSettingsNotice', 'Create the real shared inventory first.');
+    updateInitializationPanel();
+    return;
+  }
   if (typeof window.lqGetData !== 'function') return;
-  pendingSave = { data: normalizeAppData(window.lqGetData()), reason: 'Manual Sync Now', force: true };
+  pendingSave = { data: normalizeAppData(window.lqGetData()), reason: 'Manual Sync Now', force: true, initialize: false };
+  persistPendingSave();
   flushSave();
 };
 
@@ -419,68 +532,60 @@ async function handleLogin(event) {
   }
 }
 
-window.addEventListener('online', () => {
-  if (pendingSave) flushSave();
-  else if (currentUser) setState('Online — Firebase connected');
-});
-window.addEventListener('offline', () => {
-  if (currentUser) setState('Offline — changes stay on this device');
-});
-
-
-function updateInitializationPanel() {
-  const panel = byId('firebaseInitializePanel');
-  const button = byId('firebaseInitializeButton');
-  if (panel) panel.style.display = currentUser && !cloudInitialized ? 'block' : 'none';
-  if (button) button.disabled = !currentUser || cloudInitialized || syncing;
-}
-
 async function initializeProduction() {
-  if (!currentUser || cloudInitialized || syncing) return;
+  if (!currentUser || !initialCloudReady || cloudInitialized || syncing) return;
   await waitForBridge();
   const localData = normalizeAppData(window.lqGetData());
-  const countText = localData.transactions.length + ' inventory transactions and ' +
-                    localData.needs.length + ' planned needs';
+  const countText = `${localData.transactions.length} inventory transactions and ${localData.needs.length} planned needs`;
   const typed = prompt(
-    'This will create the real shared inventory from this device.\n\n' +
-    'It will upload ' + countText + '.\n\n' +
-    'Type START SHARED INVENTORY exactly to continue.'
+    `This will create the real shared inventory from this device.\n\nIt will upload ${countText}.\n\nType START SHARED INVENTORY exactly to continue.`
   );
   if (typed !== 'START SHARED INVENTORY') {
     showNotice('firebaseSettingsNotice', 'Initialization canceled. Nothing was uploaded.');
     return;
   }
   cloudInitialized = true;
-  initialCloudReady = true;
   pendingSave = {
     data: localData,
     reason: 'Created real shared inventory',
     force: true,
     initialize: true
   };
+  persistPendingSave();
   updateInitializationPanel();
-  setState('Creating real shared inventory…');
   await flushSave();
-  showNotice('firebaseSettingsNotice', 'Real shared inventory created.', true);
 }
-\ndocument.addEventListener('DOMContentLoaded', () => {
+
+window.addEventListener('online', () => {
+  if (pendingSave && cloudInitialized) flushSave();
+  else if (currentUser) setState('Online — Firebase connected');
+});
+window.addEventListener('offline', () => {
+  if (currentUser) setState('Offline — changes stay on this device');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
   const form = byId('firebaseLoginForm');
-  if (form) form.addEventListener('submit', handleLogin);\n  const initializeButton = byId('firebaseInitializeButton');\n  if (initializeButton) initializeButton.addEventListener('click', initializeProduction);
-  setState('Waiting for sign-in');
+  if (form) form.addEventListener('submit', handleLogin);
+  const initializeButton = byId('firebaseInitializeButton');
+  if (initializeButton) initializeButton.addEventListener('click', initializeProduction);
+  showGate(authStateResolved && !currentUser ? 'signin' : 'loading', authStateResolved ? 'Loading shared inventory…' : 'Checking saved sign-in…');
+  setState(authStateResolved && !currentUser ? 'Waiting for sign-in' : 'Checking sign-in');
+  updateInitializationPanel();
 });
 
 onAuthStateChanged(auth, async user => {
+  authStateResolved = true;
   currentUser = user || null;
-  const gate = byId('firebaseGate');
   if (!user) {
     stopRealtime();
-    if (gate) gate.classList.remove('hidden');
+    showGate('signin');
     setState('Waiting for sign-in');
     return;
   }
 
-  if (gate) gate.classList.add('hidden');
-  setState('Signed in — loading shared inventory');\n  updateInitializationPanel();
+  showGate('loading', 'Loading shared inventory…');
+  setState('Signed in — loading shared inventory');
   await waitForBridge();
   startRealtime();
 });

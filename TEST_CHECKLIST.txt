@@ -1,45 +1,23 @@
-LOVE QUILTS MANAGER — WEEKEND TEST CHECKLIST
-============================================
+LOVE QUILTS MANAGER — UPDATE 7.6.1 CHECKLIST
 
-Before testing
---------------
-[ ] Open Settings and choose Export Backup. Keep the downloaded JSON file.
-[ ] Confirm the splash screen says Update 7.5.5.
-[ ] Confirm existing inventory and needs are still present.
+Before initialization
+[ ] Normal app opens and shows Update 7.6.1.
+[ ] Sign-in screen appears once, or a saved sign-in is recognized.
+[ ] After sign-in, Loading Shared Inventory disappears and the splash Continue button works normally.
+[ ] Existing local 7.5.5 data remains present.
+[ ] Shared Device Sync says the shared inventory is ready to be created.
 
-Inventory
----------
-[ ] Add one quilt IN with a Date In, charity, size, quantity, and note.
-[ ] Confirm Date In is the same height and width as the other fields.
-[ ] Add one quilt OUT and confirm the count changes only after saving.
-[ ] Make an inventory adjustment and confirm it is visibly flagged.
-[ ] Edit a transaction, save it, and confirm the total updates.
-[ ] Try deleting a transaction and confirm the warning appears.
+Initialization — primary device only
+[ ] Clear fake production numbers first if needed.
+[ ] Export a backup.
+[ ] Click Create Real Shared Inventory.
+[ ] Type START SHARED INVENTORY exactly.
+[ ] Status changes to All changes synced.
 
-Needs Planner
--------------
-[ ] Add a need with Month Needed, charity, size, quantity, and note.
-[ ] Confirm Month Needed matches the other field sizes.
-[ ] Confirm Current Stock and Shortage calculate correctly.
-[ ] Edit a planned need and confirm the totals update.
-[ ] Delete a planned need and confirm the warning appears.
-
-Reports
--------
-[ ] Confirm Total On Hand, Upcoming Needs, and Shortage are correct.
-[ ] Confirm each charity shows its total.
-[ ] Open or print the compact report.
-[ ] Open or print the full report.
-[ ] Confirm the copyright notice appears and no website address prints.
-
-Settings and recovery
----------------------
-[ ] Confirm organization, app, program, and splash wording remain correct.
-[ ] Export another backup after testing.
-[ ] Confirm recent recovery copies are listed.
-[ ] Do not test Start Fresh or Reset Entire App unless using test data.
-
-Notes for the next update
--------------------------
-Write down anything confusing, slow, hard to read, or requiring duplicate entry.
-For the Needs Calendar, note which view is most useful: month-first, charity-first, or both.
+Second device
+[ ] Sign in with the other approved account.
+[ ] Shared data replaces the second device local copy after a recovery snapshot is created.
+[ ] Add one test transaction and confirm it appears on the other device.
+[ ] Delete that test transaction and confirm deletion syncs.
+[ ] Add and remove one planned need and confirm both directions sync.
+[ ] Close and reopen both devices; sign-in remains saved.
