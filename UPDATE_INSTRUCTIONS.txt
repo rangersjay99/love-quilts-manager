@@ -1,11 +1,11 @@
-LOVE QUILTS MANAGER — UPDATE 7.5.4
+LOVE QUILTS MANAGER — UPDATE 7.5.5
 =================================
 
 UPLOAD
 ------
 1. Open the GitHub repository.
 2. Choose Add file > Upload files.
-3. Upload ALL files from this ZIP, including LICENSE.txt, GOOGLE_BACKUP_SETUP.txt, and the complete icons folder.
+3. Upload ALL files from this ZIP, including LICENSE.txt, TEST_CHECKLIST.txt, GOOGLE_BACKUP_SETUP.txt, and the complete icons folder.
 4. Replace files with the same names and commit the changes.
 5. Wait for GitHub Pages to publish.
 
@@ -13,13 +13,13 @@ IPHONE REFRESH
 --------------
 1. Open the website in Safari.
 2. Refresh the page.
-3. The welcome screen should show Update 7.5.4.
-4. Do not clear Safari website data. Existing records use the same storage key and remain available.
+3. The welcome screen should show Update 7.5.5.
+4. Do not clear Safari website data. Existing records use the same love_quilts_v1 storage key and remain available.
 
-NEW IN 7.5.4
+NEW IN 7.5.5
 ------------
-- Revised patchwork-heart splash and app icon
-- Quilt patterns fill the complete heart
-- Red thread visibly passes through the needle eye
-- Month Needed field sizing corrected on phones
-- All Update 7.5.3 features retained
+- Date In and Month Needed controls use the same compact phone sizing
+- Mobile card, input, and button spacing is more consistent
+- Data storage and backup formats remain unchanged
+- A manual weekend testing checklist is included
+- The Needs Calendar remains planned for the next feature update

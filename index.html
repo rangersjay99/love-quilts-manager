@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.5.4">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.5.4">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.5.4">
+<link rel="manifest" href="manifest-v7.json?v=7.5.5">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.5.5">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.5.5">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -44,8 +44,9 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .btn-plum{background:var(--plum)}.btn-teal{background:var(--teal)}.btn-blue{background:var(--blue)}.btn-gold{background:var(--gold)}
 label{display:block;margin-top:12px;font-weight:750}
 input,select,textarea{width:100%;max-width:100%;min-width:0;min-height:48px;margin-top:7px;padding:13px;border:1px solid #cfc4ce;border-radius:12px;background:#fff;color:var(--ink)}
-#needMonth{display:block;width:100%;max-width:100%;min-width:0;height:48px;min-height:48px;padding:10px 13px;line-height:1.2;-webkit-appearance:none;appearance:none}
-#needMonth::-webkit-date-and-time-value{margin:0;text-align:left}
+#txDate,#needMonth{display:block;width:100%;max-width:100%;min-width:0;height:48px;min-height:48px;padding:10px 13px;line-height:1.2;font-size:16px;-webkit-appearance:none;appearance:none}
+#txDate::-webkit-date-and-time-value,#needMonth::-webkit-date-and-time-value{min-height:1.2em;margin:0;text-align:left;line-height:1.2}
+#txDate::-webkit-calendar-picker-indicator,#needMonth::-webkit-calendar-picker-indicator{margin:0;padding:2px}
 textarea{min-height:80px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .mode-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
@@ -96,7 +97,15 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .danger-zone{border-color:#e7b8bd;background:#fffafa}
 .danger-zone h3{color:var(--red)}
 .danger-zone .danger{margin-top:9px}
-@media(max-width:520px){.status-grid{grid-template-columns:1fr}.splash-panel{padding-left:5px;padding-right:5px}}
+@media(max-width:520px){
+  main{padding:12px}
+  .card{padding:14px;margin-bottom:12px}
+  .status-grid{grid-template-columns:1fr}
+  .splash-panel{padding-left:5px;padding-right:5px}
+  input,select,textarea{font-size:16px}
+  .row{gap:8px}
+  .row>button{margin-top:7px}
+}
 
 /* Welcome splash */
 .splash{
@@ -157,14 +166,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.5.4" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.5.5" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.5.4</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.5.5</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -345,11 +354,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.5.4 · July 16, 2026</span>
+      <b>Version</b><span>Update 7.5.5 · July 16, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.5.4 installs the fully quilted heart logo with the red thread passing through the needle and corrects the Month Needed field sizing on phones. It retains all Update 7.5.3 features.</p>
+    <p class="small">Update 7.5.5 is a cleanup release. It makes the Date In and Month Needed controls consistent on phones, standardizes mobile spacing, and retains the existing data and backup formats. The Needs Calendar is planned for the next feature update.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -363,6 +372,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script src="app.js?v=7.5.4"></script>
+<script src="app.js?v=7.5.5"></script>
 </body>
 </html>

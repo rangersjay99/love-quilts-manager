@@ -1,16 +1,18 @@
 # Love Quilts Manager
 
-**Current release: Update 7.5.4 — July 16, 2026**
+**Current release: Update 7.5.5 — July 16, 2026**
 
 Love Quilts Manager is a mobile-friendly inventory and needs-planning app for charity quilt programs. Existing data is preserved through the unchanged `love_quilts_v1` storage key.
 
-## Update 7.5.4
+## Update 7.5.5
 
-- Install the revised patchwork-heart logo on the splash screen and app icons
-- Fill the entire heart with quilt/fabric patterns
-- Route the red thread visibly through the sewing-needle eye
-- Correct the Month Needed field so it stays the same width and height as the other Needs Planner fields on phones
-- Retain all Update 7.5.3 copyright, report, backup, recovery, reset, and customization features
+- Make the Date In and Month Needed controls the same compact size as the other fields on phones
+- Standardize mobile card, input, and button spacing
+- Retain the existing local-storage key, import/export backup format, recovery history, reports, and customization features
+- Add `TEST_CHECKLIST.txt` for the weekend test
+- Keep the current fully quilted heart and threaded-needle logo
+
+The Needs Calendar is intentionally not included in this cleanup release. It is planned as the next feature update.
 
 ## Copyright and permitted use
 

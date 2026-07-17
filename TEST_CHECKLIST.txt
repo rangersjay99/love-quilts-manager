@@ -1,0 +1,45 @@
+LOVE QUILTS MANAGER — WEEKEND TEST CHECKLIST
+============================================
+
+Before testing
+--------------
+[ ] Open Settings and choose Export Backup. Keep the downloaded JSON file.
+[ ] Confirm the splash screen says Update 7.5.5.
+[ ] Confirm existing inventory and needs are still present.
+
+Inventory
+---------
+[ ] Add one quilt IN with a Date In, charity, size, quantity, and note.
+[ ] Confirm Date In is the same height and width as the other fields.
+[ ] Add one quilt OUT and confirm the count changes only after saving.
+[ ] Make an inventory adjustment and confirm it is visibly flagged.
+[ ] Edit a transaction, save it, and confirm the total updates.
+[ ] Try deleting a transaction and confirm the warning appears.
+
+Needs Planner
+-------------
+[ ] Add a need with Month Needed, charity, size, quantity, and note.
+[ ] Confirm Month Needed matches the other field sizes.
+[ ] Confirm Current Stock and Shortage calculate correctly.
+[ ] Edit a planned need and confirm the totals update.
+[ ] Delete a planned need and confirm the warning appears.
+
+Reports
+-------
+[ ] Confirm Total On Hand, Upcoming Needs, and Shortage are correct.
+[ ] Confirm each charity shows its total.
+[ ] Open or print the compact report.
+[ ] Open or print the full report.
+[ ] Confirm the copyright notice appears and no website address prints.
+
+Settings and recovery
+---------------------
+[ ] Confirm organization, app, program, and splash wording remain correct.
+[ ] Export another backup after testing.
+[ ] Confirm recent recovery copies are listed.
+[ ] Do not test Start Fresh or Reset Entire App unless using test data.
+
+Notes for the next update
+-------------------------
+Write down anything confusing, slow, hard to read, or requiring duplicate entry.
+For the Needs Calendar, note which view is most useful: month-first, charity-first, or both.
