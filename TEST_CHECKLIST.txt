@@ -1,18 +1,45 @@
-LOVE QUILTS MANAGER — UPDATE 7.6.0 TEST CHECKLIST
+LOVE QUILTS MANAGER — WEEKEND TEST CHECKLIST
+============================================
 
-[ ] Regular app opens and shows Update 7.6.0.
-[ ] Approved account signs in.
-[ ] Sign-in survives closing and reopening.
-[ ] firebase-test numbers do not appear automatically.
-[ ] One primary device initializes the real shared inventory.
-[ ] Second device receives the same inventory and needs.
-[ ] Add, edit, and delete one inventory transaction on both devices.
-[ ] Add, edit, and delete one planned need on both devices.
-[ ] Sync banner shows All changes synced.
-[ ] Backup export and PDF reports still work.
-[ ] Start Fresh still requires typed confirmation.
-[ ] Sign Out affects only that device.
+Before testing
+--------------
+[ ] Open Settings and choose Export Backup. Keep the downloaded JSON file.
+[ ] Confirm the splash screen says Update 7.5.5.
+[ ] Confirm existing inventory and needs are still present.
 
-After testing:
-[ ] Remove all fake production entries.
-[ ] Export a clean backup before weekend inventory.
+Inventory
+---------
+[ ] Add one quilt IN with a Date In, charity, size, quantity, and note.
+[ ] Confirm Date In is the same height and width as the other fields.
+[ ] Add one quilt OUT and confirm the count changes only after saving.
+[ ] Make an inventory adjustment and confirm it is visibly flagged.
+[ ] Edit a transaction, save it, and confirm the total updates.
+[ ] Try deleting a transaction and confirm the warning appears.
+
+Needs Planner
+-------------
+[ ] Add a need with Month Needed, charity, size, quantity, and note.
+[ ] Confirm Month Needed matches the other field sizes.
+[ ] Confirm Current Stock and Shortage calculate correctly.
+[ ] Edit a planned need and confirm the totals update.
+[ ] Delete a planned need and confirm the warning appears.
+
+Reports
+-------
+[ ] Confirm Total On Hand, Upcoming Needs, and Shortage are correct.
+[ ] Confirm each charity shows its total.
+[ ] Open or print the compact report.
+[ ] Open or print the full report.
+[ ] Confirm the copyright notice appears and no website address prints.
+
+Settings and recovery
+---------------------
+[ ] Confirm organization, app, program, and splash wording remain correct.
+[ ] Export another backup after testing.
+[ ] Confirm recent recovery copies are listed.
+[ ] Do not test Start Fresh or Reset Entire App unless using test data.
+
+Notes for the next update
+-------------------------
+Write down anything confusing, slow, hard to read, or requiring duplicate entry.
+For the Needs Calendar, note which view is most useful: month-first, charity-first, or both.

@@ -1,23 +1,25 @@
-LOVE QUILTS MANAGER — UPDATE 7.6.0
-Firebase Production Live Sync
+LOVE QUILTS MANAGER — UPDATE 7.5.5
+=================================
 
 UPLOAD
-1. Extract this ZIP.
-2. In the GitHub repository, open the main/root folder.
-3. Upload every extracted file and replace files with the same names.
-4. Wait for GitHub Pages to publish.
-5. Open the regular Love Quilts Manager address and refresh.
+------
+1. Open the GitHub repository.
+2. Choose Add file > Upload files.
+3. Upload ALL files from this ZIP, including LICENSE.txt, TEST_CHECKLIST.txt, GOOGLE_BACKUP_SETUP.txt, and the complete icons folder.
+4. Replace files with the same names and commit the changes.
+5. Wait for GitHub Pages to publish.
 
-FIRST PRODUCTION SETUP
-1. Sign in with an approved Firebase email and password.
-2. Choose ONE primary device.
-3. Confirm its current local data is the desired starting data.
-4. Clear fake data with Settings > Start Fresh for Real Use when appropriate.
-5. In Shared Device Sync, choose Create Real Shared Inventory.
-6. Type START SHARED INVENTORY exactly.
-7. Open the second device and sign in. It should receive the shared data.
+IPHONE REFRESH
+--------------
+1. Open the website in Safari.
+2. Refresh the page.
+3. The welcome screen should show Update 7.5.5.
+4. Do not clear Safari website data. Existing records use the same love_quilts_v1 storage key and remain available.
 
-IMPORTANT
-- Do not initialize production from both devices.
-- firebase-test remains separate.
-- Both accounts normally remain signed in on their own devices.
+NEW IN 7.5.5
+------------
+- Date In and Month Needed controls use the same compact phone sizing
+- Mobile card, input, and button spacing is more consistent
+- Data storage and backup formats remain unchanged
+- A manual weekend testing checklist is included
+- The Needs Calendar remains planned for the next feature update

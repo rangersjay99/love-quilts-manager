@@ -1,7 +1,10 @@
-Love Quilts Manager Update 7.6.0
-Released: July 16, 2026
+Love Quilts Manager Update 7.5.5
+Build date: 2026-07-16
+Copyright © 2026 Jay. All rights reserved.
 
-Adds secure Firebase sign-in and live syncing between the two approved accounts.
-Production data uses a separate database path from firebase-test.
-The real shared inventory must be initialized once from a chosen primary device.
-Existing local data, recovery, exports, PDF reports, and backup formats are retained.
+Changes:
+- Corrected Date In and Month Needed field sizing on phones
+- Standardized mobile card, input, and button spacing
+- Verified unchanged love_quilts_v1 data storage and backup format
+- Added a manual testing checklist for the weekend test
+- Prepared a clean base for the Needs Calendar update
