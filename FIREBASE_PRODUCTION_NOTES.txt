@@ -1,0 +1,14 @@
+FIREBASE PRODUCTION NOTES
+
+Firebase project:
+faithful-circle-love-quilts
+
+Production Firestore path:
+organizations/faithful-circle-love-quilts
+
+Test Firestore path:
+organizations/faithful-circle-love-quilts-test
+
+Only one signed-in primary device should initialize production.
+Typed confirmation START SHARED INVENTORY is required.
+Local browser storage remains the first save location; Firebase provides approved-device synchronization.

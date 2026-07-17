@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.5.5">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.5.5">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.5.5">
+<link rel="manifest" href="manifest-v7.json?v=7.6.0-test">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.6.0-test">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.6.0-test">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -97,6 +97,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .danger-zone{border-color:#e7b8bd;background:#fffafa}
 .danger-zone h3{color:var(--red)}
 .danger-zone .danger{margin-top:9px}
+
+.firebase-gate{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(50,29,55,.72);backdrop-filter:blur(7px)}
+.firebase-gate.hidden{display:none}.firebase-gate-card{width:min(100%,410px);padding:22px;border-radius:18px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.firebase-gate-card h2{color:var(--plum)}.firebase-test-label{display:inline-block;margin-bottom:10px;padding:5px 9px;border-radius:999px;background:#fff0dc;color:#87510f;font-size:12px;font-weight:900;letter-spacing:.06em}
+.firebase-banner{margin:0;padding:9px 14px;background:#fff0dc;border-bottom:1px solid #e4c996;color:#66440c;font-size:12px;font-weight:750;text-align:center}
+.firebase-banner b{color:#8a4c00}.firebase-user-line{margin-top:8px;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.firebase-inline-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.firebase-inline-actions button{margin-top:0}
+
 @media(max-width:520px){
   main{padding:12px}
   .card{padding:14px;margin-bottom:12px}
@@ -163,17 +171,30 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 </style>
 </head>
 <body>
+<div id="firebaseGate" class="firebase-gate">
+  <div class="firebase-gate-card">
+    <span class="firebase-test-label">LIVE SHARED INVENTORY</span>
+    <h2>Sign in to Love Quilts Manager</h2>
+    <p class="small">Sign in with an approved account. Inventory and planned needs sync between approved devices.</p>
+    <form id="firebaseLoginForm">
+      <label>Email</label><input id="firebaseEmail" type="email" autocomplete="username" required placeholder="Your Firebase account email">
+      <label>Password</label><input id="firebasePassword" type="password" autocomplete="current-password" required placeholder="Firebase password">
+      <button id="firebaseLoginBtn" class="primary" type="submit">Sign In</button>
+    </form>
+    <div id="firebaseLoginNotice" class="notice"></div>
+  </div>
+</div>
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.5.5" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.6.0-test" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.5.5</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.6.0</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -183,6 +204,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <h1 id="headerAppName">Love Quilts Manager</h1>
   <p id="headerSubtitle">Inventory on hand and upcoming needs</p>
 </header>
+<div class="firebase-banner"><b>FIREBASE SYNC TEST</b> — Use fake numbers only · <span id="firebaseBannerStatus">Waiting for sign-in</span></div>
 
 <main>
 <section id="home" class="view active">
@@ -283,12 +305,18 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 </section>
 
 <section id="settings" class="view">
+<div id="firebaseInitializePanel" style="display:none;margin-top:14px;padding:14px;border:1px solid #d7b85a;border-radius:12px;background:#fff7dc">
+  <h3 style="margin:0 0 8px">Create Real Shared Inventory</h3>
+  <p style="margin:0 0 10px;line-height:1.45">Use this once on the chosen primary device after its local numbers are ready. The other device will then receive the shared data.</p>
+  <button id="firebaseInitializeButton" type="button" style="background:#8b6b16">Create Real Shared Inventory</button>
+</div>
   <div class="card">
     <h2>Backup and Recovery</h2>
     <p id="backupHelp" class="small">Every change is saved automatically on this device. Recovery copies help undo mistakes; exported backups protect against a lost phone or cleared Safari data.</p>
     <div class="status-grid">
       <div class="status-box"><b>Local Save</b><span id="localSaveStatus">Saved automatically</span></div>
       <div class="status-box"><b>External Backup</b><span id="externalSaveStatus">Not connected</span></div>
+      <div class="status-box"><b>Shared Device Sync</b><span id="firebaseSaveStatus">Waiting for sign-in</span></div>
     </div>
     <div class="row"><button class="ghost" onclick="exportBackup()">Export Backup</button><button class="ghost" onclick="document.getElementById('importFile').click()">Import Backup</button></div>
     <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)">
@@ -297,6 +325,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div id="recoveryList"></div>
     <button class="ghost" onclick="clearRecoveryHistory()">Clear Recovery History</button>
     <div id="settingsNotice" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h2>Shared Device Sync</h2>
+    <p class="small">The app saves locally first and securely syncs inventory, needs, names, charities, and sizes between approved devices.</p>
+    <div class="status-box"><b>Signed-in account</b><span id="firebaseAccountStatus">Not signed in</span></div>
+    <div class="firebase-inline-actions"><button class="ghost" type="button" onclick="window.lqFirebaseForceSync?.()">Sync Now</button><button class="ghost" type="button" onclick="window.lqFirebaseSignOut?.()">Sign Out</button></div>
+    <div id="firebaseSettingsNotice" class="notice"></div>
   </div>
 
   <div class="card">
@@ -354,11 +390,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.5.5 · July 16, 2026</span>
+      <b>Version</b><span>Update 7.6.0 · July 16, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.5.5 is a cleanup release. It makes the Date In and Month Needed controls consistent on phones, standardizes mobile spacing, and retains the existing data and backup formats. The Needs Calendar is planned for the next feature update.</p>
+    <p class="small">Update 7.6.0 is a separate test copy for verifying sign-in and live saving between devices. It uses fake test data only and does not read the regular app's local storage.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -372,6 +408,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script src="app.js?v=7.5.5"></script>
+<script type="module" src="firebase-sync.js?v=7.6.0"></script>
+<script src="app.js?v=7.6.0-test"></script>
 </body>
 </html>
