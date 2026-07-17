@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.6.1">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7.png?v=7.6.1">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7.png?v=7.6.1">
+<link rel="manifest" href="manifest-v7.json?v=7.6.2">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.6.2">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.6.2">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -54,9 +54,10 @@ textarea{min-height:80px;resize:vertical}
 .mode-row .active-in{background:var(--green);color:#fff;border-color:var(--green)}
 .mode-row .active-out{background:var(--red);color:#fff;border-color:var(--red)}
 .mode-row .active-adjust{background:var(--gold);color:#fff;border-color:var(--gold)}
-.qty-wrap{display:grid;grid-template-columns:76px 1fr 76px;gap:8px;align-items:center;margin-top:8px}
+.qty-wrap{display:grid;grid-template-columns:64px minmax(100px,1fr) 64px;gap:8px;align-items:center;margin-top:8px}
 .qty-wrap button{min-height:56px;border:0;border-radius:13px;background:var(--soft);color:var(--plum);font-size:30px;font-weight:900}
-.qty{min-height:56px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:13px;font-size:30px;font-weight:900;background:#fff}
+.qty-input{width:100%;min-height:56px;margin:0;padding:8px 12px;text-align:center;border:2px solid var(--plum);border-radius:13px;font-size:27px;font-weight:900;background:#fff}
+.qty-help{margin-top:6px;text-align:center;font-size:12px;color:var(--muted)}
 .primary,.danger,.ghost{width:100%;min-height:50px;margin-top:12px;border-radius:12px;font-weight:850;padding:12px}
 .primary{border:0;color:#fff;background:var(--plum)}.danger{border:0;color:#fff;background:var(--red)}.ghost{border:1px solid var(--plum);color:var(--plum);background:#fff}
 .notice{display:none;margin-top:12px;padding:11px;border-radius:11px;background:#fff5d9;color:#5b4514;font-size:14px}
@@ -70,6 +71,25 @@ textarea{min-height:80px;resize:vertical}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.actions button{min-height:39px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:750}
 .planner{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.planner div{padding:9px;border-radius:10px;text-align:center;background:var(--soft)}
 .planner b{display:block;font-size:20px}.planner span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+
+.calendar-toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.calendar-toolbar label{margin:0;font-size:12px;color:var(--muted)}
+.calendar-toolbar select{margin-top:5px}
+.needs-calendar{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.month-card{min-width:0;padding:11px;border:2px solid var(--line);border-radius:13px;background:#fff}
+.month-card.covered{border-color:#8cc39a;background:#eff9f2}.month-card.shortage{border-color:#dfa1a8;background:#fff2f3}.month-card.empty-month{background:#f7f4f7}
+.month-card h4{display:flex;justify-content:space-between;gap:6px;margin:0 0 7px;color:var(--plum-dark);font-size:14px}
+.month-status{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.month-card.covered .month-status{color:var(--green)}.month-card.shortage .month-status{color:var(--red)}.month-card.empty-month .month-status{color:var(--muted)}
+.month-totals{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:7px}
+.month-totals div{padding:6px;border-radius:8px;background:rgba(255,255,255,.76);text-align:center}
+.month-totals b{display:block;font-size:17px}.month-totals span{display:block;font-size:9px;color:var(--muted)}
+.month-need{padding:6px 0;border-top:1px solid rgba(100,80,100,.15);font-size:11px;line-height:1.3}
+.month-need:first-of-type{border-top:0}.month-need button{width:100%;border:0;padding:0;text-align:left;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.audit-meta{margin-top:5px;font-size:11px;color:var(--muted);line-height:1.35}
+.restore-warning{margin-top:10px;padding:10px;border-radius:10px;background:#fff0dc;color:#744a0b;font-size:12px;line-height:1.45}
+@media(max-width:700px){.needs-calendar{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.calendar-toolbar{grid-template-columns:1fr}.needs-calendar{grid-template-columns:1fr 1fr}.month-card{padding:9px}.month-need{font-size:10px}}
 .empty{text-align:center;color:var(--muted);padding:16px 8px}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;border-bottom:1px solid var(--line);text-align:left}th{font-size:12px;color:var(--muted)}
@@ -192,14 +212,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7.png?v=7.6.1" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.6.2" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.6.1</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.6.2</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -246,8 +266,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <label id="dateLabel">Date In</label><input id="txDate" type="date">
     <label>Charity</label><select id="txCharity"></select>
     <label>Size</label><select id="txSize"></select>
-    <label>Quantity</label>
-    <div class="qty-wrap"><button onclick="changeQty(-1)">−</button><div id="qtyDisplay" class="qty">1</div><button onclick="changeQty(1)">+</button></div>
+    <label for="qtyInput">Quantity</label>
+    <div class="qty-wrap"><button type="button" aria-label="Subtract one" onclick="changeQty(-1)">−</button><input id="qtyInput" class="qty-input" type="number" inputmode="numeric" min="1" step="1" value="1" oninput="syncQtyInput()"><button type="button" aria-label="Add one" onclick="changeQty(1)">+</button></div>
+    <div class="qty-help">Type the exact number, or use − and + for small changes.</div>
     <label>Note <span class="small">(optional)</span></label><textarea id="txNote" placeholder="Delivery, event, correction reason, etc."></textarea>
     <div id="txNotice" class="notice"></div>
     <button id="saveTxBtn" class="primary" onclick="saveTransaction()">Add to Inventory</button>
@@ -279,6 +300,16 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div id="needNotice" class="notice"></div>
     <button id="saveNeedBtn" class="primary" onclick="saveNeed()">Add Need</button>
     <button id="cancelNeedBtn" class="ghost" style="display:none" onclick="cancelNeedEdit()">Cancel Editing</button>
+  </div>
+  <div class="card">
+    <h3>Needs Calendar</h3>
+    <p class="small">View all 12 months. Green means current inventory covers the listed need; red shows a shortage.</p>
+    <div class="calendar-toolbar">
+      <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
+      <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
+      <label>Size<select id="calendarSize" onchange="renderNeedsCalendar()"></select></label>
+    </div>
+    <div id="needsCalendar" class="needs-calendar"></div>
   </div>
   <div class="card"><h3>Planned Needs</h3><div id="needsList"></div></div>
 </section>
@@ -318,7 +349,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <div class="status-box"><b>External Backup</b><span id="externalSaveStatus">Not connected</span></div>
       <div class="status-box"><b>Shared Device Sync</b><span id="firebaseSaveStatus">Checking sign-in</span></div>
     </div>
-    <div class="row"><button class="ghost" onclick="exportBackup()">Export Backup</button><button class="ghost" onclick="document.getElementById('importFile').click()">Import Backup</button></div>
+    <div class="row"><button class="ghost" onclick="exportBackup()">Export Backup</button><button class="ghost" onclick="document.getElementById('importFile').click()">Restore Shared Backup</button></div>
+    <div class="restore-warning"><b>Use with caution:</b> restoring a backup replaces the shared inventory and needs on every synced device. The app automatically saves the current data as a recovery copy before restoring.</div>
     <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)">
     <h3 style="margin-top:18px">Restore a Recent Version</h3>
     <p class="small">The app keeps recent recovery copies on this device after changes.</p>
@@ -371,6 +403,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <input id="appNameInput" maxlength="80" placeholder="Love Quilts Manager">
     <label>Program / Quilt Name</label>
     <input id="itemNameInput" maxlength="60" placeholder="Love Quilts">
+    <label>Report Title <span class="small">(optional)</span></label>
+    <input id="reportTitleInput" maxlength="120" placeholder="Love Quilts Inventory and Needs Report">
+    <p class="small">Leave blank to create the report title automatically from the program name.</p>
     <label>Splash Tagline <span class="small">(optional)</span></label>
     <input id="splashTagInput" maxlength="100" placeholder="MADE WITH LOVE, SHARED WITH CARE">
     <label>Splash Message <span class="small">(optional)</span></label>
@@ -395,11 +430,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.6.1 · July 17, 2026</span>
+      <b>Version</b><span>Update 7.6.2 · July 17, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.6.1 adds secure sign-in and live synchronization between approved devices while preserving the existing local data, recovery copies, backups, and reports.</p>
+    <p class="small">Update 7.6.2 is the final pre-live-data release. It adds direct quantity entry, the Needs Calendar, report-title customization, entry accountability, safer shared-backup restore, compact mobile fields, and the corrected logo while preserving production synchronization.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -413,7 +448,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.6.1"></script>
-<script src="app.js?v=7.6.1"></script>
+<script type="module" src="firebase-sync.js?v=7.6.2"></script>
+<script src="app.js?v=7.6.2"></script>
 </body>
 </html>

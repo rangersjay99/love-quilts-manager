@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.6.1';
+const VERSION='7.6.2';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -35,12 +35,24 @@ function fmtDateTime(s){if(!s)return'Not yet';const d=new Date(s);return Number.
 function notice(id,msg,good=false){const e=el(id);if(!e)return;e.textContent=msg;e.className='notice show'+(good?' good':'');clearTimeout(e.t);e.t=setTimeout(()=>e.className='notice',5000)}
 function filePart(v){return String(v||'Quilt_Manager').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'')||'Quilt_Manager'}
 function lowerName(){return(data.itemName||DEFAULT_ITEM).toLocaleLowerCase()}
+function currentUserEmail(){return String(window.lqFirebaseState?.email||'').trim()||'This device'}
+function nowIso(){return new Date().toISOString()}
+function effectiveReportTitle(){return String(data.reportTitle||'').trim()||`${data.itemName||DEFAULT_ITEM} Inventory and Needs Report`}
+function auditText(record){
+  if(!record)return'';
+  const createdBy=String(record.createdBy||'').trim(),updatedBy=String(record.updatedBy||'').trim();
+  const createdAt=String(record.createdAt||''),updatedAt=String(record.updatedAt||'');
+  if(updatedBy&&updatedAt&&(updatedBy!==createdBy||updatedAt!==createdAt))return`Entered by ${createdBy||'earlier user'} · Last edited by ${updatedBy} ${fmtDateTime(updatedAt)}`;
+  if(createdBy)return`Entered by ${createdBy}${createdAt?' '+fmtDateTime(createdAt):''}`;
+  return'';
+}
 
 function normalizeData(d={}){
   let tx=Array.isArray(d.transactions)?d.transactions.map(t=>({
     id:t.id||uid(),date:t.date||today(),type:['IN','OUT','ADJUST'].includes(t.type)?t.type:'IN',
     charity:String(t.charity||'Unknown'),size:String(t.size||'Other'),qty:Math.max(1,Number(t.qty||t.quantity||1)),
-    adjustment:Number(t.adjustment||0),note:String(t.note||'')
+    adjustment:Number(t.adjustment||0),note:String(t.note||''),
+    createdBy:String(t.createdBy||''),createdAt:String(t.createdAt||''),updatedBy:String(t.updatedBy||''),updatedAt:String(t.updatedAt||'')
   })):[];
   if(d.inv&&!tx.length){
     Object.entries(d.inv).forEach(([k,v])=>{
@@ -50,11 +62,12 @@ function normalizeData(d={}){
   }
   const needs=Array.isArray(d.needs)?d.needs.map(n=>({
     id:n.id||uid(),month:n.month||monthNow(),charity:String(n.charity||DEFAULT_CHARITIES[0]),
-    size:String(n.size||DEFAULT_SIZES[0]),qty:Math.max(1,Number(n.qty||1)),note:String(n.note||'')
+    size:String(n.size||DEFAULT_SIZES[0]),qty:Math.max(1,Number(n.qty||1)),note:String(n.note||''),
+    createdBy:String(n.createdBy||''),createdAt:String(n.createdAt||''),updatedBy:String(n.updatedBy||''),updatedAt:String(n.updatedAt||'')
   })):[];
   return{
     orgName:String(d.orgName||DEFAULT_ORG),appName:String(d.appName||DEFAULT_APP),itemName:String(d.itemName||DEFAULT_ITEM),
-    splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
+    reportTitle:String(d.reportTitle||''),splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
     charities:unique([...(Array.isArray(d.charities)?d.charities:[]),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...DEFAULT_CHARITIES]),
     sizes:unique([...(Array.isArray(d.sizes)?d.sizes:[]),...tx.map(t=>t.size),...needs.map(n=>n.size),...DEFAULT_SIZES]),
     transactions:tx,needs
@@ -79,11 +92,11 @@ function storeRecovery(list){
   while(a.length>1&&JSON.stringify(a).length>MAX_RECOVERY_BYTES)a.pop();
   localStorage.setItem(RECOVERY_KEY,JSON.stringify(a));
 }
-function createRecoverySnapshot(reason,source=data){
+function createRecoverySnapshot(reason,source=data,force=false){
   try{
     const snap={id:uid(),createdAt:new Date().toISOString(),reason:String(reason||'Automatic recovery copy'),data:clone(source)};
     const list=getRecovery();
-    if(list[0]&&JSON.stringify(list[0].data)===JSON.stringify(snap.data))return;
+    if(!force&&list[0]&&JSON.stringify(list[0].data)===JSON.stringify(snap.data))return;
     list.unshift(snap);storeRecovery(list);
   }catch(error){console.warn('Recovery snapshot could not be saved.',error)}
 }
@@ -118,6 +131,7 @@ function applyNames(){
   el('splashMessage').innerHTML=esc(shownSplashMessage).replace(/\n/g,'<br>');
   el('splashVersion').textContent=`${data.appName} · Update ${VERSION}`;
   el('orgNameInput').value=data.orgName;el('appNameInput').value=data.appName;el('itemNameInput').value=data.itemName;
+  if(el('reportTitleInput')){el('reportTitleInput').value=data.reportTitle||'';el('reportTitleInput').placeholder=`${data.itemName} Inventory and Needs Report`}
   el('splashTagInput').value=data.splashTag;el('splashTagInput').placeholder=DEFAULT_SPLASH_TAG;
   el('splashMessageInput').value=data.splashMessage;el('splashMessageInput').placeholder=automaticSplashMessage;
   el('aboutAppName').textContent=data.appName;el('aboutItemName').textContent=data.itemName;el('aboutOrgName').textContent=data.orgName;
@@ -126,21 +140,21 @@ function applyNames(){
   el('historyInOption').textContent=`${data.itemName} In`;el('historyOutOption').textContent=`${data.itemName} Out`;
   el('inventoryNote').textContent=`Choose ${data.itemName} Out only when items physically leave storage. Use Adjust for corrections; adjustments are visibly flagged.`;
   el('needsNote').textContent=`Enter the number of ${lowerName()} needed by month. Current stock and shortage are calculated automatically.`;
-  el('reportHeading').textContent=`${data.itemName} Inventory and Needs Report`;
+  el('reportHeading').textContent=effectiveReportTitle();
   document.title=`${data.orgName} — ${data.appName}`;
   const appleTitle=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(appleTitle)appleTitle.setAttribute('content',data.appName);
   setMode(mode);
 }
 function saveNames(){
   data.orgName=el('orgNameInput').value.trim()||DEFAULT_ORG;data.appName=el('appNameInput').value.trim()||DEFAULT_APP;data.itemName=el('itemNameInput').value.trim()||DEFAULT_ITEM;
-  data.splashTag=el('splashTagInput').value.trim();data.splashMessage=el('splashMessageInput').value.trim();
-  save('Names and splash wording changed');applyNames();renderAll();notice('nameNotice','Names and splash wording saved.',true);
+  data.reportTitle=el('reportTitleInput')?.value.trim()||'';data.splashTag=el('splashTagInput').value.trim();data.splashMessage=el('splashMessageInput').value.trim();
+  save('Names, report title, and splash wording changed');applyNames();renderAll();notice('nameNotice','Names, report title, and splash wording saved.',true);
 }
 function closeSplash(){el('splash').classList.add('hidden');document.body.style.overflow=''}
 function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
-  if(id==='reports')renderReports();if(id==='settings'){renderRecoveryList();updateSaveStatus();loadExternalFields()}
+  if(id==='reports')renderReports();if(id==='needs')renderNeedsCalendar();if(id==='settings'){renderRecoveryList();updateSaveStatus();loadExternalFields()}
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function fill(id,vals,first=''){const e=el(id);if(!e)return;const old=e.value;e.innerHTML=first+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(vals.includes(old))e.value=old}
@@ -148,13 +162,21 @@ function refreshSelects(){
   data.charities=unique(data.charities).sort((a,b)=>a.localeCompare(b));data.sizes=unique(data.sizes).sort((a,b)=>a.localeCompare(b));
   ['txCharity','needCharity','deleteCharity'].forEach(id=>fill(id,data.charities));['txSize','needSize','deleteSize'].forEach(id=>fill(id,data.sizes));
   fill('historyCharity',data.charities,'<option value="">All charities</option>');
+  fill('calendarCharity',data.charities,'<option value="">All charities</option>');
+  fill('calendarSize',data.sizes,'<option value="">All sizes</option>');
+  refreshCalendarYears();
 }
 function setMode(m){
   mode=m;el('modeIn').className=m==='IN'?'active-in':'';el('modeOut').className=m==='OUT'?'active-out':'';el('modeAdjust').className=m==='ADJUST'?'active-adjust':'';
   el('dateLabel').textContent=m==='IN'?'Date In':m==='OUT'?'Date Out':'Adjustment Date';
   el('saveTxBtn').textContent=editTxId?'Save Changes':m==='IN'?'Add to Inventory':m==='OUT'?'Remove from Inventory':'Save Adjustment';
 }
-function changeQty(d){qty=Math.max(1,qty+d);el('qtyDisplay').textContent=qty}
+function setQty(value){
+  qty=Math.max(1,Math.floor(Number(value)||1));
+  if(el('qtyInput'))el('qtyInput').value=qty;
+}
+function syncQtyInput(){setQty(el('qtyInput')?.value)}
+function changeQty(d){syncQtyInput();setQty(qty+d)}
 function value(t){if(t.type==='IN')return Number(t.qty)||0;if(t.type==='OUT')return-(Number(t.qty)||0);return Number(t.adjustment)||Number(t.qty)||0}
 function invMap(exclude=null){const m={};data.transactions.filter(t=>t.id!==exclude).forEach(t=>{const k=t.charity+'|'+t.size;m[k]=(m[k]||0)+value(t)});return m}
 function onHand(c,s,exclude=null){return invMap(exclude)[c+'|'+s]||0}
@@ -165,6 +187,7 @@ function confirmInventoryChange(type,c,s,change,exclude=null){
   return confirm(`Are you sure?\n\n${action}\n${c} — ${s}\n\nCurrent inventory: ${current}\nNew inventory: ${next}\n\nTotal ${lowerName()} on hand: ${totalCurrent} → ${totalNext}`);
 }
 function saveTransaction(){
+  syncQtyInput();
   const c=el('txCharity').value,s=el('txSize').value,d=el('txDate').value||today(),noteText=el('txNote').value.trim();
   if(!c||!s)return notice('txNotice','Please select a charity and size.');
   const current=onHand(c,s,editTxId);let adj=0;
@@ -175,17 +198,18 @@ function saveTransaction(){
     if(!confirmInventoryChange('ADJUST',c,s,adj,editTxId))return notice('txNotice','Adjustment canceled. No changes were saved.');
   }
   if(mode==='OUT'&&!confirmInventoryChange('OUT',c,s,-qty,editTxId))return notice('txNotice',`${data.itemName} Out canceled. No changes were saved.`);
-  const r={id:editTxId||uid(),date:d,type:mode,charity:c,size:s,qty,adjustment:adj,note:noteText};
-  const editing=!!editTxId;
+  const editing=!!editTxId,previous=editTxId?data.transactions.find(t=>t.id===editTxId):null,stamp=nowIso(),email=currentUserEmail();
+  const r={id:editTxId||uid(),date:d,type:mode,charity:c,size:s,qty,adjustment:adj,note:noteText,
+    createdBy:previous?.createdBy||email,createdAt:previous?.createdAt||stamp,updatedBy:email,updatedAt:stamp};
   if(editTxId){const i=data.transactions.findIndex(t=>t.id===editTxId);if(i>=0)data.transactions[i]=r}else data.transactions.push(r);
   save(editing?'Inventory transaction edited':'Inventory transaction added');cancelTxEdit();renderAll();notice('txNotice','Saved successfully.',true);
 }
 function editTx(id){
   const t=data.transactions.find(x=>x.id===id);if(!t)return;editTxId=id;mode=t.type;qty=Math.abs(value(t))||1;refreshSelects();
-  el('txCharity').value=t.charity;el('txSize').value=t.size;el('txDate').value=t.date;el('txNote').value=t.note||'';el('qtyDisplay').textContent=qty;
+  el('txCharity').value=t.charity;el('txSize').value=t.size;el('txDate').value=t.date;el('txNote').value=t.note||'';setQty(qty);
   el('cancelTxBtn').style.display='block';setMode(mode);showView('inventory');
 }
-function cancelTxEdit(){editTxId=null;qty=1;el('qtyDisplay').textContent=1;el('txNote').value='';el('txDate').value=today();el('cancelTxBtn').style.display='none';setMode(mode)}
+function cancelTxEdit(){editTxId=null;setQty(1);el('txNote').value='';el('txDate').value=today();el('cancelTxBtn').style.display='none';setMode(mode)}
 function deleteTx(id){
   const t=data.transactions.find(x=>x.id===id);if(!t)return;
   const n=value(t),description=`${fmtDate(t.date)} — ${t.charity} — ${t.size} — ${n>0?'+':''}${n}`;
@@ -201,10 +225,12 @@ function renderInventory(){
 function renderHistory(){
   const c=el('historyCharity').value,t=el('historyType').value;
   const list=[...data.transactions].filter(x=>(!c||x.charity===c)&&(!t||x.type===t)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
-  el('historyList').innerHTML=list.length?list.map(x=>{const n=value(x);return`<div class="item"><div class="head"><div><div class="title ${n<0?'negative':'positive'}">${n>0?'+':''}${n} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}</div>${x.note?`<div class="meta">${esc(x.note)}</div>`:''}${x.type==='ADJUST'?'<div class="meta"><span class="flag">Adjusted inventory</span></div>':''}</div><b>${x.type==='ADJUST'?'ADJUSTED':x.type}</b></div><div class="actions"><button onclick="editTx('${x.id}')">Edit</button><button onclick="deleteTx('${x.id}')">Delete</button></div></div>`}).join(''):'<div class="empty">No matching history.</div>';
+  el('historyList').innerHTML=list.length?list.map(x=>{const n=value(x);return`<div class="item"><div class="head"><div><div class="title ${n<0?'negative':'positive'}">${n>0?'+':''}${n} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}</div>${x.note?`<div class="meta">${esc(x.note)}</div>`:''}${auditText(x)?`<div class="audit-meta">${esc(auditText(x))}</div>`:''}${x.type==='ADJUST'?'<div class="meta"><span class="flag">Adjusted inventory</span></div>':''}</div><b>${x.type==='ADJUST'?'ADJUSTED':x.type}</b></div><div class="actions"><button onclick="editTx('${x.id}')">Edit</button><button onclick="deleteTx('${x.id}')">Delete</button></div></div>`}).join(''):'<div class="empty">No matching history.</div>';
 }
 function saveNeed(){
-  const r={id:editNeedId||uid(),month:el('needMonth').value||monthNow(),charity:el('needCharity').value,size:el('needSize').value,qty:Math.max(1,Number(el('needQty').value||1)),note:el('needNote').value.trim()};
+  const previous=editNeedId?data.needs.find(n=>n.id===editNeedId):null,stamp=nowIso(),email=currentUserEmail();
+  const r={id:editNeedId||uid(),month:el('needMonth').value||monthNow(),charity:el('needCharity').value,size:el('needSize').value,qty:Math.max(1,Math.floor(Number(el('needQty').value||1))),note:el('needNote').value.trim(),
+    createdBy:previous?.createdBy||email,createdAt:previous?.createdAt||stamp,updatedBy:email,updatedAt:stamp};
   if(!r.charity||!r.size)return notice('needNotice','Please select a charity and size.');const editing=!!editNeedId;
   if(editNeedId){const i=data.needs.findIndex(n=>n.id===editNeedId);if(i>=0)data.needs[i]=r}else data.needs.push(r);
   save(editing?'Planned need edited':'Planned need added');cancelNeedEdit();renderAll();notice('needNotice','Need saved.',true);
@@ -220,8 +246,27 @@ function deleteNeed(id){
 function upcoming(){return data.needs.filter(n=>n.month>=monthNow())}
 function totalNeeded(){return upcoming().reduce((a,n)=>a+n.qty,0)}
 function shortageTotal(){return upcoming().reduce((a,n)=>a+Math.max(0,n.qty-onHand(n.charity,n.size)),0)}
-function needCard(n,actions=true){const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);return`<div class="item"><div class="head"><div><div class="title">${fmtMonth(n.month)} — ${esc(n.charity)}</div><div class="meta">${esc(n.size)}${n.note?' · '+esc(n.note):''}</div></div><div class="badge">${n.qty}</div></div><div class="planner"><div><b>${n.qty}</b><span>Need</span></div><div><b>${stock}</b><span>On Hand</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div></div>${actions?`<div class="actions"><button onclick="editNeed('${n.id}')">Edit</button><button onclick="deleteNeed('${n.id}')">Delete</button></div>`:''}</div>`}
-function renderNeeds(){const list=[...data.needs].sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity));el('needsList').innerHTML=list.length?list.map(n=>needCard(n)).join(''):'<div class="empty">No planned needs entered yet.</div>';const next=upcoming().sort((a,b)=>a.month.localeCompare(b.month)).slice(0,5);el('homeNeedsList').innerHTML=next.length?next.map(n=>needCard(n,false)).join(''):'<div class="empty">No upcoming needs entered yet.</div>'}
+function needCard(n,actions=true){const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);return`<div class="item"><div class="head"><div><div class="title">${fmtMonth(n.month)} — ${esc(n.charity)}</div><div class="meta">${esc(n.size)}${n.note?' · '+esc(n.note):''}</div>${auditText(n)?`<div class="audit-meta">${esc(auditText(n))}</div>`:''}</div><div class="badge">${n.qty}</div></div><div class="planner"><div><b>${n.qty}</b><span>Need</span></div><div><b>${stock}</b><span>On Hand</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div></div>${actions?`<div class="actions"><button onclick="editNeed('${n.id}')">Edit</button><button onclick="deleteNeed('${n.id}')">Delete</button></div>`:''}</div>`}
+function refreshCalendarYears(){
+  const select=el('calendarYear');if(!select)return;
+  const current=Number(monthNow().slice(0,4)),years=unique([current-1,current,current+1,current+2,...data.needs.map(n=>Number(String(n.month).slice(0,4))).filter(Boolean)]).map(Number).sort((a,b)=>a-b);
+  const old=Number(select.value)||current;select.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');select.value=years.includes(old)?String(old):String(current);
+}
+function renderNeedsCalendar(){
+  const box=el('needsCalendar');if(!box)return;
+  refreshCalendarYears();
+  const year=Number(el('calendarYear')?.value)||Number(monthNow().slice(0,4)),charity=el('calendarCharity')?.value||'',size=el('calendarSize')?.value||'';
+  const monthNames=Array.from({length:12},(_,i)=>new Date(year,i,1).toLocaleDateString(undefined,{month:'short'}));
+  box.innerHTML=monthNames.map((name,index)=>{
+    const month=`${year}-${String(index+1).padStart(2,'0')}`;
+    const list=data.needs.filter(n=>n.month===month&&(!charity||n.charity===charity)&&(!size||n.size===size)).sort((a,b)=>a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size));
+    const needed=list.reduce((sum,n)=>sum+n.qty,0),shortage=list.reduce((sum,n)=>sum+Math.max(0,n.qty-onHand(n.charity,n.size)),0);
+    const state=!list.length?'empty-month':shortage?'shortage':'covered',label=!list.length?'No need':shortage?'Shortage':'Covered';
+    const details=list.length?list.map(n=>`<div class="month-need"><button type="button" onclick="editNeed('${n.id}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · Need ${n.qty} · Hand ${onHand(n.charity,n.size)}</button></div>`).join(''):'<div class="month-need">No planned need</div>';
+    return`<div class="month-card ${state}"><h4><span>${name}</span><span class="month-status">${label}</span></h4><div class="month-totals"><div><b>${needed}</b><span>Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>${details}</div>`;
+  }).join('');
+}
+function renderNeeds(){renderNeedsCalendar();const list=[...data.needs].sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity));el('needsList').innerHTML=list.length?list.map(n=>needCard(n)).join(''):'<div class="empty">No planned needs entered yet.</div>';const next=upcoming().sort((a,b)=>a.month.localeCompare(b.month)).slice(0,5);el('homeNeedsList').innerHTML=next.length?next.map(n=>needCard(n,false)).join(''):'<div class="empty">No upcoming needs entered yet.</div>'}
 function renderHome(){el('homeOnHand').textContent=totalOnHand();el('homeNeeded').textContent=totalNeeded();el('homeShortage').textContent=shortageTotal();updateSaveStatus()}
 function inventoryGroups(){const inventory=invMap();return[...data.charities].sort((a,b)=>a.localeCompare(b)).map(c=>{const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));return{charity:c,sizes,total:sizes.reduce((sum,x)=>sum+x.n,0)}})}
 function reportInventoryHTML(){
@@ -231,9 +276,9 @@ function reportInventoryHTML(){
 }
 function reportNeedsHTML(){const list=upcoming().sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity));return list.length?`<table><thead><tr><th>Month</th><th>Charity / Size</th><th>Need</th><th>On Hand</th><th>Shortage</th></tr></thead><tbody>${list.map(n=>{const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);return`<tr><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${stock}</td><td class="${short?'negative':''}">${short}</td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No upcoming needs.</div>'}
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
-function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(data.itemName)} Inventory and Needs Report · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`}
+function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`}
 function renderReports(){
-  el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
+  el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
   el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();
   const a=data.transactions.filter(t=>t.type==='ADJUST').sort((x,y)=>y.date.localeCompare(x.date));
   el('reportAdjustments').innerHTML=a.length?a.map(x=>`<div class="item"><div class="head"><div><div class="title">${value(x)>0?'+':''}${value(x)} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}${x.note?' · '+esc(x.note):''}</div></div><span class="flag">Adjusted</span></div></div>`).join(''):'<div class="empty">No adjusted transactions.</div>';
@@ -255,11 +300,15 @@ function exportBackup(){download(`${filePart(data.itemName)}_Backup_${today()}.j
 function importBackup(e){
   const f=e.target.files[0];if(!f)return;const r=new FileReader();
   r.onload=()=>{const d=parse(r.result);if(!d||!Array.isArray(d.transactions)||!Array.isArray(d.charities)){notice('settingsNotice',`That is not a valid ${data.appName} backup.`);e.target.value='';return}
-    if(confirm(`Replace the current app data with “${f.name}”?\n\nA recovery copy of the current data will be kept first.`)){
-      createRecoverySnapshot('Before importing a backup');data=normalizeData(d);save('Backup imported');renderAll();notice('settingsNotice','Backup imported.',true)
-    }e.target.value='';};r.readAsText(f);
+    const imported=normalizeData(d),dates=imported.transactions.map(t=>t.date).filter(Boolean).sort(),range=dates.length?`${fmtDate(dates[0])} through ${fmtDate(dates[dates.length-1])}`:'No transaction dates';
+    createRecoverySnapshot(`Automatic backup before restoring ${f.name}`,data,true);
+    const answer=prompt(`RESTORE SHARED BACKUP\n\nFile: ${f.name}\nTransactions: ${imported.transactions.length}\nPlanned needs: ${imported.needs.length}\nDate range: ${range}\n\nThis will replace the shared information on every synced device. The current data has already been saved as a recovery copy on this device.\n\nType RESTORE SHARED DATA to continue:`);
+    if(answer==='RESTORE SHARED DATA'){
+      data=imported;save(`Shared backup restored: ${f.name}`);renderAll();notice('settingsNotice','Shared backup restored and queued to sync.',true)
+    }else notice('settingsNotice','Restore canceled. Current shared data was not changed.');
+    e.target.value='';};r.readAsText(f);
 }
-function exportCSV(){const rows=[['Date','Type','Charity','Size','Quantity Change','Note']];data.transactions.forEach(t=>rows.push([t.date,t.type,t.charity,t.size,value(t),t.note||'']));const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');download(`${filePart(data.itemName)}_Transactions_${today()}.csv`,csv,'text/csv')}
+function exportCSV(){const rows=[['Date','Type','Charity','Size','Quantity Change','Note','Entered By','Entered At','Last Edited By','Last Edited At']];data.transactions.forEach(t=>rows.push([t.date,t.type,t.charity,t.size,value(t),t.note||'',t.createdBy||'',t.createdAt||'',t.updatedBy||'',t.updatedAt||'']));const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');download(`${filePart(data.itemName)}_Transactions_${today()}.csv`,csv,'text/csv')}
 
 function renderRecoveryList(){
   const box=el('recoveryList');if(!box)return;const list=getRecovery().slice(0,10);
@@ -338,7 +387,7 @@ function makeOnePagePDF(){
   const rect=(x,y,w,h)=>commands.push(`0.6 w ${x} ${y} ${w} ${h} re S`);
 
   text(36,754,pdfFit(data.appName,62),17,true);
-  text(36,738,pdfFit(`${data.orgName} - ${data.itemName} Inventory and Needs Report`,92),9,false);
+  text(36,738,pdfFit(`${data.orgName} - ${effectiveReportTitle()}`,92),9,false);
   text(36,726,`Generated ${new Date().toLocaleString()}`,7,false);
 
   const metricY=684,metricH=32,metricW=166;
@@ -428,7 +477,7 @@ function makeFullPDF(){
     const text=(x,y,value,size=8,bold=false)=>page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
     const line=(x1,y1,x2,y2,w=.5)=>page.commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
     text(36,754,pdfFit(data.appName,68),16,true);
-    text(36,738,pdfFit(`${data.orgName} - ${data.itemName} Inventory and Needs Report`,96),9,false);
+    text(36,738,pdfFit(`${data.orgName} - ${effectiveReportTitle()}`,96),9,false);
     text(36,726,`Generated ${generated}`,7,false);
     line(36,716,576,716,.7);
     return page;
@@ -569,7 +618,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.6.1 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.6.2 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.6.1',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.6.2',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

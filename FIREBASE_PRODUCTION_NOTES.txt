@@ -1,10 +1,9 @@
-FIREBASE PRODUCTION NOTES
+FIREBASE PRODUCTION NOTES — UPDATE 7.6.2
 
 Firebase project: faithful-circle-love-quilts
-Production Firestore path: organizations/faithful-circle-love-quilts
-Test Firestore path: organizations/faithful-circle-love-quilts-test
+Production organization path: organizations/faithful-circle-love-quilts
+Test organization path: organizations/faithful-circle-love-quilts-test
 
-Production local-storage data key: love_quilts_v1
-Pending Firebase save key: love_quilts_firebase_pending_v1
-
-The production database is never automatically seeded. One approved signed-in primary device must initialize it using the typed phrase START SHARED INVENTORY.
+Update 7.6.2 preserves the proven login, initialization, pending-save recovery, and real-time sync flow.
+The only additive sync fields are reportTitle plus created/updated audit details for inventory and planned needs.
+The firebase-test folder remains separate and should not be replaced or deleted.

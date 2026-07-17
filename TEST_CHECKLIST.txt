@@ -1,23 +1,37 @@
-LOVE QUILTS MANAGER — UPDATE 7.6.1 CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.6.2 QUICK TEST CHECKLIST
 
-Before initialization
-[ ] Normal app opens and shows Update 7.6.1.
-[ ] Sign-in screen appears once, or a saved sign-in is recognized.
-[ ] After sign-in, Loading Shared Inventory disappears and the splash Continue button works normally.
-[ ] Existing local 7.5.5 data remains present.
-[ ] Shared Device Sync says the shared inventory is ready to be created.
+BACKUP
+[ ] GitHub repository ZIP saved
+[ ] App-data backup exported
 
-Initialization — primary device only
-[ ] Clear fake production numbers first if needed.
-[ ] Export a backup.
-[ ] Click Create Real Shared Inventory.
-[ ] Type START SHARED INVENTORY exactly.
-[ ] Status changes to All changes synced.
+STARTUP AND SYNC
+[ ] Correct solid-red-thread logo appears
+[ ] Update 7.6.2 appears
+[ ] Approved sign-in works
+[ ] Continue opens app normally
+[ ] Both devices show All changes synced
 
-Second device
-[ ] Sign in with the other approved account.
-[ ] Shared data replaces the second device local copy after a recovery snapshot is created.
-[ ] Add one test transaction and confirm it appears on the other device.
-[ ] Delete that test transaction and confirm deletion syncs.
-[ ] Add and remove one planned need and confirm both directions sync.
-[ ] Close and reopen both devices; sign-in remains saved.
+INVENTORY
+[ ] Type 20 directly into Quantity and save
+[ ] − and + buttons still work
+[ ] Entry appears on second device
+[ ] Entered by / last edited by appears
+[ ] Edit and delete confirmations work
+
+NEEDS CALENDAR
+[ ] All 12 months appear
+[ ] Year, charity, and size filters work
+[ ] Green covered and red shortage indicators are correct
+[ ] Tapping a calendar need opens it for editing
+[ ] Planned need syncs both ways
+
+REPORTS AND RESTORE
+[ ] Custom report title appears on screen and PDFs
+[ ] Restore Shared Backup creates a recovery copy first
+[ ] Restore requires typing RESTORE SHARED DATA
+[ ] Canceling restore leaves current shared data unchanged
+
+FINAL
+[ ] Both devices still match
+[ ] Test entries removed or Start Fresh completed once
+[ ] Final live-data backup exported

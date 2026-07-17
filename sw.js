@@ -1,16 +1,16 @@
 // Copyright © 2026 Jay. All rights reserved. See LICENSE.txt.
-const CACHE_NAME = "love-quilts-production-v7-6-1";
+const CACHE_NAME = "love-quilts-v7-6-2-prelive";
 const APP_SHELL = [
   "./",
-  "./index.html?v=7.6.1",
-  "./app.js?v=7.6.1",
-  "./firebase-sync.js?v=7.6.1",
-  "./manifest-v7.json?v=7.6.1",
+  "./index.html?v=7.6.2",
+  "./app.js?v=7.6.2",
+  "./firebase-sync.js?v=7.6.2",
+  "./manifest-v7.json?v=7.6.2",
   "./GOOGLE_BACKUP_SETUP.txt",
   "./LICENSE.txt",
-  "./icons/love-quilts-manager-180-v7.png?v=7.6.1",
-  "./icons/love-quilts-manager-192-v7.png?v=7.6.1",
-  "./icons/love-quilts-manager-512-v7.png?v=7.6.1"
+  "./icons/love-quilts-manager-180-v8.png?v=7.6.2",
+  "./icons/love-quilts-manager-192-v8.png?v=7.6.2",
+  "./icons/love-quilts-manager-512-v8.png?v=7.6.2"
 ];
 
 self.addEventListener("install", event => {
@@ -23,7 +23,7 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then(names => Promise.all(names.filter(name => name !== CACHE_NAME && (name.startsWith("love-quilts-production-") || name.startsWith("love-quilts-v"))).map(name => caches.delete(name))))
+      .then(names => Promise.all(names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))))
       .then(() => self.clients.claim())
   );
 });
@@ -36,15 +36,15 @@ self.addEventListener("fetch", event => {
       fetch(request, {cache:"no-store"})
         .then(response => {
           const copy=response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.6.1",copy));
+          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.6.2",copy));
           return response;
         })
-        .catch(() => caches.match("./index.html?v=7.6.1"))
+        .catch(() => caches.match("./index.html?v=7.6.2"))
     );
     return;
   }
   event.respondWith(
-    fetch(request, {cache:"no-store"})
+    fetch(request, {cache:"no-cache"})
       .then(response => {
         if (response && response.status === 200) {
           const copy=response.clone();

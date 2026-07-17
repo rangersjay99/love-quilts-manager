@@ -159,6 +159,7 @@ function normalizeSettings(source = {}) {
     orgName: cleanString(source.orgName || 'Faithful Circle Quilters'),
     appName: cleanString(source.appName || 'Love Quilts Manager'),
     itemName: cleanString(source.itemName || 'Love Quilts'),
+    reportTitle: cleanString(source.reportTitle || ''),
     splashTag: cleanString(source.splashTag || ''),
     splashMessage: cleanString(source.splashMessage || ''),
     charities: Array.isArray(source.charities) ? source.charities.map(cleanString) : [],
@@ -175,7 +176,11 @@ function normalizeTransaction(source = {}) {
     size: cleanString(source.size),
     qty: Math.max(1, Number(source.qty || 1)),
     adjustment: Number(source.adjustment || 0),
-    note: cleanString(source.note || '')
+    note: cleanString(source.note || ''),
+    createdBy: cleanString(source.createdBy || ''),
+    createdAt: cleanString(source.createdAt || ''),
+    updatedBy: cleanString(source.updatedBy || ''),
+    updatedAt: cleanString(source.updatedAt || '')
   };
 }
 
@@ -186,7 +191,11 @@ function normalizeNeed(source = {}) {
     charity: cleanString(source.charity),
     size: cleanString(source.size),
     qty: Math.max(1, Number(source.qty || 1)),
-    note: cleanString(source.note || '')
+    note: cleanString(source.note || ''),
+    createdBy: cleanString(source.createdBy || ''),
+    createdAt: cleanString(source.createdAt || ''),
+    updatedBy: cleanString(source.updatedBy || ''),
+    updatedAt: cleanString(source.updatedAt || '')
   };
 }
 
