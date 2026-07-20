@@ -1,1 +1,1 @@
-Update 7.6.2 icons use the approved patchwork heart with white stitch lines and solid red thread through the needle.
+Update 7.7.0 continues using the approved patchwork heart icons from Update 7.6.2, with white stitch lines and solid red thread through the needle.
