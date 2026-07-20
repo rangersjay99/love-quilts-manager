@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.7.0">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.0">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.0">
+<link rel="manifest" href="manifest-v7.json?v=7.7.1">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.1">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.1">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -190,7 +190,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.7.0 — needs planning and sync verification */
+/* Update 7.7.1 — needs planning and sync verification */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -229,14 +229,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.0" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.1" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.0</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.1</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -284,8 +284,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <label>Charity</label><select id="txCharity" required></select>
     <label>Size</label><select id="txSize" required></select>
     <label for="qtyInput">Quantity</label>
-    <div class="qty-wrap"><button type="button" aria-label="Subtract one" onclick="changeQty(-1)">−</button><input id="qtyInput" class="qty-input" type="number" inputmode="numeric" min="1" step="1" value="1" oninput="syncQtyInput()"><button type="button" aria-label="Add one" onclick="changeQty(1)">+</button></div>
-    <div class="qty-help">Type the exact number, or use − and + for small changes.</div>
+    <div class="qty-wrap"><button type="button" aria-label="Subtract one" onclick="changeQty(-1)">−</button><input id="qtyInput" class="qty-input" type="number" inputmode="numeric" min="1" step="1" value="" placeholder="Enter quantity" oninput="syncQtyInput()" onfocus="this.select()"><button type="button" aria-label="Add one" onclick="changeQty(1)">+</button></div>
+    <div class="qty-help">Tap the field and type the exact number, or use − and + for small changes.</div>
     <label>Note <span class="small">(optional)</span></label><textarea id="txNote" placeholder="Delivery, event, correction reason, etc."></textarea>
     <div id="txNotice" class="notice"></div>
     <button id="saveTxBtn" class="primary" onclick="saveTransaction()">Add to Inventory</button>
@@ -447,11 +447,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.7.0 · July 17, 2026</span>
+      <b>Version</b><span>Update 7.7.1 · July 20, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.7.0 improves real-world entry, month-by-month Available calculations, direct printing on iPhone/iPad, tinted needs blocks, and clear shared-data verification while preserving the working Firebase synchronization.</p>
+    <p class="small">Update 7.7.1 fixes direct inventory quantity entry and retains the month-by-month Available calculations, direct printing, tinted needs blocks, and shared-data verification from 7.7.0.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -465,7 +465,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.7.0"></script>
-<script src="app.js?v=7.7.0"></script>
+<script type="module" src="firebase-sync.js?v=7.7.1"></script>
+<script src="app.js?v=7.7.1"></script>
 </body>
 </html>

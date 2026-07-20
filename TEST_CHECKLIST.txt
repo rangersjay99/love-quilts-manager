@@ -1,6 +1,6 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.0 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.7.1 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.7.0.
+[ ] App opens and shows Update 7.7.1.
 [ ] Existing inventory and needs are still present.
 [ ] Both approved accounts remain signed in.
 [ ] Home shows “Shared data verified · All changes synced.”
@@ -18,3 +18,11 @@ LOVE QUILTS MANAGER — UPDATE 7.7.0 TEST CHECKLIST
 [ ] PDF and CSV export still work.
 [ ] A test change syncs to the other device.
 [ ] Delete confirmations and typed reset confirmations still work.
+
+DIRECT QUANTITY ENTRY
+[ ] Inventory quantity field starts blank.
+[ ] Tap the field and type 5; it remains 5.
+[ ] Delete the entire value; the field stays blank while editing.
+[ ] Saving a blank or zero quantity shows a validation message and saves nothing.
+[ ] The + button changes a blank field to 1.
+[ ] After saving, the quantity field returns to blank.

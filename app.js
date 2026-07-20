@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.7.0';
+const VERSION='7.7.1';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -18,7 +18,7 @@ const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
 const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
 const DEFAULT_SIZES=["Children's Large",'Adult Large','Medium'];
-let mode='IN',qty=1,editTxId=null,editNeedId=null,externalTimer=null,externalReason='Automatic save';
+let mode='IN',qty=0,editTxId=null,editNeedId=null,externalTimer=null,externalReason='Automatic save';
 
 const el=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
@@ -177,11 +177,19 @@ function setMode(m){
   el('saveTxBtn').textContent=editTxId?'Save Changes':m==='IN'?'Add to Inventory':m==='OUT'?'Remove from Inventory':'Save Adjustment';
 }
 function setQty(value){
-  qty=Math.max(1,Math.floor(Number(value)||1));
+  const parsed=Math.floor(Number(value));
+  qty=Number.isFinite(parsed)&&parsed>=1?parsed:1;
   if(el('qtyInput'))el('qtyInput').value=qty;
 }
-function syncQtyInput(){setQty(el('qtyInput')?.value)}
-function changeQty(d){syncQtyInput();setQty(qty+d)}
+function clearQty(){qty=0;if(el('qtyInput'))el('qtyInput').value=''}
+function syncQtyInput(){
+  const input=el('qtyInput');if(!input)return;
+  const raw=String(input.value??'').trim();
+  if(raw===''){qty=0;return}
+  const parsed=Math.floor(Number(raw));
+  qty=Number.isFinite(parsed)&&parsed>=1?parsed:0;
+}
+function changeQty(d){syncQtyInput();setQty(Math.max(1,(qty||0)+d))}
 function value(t){if(t.type==='IN')return Number(t.qty)||0;if(t.type==='OUT')return-(Number(t.qty)||0);return Number(t.adjustment)||Number(t.qty)||0}
 function invMap(exclude=null){const m={};data.transactions.filter(t=>t.id!==exclude).forEach(t=>{const k=t.charity+'|'+t.size;m[k]=(m[k]||0)+value(t)});return m}
 function onHand(c,s,exclude=null){return invMap(exclude)[c+'|'+s]||0}
@@ -193,6 +201,7 @@ function confirmInventoryChange(type,c,s,change,exclude=null){
 }
 function saveTransaction(){
   syncQtyInput();
+  if(qty<1)return notice('txNotice','Please enter a quantity of 1 or more.');
   const c=el('txCharity').value,s=el('txSize').value,d=el('txDate').value||today(),noteText=el('txNote').value.trim();
   if(!c||!s)return notice('txNotice','Please select a charity and size.');
   const current=onHand(c,s,editTxId);let adj=0;
@@ -214,7 +223,7 @@ function editTx(id){
   el('txCharity').value=t.charity;el('txSize').value=t.size;el('txDate').value=t.date;el('txNote').value=t.note||'';setQty(qty);
   el('cancelTxBtn').style.display='block';setMode(mode);showView('inventory');
 }
-function cancelTxEdit(){editTxId=null;setQty(1);el('txCharity').value='';el('txSize').value='';el('txNote').value='';el('txDate').value=today();el('cancelTxBtn').style.display='none';setMode(mode)}
+function cancelTxEdit(){editTxId=null;clearQty();el('txCharity').value='';el('txSize').value='';el('txNote').value='';el('txDate').value=today();el('cancelTxBtn').style.display='none';setMode(mode)}
 function deleteTx(id){
   const t=data.transactions.find(x=>x.id===id);if(!t)return;
   const n=value(t),description=`${fmtDate(t.date)} — ${t.charity} — ${t.size} — ${n>0?'+':''}${n}`;
@@ -639,7 +648,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.0 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.1 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.0',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.1',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

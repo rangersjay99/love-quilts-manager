@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.0
+LOVE QUILTS MANAGER — UPDATE 7.7.1
 Ready-to-upload package
 
 BEFORE UPLOADING
@@ -18,3 +18,5 @@ IMPORTANT
 - Do not choose Create Real Shared Inventory again.
 - Do not clear or reinitialize Firebase.
 - Existing inventory, needs, names, approved accounts, and synchronization remain in place.
+
+This hotfix corrects direct inventory quantity entry. Existing shared data and Firebase setup are unchanged.

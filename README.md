@@ -1,8 +1,11 @@
 # Love Quilts Manager
 
-Current release: Update 7.7.0 — July 20, 2026
+Current release: Update 7.7.1 — July 20, 2026
 
-## Update 7.7.0 — Real-world workflow fixes
+## Update 7.7.1 — Direct quantity entry hotfix
+
+- Direct inventory quantity field now stays blank while typing and no longer forces `1` back into the field.
+- The quantity field starts blank after each saved entry; the +/− buttons still work.
 
 - Keeps the proven direct quantity field and plus/minus buttons.
 - Requires a deliberate charity and size selection for each new inventory or needs entry.

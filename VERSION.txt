@@ -1,4 +1,4 @@
-Love Quilts Manager Update 7.7.0
+Love Quilts Manager Update 7.7.1
 Released: July 20, 2026
 
 Built directly from the working Update 7.6.2 final pre-live package.
@@ -14,3 +14,5 @@ Changes:
 
 Firebase production path retained: organizations/faithful-circle-love-quilts
 Local storage keys and Firestore data structure are unchanged.
+
+Hotfix: inventory quantity can be cleared and typed directly without the value reverting to 1.
