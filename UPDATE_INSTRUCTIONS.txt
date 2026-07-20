@@ -1,14 +1,20 @@
-LOVE QUILTS MANAGER — UPDATE 7.6.2
+LOVE QUILTS MANAGER — UPDATE 7.7.0
+Ready-to-upload package
 
-1. Before updating, download a GitHub repository ZIP and export an app-data backup.
-2. Extract this update ZIP.
-3. Upload every extracted file to the GitHub repository main/root folder.
-4. Replace matching files and commit the upload.
-5. Leave the existing firebase-test folder untouched.
-6. Wait for GitHub Pages to publish.
-7. Open the normal Love Quilts Manager address and refresh.
-8. Confirm Update 7.6.2, the corrected logo, normal sign-in, and All changes synced.
-9. Test one inventory entry and one planned need in both directions.
-10. Only after testing, use Start Fresh for Real Use once and enter the real inventory.
+BEFORE UPLOADING
+1. In the app, export a current backup.
+2. Confirm both devices show all changes synced.
+3. Download a backup ZIP of the current GitHub repository.
 
-The update preserves current data. Do not clear browser storage or delete the Firebase project.
+UPLOAD
+1. Extract this ZIP.
+2. Open the main/root folder of the GitHub repository.
+3. Upload every extracted file and replace files with the same names.
+4. Leave the firebase-test folder unchanged.
+5. Wait for GitHub Pages to publish.
+6. Close and reopen the app on each device.
+
+IMPORTANT
+- Do not choose Create Real Shared Inventory again.
+- Do not clear or reinitialize Firebase.
+- Existing inventory, needs, names, approved accounts, and synchronization remain in place.

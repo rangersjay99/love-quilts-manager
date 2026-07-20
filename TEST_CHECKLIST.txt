@@ -1,37 +1,20 @@
-LOVE QUILTS MANAGER — UPDATE 7.6.2 QUICK TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.7.0 TEST CHECKLIST
 
-BACKUP
-[ ] GitHub repository ZIP saved
-[ ] App-data backup exported
-
-STARTUP AND SYNC
-[ ] Correct solid-red-thread logo appears
-[ ] Update 7.6.2 appears
-[ ] Approved sign-in works
-[ ] Continue opens app normally
-[ ] Both devices show All changes synced
-
-INVENTORY
-[ ] Type 20 directly into Quantity and save
-[ ] − and + buttons still work
-[ ] Entry appears on second device
-[ ] Entered by / last edited by appears
-[ ] Edit and delete confirmations work
-
-NEEDS CALENDAR
-[ ] All 12 months appear
-[ ] Year, charity, and size filters work
-[ ] Green covered and red shortage indicators are correct
-[ ] Tapping a calendar need opens it for editing
-[ ] Planned need syncs both ways
-
-REPORTS AND RESTORE
-[ ] Custom report title appears on screen and PDFs
-[ ] Restore Shared Backup creates a recovery copy first
-[ ] Restore requires typing RESTORE SHARED DATA
-[ ] Canceling restore leaves current shared data unchanged
-
-FINAL
-[ ] Both devices still match
-[ ] Test entries removed or Start Fresh completed once
-[ ] Final live-data backup exported
+[ ] App opens and shows Update 7.7.0.
+[ ] Existing inventory and needs are still present.
+[ ] Both approved accounts remain signed in.
+[ ] Home shows “Shared data verified · All changes synced.”
+[ ] New inventory entry starts with Charity and Size unselected.
+[ ] Quantity can be typed directly and plus/minus buttons still work.
+[ ] Saving without Charity or Size is blocked.
+[ ] New planned need starts with Charity and Size unselected.
+[ ] Repeated needs for the same charity/size use running Available inventory by month.
+[ ] Needs Calendar matches the Planned Needs list.
+[ ] Covered, Partial, and Shortage blocks have different light tints.
+[ ] The duplicate need number at the right of each block is gone.
+[ ] At a Glance shows all upcoming needs.
+[ ] Print Full Report opens directly on iPhone/iPad.
+[ ] Print Compact Report opens directly on iPhone/iPad.
+[ ] PDF and CSV export still work.
+[ ] A test change syncs to the other device.
+[ ] Delete confirmations and typed reset confirmations still work.

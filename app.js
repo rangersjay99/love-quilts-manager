@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.6.2';
+const VERSION='7.7.0';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -139,7 +139,7 @@ function applyNames(){
   el('modeIn').textContent=`${data.itemName} In`;el('modeOut').textContent=`${data.itemName} Out`;
   el('historyInOption').textContent=`${data.itemName} In`;el('historyOutOption').textContent=`${data.itemName} Out`;
   el('inventoryNote').textContent=`Choose ${data.itemName} Out only when items physically leave storage. Use Adjust for corrections; adjustments are visibly flagged.`;
-  el('needsNote').textContent=`Enter the number of ${lowerName()} needed by month. Current stock and shortage are calculated automatically.`;
+  el('needsNote').textContent=`Enter the number of ${lowerName()} needed by month. Available inventory and shortage are calculated in month order.`;
   el('reportHeading').textContent=effectiveReportTitle();
   document.title=`${data.orgName} — ${data.appName}`;
   const appleTitle=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(appleTitle)appleTitle.setAttribute('content',data.appName);
@@ -160,7 +160,12 @@ function showView(id){
 function fill(id,vals,first=''){const e=el(id);if(!e)return;const old=e.value;e.innerHTML=first+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(vals.includes(old))e.value=old}
 function refreshSelects(){
   data.charities=unique(data.charities).sort((a,b)=>a.localeCompare(b));data.sizes=unique(data.sizes).sort((a,b)=>a.localeCompare(b));
-  ['txCharity','needCharity','deleteCharity'].forEach(id=>fill(id,data.charities));['txSize','needSize','deleteSize'].forEach(id=>fill(id,data.sizes));
+  fill('txCharity',data.charities,'<option value="">Select charity</option>');
+  fill('needCharity',data.charities,'<option value="">Select charity</option>');
+  fill('deleteCharity',data.charities);
+  fill('txSize',data.sizes,'<option value="">Select size</option>');
+  fill('needSize',data.sizes,'<option value="">Select size</option>');
+  fill('deleteSize',data.sizes);
   fill('historyCharity',data.charities,'<option value="">All charities</option>');
   fill('calendarCharity',data.charities,'<option value="">All charities</option>');
   fill('calendarSize',data.sizes,'<option value="">All sizes</option>');
@@ -209,7 +214,7 @@ function editTx(id){
   el('txCharity').value=t.charity;el('txSize').value=t.size;el('txDate').value=t.date;el('txNote').value=t.note||'';setQty(qty);
   el('cancelTxBtn').style.display='block';setMode(mode);showView('inventory');
 }
-function cancelTxEdit(){editTxId=null;setQty(1);el('txNote').value='';el('txDate').value=today();el('cancelTxBtn').style.display='none';setMode(mode)}
+function cancelTxEdit(){editTxId=null;setQty(1);el('txCharity').value='';el('txSize').value='';el('txNote').value='';el('txDate').value=today();el('cancelTxBtn').style.display='none';setMode(mode)}
 function deleteTx(id){
   const t=data.transactions.find(x=>x.id===id);if(!t)return;
   const n=value(t),description=`${fmtDate(t.date)} — ${t.charity} — ${t.size} — ${n>0?'+':''}${n}`;
@@ -236,7 +241,7 @@ function saveNeed(){
   save(editing?'Planned need edited':'Planned need added');cancelNeedEdit();renderAll();notice('needNotice','Need saved.',true);
 }
 function editNeed(id){const n=data.needs.find(x=>x.id===id);if(!n)return;editNeedId=id;refreshSelects();el('needMonth').value=n.month;el('needCharity').value=n.charity;el('needSize').value=n.size;el('needQty').value=n.qty;el('needNote').value=n.note||'';el('saveNeedBtn').textContent='Save Changes';el('cancelNeedBtn').style.display='block';showView('needs')}
-function cancelNeedEdit(){editNeedId=null;el('needMonth').value=monthNow();el('needQty').value=1;el('needNote').value='';el('saveNeedBtn').textContent='Add Need';el('cancelNeedBtn').style.display='none'}
+function cancelNeedEdit(){editNeedId=null;el('needMonth').value=monthNow();el('needCharity').value='';el('needSize').value='';el('needQty').value=1;el('needNote').value='';el('saveNeedBtn').textContent='Add Need';el('cancelNeedBtn').style.display='none'}
 function deleteNeed(id){
   const n=data.needs.find(x=>x.id===id);if(!n)return;
   if(confirm(`Delete this planned need?\n\n${fmtMonth(n.month)} — ${n.charity} — ${n.size} — Need ${n.qty}\n\nA recovery copy will be kept.`)){
@@ -245,8 +250,21 @@ function deleteNeed(id){
 }
 function upcoming(){return data.needs.filter(n=>n.month>=monthNow())}
 function totalNeeded(){return upcoming().reduce((a,n)=>a+n.qty,0)}
-function shortageTotal(){return upcoming().reduce((a,n)=>a+Math.max(0,n.qty-onHand(n.charity,n.size)),0)}
-function needCard(n,actions=true){const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);return`<div class="item"><div class="head"><div><div class="title">${fmtMonth(n.month)} — ${esc(n.charity)}</div><div class="meta">${esc(n.size)}${n.note?' · '+esc(n.note):''}</div>${auditText(n)?`<div class="audit-meta">${esc(auditText(n))}</div>`:''}</div><div class="badge">${n.qty}</div></div><div class="planner"><div><b>${n.qty}</b><span>Need</span></div><div><b>${stock}</b><span>On Hand</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div></div>${actions?`<div class="actions"><button onclick="editNeed('${n.id}')">Edit</button><button onclick="deleteNeed('${n.id}')">Delete</button></div>`:''}</div>`}
+function sortedNeedsForPlanning(list=data.needs){return[...list].sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size)||String(a.createdAt||a.id).localeCompare(String(b.createdAt||b.id)))}
+function allocateNeedsForPlanning(list=data.needs){
+  const remaining=invMap();
+  return sortedNeedsForPlanning(list).map(n=>{
+    const key=n.charity+'|'+n.size,available=Math.max(0,Number(remaining[key]||0)),need=Math.max(1,Number(n.qty||1)),shortage=Math.max(0,need-available);
+    remaining[key]=Math.max(0,available-need);
+    return{n,available,shortage,covered:Math.min(need,available)};
+  });
+}
+function allocationForNeed(target,allocations=null){return(allocations||allocateNeedsForPlanning()).find(item=>item.n.id===target.id)||{n:target,available:Math.max(0,onHand(target.charity,target.size)),shortage:Math.max(0,Number(target.qty||1)-Math.max(0,onHand(target.charity,target.size)))} }
+function shortageTotal(){return allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()).reduce((sum,item)=>sum+item.shortage,0)}
+function needCard(n,actions=true,allocation=null){
+  const info=allocation||allocationForNeed(n),available=info.available,short=info.shortage,stateClass=short===0?'need-covered':available>0?'need-partial':'need-shortage',stateLabel=short===0?'Covered':available>0?'Partial':'Shortage';
+  return`<div class="item need-card ${stateClass}"><div class="head"><div><div class="title">${fmtMonth(n.month)} — ${esc(n.charity)}</div><div class="meta">${esc(n.size)}${n.note?' · '+esc(n.note):''}</div>${auditText(n)?`<div class="audit-meta">${esc(auditText(n))}</div>`:''}</div><span class="need-status">${stateLabel}</span></div><div class="planner"><div><b>${n.qty}</b><span>Need</span></div><div><b>${available}</b><span>Available</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div></div>${actions?`<div class="actions"><button onclick="editNeed('${n.id}')">Edit</button><button onclick="deleteNeed('${n.id}')">Delete</button></div>`:''}</div>`;
+}
 function refreshCalendarYears(){
   const select=el('calendarYear');if(!select)return;
   const current=Number(monthNow().slice(0,4)),years=unique([current-1,current,current+1,current+2,...data.needs.map(n=>Number(String(n.month).slice(0,4))).filter(Boolean)]).map(Number).sort((a,b)=>a-b);
@@ -256,17 +274,20 @@ function renderNeedsCalendar(){
   const box=el('needsCalendar');if(!box)return;
   refreshCalendarYears();
   const year=Number(el('calendarYear')?.value)||Number(monthNow().slice(0,4)),charity=el('calendarCharity')?.value||'',size=el('calendarSize')?.value||'';
+  const allocations=allocateNeedsForPlanning(),byId=new Map(allocations.map(item=>[item.n.id,item]));
   const monthNames=Array.from({length:12},(_,i)=>new Date(year,i,1).toLocaleDateString(undefined,{month:'short'}));
   box.innerHTML=monthNames.map((name,index)=>{
     const month=`${year}-${String(index+1).padStart(2,'0')}`;
-    const list=data.needs.filter(n=>n.month===month&&(!charity||n.charity===charity)&&(!size||n.size===size)).sort((a,b)=>a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size));
-    const needed=list.reduce((sum,n)=>sum+n.qty,0),shortage=list.reduce((sum,n)=>sum+Math.max(0,n.qty-onHand(n.charity,n.size)),0);
-    const state=!list.length?'empty-month':shortage?'shortage':'covered',label=!list.length?'No need':shortage?'Shortage':'Covered';
-    const details=list.length?list.map(n=>`<div class="month-need"><button type="button" onclick="editNeed('${n.id}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · Need ${n.qty} · Hand ${onHand(n.charity,n.size)}</button></div>`).join(''):'<div class="month-need">No planned need</div>';
+    const list=data.needs.filter(n=>n.month===month&&(!charity||n.charity===charity)&&(!size||n.size===size)).sort((a,b)=>a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size)||String(a.createdAt||a.id).localeCompare(String(b.createdAt||b.id)));
+    const rows=list.map(n=>byId.get(n.id)||allocationForNeed(n,allocations));
+    const needed=list.reduce((sum,n)=>sum+n.qty,0),shortage=rows.reduce((sum,item)=>sum+item.shortage,0);
+    const hasPartial=rows.some(item=>item.available>0&&item.shortage>0),hasCovered=rows.some(item=>item.shortage===0),hasShort=rows.some(item=>item.shortage>0);
+    const state=!list.length?'empty-month':!hasShort?'covered':(hasPartial||hasCovered)?'partial':'shortage',label=!list.length?'No need':!hasShort?'Covered':(hasPartial||hasCovered)?'Partial':'Shortage';
+    const details=list.length?rows.map(item=>{const n=item.n;return`<div class="month-need"><button type="button" onclick="editNeed('${n.id}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · Need ${n.qty} · Available ${item.available} · Short ${item.shortage}</button></div>`}).join(''):'<div class="month-need">No planned need</div>';
     return`<div class="month-card ${state}"><h4><span>${name}</span><span class="month-status">${label}</span></h4><div class="month-totals"><div><b>${needed}</b><span>Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>${details}</div>`;
   }).join('');
 }
-function renderNeeds(){renderNeedsCalendar();const list=[...data.needs].sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity));el('needsList').innerHTML=list.length?list.map(n=>needCard(n)).join(''):'<div class="empty">No planned needs entered yet.</div>';const next=upcoming().sort((a,b)=>a.month.localeCompare(b.month)).slice(0,5);el('homeNeedsList').innerHTML=next.length?next.map(n=>needCard(n,false)).join(''):'<div class="empty">No upcoming needs entered yet.</div>'}
+function renderNeeds(){renderNeedsCalendar();const allocations=allocateNeedsForPlanning();el('needsList').innerHTML=allocations.length?allocations.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No planned needs entered yet.</div>';const next=allocations.filter(item=>item.n.month>=monthNow());el('homeNeedsList').innerHTML=next.length?next.map(item=>needCard(item.n,false,item)).join(''):'<div class="empty">No upcoming needs entered yet.</div>'}
 function renderHome(){el('homeOnHand').textContent=totalOnHand();el('homeNeeded').textContent=totalNeeded();el('homeShortage').textContent=shortageTotal();updateSaveStatus()}
 function inventoryGroups(){const inventory=invMap();return[...data.charities].sort((a,b)=>a.localeCompare(b)).map(c=>{const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));return{charity:c,sizes,total:sizes.reduce((sum,x)=>sum+x.n,0)}})}
 function reportInventoryHTML(){
@@ -274,7 +295,7 @@ function reportInventoryHTML(){
   const body=charities.map(g=>{const detail=g.sizes.length?g.sizes.map(x=>`<tr><td>${esc(g.charity)}</td><td>${esc(x.s)}</td><td>${x.n}</td></tr>`).join(''):`<tr><td>${esc(g.charity)}</td><td><span class="small">None on hand</span></td><td>0</td></tr>`;return`${detail}<tr class="subtotal-row"><td colspan="2">Total for ${esc(g.charity)}</td><td>${g.total}</td></tr>`}).join('');
   return`<table><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td colspan="2">Grand Total</td><td>${totalOnHand()}</td></tr></tfoot></table>`;
 }
-function reportNeedsHTML(){const list=upcoming().sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity));return list.length?`<table><thead><tr><th>Month</th><th>Charity / Size</th><th>Need</th><th>On Hand</th><th>Shortage</th></tr></thead><tbody>${list.map(n=>{const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);return`<tr><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${stock}</td><td class="${short?'negative':''}">${short}</td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No upcoming needs.</div>'}
+function reportNeedsHTML(){const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow());return list.length?`<table><thead><tr><th>Month</th><th>Charity / Size</th><th>Need</th><th>Available</th><th>Shortage</th></tr></thead><tbody>${list.map(item=>{const n=item.n;return`<tr><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${item.available}</td><td class="${item.shortage?'negative':''}">${item.shortage}</td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No upcoming needs.</div>'}
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`}
 function renderReports(){
@@ -367,11 +388,11 @@ function sendExternalBackupNow(){sendExternalBackup(true,'Manual backup')}
 function updateSaveStatus(){
   const local=status.lastSavedAt?`Last saved ${fmtDateTime(status.lastSavedAt)}`:'Saved automatically on this device';
   const external=cloud.url?(cloud.lastSentAt?`Last backup request ${fmtDateTime(cloud.lastSentAt)}`:(cloud.enabled?'Connected; not sent yet':'Connected; automatic sending off')):'Not connected';
-  const firebase=window.lqFirebaseState?.message||'Checking shared-device sync';
+  const firebaseState=window.lqFirebaseState||{},firebase=firebaseState.message||'Checking shared-device sync';
   if(el('localSaveStatus'))el('localSaveStatus').textContent=local;
   if(el('externalSaveStatus'))el('externalSaveStatus').textContent=external;
   if(el('firebaseSaveStatus'))el('firebaseSaveStatus').textContent=firebase;
-  if(el('homeSaveStatus'))el('homeSaveStatus').textContent=`${local} · Sync: ${firebase}`;
+  if(el('homeSaveStatus')){el('homeSaveStatus').textContent=firebaseState.verified?firebase:`${local} · Sync: ${firebase}`;el('homeSaveStatus').classList.toggle('verified',!!firebaseState.verified)}
 }
 function pdfPlain(v){
   return String(v??'')
@@ -408,12 +429,12 @@ function makeOnePagePDF(){
   inventoryRows.push({text:`GRAND TOTAL: ${totalOnHand()}`,bold:true});
 
   const needsRows=[];
-  const needs=upcoming().sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity));
+  const needs=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow());
   if(!needs.length)needsRows.push({text:'No upcoming needs.',bold:false});
-  needs.forEach(n=>{
-    const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);
+  needs.forEach(item=>{
+    const n=item.n;
     needsRows.push({text:`${fmtMonthShort(n.month)} - ${n.charity}`,bold:true});
-    needsRows.push({text:`  ${n.size} | Need ${n.qty} | Hand ${stock} | Short ${short}`,bold:false});
+    needsRows.push({text:`  ${n.size} | Need ${n.qty} | Available ${item.available} | Short ${item.shortage}`,bold:false});
   });
   const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date));
   needsRows.push({text:'',bold:false});
@@ -525,12 +546,12 @@ function makeFullPDF(){
   addParagraph(`Grand Total: ${totalOnHand()}`,{size:9,bold:true,after:10});
 
   beginSection('UPCOMING NEEDS');
-  const needs=upcoming().sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size));
+  const needs=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow());
   if(!needs.length)addParagraph('No upcoming needs.');
-  needs.forEach(n=>{
-    const stock=onHand(n.charity,n.size),short=Math.max(0,n.qty-stock);
+  needs.forEach(item=>{
+    const n=item.n;
     addParagraph(`${fmtMonth(n.month)} - ${n.charity}`,{size:9,bold:true,after:2});
-    addParagraph(`${n.size} | Need: ${n.qty} | On Hand: ${stock} | Shortage: ${short}`,{indent:16,after:n.note?1:6});
+    addParagraph(`${n.size} | Need: ${n.qty} | Available: ${item.available} | Shortage: ${item.shortage}`,{indent:16,after:n.note?1:6});
     if(n.note)addParagraph(`Note: ${n.note}`,{indent:16,size:7.5,after:6});
   });
 
@@ -591,8 +612,8 @@ async function shareReport(kind){
 function shareFullReport(){shareReport('full')}
 function shareCompactReport(){shareReport('compact')}
 function clearPrintMode(){document.body.classList.remove('print-full','print-compact')}
-function printFullReport(){renderReports();clearPrintMode();document.body.classList.add('print-full');setTimeout(()=>{window.print();setTimeout(clearPrintMode,500)},50)}
-function printMeetingReport(){renderReports();clearPrintMode();document.body.classList.add('print-compact');setTimeout(()=>{window.print();setTimeout(clearPrintMode,500)},50)}
+function printFullReport(){renderReports();clearPrintMode();document.body.classList.add('print-full');void document.body.offsetHeight;window.print()}
+function printMeetingReport(){renderReports();clearPrintMode();document.body.classList.add('print-compact');void document.body.offsetHeight;window.print()}
 function exportMeetingPDF(){exportCompactPDF()}
 window.addEventListener('afterprint',clearPrintMode);
 window.addEventListener('online',()=>queueExternalBackup('Internet connection restored'));
@@ -618,7 +639,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.6.2 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.0 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.6.2',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.0',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

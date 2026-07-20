@@ -120,13 +120,16 @@ function releaseGate() {
 }
 
 function setState(message, kind = 'normal') {
-  window.lqFirebaseState = { message, kind, email: currentUser?.email || '' };
+  const verified = message === 'All changes synced';
+  const displayMessage = verified ? '✓ Shared data verified · All changes synced' : message;
+  const previous = window.lqFirebaseState || {};
+  window.lqFirebaseState = {message:displayMessage,rawMessage:message,kind,email:currentUser?.email || '',verified,verifiedAt:verified?new Date().toISOString():(previous.verifiedAt||'')};
   const banner = byId('firebaseBannerStatus');
-  if (banner) banner.textContent = currentUser ? `${message} · ${currentUser.email}` : message;
+  if (banner) banner.textContent = currentUser ? `${displayMessage} · ${currentUser.email}` : displayMessage;
   const account = byId('firebaseAccountStatus');
   if (account) account.textContent = currentUser?.email || 'Not signed in';
   const loadingStatus = byId('firebaseLoadingStatus');
-  if (loadingStatus && !byId('firebaseGate')?.classList.contains('hidden')) loadingStatus.textContent = message;
+  if (loadingStatus && !byId('firebaseGate')?.classList.contains('hidden')) loadingStatus.textContent = displayMessage;
   if (typeof window.lqRefreshSaveStatus === 'function') window.lqRefreshSaveStatus();
 }
 

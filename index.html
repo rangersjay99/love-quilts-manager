@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.6.2">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.6.2">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.6.2">
+<link rel="manifest" href="manifest-v7.json?v=7.7.0">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.0">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.0">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -188,6 +188,23 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   body.print-compact #meetingReport .subtotal-row td{font-weight:800;background:#f3f3f3;border-top:1px solid #777}
   body.print-compact #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
 }
+
+
+/* Update 7.7.0 — needs planning and sync verification */
+.need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
+.need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
+.need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
+.need-card.need-partial{background:#fff8e5;border-color:#ead28f}
+.need-card.need-shortage{background:#fff0f1;border-color:#e7b5bb}
+.need-status{flex:0 0 auto;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.02em}
+.need-covered .need-status{background:#d7efdd;color:#245f38}
+.need-partial .need-status{background:#f7e8b6;color:#6b500d}
+.need-shortage .need-status{background:#f4d6da;color:#8d2935}
+.month-card.partial{border-color:#d9bd64;background:#fff8e5}
+.month-card.partial .month-status{color:#7a5b0b}
+.save-status.verified{margin-top:11px;padding:10px;border:1px solid #b9ddc2;border-radius:11px;background:#e6f5ea;color:#245f38;font-weight:850}
+@media print{.firebase-banner{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -204,7 +221,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div id="firebaseLoginNotice" class="notice"></div></div>
     <div id="firebaseLoadingPanel" style="display:none;text-align:center">
       <h2>Loading Shared Inventory</h2>
-      <p id="firebaseLoadingStatus" class="small">Checking Firebase…</p>
+      <p id="firebaseLoadingStatus" class="small">Checking shared data…</p>
       <button class="ghost" type="button" onclick="window.lqFirebaseSignOut?.()">Sign Out</button>
     </div>
   </div>
@@ -212,14 +229,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.6.2" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.0" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.6.2</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.0</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -251,7 +268,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <button class="btn-gold" onclick="showView('settings')">Settings</button>
     </div>
   </div>
-  <div class="card"><h3>Next Needs</h3><div id="homeNeedsList"></div></div>
+  <div class="card"><h3>Upcoming Needs</h3><div id="homeNeedsList"></div></div>
 </section>
 
 <section id="inventory" class="view">
@@ -264,8 +281,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <button id="modeAdjust" onclick="setMode('ADJUST')">Adjust</button>
     </div>
     <label id="dateLabel">Date In</label><input id="txDate" type="date">
-    <label>Charity</label><select id="txCharity"></select>
-    <label>Size</label><select id="txSize"></select>
+    <label>Charity</label><select id="txCharity" required></select>
+    <label>Size</label><select id="txSize" required></select>
     <label for="qtyInput">Quantity</label>
     <div class="qty-wrap"><button type="button" aria-label="Subtract one" onclick="changeQty(-1)">−</button><input id="qtyInput" class="qty-input" type="number" inputmode="numeric" min="1" step="1" value="1" oninput="syncQtyInput()"><button type="button" aria-label="Add one" onclick="changeQty(1)">+</button></div>
     <div class="qty-help">Type the exact number, or use − and + for small changes.</div>
@@ -293,8 +310,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <h2>Needs Planner</h2>
     <div id="needsNote" class="section-note">Enter the number needed by month. Current stock and shortage are calculated automatically.</div>
     <label>Month Needed</label><input id="needMonth" type="month">
-    <label>Charity</label><select id="needCharity"></select>
-    <label>Size</label><select id="needSize"></select>
+    <label>Charity</label><select id="needCharity" required></select>
+    <label>Size</label><select id="needSize" required></select>
     <label>Quantity Needed</label><input id="needQty" type="number" min="1" step="1" value="1">
     <label>Note <span class="small">(optional)</span></label><input id="needNote" placeholder="Holiday delivery, annual event, etc.">
     <div id="needNotice" class="notice"></div>
@@ -303,7 +320,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   </div>
   <div class="card">
     <h3>Needs Calendar</h3>
-    <p class="small">View all 12 months. Green means current inventory covers the listed need; red shows a shortage.</p>
+    <p class="small">View all 12 months. Inventory is allocated in month order: green is covered, gold is partially covered, and red is a shortage.</p>
     <div class="calendar-toolbar">
       <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
       <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
@@ -430,11 +447,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.6.2 · July 17, 2026</span>
+      <b>Version</b><span>Update 7.7.0 · July 17, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.6.2 is the final pre-live-data release. It adds direct quantity entry, the Needs Calendar, report-title customization, entry accountability, safer shared-backup restore, compact mobile fields, and the corrected logo while preserving production synchronization.</p>
+    <p class="small">Update 7.7.0 improves real-world entry, month-by-month Available calculations, direct printing on iPhone/iPad, tinted needs blocks, and clear shared-data verification while preserving the working Firebase synchronization.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -448,7 +465,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.6.2"></script>
-<script src="app.js?v=7.6.2"></script>
+<script type="module" src="firebase-sync.js?v=7.7.0"></script>
+<script src="app.js?v=7.7.0"></script>
 </body>
 </html>

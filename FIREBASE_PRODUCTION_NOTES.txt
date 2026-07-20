@@ -1,9 +1,10 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.6.2
+FIREBASE PRODUCTION NOTES — UPDATE 7.7.0
 
 Firebase project: faithful-circle-love-quilts
 Production organization path: organizations/faithful-circle-love-quilts
 Test organization path: organizations/faithful-circle-love-quilts-test
 
-Update 7.6.2 preserves the proven login, initialization, pending-save recovery, and real-time sync flow.
-The only additive sync fields are reportTitle plus created/updated audit details for inventory and planned needs.
+Update 7.7.0 preserves the proven login, initialization, pending-save recovery, and real-time synchronization flow.
+The Firebase paths, local-storage keys, approved accounts, and stored data structure are unchanged.
 The firebase-test folder remains separate and should not be replaced or deleted.
+Do not choose Create Real Shared Inventory again during this update.
