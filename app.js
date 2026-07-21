@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.7.3';
+const VERSION='7.7.4';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -403,11 +403,24 @@ function reportNeedsHTML(){
   const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
   return list.length?`<table><thead><tr><th>Month</th><th>Charity / Size</th><th>Need</th><th>Sent / Remaining</th><th>Available / Short</th></tr></thead><tbody>${list.map(item=>{const n=item.n;return`<tr><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${item.fulfilled} sent<br><span class="small">${item.remaining} remaining</span></td><td>${item.available} available<br><span class="small ${item.shortage?'negative':''}">${item.shortage} short</span></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No upcoming needs.</div>';
 }
+function distributedNeedsForReport(){
+  return data.needs.filter(n=>fulfilledQty(n)>0).sort((a,b)=>String(b.fulfilledDate||'').localeCompare(String(a.fulfilledDate||''))||String(b.month||'').localeCompare(String(a.month||''))||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size));
+}
+function distributionReportStatus(n){return remainingNeed(n)===0?'Distributed':'Partially Sent'}
+function reportDistributedHTML(){
+  const list=distributedNeedsForReport();
+  return list.length?`<table><thead><tr><th>Date Sent</th><th>Month Needed</th><th>Charity / Size</th><th>Need</th><th>Sent / Remaining</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} remaining</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No distributed needs recorded yet.</div>';
+}
+function compactDistributedHTML(limit=6){
+  const all=distributedNeedsForReport(),list=all.slice(0,limit);
+  if(!list.length)return'<div class="print-note">No distributed needs recorded.</div>';
+  return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Sent</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'—'}</td><td>${esc(n.charity)}<br>${esc(n.size)}</td><td>${fulfilledQty(n)}${remainingNeed(n)?`<br><span class="small">${remainingNeed(n)} left</span>`:''}</td></tr>`).join('')}</tbody></table>${all.length>list.length?`<div class="print-note">Showing ${list.length} of ${all.length} distribution records.</div>`:''}`;
+}
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
-function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`}
+function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Distributed Needs</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`}
 function renderReports(){
   el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
-  el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();
+  el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();el('reportDistributed').innerHTML=reportDistributedHTML();
   const a=data.transactions.filter(t=>t.type==='ADJUST').sort((x,y)=>y.date.localeCompare(x.date));
   el('reportAdjustments').innerHTML=a.length?a.map(x=>`<div class="item"><div class="head"><div><div class="title">${value(x)>0?'+':''}${value(x)} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}${x.note?' · '+esc(x.note):''}</div></div><span class="flag">Adjusted</span></div></div>`).join(''):'<div class="empty">No adjusted transactions.</div>';
   renderMeetingReport();
@@ -544,6 +557,14 @@ function makeOnePagePDF(){
     needsRows.push({text:`  ${n.size} | Need ${n.qty} | Sent ${item.fulfilled} | Remaining ${item.remaining}`,bold:false});
     needsRows.push({text:`  Available ${item.available} | Short ${item.shortage}`,bold:false});
   });
+  const distributed=distributedNeedsForReport();
+  needsRows.push({text:'',bold:false});
+  needsRows.push({text:`DISTRIBUTED NEEDS: ${distributed.length}`,bold:true});
+  distributed.slice(0,6).forEach(n=>{
+    needsRows.push({text:`${n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered'} - ${n.charity}`,bold:true});
+    needsRows.push({text:`  ${n.size} | Need ${n.qty} | Sent ${fulfilledQty(n)} | Remaining ${remainingNeed(n)}`,bold:false});
+  });
+  if(distributed.length>6)needsRows.push({text:`  + ${distributed.length-6} earlier distribution records`,bold:false});
   const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date));
   needsRows.push({text:'',bold:false});
   needsRows.push({text:`ADJUSTMENTS ON RECORD: ${adjustments.length}`,bold:true});
@@ -663,6 +684,15 @@ function makeFullPDF(){
     if(n.note)addParagraph(`Note: ${n.note}`,{indent:16,size:7.5,after:6});
   });
 
+  beginSection('DISTRIBUTED NEEDS');
+  const distributed=distributedNeedsForReport();
+  if(!distributed.length)addParagraph('No distributed needs recorded.');
+  distributed.forEach(n=>{
+    addParagraph(`${n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered'} - ${n.charity}`,{size:9,bold:true,after:2});
+    addParagraph(`${n.size} | Month Needed: ${fmtMonth(n.month)} | Need: ${n.qty} | Sent: ${fulfilledQty(n)} | Remaining: ${remainingNeed(n)} | Status: ${distributionReportStatus(n)}`,{indent:16,after:n.note?1:6});
+    if(n.note)addParagraph(`Note: ${n.note}`,{indent:16,size:7.5,after:6});
+  });
+
   beginSection('ADJUSTED TRANSACTIONS');
   const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)||a.charity.localeCompare(b.charity));
   if(!adjustments.length)addParagraph('No adjusted transactions.');
@@ -747,7 +777,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.3 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.4 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.3',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.4',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

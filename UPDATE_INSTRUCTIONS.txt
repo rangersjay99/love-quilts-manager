@@ -1,10 +1,11 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.3
-Login-Loop Hotfix
+LOVE QUILTS MANAGER — UPDATE 7.7.4
+Distributed Needs in Reports
 
 BEFORE UPLOADING
-1. Do not clear browser/app data.
-2. Do not choose Create Real Shared Inventory.
-3. If possible, keep the current repository ZIP as a backup.
+1. Confirm the app shows All changes synced.
+2. Export a current app backup.
+3. Keep the current repository ZIP as a backup.
+4. Do not choose Create Real Shared Inventory.
 
 UPLOAD
 1. Extract this ZIP.
@@ -14,10 +15,10 @@ UPLOAD
 5. Wait for GitHub Pages to finish publishing.
 
 AFTER UPLOADING
-1. Completely close the installed app or browser tab.
-2. Reopen the normal Love Quilts Manager address while connected to the internet.
-3. The splash screen should show Update 7.7.3.
-4. The approved account should remain signed in or allow a normal sign-in without looping.
-5. Confirm the header reaches All changes synced.
+1. Completely close and reopen the app while connected to the internet.
+2. Confirm the splash screen shows Update 7.7.4.
+3. Confirm the approved account signs in normally and reaches All changes synced.
+4. Open Reports and verify the Distributed Needs section.
+5. Check both the full and compact report previews or PDFs.
 
-This hotfix does not reset or reinitialize local or Firebase data.
+This update does not reset, reinitialize, or migrate local or Firebase data.

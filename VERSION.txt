@@ -1,11 +1,10 @@
-Love Quilts Manager Update 7.7.3
+Love Quilts Manager Update 7.7.4
 Released: July 20, 2026
 
-Emergency login-loop correction for Update 7.7.2.
+Adds distributed-needs reporting.
 
-- Removes a duplicated normalizeNeed code fragment from firebase-sync.js.
-- Restores Firebase authentication startup and shared-device synchronization.
-- Retains distributed/completed-needs tracking, optional Inventory Out creation, Past Due status, and the direct quantity-entry fix.
-- Uses a new 7.7.3 cache so devices do not retain the faulty 7.7.2 Firebase module.
-
-Existing local and Firebase data formats remain unchanged.
+- On-screen report includes a Distributed Needs table.
+- Full print and full PDF include every distribution record.
+- Compact print and compact PDF include recent distribution records.
+- Each record shows sent date, month needed, charity, size, need, sent, remaining, and completion status where space allows.
+- Firebase paths, local-storage keys, authentication, and synchronization flow remain unchanged.

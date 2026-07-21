@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.7.3">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.3">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.3">
+<link rel="manifest" href="manifest-v7.json?v=7.7.4">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.4">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.4">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -190,7 +190,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.7.3 — need distribution tracking */
+/* Update 7.7.4 — distributed needs reporting */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -242,14 +242,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.3" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.4" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.3</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.4</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -363,10 +363,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   </div>
   <div class="card"><h3>Inventory On Hand</h3><div id="reportInventory"></div></div>
   <div class="card"><h3>Upcoming Needs</h3><div id="reportNeeds"></div></div>
+  <div class="card"><h3>Distributed Needs</h3><div id="reportDistributed"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
   <div class="card no-print">
     <h3>Report Downloads</h3>
-    <p class="small">The full PDF includes all inventory, upcoming needs, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
+    <p class="small">The full PDF includes all inventory, upcoming needs, distributed needs, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
     <button class="primary" onclick="exportFullPDF()">Download Full PDF Report</button>
     <button class="ghost" onclick="exportCompactPDF()">Download Compact One-Page PDF</button>
     <div class="row"><button class="ghost" onclick="shareFullReport()">Email Full Report</button><button class="ghost" onclick="shareCompactReport()">Email Compact Report</button></div>
@@ -468,11 +469,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.7.3 · July 20, 2026</span>
+      <b>Version</b><span>Update 7.7.4 · July 20, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.7.3 adds distributed/completed needs, quantity and date tracking, optional automatic Inventory Out entries, and clear Past Due status while retaining the direct quantity-entry fix.</p>
+    <p class="small">Update 7.7.4 adds distributed needs to on-screen, printed, compact, and full PDF reports while retaining the proven login, sync, direct quantity-entry, and fulfillment features.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -486,7 +487,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.7.3"></script>
-<script src="app.js?v=7.7.3"></script>
+<script type="module" src="firebase-sync.js?v=7.7.4"></script>
+<script src="app.js?v=7.7.4"></script>
 </body>
 </html>

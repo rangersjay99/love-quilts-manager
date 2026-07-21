@@ -1,14 +1,14 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.3 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.7.4 TEST CHECKLIST
 
-[ ] Splash screen shows Update 7.7.3.
-[ ] App no longer cycles between login and loading screens.
-[ ] Approved account signs in normally.
+[ ] Splash screen shows Update 7.7.4.
+[ ] Approved account signs in without looping.
 [ ] Existing inventory and needs appear.
 [ ] Header reaches All changes synced.
-[ ] Second approved device shows the same information.
-[ ] Direct inventory quantity entry still accepts a blank field and typed quantities.
-[ ] A past need can be marked Distributed without deducting inventory again.
-[ ] A future distribution can optionally create the matching Inventory Out entry.
-[ ] Completed needs show Distributed and do not reserve current inventory.
-[ ] Past unfinished needs show Past Due.
-[ ] Closing and reopening keeps the account signed in.
+[ ] Reports show a Distributed Needs section.
+[ ] A completed June need shows its date sent, month needed, charity, size, need, sent, remaining 0, and Distributed status.
+[ ] A partially sent need shows Partially Sent and the correct remaining quantity.
+[ ] Full print and full PDF include all distributed needs.
+[ ] Compact print and compact PDF include recent distributed needs.
+[ ] Upcoming Needs still excludes fully distributed needs.
+[ ] Direct inventory quantity entry still works.
+[ ] Second approved device shows the same data.
