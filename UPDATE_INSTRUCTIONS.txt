@@ -1,32 +1,23 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.2
-Ready-to-upload package
+LOVE QUILTS MANAGER — UPDATE 7.7.3
+Login-Loop Hotfix
 
 BEFORE UPLOADING
-1. In the app, export a current backup.
-2. Confirm both devices show all changes synced.
-3. Download a backup ZIP of the current GitHub repository.
+1. Do not clear browser/app data.
+2. Do not choose Create Real Shared Inventory.
+3. If possible, keep the current repository ZIP as a backup.
 
 UPLOAD
 1. Extract this ZIP.
 2. Open the main/root folder of the GitHub repository.
 3. Upload every extracted file and replace files with the same names.
 4. Leave the firebase-test folder unchanged.
-5. Wait for GitHub Pages to publish.
-6. Completely close and reopen the app on each device.
-7. Confirm the splash screen shows Update 7.7.2.
+5. Wait for GitHub Pages to finish publishing.
 
-MARKING AN OLD NEED DISTRIBUTED
-1. Open Needs and locate the need.
-2. Choose Mark Distributed.
-3. Confirm Quantity Distributed and Date Distributed.
-4. Leave “Record as Love Quilts Out” UNCHECKED when the quilts were already removed from inventory.
-5. Save Changes.
+AFTER UPLOADING
+1. Completely close the installed app or browser tab.
+2. Reopen the normal Love Quilts Manager address while connected to the internet.
+3. The splash screen should show Update 7.7.3.
+4. The approved account should remain signed in or allow a normal sign-in without looping.
+5. Confirm the header reaches All changes synced.
 
-FUTURE DISTRIBUTIONS
-- Check “Record as Love Quilts Out” only when the distribution has not already been entered on the Inventory screen.
-- The app will create the matching Inventory Out transaction and prevent inventory from going below zero.
-
-IMPORTANT
-- Do not choose Create Real Shared Inventory again.
-- Do not clear or reinitialize Firebase.
-- Existing inventory, needs, names, approved accounts, and synchronization remain in place.
+This hotfix does not reset or reinitialize local or Firebase data.

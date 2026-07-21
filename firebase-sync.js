@@ -208,19 +208,6 @@ function normalizeNeed(source = {}) {
     updatedBy: cleanString(source.updatedBy || ''),
     updatedAt: cleanString(source.updatedAt || '')
   };
-}) {
-  return {
-    id: cleanString(source.id),
-    month: cleanString(source.month),
-    charity: cleanString(source.charity),
-    size: cleanString(source.size),
-    qty: Math.max(1, Number(source.qty || 1)),
-    note: cleanString(source.note || ''),
-    createdBy: cleanString(source.createdBy || ''),
-    createdAt: cleanString(source.createdAt || ''),
-    updatedBy: cleanString(source.updatedBy || ''),
-    updatedAt: cleanString(source.updatedAt || '')
-  };
 }
 
 function normalizeAppData(source = {}) {

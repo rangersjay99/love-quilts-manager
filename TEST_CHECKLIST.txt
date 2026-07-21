@@ -1,32 +1,14 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.2 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.7.3 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.7.2.
-[ ] Existing inventory and needs are still present.
-[ ] Both approved accounts remain signed in and synced.
-[ ] Direct inventory quantity entry still works.
-
-HISTORICAL COMPLETED NEED
-[ ] Edit a past-month need and choose Mark Distributed.
-[ ] Quantity Distributed defaults to the full need quantity.
-[ ] Enter/confirm the actual distribution date.
-[ ] Leave Record as Love Quilts Out unchecked when inventory was already updated.
-[ ] Save and confirm the card says Distributed.
-[ ] The card shows Need, Sent, and Remaining 0.
-[ ] The month calendar says Distributed rather than Covered.
-[ ] The completed past need no longer uses today's available inventory.
-
-PAST DUE AND PARTIAL
-[ ] An unfinished past-month need says Past Due.
-[ ] A partially distributed need shows Need, Sent, and Remaining.
-[ ] Current/future unfulfilled needs still show Covered, Partial, or Shortage.
-
-AUTOMATIC INVENTORY OUT
-[ ] For a test need, increase Quantity Distributed and check Record as Love Quilts Out.
-[ ] Confirmation shows the inventory change.
-[ ] A matching OUT transaction appears in Inventory History.
-[ ] Re-saving the same distributed quantity does not create a duplicate OUT transaction.
-[ ] Attempting to distribute more than inventory on hand is blocked.
-
-[ ] Reports and PDFs use remaining upcoming need quantities.
-[ ] A test completion syncs to the other device.
-[ ] Backup export and restore still preserve distribution status.
+[ ] Splash screen shows Update 7.7.3.
+[ ] App no longer cycles between login and loading screens.
+[ ] Approved account signs in normally.
+[ ] Existing inventory and needs appear.
+[ ] Header reaches All changes synced.
+[ ] Second approved device shows the same information.
+[ ] Direct inventory quantity entry still accepts a blank field and typed quantities.
+[ ] A past need can be marked Distributed without deducting inventory again.
+[ ] A future distribution can optionally create the matching Inventory Out entry.
+[ ] Completed needs show Distributed and do not reserve current inventory.
+[ ] Past unfinished needs show Past Due.
+[ ] Closing and reopening keeps the account signed in.
