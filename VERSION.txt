@@ -1,10 +1,9 @@
-Love Quilts Manager Update 7.7.4
+Love Quilts Manager Update 7.7.5
 Released: July 20, 2026
 
-Adds distributed-needs reporting.
+Refines the Needs screen order.
 
-- On-screen report includes a Distributed Needs table.
-- Full print and full PDF include every distribution record.
-- Compact print and compact PDF include recent distribution records.
-- Each record shows sent date, month needed, charity, size, need, sent, remaining, and completion status where space allows.
-- Firebase paths, local-storage keys, authentication, and synchronization flow remain unchanged.
+- Needs Calendar appears first.
+- Planned Needs appears second.
+- Needs Planner entry form appears last.
+- No calculations, reports, authentication, synchronization, or stored-data structures were changed.

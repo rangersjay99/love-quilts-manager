@@ -1,5 +1,5 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.4
-Distributed Needs in Reports
+LOVE QUILTS MANAGER — UPDATE 7.7.5
+Needs Screen Layout Refinement
 
 BEFORE UPLOADING
 1. Confirm the app shows All changes synced.
@@ -16,9 +16,9 @@ UPLOAD
 
 AFTER UPLOADING
 1. Completely close and reopen the app while connected to the internet.
-2. Confirm the splash screen shows Update 7.7.4.
+2. Confirm the splash screen shows Update 7.7.5.
 3. Confirm the approved account signs in normally and reaches All changes synced.
-4. Open Reports and verify the Distributed Needs section.
-5. Check both the full and compact report previews or PDFs.
+4. Open Needs and verify the order: Needs Calendar, Planned Needs, Needs Planner.
+5. Confirm existing inventory, needs, distributed records, and reports remain unchanged.
 
-This update does not reset, reinitialize, or migrate local or Firebase data.
+This update does not reset, reinitialize, migrate, or alter local or Firebase data.

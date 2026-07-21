@@ -1,14 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.4 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.7.5 TEST CHECKLIST
 
-[ ] Splash screen shows Update 7.7.4.
+[ ] Splash screen shows Update 7.7.5.
 [ ] Approved account signs in without looping.
 [ ] Existing inventory and needs appear.
 [ ] Header reaches All changes synced.
-[ ] Reports show a Distributed Needs section.
-[ ] A completed June need shows its date sent, month needed, charity, size, need, sent, remaining 0, and Distributed status.
-[ ] A partially sent need shows Partially Sent and the correct remaining quantity.
-[ ] Full print and full PDF include all distributed needs.
-[ ] Compact print and compact PDF include recent distributed needs.
-[ ] Upcoming Needs still excludes fully distributed needs.
+[ ] Needs Calendar is the first card on the Needs screen.
+[ ] Planned Needs is directly below the calendar.
+[ ] Needs Planner entry form is at the bottom.
+[ ] Calendar filters and month cards still work.
+[ ] Existing needs can still be edited from the calendar or Planned Needs list.
+[ ] Distributed status and dates still appear correctly.
+[ ] Reports still include distributed needs.
 [ ] Direct inventory quantity entry still works.
 [ ] Second approved device shows the same data.
