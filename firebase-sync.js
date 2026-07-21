@@ -188,6 +188,27 @@ function normalizeTransaction(source = {}) {
 }
 
 function normalizeNeed(source = {}) {
+  const qty = Math.max(1, Math.floor(Number(source.qty || 1)));
+  const fulfilledQty = Math.max(0, Math.min(qty, Math.floor(Number(source.fulfilledQty || 0))));
+  return {
+    id: cleanString(source.id),
+    month: cleanString(source.month),
+    charity: cleanString(source.charity),
+    size: cleanString(source.size),
+    qty,
+    note: cleanString(source.note || ''),
+    fulfilledQty,
+    fulfilledDate: cleanString(source.fulfilledDate || ''),
+    fulfilledBy: cleanString(source.fulfilledBy || ''),
+    fulfilledAt: cleanString(source.fulfilledAt || ''),
+    fulfilledHighWater: Math.max(fulfilledQty, Math.floor(Number(source.fulfilledHighWater ?? fulfilledQty) || 0)),
+    autoOutQty: Math.max(0, Math.floor(Number(source.autoOutQty || 0))),
+    createdBy: cleanString(source.createdBy || ''),
+    createdAt: cleanString(source.createdAt || ''),
+    updatedBy: cleanString(source.updatedBy || ''),
+    updatedAt: cleanString(source.updatedAt || '')
+  };
+}) {
   return {
     id: cleanString(source.id),
     month: cleanString(source.month),

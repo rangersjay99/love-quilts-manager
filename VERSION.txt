@@ -1,18 +1,14 @@
-Love Quilts Manager Update 7.7.1
+Love Quilts Manager Update 7.7.2
 Released: July 20, 2026
 
-Built directly from the working Update 7.6.2 final pre-live package.
+Need fulfillment and distribution tracking:
+- Planned needs can record Quantity Distributed and Date Distributed.
+- Completed needs show DISTRIBUTED with Need, Sent, and Remaining totals.
+- Partially distributed needs show Sent and Remaining quantities.
+- Unfinished needs in past months show PAST DUE instead of Covered.
+- Completed needs no longer reserve current inventory for later months.
+- Optional checkbox creates the matching Inventory Out transaction for newly distributed quilts.
+- Leave the checkbox off when the Inventory Out transaction was already entered.
 
-Changes:
-- Deliberate charity and size selection for new entries.
-- Running Available inventory allocation by month.
-- Correct calendar, screen, report, and PDF shortage figures.
-- Tinted needs blocks without the duplicate quantity badge.
-- All upcoming needs shown on Home.
-- Direct iPhone/iPad printing fix.
-- Clear shared-data verification message.
-
+Retains direct quantity entry, live Firebase synchronization, backups, reports, calendar, and existing data.
 Firebase production path retained: organizations/faithful-circle-love-quilts
-Local storage keys and Firestore data structure are unchanged.
-
-Hotfix: inventory quantity can be cleared and typed directly without the value reverting to 1.

@@ -1,28 +1,32 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.1 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.7.2 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.7.1.
+[ ] App opens and shows Update 7.7.2.
 [ ] Existing inventory and needs are still present.
-[ ] Both approved accounts remain signed in.
-[ ] Home shows “Shared data verified · All changes synced.”
-[ ] New inventory entry starts with Charity and Size unselected.
-[ ] Quantity can be typed directly and plus/minus buttons still work.
-[ ] Saving without Charity or Size is blocked.
-[ ] New planned need starts with Charity and Size unselected.
-[ ] Repeated needs for the same charity/size use running Available inventory by month.
-[ ] Needs Calendar matches the Planned Needs list.
-[ ] Covered, Partial, and Shortage blocks have different light tints.
-[ ] The duplicate need number at the right of each block is gone.
-[ ] At a Glance shows all upcoming needs.
-[ ] Print Full Report opens directly on iPhone/iPad.
-[ ] Print Compact Report opens directly on iPhone/iPad.
-[ ] PDF and CSV export still work.
-[ ] A test change syncs to the other device.
-[ ] Delete confirmations and typed reset confirmations still work.
+[ ] Both approved accounts remain signed in and synced.
+[ ] Direct inventory quantity entry still works.
 
-DIRECT QUANTITY ENTRY
-[ ] Inventory quantity field starts blank.
-[ ] Tap the field and type 5; it remains 5.
-[ ] Delete the entire value; the field stays blank while editing.
-[ ] Saving a blank or zero quantity shows a validation message and saves nothing.
-[ ] The + button changes a blank field to 1.
-[ ] After saving, the quantity field returns to blank.
+HISTORICAL COMPLETED NEED
+[ ] Edit a past-month need and choose Mark Distributed.
+[ ] Quantity Distributed defaults to the full need quantity.
+[ ] Enter/confirm the actual distribution date.
+[ ] Leave Record as Love Quilts Out unchecked when inventory was already updated.
+[ ] Save and confirm the card says Distributed.
+[ ] The card shows Need, Sent, and Remaining 0.
+[ ] The month calendar says Distributed rather than Covered.
+[ ] The completed past need no longer uses today's available inventory.
+
+PAST DUE AND PARTIAL
+[ ] An unfinished past-month need says Past Due.
+[ ] A partially distributed need shows Need, Sent, and Remaining.
+[ ] Current/future unfulfilled needs still show Covered, Partial, or Shortage.
+
+AUTOMATIC INVENTORY OUT
+[ ] For a test need, increase Quantity Distributed and check Record as Love Quilts Out.
+[ ] Confirmation shows the inventory change.
+[ ] A matching OUT transaction appears in Inventory History.
+[ ] Re-saving the same distributed quantity does not create a duplicate OUT transaction.
+[ ] Attempting to distribute more than inventory on hand is blocked.
+
+[ ] Reports and PDFs use remaining upcoming need quantities.
+[ ] A test completion syncs to the other device.
+[ ] Backup export and restore still preserve distribution status.
