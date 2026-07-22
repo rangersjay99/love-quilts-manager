@@ -1,13 +1,13 @@
-Love Quilts Manager Update 7.7.6
+Love Quilts Manager Update 7.7.7
 Released: July 22, 2026
 
-Adds the approved report comparison layout.
+Needs editing update for today’s inventory test.
 
-- Adds Requested Needs beside each charity and size.
-- Adds Difference, calculated as On Hand minus Requested Needs.
-- Difference is green when positive and red when negative; zero remains neutral.
-- On Hand values are bold.
-- Charity subtotals and the grand total include Requested Needs, On Hand, and Difference.
-- Screen reports, browser printing, Compact PDF, and Full PDF use the updated layout.
-- Requested Needs uses the remaining quantity for current and future planned needs.
-- No authentication, sync, inventory, needs, or stored-data structures were changed.
+- Planned Needs now edit directly inside the selected Needs card.
+- Month, charity, size, quantity, note, and distribution fields all load into the inline editor.
+- Save Changes and Cancel stay with the record being edited.
+- Mark Distributed opens the same inline editor with the distributed quantity and date prepared for review.
+- Delete is smaller and still requires a confirmation before removal.
+- Availability is labeled “Available for this need” to clarify that inventory is allocated in month order.
+- Keeps the Update 7.7.6 report comparison layout.
+- No authentication, Firebase sync, or stored-data format changes.

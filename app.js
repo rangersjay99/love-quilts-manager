@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.7.6';
+const VERSION='7.7.7';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -258,54 +258,91 @@ function distributionText(n){
   const sent=fulfilledQty(n);if(!sent)return'';
   return`Distributed ${sent}${n.fulfilledDate?' on '+fmtDate(n.fulfilledDate):''}${n.fulfilledBy?' by '+n.fulfilledBy:''}`;
 }
-function prepareNeedDistribution(id){
-  const n=data.needs.find(x=>x.id===id);if(!n)return;
-  editNeed(id);el('needFulfilledQty').value=n.qty;if(!el('needFulfilledDate').value)el('needFulfilledDate').value=today();
-  el('needRecordOut').checked=false;
-  notice('needNotice',`Review the distributed quantity and date. Check “Record as ${data.itemName} Out” only if it has not already been entered in Inventory.`);
-  el('needFulfilledQty').scrollIntoView({behavior:'smooth',block:'center'});
+function showNeedSaveMessage(target,msg,good=false){
+  if(typeof target==='string')return notice(target,msg,good);
+  if(!target)return;
+  target.textContent=msg;target.className='notice show'+(good?' good':'');
+  clearTimeout(target.t);target.t=setTimeout(()=>target.className='notice',5000);
 }
-function saveNeed(){
-  const previous=editNeedId?data.needs.find(n=>n.id===editNeedId):null,stamp=nowIso(),email=currentUserEmail();
-  const needQty=Math.max(1,Math.floor(Number(el('needQty').value||1)));
-  const sentRaw=Math.floor(Number(el('needFulfilledQty').value||0));
-  if(!Number.isFinite(sentRaw)||sentRaw<0)return notice('needNotice','Quantity Distributed must be zero or more.');
-  if(sentRaw>needQty)return notice('needNotice','Quantity Distributed cannot be greater than Quantity Needed.');
-  const sentDate=String(el('needFulfilledDate').value||'');
-  if(sentRaw>0&&!sentDate)return notice('needNotice','Please enter the distribution date.');
+function needValuesFromMainForm(){
+  return{
+    month:el('needMonth').value||monthNow(),charity:el('needCharity').value,size:el('needSize').value,
+    qty:el('needQty').value,note:el('needNote').value.trim(),fulfilledQty:el('needFulfilledQty').value,
+    fulfilledDate:el('needFulfilledDate').value||'',recordOut:!!el('needRecordOut').checked
+  };
+}
+function needValuesFromInlineForm(form){
+  const field=name=>form.querySelector(`[name="${name}"]`);
+  return{
+    month:field('month')?.value||monthNow(),charity:field('charity')?.value||'',size:field('size')?.value||'',
+    qty:field('qty')?.value,note:String(field('note')?.value||'').trim(),fulfilledQty:field('fulfilledQty')?.value,
+    fulfilledDate:field('fulfilledDate')?.value||'',recordOut:!!field('recordOut')?.checked
+  };
+}
+function persistNeedRecord(values,id=null,messageTarget='needNotice'){
+  const previous=id?data.needs.find(n=>n.id===id):null,stamp=nowIso(),email=currentUserEmail();
+  if(id&&!previous){showNeedSaveMessage(messageTarget,'This need could not be found. It may have changed on another device.');editNeedId=null;renderNeeds();return false}
+  const needQty=Math.floor(Number(values.qty));
+  if(!Number.isFinite(needQty)||needQty<1){showNeedSaveMessage(messageTarget,'Quantity Needed must be 1 or more.');return false}
+  const sentRaw=Math.floor(Number(values.fulfilledQty||0));
+  if(!Number.isFinite(sentRaw)||sentRaw<0){showNeedSaveMessage(messageTarget,'Quantity Distributed must be zero or more.');return false}
+  if(sentRaw>needQty){showNeedSaveMessage(messageTarget,'Quantity Distributed cannot be greater than Quantity Needed.');return false}
+  const sentDate=String(values.fulfilledDate||'');
+  if(sentRaw>0&&!sentDate){showNeedSaveMessage(messageTarget,'Please enter the distribution date.');return false}
+  const charity=String(values.charity||''),size=String(values.size||'');
+  if(!charity||!size){showNeedSaveMessage(messageTarget,'Please select a charity and size.');return false}
   const fulfillmentChanged=sentRaw!==fulfilledQty(previous)||sentDate!==String(previous?.fulfilledDate||'');
   const previousSent=fulfilledQty(previous),priorAutoOut=Math.max(0,Math.floor(Number(previous?.autoOutQty||0)));
   const priorHighWater=Math.max(previousSent,Math.floor(Number(previous?.fulfilledHighWater??previousSent)||0));
-  const recordOut=!!el('needRecordOut').checked;
-  const autoOutNeeded=recordOut?Math.max(0,sentRaw-priorHighWater):0;
-  const r={id:editNeedId||uid(),month:el('needMonth').value||monthNow(),charity:el('needCharity').value,size:el('needSize').value,qty:needQty,note:el('needNote').value.trim(),
+  const recordOut=!!values.recordOut,autoOutNeeded=recordOut?Math.max(0,sentRaw-priorHighWater):0;
+  const r={id:id||uid(),month:String(values.month||monthNow()),charity,size,qty:needQty,note:String(values.note||'').trim(),
     fulfilledQty:sentRaw,fulfilledDate:sentRaw?sentDate:'',fulfilledBy:fulfillmentChanged?(sentRaw?email:''):String(previous?.fulfilledBy||''),fulfilledAt:fulfillmentChanged?(sentRaw?stamp:''):String(previous?.fulfilledAt||''),
     fulfilledHighWater:Math.max(priorHighWater,sentRaw),autoOutQty:priorAutoOut,
     createdBy:previous?.createdBy||email,createdAt:previous?.createdAt||stamp,updatedBy:email,updatedAt:stamp};
-  if(!r.charity||!r.size)return notice('needNotice','Please select a charity and size.');
   if(autoOutNeeded>0){
     const current=onHand(r.charity,r.size);
-    if(autoOutNeeded>current)return notice('needNotice',`Only ${current} are on hand for ${r.charity} — ${r.size}. Leave the Inventory Out box unchecked if this distribution was already recorded.`);
-    if(!confirmInventoryChange('OUT',r.charity,r.size,-autoOutNeeded))return notice('needNotice','Distribution save canceled. No changes were saved.');
+    if(autoOutNeeded>current){showNeedSaveMessage(messageTarget,`Only ${current} are on hand for ${r.charity} — ${r.size}. Leave the Inventory Out box unchecked if this distribution was already recorded.`);return false}
+    if(!confirmInventoryChange('OUT',r.charity,r.size,-autoOutNeeded)){showNeedSaveMessage(messageTarget,'Distribution save canceled. No changes were saved.');return false}
     data.transactions.push({id:uid(),date:r.fulfilledDate,type:'OUT',charity:r.charity,size:r.size,qty:autoOutNeeded,adjustment:0,
       note:`Distributed for ${fmtMonth(r.month)} planned need`,createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp});
     r.autoOutQty=priorAutoOut+autoOutNeeded;
   }
-  const editing=!!editNeedId;
-  if(editNeedId){const i=data.needs.findIndex(n=>n.id===editNeedId);if(i>=0)data.needs[i]=r}else data.needs.push(r);
-  save(editing?'Planned need edited':'Planned need added');cancelNeedEdit();renderAll();notice('needNotice',sentRaw>=needQty?'Need marked distributed.':'Need saved.',true);
+  if(id){const i=data.needs.findIndex(n=>n.id===id);if(i<0)return false;data.needs[i]=r}else data.needs.push(r);
+  save(id?'Planned need edited':'Planned need added');editNeedId=null;renderAll();
+  if(id)notice('needNotice','Need changes saved.',true);else notice('needNotice',sentRaw>=needQty?'Need marked distributed.':'Need saved.',true);
+  return true;
 }
-function editNeed(id){
-  const n=data.needs.find(x=>x.id===id);if(!n)return;editNeedId=id;refreshSelects();
-  el('needMonth').value=n.month;el('needCharity').value=n.charity;el('needSize').value=n.size;el('needQty').value=n.qty;el('needNote').value=n.note||'';
-  el('needFulfilledQty').value=fulfilledQty(n);el('needFulfilledDate').value=n.fulfilledDate||'';el('needRecordOut').checked=false;
-  el('saveNeedBtn').textContent='Save Changes';el('cancelNeedBtn').style.display='block';showView('needs');
+function prepareNeedDistribution(id){editNeed(id,true)}
+function saveNeed(){
+  if(!persistNeedRecord(needValuesFromMainForm(),null,'needNotice'))return;
+  resetNeedEntryForm();
 }
-function cancelNeedEdit(){
-  editNeedId=null;el('needMonth').value=monthNow();el('needCharity').value='';el('needSize').value='';el('needQty').value=1;el('needNote').value='';
+function resetNeedEntryForm(){
+  el('needMonth').value=monthNow();el('needCharity').value='';el('needSize').value='';el('needQty').value=1;el('needNote').value='';
   el('needFulfilledQty').value=0;el('needFulfilledDate').value='';el('needRecordOut').checked=false;
   el('saveNeedBtn').textContent='Add Need';el('cancelNeedBtn').style.display='none';
 }
+function editNeed(id,distribution=false){
+  const n=data.needs.find(x=>x.id===id);if(!n)return;
+  editNeedId=id;showView('needs');renderNeeds();
+  requestAnimationFrame(()=>{
+    const form=[...document.querySelectorAll('.need-inline-editor')].find(x=>x.dataset.needEditId===id);if(!form)return;
+    if(distribution){
+      const qtyField=form.querySelector('[name="fulfilledQty"]'),dateField=form.querySelector('[name="fulfilledDate"]');
+      if(qtyField)qtyField.value=n.qty;if(dateField&&!dateField.value)dateField.value=today();
+      showNeedSaveMessage(form.querySelector('.inline-need-notice'),`Review the distributed quantity and date. Check “Record as ${data.itemName} Out” only if it has not already been entered in Inventory.`);
+      qtyField?.focus();
+    }else form.querySelector('[name="month"]')?.focus();
+    form.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+}
+function saveInlineNeed(event,id){
+  event?.preventDefault();
+  const form=event?.currentTarget?.classList?.contains('need-inline-editor')?event.currentTarget:[...document.querySelectorAll('.need-inline-editor')].find(x=>x.dataset.needEditId===id);
+  if(!form)return false;
+  return persistNeedRecord(needValuesFromInlineForm(form),id,form.querySelector('.inline-need-notice'));
+}
+function cancelNeedEdit(){editNeedId=null;renderNeeds()}
 function deleteNeed(id){
   const n=data.needs.find(x=>x.id===id);if(!n)return;
   const sent=fulfilledQty(n),extra=sent?`
@@ -317,7 +354,7 @@ Deleting the need does not delete any Inventory Out transaction.`:'';
 ${fmtMonth(n.month)} — ${n.charity} — ${n.size} — Need ${n.qty}${extra}
 
 A recovery copy will be kept.`)){
-    createRecoverySnapshot('Before deleting a planned need');data.needs=data.needs.filter(x=>x.id!==id);save('Planned need deleted');renderAll();
+    createRecoverySnapshot('Before deleting a planned need');data.needs=data.needs.filter(x=>x.id!==id);if(editNeedId===id)editNeedId=null;save('Planned need deleted');renderAll();
   }
 }
 function upcoming(){return data.needs.filter(n=>n.month>=monthNow()&&remainingNeed(n)>0)}
@@ -336,6 +373,31 @@ function allocationForNeed(target,allocations=null){
   return(allocations||allocateNeedsForPlanning()).find(item=>item.n.id===target.id)||{n:target,available,shortage:Math.max(0,need-available),covered:Math.min(need,available),remaining:need,fulfilled:fulfilledQty(target)};
 }
 function shortageTotal(){return allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0).reduce((sum,item)=>sum+item.shortage,0)}
+function needInlineEditor(n,stateClass,stateLabel){
+  const charityOptions=data.charities.map(c=>`<option value="${esc(c)}"${c===n.charity?' selected':''}>${esc(c)}</option>`).join('');
+  const sizeOptions=data.sizes.map(s=>`<option value="${esc(s)}"${s===n.size?' selected':''}>${esc(s)}</option>`).join('');
+  return`<form class="item need-card need-inline-editor ${stateClass}" data-need-edit-id="${esc(n.id)}" onsubmit="return saveInlineNeed(event,this.dataset.needEditId)">
+    <div class="inline-edit-heading"><div><div class="title">Edit Planned Need</div><div class="meta">Changes save directly to this record.</div></div><span class="need-status">${stateLabel}</span></div>
+    <div class="inline-edit-grid">
+      <label>Month Needed<input name="month" type="month" value="${esc(n.month)}" required></label>
+      <label>Charity<select name="charity" required>${charityOptions}</select></label>
+      <label>Size<select name="size" required>${sizeOptions}</select></label>
+      <label>Quantity Needed<input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" required></label>
+    </div>
+    <label>Note <span class="small">(optional)</span><input name="note" value="${esc(n.note||'')}" placeholder="Holiday delivery, annual event, etc."></label>
+    <div class="inline-distribution-fields">
+      <div class="inline-section-title">Distribution Status</div>
+      <div class="inline-edit-grid two">
+        <label>Quantity Distributed<input name="fulfilledQty" type="number" inputmode="numeric" min="0" step="1" value="${fulfilledQty(n)}"></label>
+        <label>Date Distributed<input name="fulfilledDate" type="date" value="${esc(n.fulfilledDate||'')}"></label>
+      </div>
+      <label class="check-row inline-check"><input name="recordOut" type="checkbox"><span>Record any newly distributed quantity as ${esc(data.itemName)} Out</span></label>
+      <p class="small">Leave unchecked when the quilts were already entered on the Inventory screen.</p>
+    </div>
+    <div class="notice inline-need-notice"></div>
+    <div class="inline-edit-actions"><button type="submit" class="inline-save">Save Changes</button><button type="button" class="inline-cancel" onclick="cancelNeedEdit()">Cancel</button><button type="button" class="need-delete-button" onclick="deleteNeed(this.closest('.need-inline-editor').dataset.needEditId)">Delete</button></div>
+  </form>`;
+}
 function needCard(n,actions=true,allocation=null){
   const info=allocation||allocationForNeed(n),available=info.available,short=info.shortage,sent=fulfilledQty(n),remaining=remainingNeed(n),complete=remaining===0,pastDue=needIsPastDue(n);
   let stateClass,stateLabel,planner,detail='';
@@ -346,13 +408,14 @@ function needCard(n,actions=true,allocation=null){
   }else if(sent>0||pastDue){
     stateClass=pastDue?'need-pastdue':'need-partial';stateLabel=pastDue?'Past Due': 'Partially Sent';
     planner=`<div><b>${n.qty}</b><span>Need</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${pastDue?'negative':''}">${remaining}</b><span>Remaining</span></div>`;
-    detail=`<div class="distribution-meta">${sent?esc(distributionText(n))+' · ':''}Current available ${available} · Short ${short}</div>`;
+    detail=`<div class="distribution-meta">${sent?esc(distributionText(n))+' · ':''}Available for this need ${available} · Short ${short}</div>`;
   }else{
     stateClass=short===0?'need-covered':available>0?'need-partial':'need-shortage';stateLabel=short===0?'Covered':available>0?'Partial':'Shortage';
-    planner=`<div><b>${n.qty}</b><span>Need</span></div><div><b>${available}</b><span>Available</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div>`;
+    planner=`<div><b>${n.qty}</b><span>Need</span></div><div><b>${available}</b><span>Available for this need</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div>`;
   }
-  const actionButtons=actions?`<div class="actions need-actions"><button onclick="editNeed('${n.id}')">Edit</button><button onclick="prepareNeedDistribution('${n.id}')">${complete?'Update Distribution':'Mark Distributed'}</button><button onclick="deleteNeed('${n.id}')">Delete</button></div>`:'';
-  return`<div class="item need-card ${stateClass}"><div class="head"><div><div class="title">${fmtMonth(n.month)} — ${esc(n.charity)}</div><div class="meta">${esc(n.size)}${n.note?' · '+esc(n.note):''}</div>${auditText(n)?`<div class="audit-meta">${esc(auditText(n))}</div>`:''}</div><span class="need-status">${stateLabel}</span></div><div class="planner">${planner}</div>${detail}${actionButtons}</div>`;
+  if(actions&&editNeedId===n.id)return needInlineEditor(n,stateClass,stateLabel);
+  const actionButtons=actions?`<div class="actions need-actions"><button class="need-edit-button" onclick="editNeed(this.closest('.need-card').dataset.needId)">Edit</button><button class="need-distribute-button" onclick="prepareNeedDistribution(this.closest('.need-card').dataset.needId)">${complete?'Update Distribution':'Mark Distributed'}</button><button class="need-delete-button" onclick="deleteNeed(this.closest('.need-card').dataset.needId)">Delete</button></div>`:'';
+  return`<div class="item need-card ${stateClass}" data-need-id="${esc(n.id)}"><div class="head"><div><div class="title">${fmtMonth(n.month)} — ${esc(n.charity)}</div><div class="meta">${esc(n.size)}${n.note?' · '+esc(n.note):''}</div>${auditText(n)?`<div class="audit-meta">${esc(auditText(n))}</div>`:''}</div><span class="need-status">${stateLabel}</span></div><div class="planner">${planner}</div>${detail}${actionButtons}</div>`;
 }
 function refreshCalendarYears(){
   const select=el('calendarYear');if(!select)return;
@@ -387,6 +450,7 @@ function renderNeedsCalendar(){
   }).join('');
 }
 function renderNeeds(){
+  if(editNeedId&&!data.needs.some(n=>n.id===editNeedId))editNeedId=null;
   renderNeedsCalendar();const allocations=allocateNeedsForPlanning();
   el('needsList').innerHTML=allocations.length?allocations.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No planned needs entered yet.</div>';
   const next=allocations.filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -840,7 +904,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.6 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.7 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.6',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.7',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

@@ -1,19 +1,22 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.6
+LOVE QUILTS MANAGER — UPDATE 7.7.7
 
 WHAT THIS UPDATE CHANGES
-- Report summary now shows Charity, Size, Requested Needs, On Hand, and Difference.
-- On Hand is bold.
-- Only Difference is color-coded: green for positive, red for negative, neutral for zero.
-- The updated summary is included on screen, in Print Full Report, Print Compact Report, Full PDF, and Compact PDF.
+- Planned Needs edit directly inside the selected need card.
+- Month, charity, size, quantity, note, and distribution fields load into the inline editor.
+- Save Changes and Cancel remain beside the record being edited.
+- Mark Distributed opens the same inline editor and prepares the quantity and date for review.
+- Delete is smaller and still requires confirmation before removing a need.
+- Inventory allocation is labeled “Available for this need” to make repeated monthly needs clearer.
+- The Update 7.7.6 Requested Needs / On Hand / Difference report layout remains included.
 
 HOW TO UPDATE ON GITHUB
 1. Open the faithful-circle-quilt-guild repository.
 2. Choose Add file, then Upload files.
-3. Upload every file and folder from this ZIP.
+3. Upload every file and folder from this ZIP, not the ZIP itself.
 4. Allow replacement of the existing files.
 5. Commit the changes.
 6. Wait about one minute, then reopen or refresh the app.
-7. Confirm the splash screen shows Update 7.7.6.
+7. Confirm the splash screen shows Update 7.7.7.
 
 DATA SAFETY
-This update does not clear or convert shared data. Firebase login and synchronization are unchanged.
+This update does not clear or convert shared data. Firebase login, approved users, and synchronization are unchanged.

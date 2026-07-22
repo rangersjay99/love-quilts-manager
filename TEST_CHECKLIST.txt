@@ -1,20 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.6 TEST CHECKLIST
+LOVE QUILTS MANAGER UPDATE 7.7.7 TEST CHECKLIST
 
-[ ] Splash screen shows Update 7.7.6.
-[ ] Approved account signs in without looping.
-[ ] Existing inventory and needs appear.
-[ ] Header reaches All changes synced.
-[ ] Needs Calendar remains the first card on the Needs screen.
-[ ] Planned Needs remains directly below the calendar.
-[ ] Needs Planner entry form remains at the bottom.
-[ ] Reports summary headings are Charity, Size, Requested Needs, On Hand, Difference.
-[ ] Requested Needs totals the remaining current/future planned quantities by charity and size.
-[ ] On Hand numbers are bold.
-[ ] Positive Difference is green; negative Difference is red; zero is neutral.
-[ ] Charity subtotals and Grand Total calculate correctly.
-[ ] Print Full Report uses the comparison layout.
-[ ] Print Compact Report uses the comparison layout and fits on one page with normal data.
-[ ] Full PDF and Compact PDF show the comparison layout.
-[ ] Direct inventory quantity entry still works.
-[ ] Existing needs can still be edited and distributed.
-[ ] Second approved device shows the same data.
+1. Open the app and confirm the splash screen says Update 7.7.7.
+2. Add an Inventory In record and confirm it appears on the other synced device.
+3. Open Needs and press Edit on an existing planned need.
+4. Confirm the editor opens inside that need card and loads month, charity, size, quantity, note, and distribution values.
+5. Change the quantity or note, press Save Changes, and confirm the card updates.
+6. Reopen Edit and verify the saved values load correctly.
+7. Press Cancel and confirm no values change.
+8. Press Mark Distributed and confirm the inline editor prepares the quantity and date for review.
+9. Leave Record as Out unchecked when Inventory Out was already entered; save and confirm inventory does not deduct twice.
+10. Check Record as Out only for a new distribution; confirm the warning and resulting Inventory Out record.
+11. Press the smaller Delete button and confirm deletion requires approval and keeps a recovery copy.
+12. With two needs for the same charity and size in different months, confirm inventory is allocated in month order and the later card says “Available for this need” with the remaining amount.
+13. Open Reports and confirm Requested Needs, bold On Hand, and color-coded Difference remain correct.

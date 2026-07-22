@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.7.6">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.6">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.6">
+<link rel="manifest" href="manifest-v7.json?v=7.7.7">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.7">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.7">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -196,7 +196,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.7.6 — Report comparison and printable layout */
+/* Update 7.7.7 — In-place Needs editing and report comparison layout */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -211,14 +211,27 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .need-completed .need-status{background:#cce9d5;color:#1f6337}
 .need-pastdue .need-status{background:#f3d7c1;color:#82451e}
 .distribution-meta{margin-top:8px;font-size:12px;font-weight:750;color:var(--muted)}
-.need-actions{grid-template-columns:repeat(3,minmax(0,1fr))}
+.need-actions{display:flex;grid-template-columns:none;align-items:center;flex-wrap:wrap;gap:8px}
+.need-actions .need-edit-button,.need-actions .need-distribute-button{flex:1 1 150px}
+.need-delete-button{flex:0 0 auto!important;min-height:34px!important;width:auto!important;padding:6px 11px!important;border-color:#d7a8ae!important;color:var(--red)!important;background:#fff!important;font-size:12px!important}
 .distribution-fields{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
 .distribution-fields h3{margin:0 0 4px;font-size:16px}
 .check-row{display:flex;align-items:flex-start;gap:9px;margin-top:11px;font-weight:750}.check-row input{width:20px;height:20px;margin:0;flex:0 0 auto}
+.inline-edit-heading{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:4px}
+.need-inline-editor{border-width:2px;box-shadow:0 4px 16px rgba(61,39,63,.10)}
+.need-inline-editor label{margin-top:9px;font-size:13px}
+.need-inline-editor input,.need-inline-editor select{min-height:43px;margin-top:5px;padding:9px 10px;border-radius:10px;background:#fff}
+.inline-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 9px}.inline-edit-grid.two{grid-template-columns:1fr 1fr}
+.inline-distribution-fields{margin-top:12px;padding:10px;border:1px solid rgba(100,80,100,.18);border-radius:11px;background:rgba(255,255,255,.65)}
+.inline-section-title{font-size:14px;font-weight:850;color:var(--plum-dark)}
+.inline-check{margin-top:10px!important;font-size:12px!important}.inline-check input{width:20px!important;height:20px!important;margin:0!important;padding:0!important}
+.inline-edit-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px}
+.inline-edit-actions button{min-height:40px;border-radius:10px;font-weight:800;padding:8px 14px}
+.inline-save{flex:1 1 160px;border:0;background:var(--plum);color:#fff}.inline-cancel{flex:0 1 auto;border:1px solid var(--plum);background:#fff;color:var(--plum)}
 .month-totals.three{grid-template-columns:repeat(3,1fr)}
 .month-card.completed{border-color:#78b98b;background:#eaf7ee}.month-card.completed .month-status{color:#23653a}
 .month-card.past-due{border-color:#d89a67;background:#fff1e7}.month-card.past-due .month-status{color:#87461c}
-@media(max-width:520px){.need-actions{grid-template-columns:1fr 1fr}.need-actions button:last-child{grid-column:1/-1}}
+@media(max-width:520px){.inline-edit-grid,.inline-edit-grid.two{grid-template-columns:1fr}.need-actions .need-edit-button,.need-actions .need-distribute-button{flex-basis:calc(50% - 4px)}.need-delete-button{margin-left:auto}}
 .month-card.partial{border-color:#d9bd64;background:#fff8e5}
 .month-card.partial .month-status{color:#7a5b0b}
 .save-status.verified{margin-top:11px;padding:10px;border:1px solid #b9ddc2;border-radius:11px;background:#e6f5ea;color:#245f38;font-weight:850}
@@ -248,14 +261,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.6" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.7" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.6</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.7</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -475,11 +488,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.7.6 · July 22, 2026</span>
+      <b>Version</b><span>Update 7.7.7 · July 22, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.7.6 adds Requested Needs and Difference to the report summary. On Hand is bold, and only the Difference is color-coded green or red. Screen reports, printing, and both PDF exports use the new layout.</p>
+    <p class="small">Update 7.7.7 lets planned needs be edited directly inside their Needs card. Save and Cancel stay with the record, Delete is smaller and still requires confirmation, and availability is labeled clearly as inventory allocated to that specific need. The 7.7.6 report comparison layout is retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -493,7 +506,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.7.6"></script>
-<script src="app.js?v=7.7.6"></script>
+<script type="module" src="firebase-sync.js?v=7.7.7"></script>
+<script src="app.js?v=7.7.7"></script>
 </body>
 </html>

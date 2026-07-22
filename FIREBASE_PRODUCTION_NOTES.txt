@@ -1,10 +1,10 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.7.6
+FIREBASE PRODUCTION NOTES — UPDATE 7.7.7
 
 Firebase project: faithful-circle-love-quilts
 Production organization path: organizations/faithful-circle-love-quilts
 Test organization path: organizations/faithful-circle-love-quilts-test
 
-Update 7.7.6 changes report calculations and presentation only.
+Update 7.7.7 changes the Needs-tab editing interface only. Firebase configuration, authentication, sync paths, and stored-data structure are unchanged.
 The proven Update 7.7.3 authentication, initialization, pending-save recovery, and real-time synchronization flow is preserved.
 The Firebase module itself is byte-for-byte unchanged from the previous release.
 Firebase paths, local-storage keys, approved accounts, and stored data structure are unchanged.
