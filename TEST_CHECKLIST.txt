@@ -1,15 +1,12 @@
-LOVE QUILTS MANAGER UPDATE 7.7.7 TEST CHECKLIST
+LOVE QUILTS MANAGER UPDATE 7.7.8 TEST CHECKLIST
 
-1. Open the app and confirm the splash screen says Update 7.7.7.
-2. Add an Inventory In record and confirm it appears on the other synced device.
-3. Open Needs and press Edit on an existing planned need.
-4. Confirm the editor opens inside that need card and loads month, charity, size, quantity, note, and distribution values.
-5. Change the quantity or note, press Save Changes, and confirm the card updates.
-6. Reopen Edit and verify the saved values load correctly.
-7. Press Cancel and confirm no values change.
-8. Press Mark Distributed and confirm the inline editor prepares the quantity and date for review.
-9. Leave Record as Out unchecked when Inventory Out was already entered; save and confirm inventory does not deduct twice.
-10. Check Record as Out only for a new distribution; confirm the warning and resulting Inventory Out record.
-11. Press the smaller Delete button and confirm deletion requires approval and keeps a recovery copy.
-12. With two needs for the same charity and size in different months, confirm inventory is allocated in month order and the later card says “Available for this need” with the remaining amount.
-13. Open Reports and confirm Requested Needs, bold On Hand, and color-coded Difference remain correct.
+1. Confirm the splash screen says Update 7.7.8.
+2. Open Reports. Confirm On Hand is the first numeric column, Requested Needs is second, and Difference is third.
+3. Confirm every charity total and Grand Total is directly below the matching heading.
+4. Print or export Compact PDF and Full PDF and confirm the same column order.
+5. Open Planned Needs and press Edit on a record. Confirm the existing month, charity, size, note, and Need fields turn into inputs inside the same card.
+6. Change one value, save, and confirm the displayed card updates.
+7. Press Edit again, change a value, press Cancel, and confirm the saved value remains unchanged.
+8. Press Update Distribution and confirm Sent and Date Distributed edit inside the same card.
+9. Confirm Delete remains small and asks for confirmation.
+10. Confirm another signed-in device receives the saved change.

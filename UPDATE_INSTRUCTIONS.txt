@@ -1,22 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.7
+LOVE QUILTS MANAGER — UPDATE 7.7.8
 
-WHAT THIS UPDATE CHANGES
-- Planned Needs edit directly inside the selected need card.
-- Month, charity, size, quantity, note, and distribution fields load into the inline editor.
-- Save Changes and Cancel remain beside the record being edited.
-- Mark Distributed opens the same inline editor and prepares the quantity and date for review.
-- Delete is smaller and still requires confirmation before removing a need.
-- Inventory allocation is labeled “Available for this need” to make repeated monthly needs clearer.
-- The Update 7.7.6 Requested Needs / On Hand / Difference report layout remains included.
-
-HOW TO UPDATE ON GITHUB
-1. Open the faithful-circle-quilt-guild repository.
-2. Choose Add file, then Upload files.
-3. Upload every file and folder from this ZIP, not the ZIP itself.
-4. Allow replacement of the existing files.
+1. Extract this ZIP file.
+2. Open the GitHub repository on the laptop.
+3. Choose Add file, then Upload files.
+4. Upload every extracted file and folder. Do not upload the ZIP itself.
 5. Commit the changes.
-6. Wait about one minute, then reopen or refresh the app.
-7. Confirm the splash screen shows Update 7.7.7.
+6. Wait about one minute, then fully close and reopen the app.
+7. Confirm the splash screen shows Update 7.7.8.
 
-DATA SAFETY
-This update does not clear or convert shared data. Firebase login, approved users, and synchronization are unchanged.
+FIRST CHECKS
+- Open Reports and confirm the numeric headings are On Hand, Requested Needs, Difference.
+- Confirm charity totals and Grand Total align under those headings.
+- Open Planned Needs and press Edit. The existing card fields should become editable without changing to a separate Edit Planned Need layout.
+- Press Update Distribution and confirm the sent quantity and date edit in the same card.

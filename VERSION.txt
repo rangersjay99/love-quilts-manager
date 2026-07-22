@@ -1,13 +1,12 @@
-Love Quilts Manager Update 7.7.7
+Love Quilts Manager Update 7.7.8
 Released: July 22, 2026
 
-Needs editing update for today’s inventory test.
+Direct card editing and report alignment correction.
 
-- Planned Needs now edit directly inside the selected Needs card.
-- Month, charity, size, quantity, note, and distribution fields all load into the inline editor.
-- Save Changes and Cancel stay with the record being edited.
-- Mark Distributed opens the same inline editor with the distributed quantity and date prepared for review.
-- Delete is smaller and still requires a confirmation before removal.
-- Availability is labeled “Available for this need” to clarify that inventory is allocated in month order.
-- Keeps the Update 7.7.6 report comparison layout.
+- Edit now changes the month, charity, size, note, and quantity directly in their displayed Planned Needs card.
+- Update Distribution edits sent quantity and date in the same displayed card.
+- Save, Cancel, and the smaller confirmed Delete button remain attached to that card.
+- Report numeric columns are now On Hand, Requested Needs, and Difference.
+- Detail rows, charity totals, and Grand Total use the same column alignment.
+- Compact PDF and Full PDF use the corrected order.
 - No authentication, Firebase sync, or stored-data format changes.
