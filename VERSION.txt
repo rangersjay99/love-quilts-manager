@@ -1,4 +1,4 @@
-Love Quilts Manager Update 7.7.8
+Love Quilts Manager Update 7.7.9
 Released: July 22, 2026
 
 Direct card editing and report alignment correction.

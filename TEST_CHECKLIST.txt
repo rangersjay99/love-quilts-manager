@@ -1,6 +1,6 @@
-LOVE QUILTS MANAGER UPDATE 7.7.8 TEST CHECKLIST
+LOVE QUILTS MANAGER UPDATE 7.7.9 TEST CHECKLIST
 
-1. Confirm the splash screen says Update 7.7.8.
+1. Confirm the splash screen says Update 7.7.9.
 2. Open Reports. Confirm On Hand is the first numeric column, Requested Needs is second, and Difference is third.
 3. Confirm every charity total and Grand Total is directly below the matching heading.
 4. Print or export Compact PDF and Full PDF and confirm the same column order.

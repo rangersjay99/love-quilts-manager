@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.7.8';
+const VERSION='7.7.9';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -495,12 +495,19 @@ function reportComparisonRows(){
 function reportInventoryHTML(){
   const rows=reportComparisonRows();if(!rows.length)return'<div class="empty">No charities available.</div>';
   const body=rows.filter(row=>row.type!=='grand').map(row=>{
-    const rowClass=row.type==='subtotal'?' class="subtotal-row"':'';
-    const label=row.type==='subtotal'?`<td colspan="2">${esc(row.charity)}</td>`:`<td>${esc(row.charity)}</td><td>${row.empty?'<span class="small">None on hand</span>':esc(row.size)}</td>`;
-    return`<tr${rowClass}>${label}<td><b class="on-hand-value">${row.onHand}</b></td><td>${row.requestedNeeds}</td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`;
+    const isTotal=row.type==='subtotal';
+    const rowClass=isTotal?' class="subtotal-row"':'';
+    const charityCell=isTotal?esc(row.charity):esc(row.charity);
+    const sizeCell=isTotal?'':(row.empty?'<span class="small">None on hand</span>':esc(row.size));
+    const onHandCell=isTotal?`<b class="on-hand-value">${row.onHand}</b>`:String(row.onHand);
+    const requestedCell=isTotal?`<b>${row.requestedNeeds}</b>`:String(row.requestedNeeds);
+    const differenceCell=isTotal
+      ?`<b><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></b>`
+      :`<span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span>`;
+    return`<tr${rowClass}><td>${charityCell}</td><td>${sizeCell}</td><td>${onHandCell}</td><td>${requestedCell}</td><td>${differenceCell}</td></tr>`;
   }).join('');
   const grand=rows.find(row=>row.type==='grand');
-  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th><th>Requested Needs</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td colspan="2">Grand Total</td><td><b class="on-hand-value">${grand.onHand}</b></td><td>${grand.requestedNeeds}</td><td><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></td></tr></tfoot></table>`;
+  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th><th>Requested Needs</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
 }
 function reportNeedsHTML(){
   const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -908,7 +915,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.8 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.9 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.8',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.9',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
