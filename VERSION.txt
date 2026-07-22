@@ -1,9 +1,13 @@
-Love Quilts Manager Update 7.7.5
-Released: July 20, 2026
+Love Quilts Manager Update 7.7.6
+Released: July 22, 2026
 
-Refines the Needs screen order.
+Adds the approved report comparison layout.
 
-- Needs Calendar appears first.
-- Planned Needs appears second.
-- Needs Planner entry form appears last.
-- No calculations, reports, authentication, synchronization, or stored-data structures were changed.
+- Adds Requested Needs beside each charity and size.
+- Adds Difference, calculated as On Hand minus Requested Needs.
+- Difference is green when positive and red when negative; zero remains neutral.
+- On Hand values are bold.
+- Charity subtotals and the grand total include Requested Needs, On Hand, and Difference.
+- Screen reports, browser printing, Compact PDF, and Full PDF use the updated layout.
+- Requested Needs uses the remaining quantity for current and future planned needs.
+- No authentication, sync, inventory, needs, or stored-data structures were changed.

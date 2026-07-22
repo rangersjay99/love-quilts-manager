@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.7.5">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.5">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.5">
+<link rel="manifest" href="manifest-v7.json?v=7.7.6">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.6">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.6">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -93,6 +93,10 @@ textarea{min-height:80px;resize:vertical}
 .empty{text-align:center;color:var(--muted);padding:16px 8px}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;border-bottom:1px solid var(--line);text-align:left}th{font-size:12px;color:var(--muted)}
+.report-summary-table{table-layout:fixed}
+.report-summary-table .col-charity{width:25%}.report-summary-table .col-size{width:25%}.report-summary-table .col-requested{width:18%}.report-summary-table .col-onhand{width:15%}.report-summary-table .col-difference{width:17%}
+.report-summary-table th:nth-child(n+3),.report-summary-table td:nth-child(n+3){text-align:right}
+.on-hand-value{font-weight:900}.difference-value{white-space:nowrap}
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
 .bottom-nav button{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:800;min-height:50px;border-radius:10px;padding:6px 2px}
 .bottom-nav button.active{background:var(--soft);color:var(--plum)}.bottom-nav b{display:block;font-size:20px;line-height:1.1}
@@ -163,7 +167,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 @media print{
   @page{size:letter portrait;margin:.45in}
   .splash,header,.bottom-nav,.no-print,.actions{display:none!important}
-  html,body{height:auto;min-height:0;background:#fff;padding:0;margin:0}
+  html,body{height:auto;min-height:0;background:#fff;padding:0;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   main{max-width:none;padding:0;margin:0}.view{display:none!important}#reports.view{display:block!important}
   #meetingReport{display:none!important}
   #reports>.card{display:block!important;box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0 0 18px!important;break-inside:auto}
@@ -175,7 +179,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   body.print-compact .report-copyright{display:none!important}
   body.print-compact #meetingReport{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
   body.print-compact #meetingReport h1{font-size:18px;margin:0 0 2px}
-  body.print-compact #meetingReport h2{font-size:12px;margin:8px 0 3px}
+  body.print-compact #meetingReport h2{font-size:12px;margin:7px 0 3px}
   body.print-compact #meetingReport .print-meta{font-size:8px;color:#555;margin-bottom:6px}
   body.print-compact #meetingReport .print-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0 7px}
   body.print-compact #meetingReport .print-metric{border:1px solid #999;padding:4px;text-align:center}
@@ -183,14 +187,16 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   body.print-compact #meetingReport table{font-size:8px;line-height:1.08}
   body.print-compact #meetingReport th,body.print-compact #meetingReport td{padding:2px 3px;border-bottom:1px solid #bbb}
   body.print-compact #meetingReport .print-note{font-size:7px;color:#555;margin-top:3px}
-  body.print-compact #meetingReport .print-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  body.print-compact #meetingReport .print-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin-top:6px}
   body.print-compact #meetingReport .print-columns>div{min-width:0}
   body.print-compact #meetingReport .subtotal-row td{font-weight:800;background:#f3f3f3;border-top:1px solid #777}
   body.print-compact #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
+  body.print-compact #meetingReport .report-summary-table{font-size:7.4px;table-layout:fixed}
+  body.print-compact #meetingReport .report-summary-table th,body.print-compact #meetingReport .report-summary-table td{padding:2px 2px}
 }
 
 
-/* Update 7.7.5 — Needs Calendar first; Needs Planner last */
+/* Update 7.7.6 — Report comparison and printable layout */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -242,14 +248,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.5" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.6" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.5</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.6</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -361,7 +367,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <div class="metric short"><strong id="reportShortage">0</strong><span>Shortage</span></div>
     </div>
   </div>
-  <div class="card"><h3>Inventory On Hand</h3><div id="reportInventory"></div></div>
+  <div class="card"><h3>Inventory and Requested Needs</h3><div id="reportInventory"></div></div>
   <div class="card"><h3>Upcoming Needs</h3><div id="reportNeeds"></div></div>
   <div class="card"><h3>Distributed Needs</h3><div id="reportDistributed"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
@@ -469,11 +475,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.7.5 · July 20, 2026</span>
+      <b>Version</b><span>Update 7.7.6 · July 22, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.7.5 places the Needs Calendar first, Planned Needs second, and the less frequently used Needs Planner form last. Login, sync, reports, direct quantity entry, and distribution tracking are unchanged.</p>
+    <p class="small">Update 7.7.6 adds Requested Needs and Difference to the report summary. On Hand is bold, and only the Difference is color-coded green or red. Screen reports, printing, and both PDF exports use the new layout.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -487,7 +493,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.7.5"></script>
-<script src="app.js?v=7.7.5"></script>
+<script type="module" src="firebase-sync.js?v=7.7.6"></script>
+<script src="app.js?v=7.7.6"></script>
 </body>
 </html>

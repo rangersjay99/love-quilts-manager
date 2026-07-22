@@ -1,24 +1,19 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.5
-Needs Screen Layout Refinement
+LOVE QUILTS MANAGER — UPDATE 7.7.6
 
-BEFORE UPLOADING
-1. Confirm the app shows All changes synced.
-2. Export a current app backup.
-3. Keep the current repository ZIP as a backup.
-4. Do not choose Create Real Shared Inventory.
+WHAT THIS UPDATE CHANGES
+- Report summary now shows Charity, Size, Requested Needs, On Hand, and Difference.
+- On Hand is bold.
+- Only Difference is color-coded: green for positive, red for negative, neutral for zero.
+- The updated summary is included on screen, in Print Full Report, Print Compact Report, Full PDF, and Compact PDF.
 
-UPLOAD
-1. Extract this ZIP.
-2. Open the main/root folder of the GitHub repository.
-3. Upload every extracted file and replace files with the same names.
-4. Leave the firebase-test folder unchanged.
-5. Wait for GitHub Pages to finish publishing.
+HOW TO UPDATE ON GITHUB
+1. Open the faithful-circle-quilt-guild repository.
+2. Choose Add file, then Upload files.
+3. Upload every file and folder from this ZIP.
+4. Allow replacement of the existing files.
+5. Commit the changes.
+6. Wait about one minute, then reopen or refresh the app.
+7. Confirm the splash screen shows Update 7.7.6.
 
-AFTER UPLOADING
-1. Completely close and reopen the app while connected to the internet.
-2. Confirm the splash screen shows Update 7.7.5.
-3. Confirm the approved account signs in normally and reaches All changes synced.
-4. Open Needs and verify the order: Needs Calendar, Planned Needs, Needs Planner.
-5. Confirm existing inventory, needs, distributed records, and reports remain unchanged.
-
-This update does not reset, reinitialize, migrate, or alter local or Firebase data.
+DATA SAFETY
+This update does not clear or convert shared data. Firebase login and synchronization are unchanged.

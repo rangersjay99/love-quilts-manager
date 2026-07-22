@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.7.5';
+const VERSION='7.7.6';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -394,10 +394,45 @@ function renderNeeds(){
 }
 function renderHome(){el('homeOnHand').textContent=totalOnHand();el('homeNeeded').textContent=totalNeeded();el('homeShortage').textContent=shortageTotal();updateSaveStatus()}
 function inventoryGroups(){const inventory=invMap();return[...data.charities].sort((a,b)=>a.localeCompare(b)).map(c=>{const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));return{charity:c,sizes,total:sizes.reduce((sum,x)=>sum+x.n,0)}})}
+function requestedNeedsMap(){
+  const m={};
+  upcoming().forEach(n=>{const key=n.charity+'|'+n.size;m[key]=(m[key]||0)+remainingNeed(n)});
+  return m;
+}
+function reportComparisonGroups(){
+  const inventory=invMap(),requested=requestedNeedsMap();
+  const charities=unique([...data.charities,...Object.keys(inventory).map(k=>k.slice(0,k.lastIndexOf('|'))),...Object.keys(requested).map(k=>k.slice(0,k.lastIndexOf('|')))]).sort((a,b)=>a.localeCompare(b));
+  return charities.map(charity=>{
+    const prefix=charity+'|';
+    const sizes=unique([...data.sizes,...Object.keys(inventory).filter(k=>k.startsWith(prefix)).map(k=>k.slice(prefix.length)),...Object.keys(requested).filter(k=>k.startsWith(prefix)).map(k=>k.slice(prefix.length))])
+      .map(size=>{const key=charity+'|'+size,onHand=Number(inventory[key]||0),requestedNeeds=Number(requested[key]||0);return{size,onHand,requestedNeeds,difference:onHand-requestedNeeds}})
+      .filter(row=>row.onHand!==0||row.requestedNeeds!==0)
+      .sort((a,b)=>a.size.localeCompare(b.size));
+    if(!sizes.length)sizes.push({size:'',onHand:0,requestedNeeds:0,difference:0,empty:true});
+    const totals=sizes.reduce((out,row)=>({onHand:out.onHand+row.onHand,requestedNeeds:out.requestedNeeds+row.requestedNeeds,difference:out.difference+row.difference}),{onHand:0,requestedNeeds:0,difference:0});
+    return{charity,sizes,...totals};
+  });
+}
+function signedDifference(n){return n>0?`+${n}`:String(n)}
+function differenceClass(n){return n>0?'positive':n<0?'negative':''}
+function reportComparisonRows(){
+  const rows=[];
+  reportComparisonGroups().forEach(group=>{
+    group.sizes.forEach(row=>rows.push({type:'detail',charity:group.charity,size:row.empty?'None on hand':row.size,requestedNeeds:row.requestedNeeds,onHand:row.onHand,difference:row.difference,empty:!!row.empty}));
+    rows.push({type:'subtotal',charity:`Total for ${group.charity}`,size:'',requestedNeeds:group.requestedNeeds,onHand:group.onHand,difference:group.difference});
+  });
+  rows.push({type:'grand',charity:'Grand Total',size:'',requestedNeeds:totalNeeded(),onHand:totalOnHand(),difference:totalOnHand()-totalNeeded()});
+  return rows;
+}
 function reportInventoryHTML(){
-  const charities=inventoryGroups();if(!charities.length)return'<div class="empty">No charities available.</div>';
-  const body=charities.map(g=>{const detail=g.sizes.length?g.sizes.map(x=>`<tr><td>${esc(g.charity)}</td><td>${esc(x.s)}</td><td>${x.n}</td></tr>`).join(''):`<tr><td>${esc(g.charity)}</td><td><span class="small">None on hand</span></td><td>0</td></tr>`;return`${detail}<tr class="subtotal-row"><td colspan="2">Total for ${esc(g.charity)}</td><td>${g.total}</td></tr>`}).join('');
-  return`<table><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td colspan="2">Grand Total</td><td>${totalOnHand()}</td></tr></tfoot></table>`;
+  const rows=reportComparisonRows();if(!rows.length)return'<div class="empty">No charities available.</div>';
+  const body=rows.filter(row=>row.type!=='grand').map(row=>{
+    const rowClass=row.type==='subtotal'?' class="subtotal-row"':'';
+    const label=row.type==='subtotal'?`<td colspan="2">${esc(row.charity)}</td>`:`<td>${esc(row.charity)}</td><td>${row.empty?'<span class="small">None on hand</span>':esc(row.size)}</td>`;
+    return`<tr${rowClass}>${label}<td>${row.requestedNeeds}</td><td><b class="on-hand-value">${row.onHand}</b></td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`;
+  }).join('');
+  const grand=rows.find(row=>row.type==='grand');
+  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-requested"><col class="col-onhand"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>Requested Needs</th><th>On Hand</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td colspan="2">Grand Total</td><td>${grand.requestedNeeds}</td><td><b class="on-hand-value">${grand.onHand}</b></td><td><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></td></tr></tfoot></table>`;
 }
 function reportNeedsHTML(){
   const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -417,7 +452,10 @@ function compactDistributedHTML(limit=6){
   return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Sent</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'—'}</td><td>${esc(n.charity)}<br>${esc(n.size)}</td><td>${fulfilledQty(n)}${remainingNeed(n)?`<br><span class="small">${remainingNeed(n)} left</span>`:''}</td></tr>`).join('')}</tbody></table>${all.length>list.length?`<div class="print-note">Showing ${list.length} of ${all.length} distribution records.</div>`:''}`;
 }
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
-function renderMeetingReport(){const generated=new Date().toLocaleString();el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><div class="print-columns"><div><h2>Inventory On Hand</h2>${reportInventoryHTML()}</div><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}<h2>Distributed Needs</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`}
+function renderMeetingReport(){
+  const generated=new Date().toLocaleString();
+  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><h2>Inventory and Requested Needs</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}</div><div><h2>Distributed Needs</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+}
 function renderReports(){
   el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
   el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();el('reportDistributed').innerHTML=reportDistributedHTML();
@@ -523,9 +561,14 @@ function pdfEscape(v){return pdfPlain(v).replace(/\\/g,'\\\\').replace(/\(/g,'\\
 function pdfFit(v,max){const s=pdfPlain(v);return s.length<=max?s:s.slice(0,Math.max(0,max-3))+'...'}
 function makeOnePagePDF(){
   const commands=[];
-  const text=(x,y,value,size=8,bold=false)=>commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
+  const text=(x,y,value,size=8,bold=false,color='')=>{
+    if(color)commands.push(`${color} rg`);
+    commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
+    if(color)commands.push('0 0 0 rg');
+  };
   const line=(x1,y1,x2,y2,w=.5)=>commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
   const rect=(x,y,w,h)=>commands.push(`0.6 w ${x} ${y} ${w} ${h} re S`);
+  const diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
 
   text(36,754,pdfFit(data.appName,62),17,true);
   text(36,738,pdfFit(`${data.orgName} - ${effectiveReportTitle()}`,92),9,false);
@@ -536,17 +579,27 @@ function makeOnePagePDF(){
     rect(x,metricY,metricW,metricH);text(x+8,metricY+18,String(num),14,true);text(x+42,metricY+19,label,8,true);
   });
 
-  text(36,665,'INVENTORY ON HAND',10,true);line(36,659,294,659,0.7);
-  text(318,665,'UPCOMING NEEDS',10,true);line(318,659,576,659,0.7);
-
-  const inventoryRows=[];
-  inventoryGroups().forEach(g=>{
-    inventoryRows.push({text:g.charity,bold:true});
-    if(g.sizes.length)g.sizes.forEach(x=>inventoryRows.push({text:`  ${x.s}: ${x.n}`,bold:false}));
-    else inventoryRows.push({text:'  None on hand',bold:false});
-    inventoryRows.push({text:`  Total: ${g.total}`,bold:true});
+  text(36,665,'INVENTORY AND REQUESTED NEEDS',10,true);line(36,659,576,659,.7);
+  const xCharity=36,xSize=180,xRequested=365,xOnHand=455,xDifference=525;
+  let y=645;
+  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xRequested,y,'REQUESTED NEEDS',7,true);text(xOnHand,y,'ON HAND',7,true);text(xDifference-10,y,'DIFFERENCE',7,true);line(36,y-5,576,y-5,.5);y-=16;
+  const allRows=reportComparisonRows(),maxSummaryRows=20,shownRows=allRows.slice(0,maxSummaryRows);
+  shownRows.forEach(row=>{
+    const bold=row.type!=='detail';
+    if(row.type!=='detail')line(36,y+8,576,y+8,.35);
+    text(xCharity,y,pdfFit(row.charity,row.type==='detail'?25:34),7.2,bold);
+    if(row.type==='detail')text(xSize,y,pdfFit(row.size,28),7.2,false);
+    text(xRequested,y,String(row.requestedNeeds),7.2,bold);
+    text(xOnHand,y,String(row.onHand),7.2,true);
+    text(xDifference,y,signedDifference(row.difference),7.2,row.type!=='detail',diffColor(row.difference));
+    y-=12;
   });
-  inventoryRows.push({text:`GRAND TOTAL: ${totalOnHand()}`,bold:true});
+  if(allRows.length>shownRows.length){text(36,y,`+ ${allRows.length-shownRows.length} summary rows not shown`,7,true);y-=12}
+  line(36,y+5,576,y+5,.7);
+
+  const lowerTop=y-14;
+  text(36,lowerTop,'UPCOMING NEEDS',9,true);line(36,lowerTop-5,294,lowerTop-5,.6);
+  text(318,lowerTop,'RECENT ACTIVITY',9,true);line(318,lowerTop-5,576,lowerTop-5,.6);
 
   const needsRows=[];
   const needs=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -554,30 +607,31 @@ function makeOnePagePDF(){
   needs.forEach(item=>{
     const n=item.n;
     needsRows.push({text:`${fmtMonthShort(n.month)} - ${n.charity}`,bold:true});
-    needsRows.push({text:`  ${n.size} | Need ${n.qty} | Sent ${item.fulfilled} | Remaining ${item.remaining}`,bold:false});
+    needsRows.push({text:`  ${n.size} | Need ${n.qty} | Remaining ${item.remaining}`,bold:false});
     needsRows.push({text:`  Available ${item.available} | Short ${item.shortage}`,bold:false});
   });
+
+  const activityRows=[];
   const distributed=distributedNeedsForReport();
-  needsRows.push({text:'',bold:false});
-  needsRows.push({text:`DISTRIBUTED NEEDS: ${distributed.length}`,bold:true});
+  activityRows.push({text:`DISTRIBUTED NEEDS: ${distributed.length}`,bold:true});
   distributed.slice(0,6).forEach(n=>{
-    needsRows.push({text:`${n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered'} - ${n.charity}`,bold:true});
-    needsRows.push({text:`  ${n.size} | Need ${n.qty} | Sent ${fulfilledQty(n)} | Remaining ${remainingNeed(n)}`,bold:false});
+    activityRows.push({text:`${n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered'} - ${n.charity}`,bold:true});
+    activityRows.push({text:`  ${n.size} | Sent ${fulfilledQty(n)} | Remaining ${remainingNeed(n)}`,bold:false});
   });
-  if(distributed.length>6)needsRows.push({text:`  + ${distributed.length-6} earlier distribution records`,bold:false});
+  if(distributed.length>6)activityRows.push({text:`  + ${distributed.length-6} earlier distribution records`,bold:false});
   const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date));
-  needsRows.push({text:'',bold:false});
-  needsRows.push({text:`ADJUSTMENTS ON RECORD: ${adjustments.length}`,bold:true});
-  adjustments.slice(0,8).forEach(t=>needsRows.push({text:`${fmtDate(t.date)} - ${t.charity} / ${t.size}: ${value(t)>0?'+':''}${value(t)}`,bold:false}));
-  if(adjustments.length>8)needsRows.push({text:`  + ${adjustments.length-8} earlier adjustments`,bold:false});
+  activityRows.push({text:'',bold:false});
+  activityRows.push({text:`ADJUSTMENTS ON RECORD: ${adjustments.length}`,bold:true});
+  adjustments.slice(0,8).forEach(t=>activityRows.push({text:`${fmtDate(t.date)} - ${t.charity} / ${t.size}: ${value(t)>0?'+':''}${value(t)}`,bold:false}));
+  if(adjustments.length>8)activityRows.push({text:`  + ${adjustments.length-8} earlier adjustments`,bold:false});
 
   const drawRows=(rows,x,maxChars)=>{
-    const maxRows=58,startY=647,rowH=10;
-    rows.slice(0,maxRows).forEach((r,i)=>text(x,startY-i*rowH,pdfFit(r.text,maxChars),7.4,!!r.bold));
-    if(rows.length>maxRows)text(x,startY-(maxRows-1)*rowH,pdfFit(`+ ${rows.length-maxRows+1} more rows not shown`,maxChars),7.4,true);
+    const rowH=10,startY=lowerTop-18,maxRows=Math.max(1,Math.floor((startY-38)/rowH));
+    rows.slice(0,maxRows).forEach((r,i)=>text(x,startY-i*rowH,pdfFit(r.text,maxChars),7.2,!!r.bold));
+    if(rows.length>maxRows)text(x,startY-(maxRows-1)*rowH,pdfFit(`+ ${rows.length-maxRows+1} more rows not shown`,maxChars),7.2,true);
   };
-  drawRows(inventoryRows,36,48);
-  drawRows(needsRows,318,48);
+  drawRows(needsRows,36,48);
+  drawRows(activityRows,318,48);
   text(36,24,pdfFit(COPYRIGHT_PDF,82),6.2,false);
   text(36,14,'Personal and authorized guild use only.',6.2,false);
   text(500,14,`Update ${VERSION}`,6.2,false);
@@ -624,7 +678,7 @@ function makeFullPDF(){
   let page=null,currentSection='';
   const newPage=()=>{
     page={commands:[],y:704};pages.push(page);
-    const text=(x,y,value,size=8,bold=false)=>page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
+    const text=(x,y,value,size=8,bold=false,color='')=>{if(color)page.commands.push(`${color} rg`);page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);if(color)page.commands.push('0 0 0 rg')};
     const line=(x1,y1,x2,y2,w=.5)=>page.commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
     text(36,754,pdfFit(data.appName,68),16,true);
     text(36,738,pdfFit(`${data.orgName} - ${effectiveReportTitle()}`,96),9,false);
@@ -632,7 +686,7 @@ function makeFullPDF(){
     line(36,716,576,716,.7);
     return page;
   };
-  const text=(x,y,value,size=8,bold=false)=>page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
+  const text=(x,y,value,size=8,bold=false,color='')=>{if(color)page.commands.push(`${color} rg`);page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);if(color)page.commands.push('0 0 0 rg')};
   const line=(x1,y1,x2,y2,w=.5)=>page.commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
   const rect=(x,y,w,h)=>page.commands.push(`0.6 w ${x} ${y} ${w} ${h} re S`);
   const sectionHeader=(label,continued=false)=>{
@@ -663,16 +717,25 @@ function makeFullPDF(){
   });
   page.y=632;
 
-  beginSection('INVENTORY ON HAND');
-  const groups=inventoryGroups();
-  if(!groups.length)addParagraph('No charities available.');
-  groups.forEach(g=>{
-    addParagraph(g.charity,{size:9,bold:true,after:2});
-    if(g.sizes.length)g.sizes.forEach(x=>addParagraph(`${x.s}: ${x.n}`,{indent:16,after:1}));
-    else addParagraph('None on hand: 0',{indent:16,after:1});
-    addParagraph(`Total for ${g.charity}: ${g.total}`,{indent:16,bold:true,after:6});
+  beginSection('INVENTORY AND REQUESTED NEEDS');
+  const comparisonRows=reportComparisonRows(),diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
+  const drawComparisonHeader=()=>{
+    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(365,page.y,'REQUESTED NEEDS',7,true);text(455,page.y,'ON HAND',7,true);text(515,page.y,'DIFFERENCE',7,true);
+    line(36,page.y-5,576,page.y-5,.5);page.y-=17;
+  };
+  drawComparisonHeader();
+  comparisonRows.forEach(row=>{
+    if(page.y-15<48){newPage();sectionHeader(currentSection,true);drawComparisonHeader()}
+    const bold=row.type!=='detail';
+    if(row.type!=='detail')line(36,page.y+8,576,page.y+8,.35);
+    text(36,page.y,pdfFit(row.charity,row.type==='detail'?25:34),7.6,bold);
+    if(row.type==='detail')text(185,page.y,pdfFit(row.size,29),7.6,false);
+    text(365,page.y,String(row.requestedNeeds),7.6,bold);
+    text(455,page.y,String(row.onHand),7.6,true);
+    text(525,page.y,signedDifference(row.difference),7.6,row.type!=='detail',diffColor(row.difference));
+    page.y-=14;
   });
-  addParagraph(`Grand Total: ${totalOnHand()}`,{size:9,bold:true,after:10});
+  page.y-=8;
 
   beginSection('UPCOMING NEEDS');
   const needs=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -777,7 +840,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.5 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.7.6 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.5',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.7.6',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
