@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.2">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.2">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.2">
+<link rel="manifest" href="manifest-v7.json?v=7.8.4">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.4">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.4">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -217,7 +217,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.8.2 — In-place Needs editing and report comparison layout */
+/* Update 7.8.4 — In-place Needs editing and report comparison layout */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -282,14 +282,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.2" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.4" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.2</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.4</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -306,9 +306,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card">
     <h2>At a Glance</h2>
     <div class="grid3">
-      <div class="metric"><strong id="homeOnHand">0</strong><span>Total On Hand</span></div>
-      <div class="metric"><strong id="homeNeeded">0</strong><span>Quilts Needed to Complete</span></div>
-      <div class="metric"><strong id="homeDifference">0</strong><span>Difference</span></div>
+      <div class="metric"><strong id="homeOnHand">0</strong><span>Total Quilts in Storage</span></div>
+      <div class="metric"><strong id="homeNeeded">0</strong><span>Quilts Requested</span></div>
+      <div class="metric"><strong id="homeDifference">0</strong><span>Quilts Still Needed</span></div>
     </div>
     <div id="homeSaveStatus" class="save-status">Saved automatically on this device.</div>
   </div>
@@ -402,13 +402,13 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card">
     <h2 id="reportHeading">Love Quilts Inventory and Quilt Requests Report</h2><p id="reportDate" class="small"></p>
     <div class="grid3">
-      <div class="metric"><strong id="reportOnHand">0</strong><span>Total On Hand</span></div>
-      <div class="metric"><strong id="reportNeeded">0</strong><span>Quilts Needed to Complete</span></div>
+      <div class="metric"><strong id="reportOnHand">0</strong><span>Total Quilts in Storage</span></div>
+      <div class="metric"><strong id="reportNeeded">0</strong><span>Quilts Requested</span></div>
       <div class="metric short"><strong id="reportShortage">0</strong><span>Shortage</span></div>
     </div>
   </div>
-  <div class="card"><h3>Inventory and Quilts Needed to Complete</h3><div id="reportInventory"></div></div>
-  <div class="card"><h3>Quilts Needed to Complete</h3><div id="reportNeeds"></div></div>
+  <div class="card"><h3>Quilts in Storage and Quilts Requested</h3><div id="reportInventory"></div></div>
+  <div class="card"><h3>Quilts Requested</h3><div id="reportNeeds"></div></div>
   <div class="card"><h3>Distributed Quilt Requests</h3><div id="reportDistributed"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
   <div class="card no-print">
@@ -515,11 +515,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.2 · July 22, 2026</span>
+      <b>Version</b><span>Update 7.8.4 · July 22, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.2 lets quilt requests be edited directly inside their displayed card. Save and Cancel stay with the record, Delete is smaller and still requires confirmation, and availability is labeled clearly as inventory allocated to that specific request. The 7.7.6 report comparison layout is retained.</p>
+    <p class="small">Update 7.8.4 lets quilt requests be edited directly inside their displayed card. Save and Cancel stay with the record, Delete is smaller and still requires confirmation, and availability is labeled clearly as inventory allocated to that specific request. The 7.7.6 report comparison layout is retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -533,7 +533,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.2"></script>
-<script src="app.js?v=7.8.2"></script>
+<script type="module" src="firebase-sync.js?v=7.8.4"></script>
+<script src="app.js?v=7.8.4"></script>
 </body>
 </html>

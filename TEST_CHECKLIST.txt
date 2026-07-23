@@ -1,8 +1,8 @@
-LOVE QUILTS MANAGER UPDATE 7.8.2 TEST CHECKLIST
+LOVE QUILTS MANAGER UPDATE 7.8.4 TEST CHECKLIST
 
-1. Confirm the splash screen says Update 7.8.2.
-2. On At a Glance, verify “Quilts Needed to Complete” appears in the top totals and every charity block.
+1. Confirm the splash screen says Update 7.8.4.
+2. On At a Glance, verify “Quilts Requested” appears in the top totals and every charity block.
 3. Open Quilts Requested and verify request quantities are labeled “Quilts Requested.”
-4. Open Reports and verify remaining quantities are labeled “Quilts Needed to Complete.”
+4. Open Reports and verify remaining quantities are labeled “Quilts Requested.”
 5. Print the At-a-Glance Summary and verify the same wording appears.
 6. Confirm existing inventory, quilt requests, login, and syncing remain intact.

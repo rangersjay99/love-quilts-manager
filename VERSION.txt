@@ -1,6 +1,6 @@
-Love Quilts Manager Update 7.8.2
+Love Quilts Manager Update 7.8.4
 
-- Renames “Needs Remaining” to “Quilts Needed to Complete.”
+- Renames “Needs Remaining” to “Quilts Requested.”
 - Renames “Need/Needs” quantity labels to “Quilts Requested.”
 - Applies the clearer wording to At a Glance, charity cards, quilt request cards, reports, print summary, and PDFs.
 - No Firebase, synchronization, or saved-data format changes.

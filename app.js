@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.2';
+const VERSION='7.8.4';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -374,14 +374,14 @@ function needInlineEditor(n,stateClass,stateLabel,info,editorMode='details'){
   const sizeOptions=data.sizes.map(size=>`<option value="${esc(size)}"${size===n.size?' selected':''}>${esc(size)}</option>`).join('');
   const sent=fulfilledQty(n),remaining=remainingNeed(n),complete=remaining===0,pastDue=needIsPastDue(n),available=Math.max(0,Number(info?.available||0)),short=Math.max(0,Number(info?.shortage||0));
   let metricTwo='',metricThree='';
-  if(complete){metricTwo=`<div><b>${sent}</b><span>Sent</span></div>`;metricThree=`<div><b class="positive">0</b><span>Needed to Complete</span></div>`}
-  else if(sent>0||pastDue){metricTwo=`<div><b>${sent}</b><span>Sent</span></div>`;metricThree=`<div><b class="${pastDue?'negative':''}">${remaining}</b><span>Needed to Complete</span></div>`}
+  if(complete){metricTwo=`<div><b>${sent}</b><span>Sent</span></div>`;metricThree=`<div><b class="positive">0</b><span>Still Needed</span></div>`}
+  else if(sent>0||pastDue){metricTwo=`<div><b>${sent}</b><span>Sent</span></div>`;metricThree=`<div><b class="${pastDue?'negative':''}">${remaining}</b><span>Still Needed</span></div>`}
   else{metricTwo=`<div><b>${available}</b><span>Available for this request</span></div>`;metricThree=`<div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div>`}
   const distributionQty=sent||Number(n.qty)||1,distributionDate=n.fulfilledDate||today();
   const planner=editorMode==='distribution'
     ?`<div class="planner-edit-cell"><input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" oninput="updateInlineNeedPreview(this.form)" aria-label="Quilts requested"><span>Quilts Requested</span></div>
       <div class="planner-edit-cell"><input name="fulfilledQty" type="number" inputmode="numeric" min="0" step="1" value="${distributionQty}" oninput="updateInlineNeedPreview(this.form)" aria-label="Quantity sent"><span>Sent</span></div>
-      <div><b data-inline-remaining>${Math.max(0,(Number(n.qty)||1)-distributionQty)}</b><span>Needed to Complete</span></div>`
+      <div><b data-inline-remaining>${Math.max(0,(Number(n.qty)||1)-distributionQty)}</b><span>Still Needed</span></div>`
     :`<div class="planner-edit-cell"><input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" aria-label="Quilts requested"><span>Quilts Requested</span></div>${metricTwo}${metricThree}`;
   const distributionFields=editorMode==='distribution'
     ?`<div class="direct-distribution-row"><label>Date Distributed<input name="fulfilledDate" type="date" value="${esc(distributionDate)}"></label><label class="check-row inline-check"><input name="recordOut" type="checkbox"><span>Record newly distributed quantity as ${esc(data.itemName)} Out</span></label></div>
@@ -407,11 +407,11 @@ function needCard(n,actions=true,allocation=null){
   let stateClass,stateLabel,planner,detail='';
   if(complete){
     stateClass='need-completed';stateLabel='Distributed';
-    planner=`<div><b>${n.qty}</b><span>Quilts Requested</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="positive">0</b><span>Needed to Complete</span></div>`;
+    planner=`<div><b>${n.qty}</b><span>Quilts Requested</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="positive">0</b><span>Still Needed</span></div>`;
     detail=`<div class="distribution-meta">✓ ${esc(distributionText(n)||'Distribution completed')}</div>`;
   }else if(sent>0||pastDue){
     stateClass=pastDue?'need-pastdue':'need-partial';stateLabel=pastDue?'Past Due': 'Partially Sent';
-    planner=`<div><b>${n.qty}</b><span>Quilts Requested</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${pastDue?'negative':''}">${remaining}</b><span>Needed to Complete</span></div>`;
+    planner=`<div><b>${n.qty}</b><span>Quilts Requested</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${pastDue?'negative':''}">${remaining}</b><span>Still Needed</span></div>`;
     detail=`<div class="distribution-meta">${sent?esc(distributionText(n))+' · ':''}Available for this request ${available} · Short ${short}</div>`;
   }else{
     stateClass=short===0?'need-covered':available>0?'need-partial':'need-shortage';stateLabel=short===0?'Covered':available>0?'Partial':'Shortage';
@@ -444,12 +444,12 @@ function renderNeedsCalendar(){
     const details=list.length?rows.map(item=>{
       const n=item.n,nSent=fulfilledQty(n),nRemaining=remainingNeed(n);
       let summary;
-      if(nRemaining===0)summary=`Quilts Requested ${n.qty} · Sent ${nSent} · Needed to Complete 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
-      else if(nSent>0||month<monthNow())summary=`Quilts Requested ${n.qty} · Sent ${nSent} · Needed to Complete ${nRemaining} · Available ${item.available} · Short ${item.shortage}`;
+      if(nRemaining===0)summary=`Quilts Requested ${n.qty} · Sent ${nSent} · Still Needed 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
+      else if(nSent>0||month<monthNow())summary=`Quilts Requested ${n.qty} · Sent ${nSent} · Still Needed ${nRemaining} · Available ${item.available} · Short ${item.shortage}`;
       else summary=`Quilts Requested ${n.qty} · Available ${item.available} · Short ${item.shortage}`;
       return`<div class="month-need"><button type="button" onclick="editNeed('${n.id}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · ${summary}</button></div>`;
     }).join(''):'<div class="month-need">No quilt request</div>';
-    const totals=(allComplete||pastDue||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Requested</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Needed to Complete</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Requested</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
+    const totals=(allComplete||pastDue||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Requested</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Requested</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
     return`<div class="month-card ${state}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}</div>`;
   }).join('');
 }
@@ -478,7 +478,7 @@ function renderHomeCharityBreakdown(){
   box.innerHTML=rows.length?rows.map(row=>{
     const state=row.difference<0?'has-shortage':row.difference>0?'has-surplus':'balanced';
     const diffClass=differenceClass(row.difference);
-    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>On Hand</span></div><div><b>${row.needsRemaining}</b><span>Quilts Needed to Complete</span></div><div><b class="${diffClass}">${signedDifference(row.difference)}</b><span>Difference</span></div></div></button>`;
+    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>Quilts in Storage</span></div><div><b>${row.needsRemaining}</b><span>Quilts Requested</span></div><div><b class="${diffClass}">${signedDifference(row.difference)}</b><span>Quilts Still Needed</span></div></div></button>`;
   }).join(''):'<div class="empty">No charities have been entered yet.</div>';
 }
 function openHomeCharity(charity){
@@ -491,7 +491,7 @@ function renderHomeSummaryReport(){
   const rows=homeCharitySummaries(),onHand=totalOnHand(),needsRemaining=totalNeeded(),difference=onHand-needsRemaining;
   const generated=new Date().toLocaleString();
   const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.needsRemaining}</td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
-  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · At a Glance Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>Total On Hand</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>Quilts Needed to Complete</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>Difference</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>On Hand</th><th>Quilts Needed to Complete</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · At a Glance Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>Total Quilts in Storage</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>Quilts Requested</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>Quilts Still Needed</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>Quilts in Storage</th><th>Quilts Requested</th><th>Quilts Still Needed</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderHome(){
   const difference=totalOnHand()-totalNeeded();
@@ -548,11 +548,11 @@ function reportInventoryHTML(){
     return`<tr${rowClass}><td>${charityCell}</td><td>${sizeCell}</td><td>${onHandCell}</td><td>${requestedCell}</td><td>${differenceCell}</td></tr>`;
   }).join('');
   const grand=rows.find(row=>row.type==='grand');
-  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th><th>Quilts Needed to Complete</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
+  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>Quilts in Storage</th><th>Quilts Requested</th><th>Quilts Still Needed</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
 }
 function reportNeedsHTML(){
   const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
-  return list.length?`<table><thead><tr><th>Month</th><th>Charity / Size</th><th>Quilts Requested</th><th>Sent / Needed to Complete</th><th>Available / Short</th></tr></thead><tbody>${list.map(item=>{const n=item.n;return`<tr><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${item.fulfilled} sent<br><span class="small">${item.remaining} needed to complete</span></td><td>${item.available} available<br><span class="small ${item.shortage?'negative':''}">${item.shortage} short</span></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No upcoming quilt requests.</div>';
+  return list.length?`<table><thead><tr><th>Month</th><th>Charity / Size</th><th>Quilts Requested</th><th>Sent / Still Needed</th><th>Available / Short</th></tr></thead><tbody>${list.map(item=>{const n=item.n;return`<tr><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${item.fulfilled} sent<br><span class="small">${item.remaining} still needed</span></td><td>${item.available} available<br><span class="small ${item.shortage?'negative':''}">${item.shortage} short</span></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No upcoming quilt requests.</div>';
 }
 function distributedNeedsForReport(){
   return data.needs.filter(n=>fulfilledQty(n)>0).sort((a,b)=>String(b.fulfilledDate||'').localeCompare(String(a.fulfilledDate||''))||String(b.month||'').localeCompare(String(a.month||''))||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size));
@@ -560,7 +560,7 @@ function distributedNeedsForReport(){
 function distributionReportStatus(n){return remainingNeed(n)===0?'Distributed':'Partially Sent'}
 function reportDistributedHTML(){
   const list=distributedNeedsForReport();
-  return list.length?`<table><thead><tr><th>Date Sent</th><th>Month Needed</th><th>Charity / Size</th><th>Quilts Requested</th><th>Sent / Needed to Complete</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} needed to complete</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No distributed quilt requests recorded yet.</div>';
+  return list.length?`<table><thead><tr><th>Date Sent</th><th>Month Needed</th><th>Charity / Size</th><th>Quilts Requested</th><th>Sent / Still Needed</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} still needed</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No distributed quilt requests recorded yet.</div>';
 }
 function compactDistributedHTML(limit=6){
   const all=distributedNeedsForReport(),list=all.slice(0,limit);
@@ -570,7 +570,7 @@ function compactDistributedHTML(limit=6){
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){
   const generated=new Date().toLocaleString();
-  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Quilts Needed to Complete</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><h2>Inventory and Quilts Needed to Complete</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>Quilts Needed to Complete</h2>${reportNeedsHTML()}</div><div><h2>Distributed Quilt Requests</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total Quilts in Storage</div><div class="print-metric"><b>${totalNeeded()}</b>Quilts Requested</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><h2>Quilts in Storage and Quilts Requested</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>Quilts Requested</h2>${reportNeedsHTML()}</div><div><h2>Distributed Quilt Requests</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderReports(){
   el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
@@ -691,14 +691,14 @@ function makeOnePagePDF(){
   text(36,726,`Generated ${new Date().toLocaleString()}`,7,false);
 
   const metricY=684,metricH=32,metricW=166;
-  [[36,'Total On Hand',totalOnHand()],[223,'Quilts Needed to Complete',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
+  [[36,'Total Quilts in Storage',totalOnHand()],[223,'Quilts Requested',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
     rect(x,metricY,metricW,metricH);text(x+8,metricY+18,String(num),14,true);text(x+42,metricY+19,label,8,true);
   });
 
-  text(36,665,'INVENTORY AND QUILTS NEEDED TO COMPLETE',10,true);line(36,659,576,659,.7);
+  text(36,665,'QUILTS IN STORAGE AND QUILTS REQUESTED',10,true);line(36,659,576,659,.7);
   const xCharity=36,xSize=180,xOnHand=365,xRequested=455,xDifference=525;
   let y=645;
-  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand,y,'ON HAND',7,true);text(xRequested-7,y+3,'QUILTS NEEDED',5.5,true);text(xRequested-7,y-4,'TO COMPLETE',5.5,true);text(xDifference-10,y,'DIFFERENCE',7,true);line(36,y-8,576,y-8,.5);y-=20;
+  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand-2,y+3,'QUILTS IN',5.5,true);text(xOnHand-6,y-4,'STORAGE',5.5,true);text(xRequested+2,y+3,'QUILTS',5.5,true);text(xRequested-8,y-4,'REQUESTED',5.5,true);text(xDifference-12,y+3,'QUILTS STILL',5.5,true);text(xDifference-6,y-4,'NEEDED',5.5,true);line(36,y-8,576,y-8,.5);y-=20;
   const allRows=reportComparisonRows(),maxSummaryRows=20,shownRows=allRows.slice(0,maxSummaryRows);
   shownRows.forEach(row=>{
     const bold=row.type!=='detail';
@@ -723,7 +723,7 @@ function makeOnePagePDF(){
   needs.forEach(item=>{
     const n=item.n;
     needsRows.push({text:`${fmtMonthShort(n.month)} - ${n.charity}`,bold:true});
-    needsRows.push({text:`  ${n.size} | Quilts Requested ${n.qty} | Needed to Complete ${item.remaining}`,bold:false});
+    needsRows.push({text:`  ${n.size} | Quilts Requested ${n.qty} | Still Needed ${item.remaining}`,bold:false});
     needsRows.push({text:`  Available ${item.available} | Short ${item.shortage}`,bold:false});
   });
 
@@ -732,7 +732,7 @@ function makeOnePagePDF(){
   activityRows.push({text:`DISTRIBUTED NEEDS: ${distributed.length}`,bold:true});
   distributed.slice(0,6).forEach(n=>{
     activityRows.push({text:`${n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered'} - ${n.charity}`,bold:true});
-    activityRows.push({text:`  ${n.size} | Sent ${fulfilledQty(n)} | Needed to Complete ${remainingNeed(n)}`,bold:false});
+    activityRows.push({text:`  ${n.size} | Sent ${fulfilledQty(n)} | Still Needed ${remainingNeed(n)}`,bold:false});
   });
   if(distributed.length>6)activityRows.push({text:`  + ${distributed.length-6} earlier distribution records`,bold:false});
   const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date));
@@ -828,15 +828,15 @@ function makeFullPDF(){
 
   newPage();
   const metricY=656,metricH=36,metricW=166;
-  [[36,'Total On Hand',totalOnHand()],[223,'Quilts Needed to Complete',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
+  [[36,'Total Quilts in Storage',totalOnHand()],[223,'Quilts Requested',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
     rect(x,metricY,metricW,metricH);text(x+9,metricY+20,String(num),15,true);text(x+49,metricY+21,label,8,true);
   });
   page.y=632;
 
-  beginSection('INVENTORY AND QUILTS NEEDED TO COMPLETE');
+  beginSection('QUILTS IN STORAGE AND QUILTS REQUESTED');
   const comparisonRows=reportComparisonRows(),diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
   const drawComparisonHeader=()=>{
-    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(365,page.y,'ON HAND',7,true);text(448,page.y+3,'QUILTS NEEDED',5.5,true);text(448,page.y-4,'TO COMPLETE',5.5,true);text(515,page.y,'DIFFERENCE',7,true);
+    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(360,page.y+3,'QUILTS IN',5.5,true);text(360,page.y-4,'STORAGE',5.5,true);text(456,page.y+3,'QUILTS',5.5,true);text(448,page.y-4,'REQUESTED',5.5,true);text(507,page.y+3,'QUILTS STILL',5.5,true);text(513,page.y-4,'NEEDED',5.5,true);
     line(36,page.y-8,576,page.y-8,.5);page.y-=21;
   };
   drawComparisonHeader();
@@ -859,7 +859,7 @@ function makeFullPDF(){
   needs.forEach(item=>{
     const n=item.n;
     addParagraph(`${fmtMonth(n.month)} - ${n.charity}`,{size:9,bold:true,after:2});
-    addParagraph(`${n.size} | Quilts Requested: ${n.qty} | Sent: ${item.fulfilled} | Needed to Complete: ${item.remaining} | Available: ${item.available} | Shortage: ${item.shortage}`,{indent:16,after:n.note?1:6});
+    addParagraph(`${n.size} | Quilts Requested: ${n.qty} | Sent: ${item.fulfilled} | Still Needed: ${item.remaining} | Available: ${item.available} | Shortage: ${item.shortage}`,{indent:16,after:n.note?1:6});
     if(n.note)addParagraph(`Note: ${n.note}`,{indent:16,size:7.5,after:6});
   });
 
@@ -868,7 +868,7 @@ function makeFullPDF(){
   if(!distributed.length)addParagraph('No distributed quilt requests recorded.');
   distributed.forEach(n=>{
     addParagraph(`${n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered'} - ${n.charity}`,{size:9,bold:true,after:2});
-    addParagraph(`${n.size} | Month Needed: ${fmtMonth(n.month)} | Quilts Requested: ${n.qty} | Sent: ${fulfilledQty(n)} | Needed to Complete: ${remainingNeed(n)} | Status: ${distributionReportStatus(n)}`,{indent:16,after:n.note?1:6});
+    addParagraph(`${n.size} | Month Needed: ${fmtMonth(n.month)} | Quilts Requested: ${n.qty} | Sent: ${fulfilledQty(n)} | Still Needed: ${remainingNeed(n)} | Status: ${distributionReportStatus(n)}`,{indent:16,after:n.note?1:6});
     if(n.note)addParagraph(`Note: ${n.note}`,{indent:16,size:7.5,after:6});
   });
 
