@@ -1,10 +1,25 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.9
+LOVE QUILTS MANAGER — UPDATE 7.8.10
+Released: July 23, 2026
 
+BEFORE UPDATING
+1. Confirm all devices show that changes are synced.
+2. Export a current backup from Settings.
+3. Keep a ZIP backup of the current GitHub repository.
+
+UPLOAD
 1. Extract this ZIP.
-2. Upload every extracted file to the GitHub repository main/root folder and replace matching files.
-3. Do not delete or replace the firebase-test folder.
-4. Wait for GitHub Pages to publish, then close and reopen the app on each device.
-5. On the device that already shows the preferred Home wording, open Settings and press Save Names and Home Wording once.
-6. Wait for “All changes synced,” then reopen the other devices.
+2. Upload every extracted file to the GitHub repository main/root folder.
+3. Replace files with the same names.
+4. Do not delete or replace the firebase-test folder.
+5. Wait for GitHub Pages to publish.
+6. Close and reopen the installed app on each device. Refresh once if an older version appears.
 
-Existing inventory, requests, distributions, settings, and Firebase paths are unchanged.
+NEW HOME SHORTCUTS
+- ＋ Add Quilts opens Love Quilts In.
+- ＋ Add Need opens a blank charity-request form.
+- Distribute Quilts opens the outstanding request list so Mark Distributed can be selected.
+- The Difference card uses an unsigned red Shortage, green Surplus, or Balanced status.
+
+IMPORTANT
+- This update does not clear or reinitialize shared data.
+- Firebase production paths and the saved-data schema are unchanged.

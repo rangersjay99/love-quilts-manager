@@ -1,6 +1,7 @@
-Love Quilts Manager Update 7.8.9
+Love Quilts Manager Update 7.8.10
 Released: July 23, 2026
 
-Fixes synchronization of the customizable Home-screen headings and labels.
-The six Home wording fields are now included in Firebase shared settings and migrate safely from Update 7.8.8 without erasing wording already saved on a device.
-The corrected Reports summary calculation and all Update 7.8.8 features are retained.
+Adds At a Glance shortcuts for adding charity needs and distributing quilts.
+The main Difference card now displays an unsigned, color-coded Shortage, Surplus, or Balanced status.
+
+Existing inventory, needs, distribution records, shared wording, reports, backups, and Firebase paths are unchanged.

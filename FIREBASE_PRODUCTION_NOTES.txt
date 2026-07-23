@@ -1,5 +1,10 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.8.9
+FIREBASE PRODUCTION NOTES — UPDATE 7.8.10
 
-The Firebase project, organization path, approved users, and Firestore rules are unchanged.
-Update 7.8.9 adds the six customizable Home wording fields to the existing settings/main document.
-No database reset or reinitialization is required.
+No Firebase path or saved-data schema changes are included in this update.
+The new Home buttons and Difference status are interface-only changes.
+Custom Home wording continues to sync through the existing settings/main document.
+
+Production Firestore path:
+organizations/faithful-circle-love-quilts
+
+Do not recreate or reinitialize the shared inventory.

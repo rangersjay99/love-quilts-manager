@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.9';
+const VERSION='7.8.10';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -213,6 +213,35 @@ function openAddQuilts(){
 function openInventoryDetails(){
   showView('inventory');
   requestAnimationFrame(()=>el('inventoryDetailsCard')?.scrollIntoView({behavior:'smooth',block:'start'}));
+}
+function resetNeedEntryForm(){
+  editNeedId=null;editNeedMode='details';
+  if(el('needMonth'))el('needMonth').value=monthNow();
+  if(el('needCharity'))el('needCharity').value='';
+  if(el('needSize'))el('needSize').value='';
+  if(el('needQty'))el('needQty').value=1;
+  if(el('needNote'))el('needNote').value='';
+  if(el('needFulfilledQty'))el('needFulfilledQty').value=0;
+  if(el('needFulfilledDate'))el('needFulfilledDate').value='';
+  if(el('needRecordOut'))el('needRecordOut').checked=false;
+  if(el('saveNeedBtn'))el('saveNeedBtn').textContent='Add to Quilts Needed';
+  if(el('cancelNeedBtn'))el('cancelNeedBtn').style.display='none';
+}
+function openAddNeed(){
+  resetNeedEntryForm();showView('needs');renderNeeds();
+  requestAnimationFrame(()=>{el('needsEntryCard')?.scrollIntoView({behavior:'smooth',block:'start'});el('needCharity')?.focus()});
+}
+function openNeedsDetails(){
+  showView('needs');renderNeeds();
+  requestAnimationFrame(()=>el('needsList')?.scrollIntoView({behavior:'smooth',block:'start'}));
+}
+function openDistributeQuilts(){
+  editNeedId=null;editNeedMode='details';showView('needs');renderNeeds();
+  requestAnimationFrame(()=>{
+    notice('needNotice','Choose a request below, then tap Mark Distributed.');
+    const first=[...document.querySelectorAll('#needsList .need-card')].find(card=>!card.classList.contains('need-completed'));
+    (first||el('needsList'))?.scrollIntoView({behavior:'smooth',block:'center'});
+  });
 }
 function setMode(m){
   mode=m;el('modeIn').className=m==='IN'?'active-in':'';el('modeOut').className=m==='OUT'?'active-out':'';el('modeAdjust').className=m==='ADJUST'?'active-adjust':'';
@@ -576,9 +605,13 @@ function renderHome(){
   const difference=totalOnHand()-totalNeeded();
   el('homeOnHand').textContent=totalOnHand();
   el('homeNeeded').textContent=totalNeeded();
-  const differenceBox=el('homeDifference');
-  differenceBox.textContent=signedDifference(difference);
+  const differenceBox=el('homeDifference'),differenceStatus=el('homeDifferenceStatus');
+  differenceBox.textContent=String(Math.abs(difference));
   differenceBox.className=differenceClass(difference);
+  if(differenceStatus){
+    differenceStatus.textContent=difference>0?'Surplus':difference<0?'Shortage':'Balanced';
+    differenceStatus.className=`difference-status ${difference>0?'positive':difference<0?'negative':'balanced'}`;
+  }
   renderHomeCalendar();renderHomeSummaryReport();updateSaveStatus();
 }
 function inventoryGroups(){const inventory=invMap();return[...data.charities].sort((a,b)=>a.localeCompare(b)).map(c=>{const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));return{charity:c,sizes,total:sizes.reduce((sum,x)=>sum+x.n,0)}})}
@@ -1037,7 +1070,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.9 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.10 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.9',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.10',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
