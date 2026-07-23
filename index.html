@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.1">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.1">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.1">
+<link rel="manifest" href="manifest-v7.json?v=7.8.2">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.2">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.2">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -110,7 +110,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .report-summary-table th:nth-child(n+3),.report-summary-table td:nth-child(n+3){text-align:right}
 .on-hand-value{font-weight:900}.difference-value{white-space:nowrap}
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
-.bottom-nav button{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:800;min-height:50px;border-radius:10px;padding:6px 2px}
+.bottom-nav button{border:0;background:transparent;color:var(--muted);font-size:10px;line-height:1.15;font-weight:800;min-height:50px;border-radius:10px;padding:6px 2px}
 .bottom-nav button.active{background:var(--soft);color:var(--plum)}.bottom-nav b{display:block;font-size:20px;line-height:1.1}
 .print-only{display:none}
 .about-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;font-size:14px}.about-grid b{color:var(--plum-dark)}
@@ -217,7 +217,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.7.7 — In-place Needs editing and report comparison layout */
+/* Update 7.8.2 — In-place Needs editing and report comparison layout */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -282,14 +282,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.1" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.2" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.1</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.2</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -297,7 +297,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <header>
   <div id="headerOrg" class="org">Faithful Circle Quilters</div>
   <h1 id="headerAppName">Love Quilts Manager</h1>
-  <p id="headerSubtitle">Inventory on hand and upcoming needs</p>
+  <p id="headerSubtitle">Inventory on hand and quilts requested</p>
 </header>
 <div class="firebase-banner"><b>SHARED DEVICE SYNC</b> · <span id="firebaseBannerStatus">Waiting for sign-in</span></div>
 
@@ -307,7 +307,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <h2>At a Glance</h2>
     <div class="grid3">
       <div class="metric"><strong id="homeOnHand">0</strong><span>Total On Hand</span></div>
-      <div class="metric"><strong id="homeNeeded">0</strong><span>Needs Remaining</span></div>
+      <div class="metric"><strong id="homeNeeded">0</strong><span>Quilts Needed to Complete</span></div>
       <div class="metric"><strong id="homeDifference">0</strong><span>Difference</span></div>
     </div>
     <div id="homeSaveStatus" class="save-status">Saved automatically on this device.</div>
@@ -323,7 +323,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <h3>Choose an Action</h3>
     <div class="home-actions">
       <button id="homeRecordBtn" class="btn-plum" onclick="showView('inventory')">Record Love Quilts</button>
-      <button class="btn-teal" onclick="showView('needs')">Needs Planner</button>
+      <button class="btn-teal" onclick="showView('needs')">Quilts Requested</button>
       <button class="btn-blue" onclick="showView('reports')">View Reports</button>
       <button class="btn-gold" onclick="showView('settings')">Settings</button>
     </div>
@@ -366,8 +366,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
 <section id="needs" class="view">
   <div class="card">
-    <h2>Needs Calendar</h2>
-    <p class="small">View all 12 months. Inventory is allocated in month order: green is covered, gold is partially covered, red is a shortage, orange is past due, and “Distributed” means the need was completed.</p>
+    <h2>Quilt Request Calendar</h2>
+    <p class="small">View all 12 months. Inventory is allocated in month order: green is covered, gold is partially covered, red is a shortage, orange is past due, and “Distributed” means the quilt request was completed.</p>
     <div class="calendar-toolbar">
       <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
       <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
@@ -375,45 +375,45 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     </div>
     <div id="needsCalendar" class="needs-calendar"></div>
   </div>
-  <div class="card"><h3>Planned Needs</h3><div id="needsList"></div></div>
+  <div class="card"><h3>Quilts Requested</h3><div id="needsList"></div></div>
   <div class="card">
-    <h2>Needs Planner</h2>
-    <div id="needsNote" class="section-note">Enter the number needed by month. Current stock and shortage are calculated automatically.</div>
+    <h2>Quilts Requested</h2>
+    <div id="needsNote" class="section-note">Enter the number of quilts requested for each month. Current stock and shortage are calculated automatically.</div>
     <label>Month Needed</label><input id="needMonth" type="month">
     <label>Charity</label><select id="needCharity" required></select>
     <label>Size</label><select id="needSize" required></select>
-    <label>Quantity Needed</label><input id="needQty" type="number" min="1" step="1" value="1">
+    <label>Quilts Requested</label><input id="needQty" type="number" min="1" step="1" value="1">
     <label>Note <span class="small">(optional)</span></label><input id="needNote" placeholder="Holiday delivery, annual event, etc.">
     <div class="distribution-fields">
       <h3>Distribution Status</h3>
-      <p class="small">Use these fields when some or all of this need has been delivered.</p>
+      <p class="small">Use these fields when some or all of this quilt request has been delivered.</p>
       <label>Quantity Distributed</label><input id="needFulfilledQty" type="number" inputmode="numeric" min="0" step="1" value="0">
       <label>Date Distributed</label><input id="needFulfilledDate" type="date">
       <label class="check-row"><input id="needRecordOut" type="checkbox"><span>Record any newly distributed quantity as <span id="needRecordOutName">Love Quilts</span> Out</span></label>
       <p class="small">Leave this unchecked when the quilts were already entered on the Inventory screen. Checking it creates the matching Inventory Out transaction automatically.</p>
     </div>
     <div id="needNotice" class="notice"></div>
-    <button id="saveNeedBtn" class="primary" onclick="saveNeed()">Add Need</button>
+    <button id="saveNeedBtn" class="primary" onclick="saveNeed()">Add Quilt Request</button>
     <button id="cancelNeedBtn" class="ghost" style="display:none" onclick="cancelNeedEdit()">Cancel Editing</button>
   </div>
 </section>
 
 <section id="reports" class="view">
   <div class="card">
-    <h2 id="reportHeading">Love Quilts Inventory and Needs Report</h2><p id="reportDate" class="small"></p>
+    <h2 id="reportHeading">Love Quilts Inventory and Quilt Requests Report</h2><p id="reportDate" class="small"></p>
     <div class="grid3">
       <div class="metric"><strong id="reportOnHand">0</strong><span>Total On Hand</span></div>
-      <div class="metric"><strong id="reportNeeded">0</strong><span>Upcoming Needs</span></div>
+      <div class="metric"><strong id="reportNeeded">0</strong><span>Quilts Needed to Complete</span></div>
       <div class="metric short"><strong id="reportShortage">0</strong><span>Shortage</span></div>
     </div>
   </div>
-  <div class="card"><h3>Inventory and Requested Needs</h3><div id="reportInventory"></div></div>
-  <div class="card"><h3>Upcoming Needs</h3><div id="reportNeeds"></div></div>
-  <div class="card"><h3>Distributed Needs</h3><div id="reportDistributed"></div></div>
+  <div class="card"><h3>Inventory and Quilts Needed to Complete</h3><div id="reportInventory"></div></div>
+  <div class="card"><h3>Quilts Needed to Complete</h3><div id="reportNeeds"></div></div>
+  <div class="card"><h3>Distributed Quilt Requests</h3><div id="reportDistributed"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
   <div class="card no-print">
     <h3>Report Downloads</h3>
-    <p class="small">The full PDF includes all inventory, upcoming needs, distributed needs, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
+    <p class="small">The full PDF includes all inventory, quilt requests, distributed quilt requests, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
     <button class="primary" onclick="exportFullPDF()">Download Full PDF Report</button>
     <button class="ghost" onclick="exportCompactPDF()">Download Compact One-Page PDF</button>
     <div class="row"><button class="ghost" onclick="shareFullReport()">Email Full Report</button><button class="ghost" onclick="shareCompactReport()">Email Compact Report</button></div>
@@ -489,7 +489,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <label>Program / Quilt Name</label>
     <input id="itemNameInput" maxlength="60" placeholder="Love Quilts">
     <label>Report Title <span class="small">(optional)</span></label>
-    <input id="reportTitleInput" maxlength="120" placeholder="Love Quilts Inventory and Needs Report">
+    <input id="reportTitleInput" maxlength="120" placeholder="Love Quilts Inventory and Quilt Requests Report">
     <p class="small">Leave blank to create the report title automatically from the program name.</p>
     <label>Splash Tagline <span class="small">(optional)</span></label>
     <input id="splashTagInput" maxlength="100" placeholder="MADE WITH LOVE, SHARED WITH CARE">
@@ -515,11 +515,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.7.7 · July 22, 2026</span>
+      <b>Version</b><span>Update 7.8.2 · July 22, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.7.7 lets planned needs be edited directly inside their Needs card. Save and Cancel stay with the record, Delete is smaller and still requires confirmation, and availability is labeled clearly as inventory allocated to that specific need. The 7.7.6 report comparison layout is retained.</p>
+    <p class="small">Update 7.8.2 lets quilt requests be edited directly inside their displayed card. Save and Cancel stay with the record, Delete is smaller and still requires confirmation, and availability is labeled clearly as inventory allocated to that specific request. The 7.7.6 report comparison layout is retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -528,12 +528,12 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <nav class="bottom-nav">
   <button data-view="home" class="active" onclick="showView('home')"><b>⌂</b>Home</button>
   <button data-view="inventory" onclick="showView('inventory')"><b>＋</b>Inventory</button>
-  <button data-view="needs" onclick="showView('needs')"><b>▦</b>Needs</button>
+  <button data-view="needs" onclick="showView('needs')"><b>▦</b>Quilts Requested</button>
   <button data-view="reports" onclick="showView('reports')"><b>▤</b>Reports</button>
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.7.7"></script>
-<script src="app.js?v=7.7.7"></script>
+<script type="module" src="firebase-sync.js?v=7.8.2"></script>
+<script src="app.js?v=7.8.2"></script>
 </body>
 </html>

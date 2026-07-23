@@ -1,11 +1,9 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.1
+LOVE QUILTS MANAGER — UPDATE 7.8.2
 
 1. Extract this ZIP file.
 2. Open the GitHub repository.
-3. Choose Add file, then Upload files.
-4. Upload every extracted file and folder. Do not upload the ZIP itself.
+3. Choose Add file → Upload files.
+4. Upload every extracted file and folder, not the ZIP itself.
 5. Commit the changes.
-6. Wait about one minute, then close and reopen the app.
-7. Confirm the splash screen shows Update 7.8.1.
-
-This update does not change Firebase settings or the saved-data format.
+6. Wait about one minute, then reopen or refresh the app.
+7. Confirm the splash screen shows Update 7.8.2.

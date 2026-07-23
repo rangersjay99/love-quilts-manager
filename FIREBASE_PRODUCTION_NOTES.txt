@@ -1,5 +1,3 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.8.1
+FIREBASE PRODUCTION NOTES — UPDATE 7.8.2
 
-No Firebase configuration changes are required.
-
-Update 7.8.1 changes the At-a-Glance presentation and report wording only. Authentication, Firestore paths, synchronization behavior, and stored-data structure are unchanged.
+Update 7.8.2 changes user-facing wording only. Authentication, Firestore paths, synchronization behavior, and stored-data structure are unchanged.

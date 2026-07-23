@@ -1,10 +1,6 @@
-Love Quilts Manager Update 7.8.1
-Released: July 22, 2026
+Love Quilts Manager Update 7.8.2
 
-At-a-Glance printable summary update.
-
-- Adds a Print Summary button directly beneath the opening-screen charity breakdown.
-- The printable one-page summary includes Total On Hand, Needs Remaining, Difference, and the same three numbers for every charity.
-- The report uses the current organization and app names and includes the generated date and time.
-- The existing At-a-Glance charity cards remain tappable for detailed needs information.
-- No authentication, Firebase sync, or stored-data format changes.
+- Renames “Needs Remaining” to “Quilts Needed to Complete.”
+- Renames “Need/Needs” quantity labels to “Quilts Requested.”
+- Applies the clearer wording to At a Glance, charity cards, quilt request cards, reports, print summary, and PDFs.
+- No Firebase, synchronization, or saved-data format changes.
