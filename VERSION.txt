@@ -1,7 +1,6 @@
-Love Quilts Manager Update 7.8.7
+Love Quilts Manager Update 7.8.8
+Released: July 23, 2026
 
-- Adds a ＋ Add Quilts button directly to the At a Glance Total Quilts in Storage card.
-- The new button opens Inventory in Love Quilts In mode for immediate entry.
-- Tapping the rest of the storage card opens Current Inventory details.
-- Retains the Home All Quilts Calendar, month-by-month ＋ Add Quilts Needed pop-ups, and direct calendar editing from Update 7.8.6.
-- No Firebase path, synchronization, or saved-data format changes.
+Adds editable Home-screen headings and metric labels under Settings > Names and Wording.
+Corrects the Reports summary Shortage so it matches the report Grand Total calculation.
+Existing inventory, charity requests, Firebase paths, login, syncing, and backup formats are retained.

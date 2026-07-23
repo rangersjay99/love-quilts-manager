@@ -1,3 +1,4 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.8.7
+FIREBASE PRODUCTION NOTES — UPDATE 7.8.8
 
-Update 7.8.7 changes the Home shortcuts and calendar workflow only. Authentication, Firestore paths, synchronization behavior, and stored-data structure are unchanged.
+Authentication, approved users, organization path, and synchronization behavior are unchanged.
+The shared data object now includes optional Home-screen wording fields. Older saved data automatically receives the default wording, so no database reinitialization or migration is required.

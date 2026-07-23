@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.7';
+const VERSION='7.8.8';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -14,6 +14,12 @@ const DEFAULT_ORG='Faithful Circle Quilters';
 const DEFAULT_APP='Love Quilts Manager';
 const DEFAULT_ITEM='Love Quilts';
 const DEFAULT_SPLASH_TAG='MADE WITH LOVE, SHARED WITH CARE';
+const DEFAULT_HOME_AT_A_GLANCE='At a Glance';
+const DEFAULT_HOME_STORAGE_LABEL='Total Quilts in Storage';
+const DEFAULT_HOME_NEEDED_LABEL='Quilts Still Needed';
+const DEFAULT_HOME_DIFFERENCE_LABEL='Difference';
+const DEFAULT_HOME_CALENDAR_HEADING='All Quilts Calendar';
+const DEFAULT_HOME_ACTIONS_HEADING='Choose an Action';
 const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
 const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
@@ -77,6 +83,9 @@ function normalizeData(d={}){
   return{
     orgName:String(d.orgName||DEFAULT_ORG),appName:String(d.appName||DEFAULT_APP),itemName:String(d.itemName||DEFAULT_ITEM),
     reportTitle:String(d.reportTitle||''),splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
+    homeAtAGlance:String(d.homeAtAGlance||DEFAULT_HOME_AT_A_GLANCE),homeStorageLabel:String(d.homeStorageLabel||DEFAULT_HOME_STORAGE_LABEL),
+    homeNeededLabel:String(d.homeNeededLabel||DEFAULT_HOME_NEEDED_LABEL),homeDifferenceLabel:String(d.homeDifferenceLabel||DEFAULT_HOME_DIFFERENCE_LABEL),
+    homeCalendarHeading:String(d.homeCalendarHeading||DEFAULT_HOME_CALENDAR_HEADING),homeActionsHeading:String(d.homeActionsHeading||DEFAULT_HOME_ACTIONS_HEADING),
     charities:unique([...(Array.isArray(d.charities)?d.charities:[]),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...DEFAULT_CHARITIES]),
     sizes:unique([...(Array.isArray(d.sizes)?d.sizes:[]),...tx.map(t=>t.size),...needs.map(n=>n.size),...DEFAULT_SIZES]),
     transactions:tx,needs
@@ -132,6 +141,12 @@ function applyNames(){
   data.itemName=(data.itemName||DEFAULT_ITEM).trim()||DEFAULT_ITEM;
   data.splashTag=String(data.splashTag||'').trim();
   data.splashMessage=String(data.splashMessage||'').trim();
+  data.homeAtAGlance=String(data.homeAtAGlance||DEFAULT_HOME_AT_A_GLANCE).trim()||DEFAULT_HOME_AT_A_GLANCE;
+  data.homeStorageLabel=String(data.homeStorageLabel||DEFAULT_HOME_STORAGE_LABEL).trim()||DEFAULT_HOME_STORAGE_LABEL;
+  data.homeNeededLabel=String(data.homeNeededLabel||DEFAULT_HOME_NEEDED_LABEL).trim()||DEFAULT_HOME_NEEDED_LABEL;
+  data.homeDifferenceLabel=String(data.homeDifferenceLabel||DEFAULT_HOME_DIFFERENCE_LABEL).trim()||DEFAULT_HOME_DIFFERENCE_LABEL;
+  data.homeCalendarHeading=String(data.homeCalendarHeading||DEFAULT_HOME_CALENDAR_HEADING).trim()||DEFAULT_HOME_CALENDAR_HEADING;
+  data.homeActionsHeading=String(data.homeActionsHeading||DEFAULT_HOME_ACTIONS_HEADING).trim()||DEFAULT_HOME_ACTIONS_HEADING;
   const automaticSplashMessage=`Keeping track of ${lowerName()}…\none quilt at a time.`;
   const shownSplashMessage=data.splashMessage||automaticSplashMessage;
   el('headerOrg').textContent=data.orgName;el('headerAppName').textContent=data.appName;
@@ -140,6 +155,12 @@ function applyNames(){
   el('splashMessage').innerHTML=esc(shownSplashMessage).replace(/\n/g,'<br>');
   el('splashVersion').textContent=`${data.appName} · Update ${VERSION}`;
   el('orgNameInput').value=data.orgName;el('appNameInput').value=data.appName;el('itemNameInput').value=data.itemName;
+  el('homeAtAGlanceHeading').textContent=data.homeAtAGlance;el('homeStorageLabel').textContent=data.homeStorageLabel;
+  el('homeNeededLabel').textContent=data.homeNeededLabel;el('homeDifferenceLabel').textContent=data.homeDifferenceLabel;
+  el('homeCalendarHeading').textContent=data.homeCalendarHeading;el('homeActionsHeading').textContent=data.homeActionsHeading;
+  el('homeAtAGlanceInput').value=data.homeAtAGlance;el('homeStorageLabelInput').value=data.homeStorageLabel;
+  el('homeNeededLabelInput').value=data.homeNeededLabel;el('homeDifferenceLabelInput').value=data.homeDifferenceLabel;
+  el('homeCalendarHeadingInput').value=data.homeCalendarHeading;el('homeActionsHeadingInput').value=data.homeActionsHeading;
   if(el('reportTitleInput')){el('reportTitleInput').value=data.reportTitle||'';el('reportTitleInput').placeholder=`${data.itemName} Inventory and Quilts Needed Report`}
   el('splashTagInput').value=data.splashTag;el('splashTagInput').placeholder=DEFAULT_SPLASH_TAG;
   el('splashMessageInput').value=data.splashMessage;el('splashMessageInput').placeholder=automaticSplashMessage;
@@ -156,8 +177,11 @@ function applyNames(){
 }
 function saveNames(){
   data.orgName=el('orgNameInput').value.trim()||DEFAULT_ORG;data.appName=el('appNameInput').value.trim()||DEFAULT_APP;data.itemName=el('itemNameInput').value.trim()||DEFAULT_ITEM;
+  data.homeAtAGlance=el('homeAtAGlanceInput').value.trim()||DEFAULT_HOME_AT_A_GLANCE;data.homeStorageLabel=el('homeStorageLabelInput').value.trim()||DEFAULT_HOME_STORAGE_LABEL;
+  data.homeNeededLabel=el('homeNeededLabelInput').value.trim()||DEFAULT_HOME_NEEDED_LABEL;data.homeDifferenceLabel=el('homeDifferenceLabelInput').value.trim()||DEFAULT_HOME_DIFFERENCE_LABEL;
+  data.homeCalendarHeading=el('homeCalendarHeadingInput').value.trim()||DEFAULT_HOME_CALENDAR_HEADING;data.homeActionsHeading=el('homeActionsHeadingInput').value.trim()||DEFAULT_HOME_ACTIONS_HEADING;
   data.reportTitle=el('reportTitleInput')?.value.trim()||'';data.splashTag=el('splashTagInput').value.trim();data.splashMessage=el('splashMessageInput').value.trim();
-  save('Names, report title, and splash wording changed');applyNames();renderAll();notice('nameNotice','Names, report title, and splash wording saved.',true);
+  save('Names and Home wording changed');applyNames();renderAll();notice('nameNotice','Names and Home-screen wording saved.',true);
 }
 function closeSplash(){el('splash').classList.add('hidden');document.body.style.overflow=''}
 function showView(id){
@@ -386,7 +410,7 @@ function allocationForNeed(target,allocations=null){
   const available=Math.max(0,onHand(target.charity,target.size)),need=remainingNeed(target);
   return(allocations||allocateNeedsForPlanning()).find(item=>item.n.id===target.id)||{n:target,available,shortage:Math.max(0,need-available),covered:Math.min(need,available),remaining:need,fulfilled:fulfilledQty(target)};
 }
-function shortageTotal(){return allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0).reduce((sum,item)=>sum+item.shortage,0)}
+function shortageTotal(){return Math.max(0,totalNeeded()-totalOnHand())}
 function needInlineEditor(n,stateClass,stateLabel,info,editorMode='details'){
   const charityOptions=data.charities.map(c=>`<option value="${esc(c)}"${c===n.charity?' selected':''}>${esc(c)}</option>`).join('');
   const sizeOptions=data.sizes.map(size=>`<option value="${esc(size)}"${size===n.size?' selected':''}>${esc(size)}</option>`).join('');
@@ -546,7 +570,7 @@ function renderHomeSummaryReport(){
   const rows=homeCharitySummaries(),onHand=totalOnHand(),needsRemaining=totalNeeded(),difference=onHand-needsRemaining;
   const generated=new Date().toLocaleString();
   const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.needsRemaining}</td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
-  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · At a Glance Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>Total Quilts in Storage</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>Quilts Still Needed</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>Difference</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>In Storage</th><th>Quilts Still Needed</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · ${esc(data.homeAtAGlance)} Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>${esc(data.homeNeededLabel)}</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>In Storage</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderHome(){
   const difference=totalOnHand()-totalNeeded();
@@ -1013,7 +1037,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.7 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.8 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.7',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.8',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

@@ -1,14 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.7 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.8 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.8.7.
-[ ] Existing inventory and quilts-needed entries remain present.
-[ ] Home shows Total Quilts in Storage.
-[ ] ＋ Add Quilts opens Inventory in Love Quilts In mode.
-[ ] The rest of the storage card opens Current Inventory details.
-[ ] Home All Quilts Calendar still displays all 12 months.
-[ ] Each month still has ＋ Add Quilts Needed.
-[ ] Month add pop-up opens with the selected month prefilled.
-[ ] Tapping an existing calendar entry still opens direct editing.
-[ ] Main Add to Quilts Needed button works.
-[ ] Both approved devices sync changes normally.
-[ ] Reports and printing still work.
+[ ] App opens and shows Update 7.8.8.
+[ ] Existing inventory and charity requests remain present.
+[ ] Settings > Names and Wording shows six Home Screen Header fields.
+[ ] Changing each Home heading updates the Home screen after saving.
+[ ] Leaving a Home wording field blank restores its default wording.
+[ ] Home wording synchronizes to the other approved device.
+[ ] Reports summary Shortage matches the negative Grand Total Difference as a positive shortage number.
+[ ] The previous 180-versus-146 mismatch is gone.
+[ ] Full print, compact print, and PDF summaries show the corrected shortage.
+[ ] All Quilts Calendar add/edit actions still work.
+[ ] ＋ Add Quilts on the storage card opens Love Quilts In.
+[ ] Tapping the rest of the storage card opens Current Inventory.
+[ ] Both devices return to All changes synced.
