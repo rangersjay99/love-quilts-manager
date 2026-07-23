@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.8">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.8">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.8">
+<link rel="manifest" href="manifest-v7.json?v=7.8.9">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.9">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.9">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -228,7 +228,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.8.8 — customizable Home headers and corrected report summary */
+/* Update 7.8.9 — shared Home wording synchronization fix */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -293,14 +293,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.8" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.9" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.8</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.9</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -461,7 +461,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card">
     <h2>Shared Device Sync</h2>
-    <p class="small">Inventory, needs, names, charities, and sizes are securely synchronized between approved signed-in devices. The app also keeps a local copy and recovery history on each device.</p>
+    <p class="small">Inventory, needs, names, Home wording, charities, and sizes are securely synchronized between approved signed-in devices. The app also keeps a local copy and recovery history on each device.</p>
     <div class="status-box"><b>Signed-in account</b><span id="firebaseAccountStatus">Not signed in</span></div>
     <div class="firebase-inline-actions"><button class="ghost" type="button" onclick="window.lqFirebaseForceSync?.()">Sync Now</button><button class="ghost" type="button" onclick="window.lqFirebaseSignOut?.()">Sign Out</button></div>
     <div id="firebaseSettingsNotice" class="notice"></div>
@@ -545,11 +545,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.8 · July 23, 2026</span>
+      <b>Version</b><span>Update 7.8.9 · July 23, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.8 adds editable Home-screen headers in Settings and corrects the Reports summary shortage so it matches the report Grand Total. The calendar editing and ＋ Add Quilts storage shortcut are retained.</p>
+    <p class="small">Update 7.8.9 synchronizes the editable Home-screen headings and labels across approved devices. The corrected Reports summary, calendar editing, and ＋ Add Quilts storage shortcut are retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -577,7 +577,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.8"></script>
-<script src="app.js?v=7.8.8"></script>
+<script type="module" src="firebase-sync.js?v=7.8.9"></script>
+<script src="app.js?v=7.8.9"></script>
 </body>
 </html>

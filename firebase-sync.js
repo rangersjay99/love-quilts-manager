@@ -165,6 +165,12 @@ function normalizeSettings(source = {}) {
     reportTitle: cleanString(source.reportTitle || ''),
     splashTag: cleanString(source.splashTag || ''),
     splashMessage: cleanString(source.splashMessage || ''),
+    homeAtAGlance: cleanString(source.homeAtAGlance || 'At a Glance'),
+    homeStorageLabel: cleanString(source.homeStorageLabel || 'Total Quilts in Storage'),
+    homeNeededLabel: cleanString(source.homeNeededLabel || 'Quilts Still Needed'),
+    homeDifferenceLabel: cleanString(source.homeDifferenceLabel || 'Difference'),
+    homeCalendarHeading: cleanString(source.homeCalendarHeading || 'All Quilts Calendar'),
+    homeActionsHeading: cleanString(source.homeActionsHeading || 'Choose an Action'),
     charities: Array.isArray(source.charities) ? source.charities.map(cleanString) : [],
     sizes: Array.isArray(source.sizes) ? source.sizes.map(cleanString) : []
   };
@@ -221,8 +227,11 @@ function normalizeAppData(source = {}) {
 
 function composeRemoteData() {
   const fallback = typeof window.lqGetData === 'function' ? normalizeSettings(window.lqGetData()) : normalizeSettings();
+  // Older shared settings do not contain the Home wording fields. Merge them over
+  // this device's current wording so an update does not erase an existing choice.
+  const settings = remote.settings ? normalizeSettings({ ...fallback, ...remote.settings }) : fallback;
   return {
-    ...(remote.settings ? normalizeSettings(remote.settings) : fallback),
+    ...settings,
     transactions: remote.transactions.map(normalizeTransaction).filter(x => x.id),
     needs: remote.needs.map(normalizeNeed).filter(x => x.id)
   };
@@ -248,7 +257,18 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
   clearTimeout(remoteApplyTimer);
   remoteApplyTimer = setTimeout(async () => {
     await waitForBridge();
+    const localBeforeRemote = normalizeAppData(window.lqGetData());
     const cloudData = normalizeAppData(composeRemoteData());
+    const sharedHomeWordingMissing = !!remote.settings && [
+      'homeAtAGlance','homeStorageLabel','homeNeededLabel','homeDifferenceLabel','homeCalendarHeading','homeActionsHeading'
+    ].some(key => !Object.prototype.hasOwnProperty.call(remote.settings, key));
+    const localHasCustomHomeWording =
+      localBeforeRemote.homeAtAGlance !== 'At a Glance' ||
+      localBeforeRemote.homeStorageLabel !== 'Total Quilts in Storage' ||
+      localBeforeRemote.homeNeededLabel !== 'Quilts Still Needed' ||
+      localBeforeRemote.homeDifferenceLabel !== 'Difference' ||
+      localBeforeRemote.homeCalendarHeading !== 'All Quilts Calendar' ||
+      localBeforeRemote.homeActionsHeading !== 'Choose an Action';
     const cloudHasData = !!remote.settings || cloudData.transactions.length > 0 || cloudData.needs.length > 0;
     const waitingForServer = !cloudHasData && !remote.org?.initialized && (
       remote.orgFromCache || remote.settingsFromCache || remote.transactionsFromCache || remote.needsFromCache
@@ -272,6 +292,22 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
     if (syncing) return;
     if (pendingSave) {
       setState('Uploading changes saved on this device…');
+      releaseGate();
+      flushSave();
+      return;
+    }
+
+    // One-time migration for 7.8.8: if this device has customized Home wording
+    // and the shared settings document does not yet have those fields, publish it.
+    if (sharedHomeWordingMissing && localHasCustomHomeWording) {
+      pendingSave = {
+        data: clone(cloudData),
+        reason: 'Added Home wording to shared settings',
+        force: true,
+        initialize: false
+      };
+      persistPendingSave();
+      setState('Sharing Home wording with all devices…');
       releaseGate();
       flushSave();
       return;

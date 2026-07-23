@@ -1,14 +1,13 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.8 — July 23, 2026
+Current release: Update 7.8.9 — July 23, 2026
 
-## Update 7.8.8 — Custom Home wording and corrected report summary
+## Update 7.8.9 — Shared Home wording sync fix
 
-- Settings can now rename six Home-screen headings and metric labels.
-- Blank Home wording fields return to the clear default wording.
-- The Reports summary Shortage now uses the same Grand Total calculation as the report comparison table.
-- The earlier mismatch, such as 180 in the summary versus 146 in the Grand Total, is corrected.
-- Calendar editing, synchronized data, printable reports, and the ＋ Add Quilts storage shortcut are retained.
+- Custom Home-screen headings and labels now synchronize through Firebase to every approved device.
+- Existing customized wording on the device where it was entered is preserved during the one-time migration from 7.8.8.
+- Pressing **Save Names and Home Wording** publishes all six wording fields to shared settings.
+- The corrected Reports summary calculation, calendar editing, and ＋ Add Quilts storage shortcut are retained.
 
 Copyright © 2026 Jay. Love Quilts Manager. All rights reserved.
 Personal and authorized guild use only. See LICENSE.txt.

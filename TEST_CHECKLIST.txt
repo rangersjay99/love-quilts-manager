@@ -1,15 +1,12 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.8 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.9 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.8.8.
-[ ] Existing inventory and charity requests remain present.
-[ ] Settings > Names and Wording shows six Home Screen Header fields.
-[ ] Changing each Home heading updates the Home screen after saving.
-[ ] Leaving a Home wording field blank restores its default wording.
-[ ] Home wording synchronizes to the other approved device.
-[ ] Reports summary Shortage matches the negative Grand Total Difference as a positive shortage number.
-[ ] The previous 180-versus-146 mismatch is gone.
-[ ] Full print, compact print, and PDF summaries show the corrected shortage.
-[ ] All Quilts Calendar add/edit actions still work.
-[ ] ＋ Add Quilts on the storage card opens Love Quilts In.
-[ ] Tapping the rest of the storage card opens Current Inventory.
-[ ] Both devices return to All changes synced.
+[ ] App opens and shows Update 7.8.9.
+[ ] Existing inventory, charity requests, and distributions remain present.
+[ ] On the device with the preferred wording, Settings > Save Names and Home Wording completes normally.
+[ ] Sync status reaches Shared data verified · All changes synced.
+[ ] A second approved device shows the same six Home headings/labels after reopening.
+[ ] Changing one Home label on either device updates the other device after sync.
+[ ] Total Quilts in Storage card and ＋ Add Quilts button still work independently.
+[ ] All Quilts Calendar still supports add and edit actions.
+[ ] Reports summary Shortage matches the report Grand Total Difference.
+[ ] Print and PDF report functions still work.

@@ -1,4 +1,5 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.8.8
+FIREBASE PRODUCTION NOTES — UPDATE 7.8.9
 
-Authentication, approved users, organization path, and synchronization behavior are unchanged.
-The shared data object now includes optional Home-screen wording fields. Older saved data automatically receives the default wording, so no database reinitialization or migration is required.
+The Firebase project, organization path, approved users, and Firestore rules are unchanged.
+Update 7.8.9 adds the six customizable Home wording fields to the existing settings/main document.
+No database reset or reinitialization is required.
