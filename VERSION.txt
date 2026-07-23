@@ -1,7 +1,7 @@
-Love Quilts Manager Update 7.8.10
+Love Quilts Manager Update 7.8.11
 Released: July 23, 2026
 
-Adds At a Glance shortcuts for adding charity needs and distributing quilts.
-The main Difference card now displays an unsigned, color-coded Shortage, Surplus, or Balanced status.
+Makes the three At a Glance cards visually symmetrical.
+All card titles are bold and positioned above their numbers, equal status space keeps the content aligned, and all three action buttons share the same lower position.
 
-Existing inventory, needs, distribution records, shared wording, reports, backups, and Firebase paths are unchanged.
+The action buttons use slightly translucent backgrounds so the At a Glance totals remain the visual focus. Existing data, wording, shortcuts, reports, calendar tools, and Firebase paths are unchanged.

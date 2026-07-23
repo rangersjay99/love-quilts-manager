@@ -1,17 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.10 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.11 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.8.10.
-[ ] Existing inventory, charity requests, and distributions remain present.
-[ ] ＋ Add Quilts opens Inventory in Love Quilts In mode.
-[ ] Tapping the Storage card opens Current Inventory.
-[ ] ＋ Add Need opens a blank Quilts Needed entry form.
-[ ] Tapping the Still Needed card opens the charity-request list.
-[ ] Distribute Quilts opens the outstanding requests and shows Mark Distributed actions.
-[ ] Tapping the Difference card opens the same distribution workflow.
-[ ] A negative Difference shows its absolute number in bold red with Shortage underneath.
-[ ] A positive Difference shows its number in bold green with Surplus underneath.
-[ ] A zero Difference shows 0 with Balanced underneath.
-[ ] Custom Home headings still sync between approved devices.
-[ ] Reports summary and Grand Total Difference remain correct.
-[ ] Calendar add and direct-edit actions still work.
-[ ] Both approved devices return to Shared data verified · All changes synced.
+[ ] App opens and shows Update 7.8.11.
+[ ] Existing inventory, needs, and distribution records remain present.
+[ ] All three At a Glance titles are bold and above their numbers.
+[ ] All three cards have matching vertical spacing.
+[ ] All three action buttons line up along the bottom.
+[ ] Action buttons are slightly translucent but remain easy to read and tap.
+[ ] ＋ Add Quilts opens Love Quilts In.
+[ ] ＋ Add Need opens the add-request form.
+[ ] Distribute Quilts opens the distribution workflow.
+[ ] Shortage is bold red without a minus sign.
+[ ] Surplus is bold green.
+[ ] Custom Home wording still appears and syncs between devices.
+[ ] Reports, calendar add/edit, backup, and printing still work.
+[ ] Both devices return to Shared data verified · All changes synced.

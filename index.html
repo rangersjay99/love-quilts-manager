@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.10">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.10">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.10">
+<link rel="manifest" href="manifest-v7.json?v=7.8.11">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.11">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.11">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -35,19 +35,20 @@ h2,h3{margin:0 0 12px}.small{font-size:13px;color:var(--muted);line-height:1.4}
 .subtotal-row td{font-weight:800;background:var(--soft);border-top:2px solid var(--line)}
 tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);color:var(--plum-dark)}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.metric{min-height:100px;padding:13px 6px;text-align:center;border-radius:14px;background:var(--soft)}
+.metric{min-height:184px;padding:17px 10px;text-align:center;border-radius:14px;background:var(--soft);display:flex;flex-direction:column;align-items:center}
 .metric strong{display:block;font-size:29px;line-height:1;color:var(--plum)}
 .metric strong.positive{color:var(--green)}.metric strong.negative{color:var(--red)}
-.metric span{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+.metric span{display:block;font-size:12px;color:var(--muted)}
 .metric.short strong{color:var(--red)}
 .metric-action{position:relative;cursor:pointer;border:2px solid transparent;transition:border-color .15s,transform .15s}
 .metric-action:focus,.metric-action:hover{border-color:var(--plum);outline:none}.metric-action:active{transform:scale(.99)}
-.metric-add-button{width:calc(100% - 12px);min-height:34px;margin:9px 6px 0;padding:7px 8px;border:0;border-radius:9px;background:var(--green);color:#fff;font-size:12px;font-weight:900;cursor:pointer}
-.metric-add-button.need-button{background:var(--teal)}
-.metric-add-button.distribute-button{background:var(--plum)}
-.metric-add-button:hover,.metric-add-button:focus{filter:brightness(.94);outline:2px solid rgba(47,125,74,.25)}
-.metric .metric-top-label{margin:0 0 8px;font-size:11px;font-weight:800;color:var(--muted)}
-.metric .difference-status{margin-top:7px;font-size:13px;font-weight:900}
+.metric .metric-title{display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin:0 0 9px;font-size:11px;font-weight:900;line-height:1.25;color:var(--muted)}
+.metric .metric-status-line{display:flex;align-items:center;justify-content:center;min-height:18px;margin-top:9px;font-size:13px;font-weight:900;line-height:1.15}
+.metric .metric-status-placeholder{visibility:hidden}
+.metric-add-button{width:calc(100% - 12px);min-height:42px;margin:auto 6px 0;padding:8px;border:1px solid rgba(47,125,74,.42);border-radius:9px;background:rgba(47,125,74,.82);color:#fff;font-size:12px;font-weight:900;cursor:pointer}
+.metric-add-button.need-button{border-color:rgba(47,143,138,.42);background:rgba(47,143,138,.82)}
+.metric-add-button.distribute-button{border-color:rgba(109,58,120,.42);background:rgba(109,58,120,.82)}
+.metric-add-button:hover,.metric-add-button:focus{filter:brightness(.92);outline:2px solid rgba(109,58,120,.20)}
 .metric .difference-status.positive{color:var(--green)}
 .metric .difference-status.negative{color:var(--red)}
 .metric .difference-status.balanced{color:var(--gold)}
@@ -57,7 +58,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .calendar-modal-backdrop.open{display:flex}.calendar-modal-card{width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 60px rgba(30,15,35,.28)}
 .calendar-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.calendar-modal-header h2{margin:0}.calendar-modal-close{width:40px;min-height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--plum);font-size:24px;font-weight:800;cursor:pointer}
 .calendar-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.calendar-modal-actions .primary,.calendar-modal-actions .ghost{margin-top:12px}.calendar-modal-delete{display:none}
-@media(max-width:620px){.metric{min-height:112px}.metric-add-button{font-size:11px}.home-calendar-year{grid-template-columns:1fr}.calendar-modal-backdrop{align-items:flex-end;padding:0}.calendar-modal-card{width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
+@media(max-width:620px){.metric{min-height:184px;padding:15px 6px}.metric .metric-title{min-height:42px;font-size:10px}.metric-add-button{font-size:10.5px;padding:7px 4px}.home-calendar-year{grid-template-columns:1fr}.calendar-modal-backdrop{align-items:flex-end;padding:0}.calendar-modal-card{width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
 .home-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
 .home-section-heading h3{margin:0}.home-section-heading span{font-size:12px;color:var(--muted)}
 .home-charity-list{display:grid;gap:9px}
@@ -236,7 +237,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.8.10 — shared Home wording synchronization fix */
+/* Update 7.8.11 — shared Home wording synchronization fix */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -301,14 +302,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.10" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.11" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.10</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.11</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -326,15 +327,21 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <h2 id="homeAtAGlanceHeading">At a Glance</h2>
     <div class="grid3">
       <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts in storage" onclick="openInventoryDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openInventoryDetails()}">
-        <strong id="homeOnHand">0</strong><span id="homeStorageLabel">Total Quilts in Storage</span>
+        <span id="homeStorageLabel" class="metric-title">Total Quilts in Storage</span>
+        <strong id="homeOnHand">0</strong>
+        <span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span>
         <button type="button" class="metric-add-button" onclick="event.stopPropagation();openAddQuilts()">＋ Add Quilts</button>
       </div>
       <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts still needed" onclick="openNeedsDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNeedsDetails()}">
-        <strong id="homeNeeded">0</strong><span id="homeNeededLabel">Quilts Still Needed</span>
+        <span id="homeNeededLabel" class="metric-title">Quilts Still Needed</span>
+        <strong id="homeNeeded">0</strong>
+        <span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span>
         <button type="button" class="metric-add-button need-button" onclick="event.stopPropagation();openAddNeed()">＋ Add Need</button>
       </div>
       <div class="metric metric-action" role="button" tabindex="0" aria-label="Distribute quilts for a charity request" onclick="openDistributeQuilts()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDistributeQuilts()}">
-        <span id="homeDifferenceLabel" class="metric-top-label">Difference</span><strong id="homeDifference">0</strong><span id="homeDifferenceStatus" class="difference-status balanced">Balanced</span>
+        <span id="homeDifferenceLabel" class="metric-title">Difference</span>
+        <strong id="homeDifference">0</strong>
+        <span id="homeDifferenceStatus" class="metric-status-line difference-status balanced">Balanced</span>
         <button type="button" class="metric-add-button distribute-button" onclick="event.stopPropagation();openDistributeQuilts()">Distribute Quilts</button>
       </div>
     </div>
@@ -559,11 +566,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.10 · July 23, 2026</span>
+      <b>Version</b><span>Update 7.8.11 · July 23, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.10 adds Home shortcuts for adding a need and distributing quilts. The Difference card now shows an unsigned red Shortage, green Surplus, or Balanced status. Shared wording, report fixes, and calendar editing are retained.</p>
+    <p class="small">Update 7.8.11 makes the three At a Glance cards symmetrical, with bold titles above the numbers, aligned status space and buttons, and softer translucent action buttons. Existing shortcuts, shared wording, report fixes, and calendar editing are retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -591,7 +598,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.10"></script>
-<script src="app.js?v=7.8.10"></script>
+<script type="module" src="firebase-sync.js?v=7.8.11"></script>
+<script src="app.js?v=7.8.11"></script>
 </body>
 </html>

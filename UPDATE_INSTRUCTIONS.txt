@@ -1,8 +1,8 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.10
+LOVE QUILTS MANAGER — UPDATE 7.8.11
 Released: July 23, 2026
 
 BEFORE UPDATING
-1. Confirm all devices show that changes are synced.
+1. Confirm the app says all changes are synced.
 2. Export a current backup from Settings.
 3. Keep a ZIP backup of the current GitHub repository.
 
@@ -12,14 +12,12 @@ UPLOAD
 3. Replace files with the same names.
 4. Do not delete or replace the firebase-test folder.
 5. Wait for GitHub Pages to publish.
-6. Close and reopen the installed app on each device. Refresh once if an older version appears.
+6. Close and reopen the app on each device. Refresh once if an older version appears.
 
-NEW HOME SHORTCUTS
-- ＋ Add Quilts opens Love Quilts In.
-- ＋ Add Need opens a blank charity-request form.
-- Distribute Quilts opens the outstanding request list so Mark Distributed can be selected.
-- The Difference card uses an unsigned red Shortage, green Surplus, or Balanced status.
+THIS UPDATE
+- Makes the three At a Glance cards symmetrical.
+- Places bold titles above all three numbers.
+- Aligns status space and action buttons.
+- Softens the action buttons with slight translucency.
 
-IMPORTANT
-- This update does not clear or reinitialize shared data.
-- Firebase production paths and the saved-data schema are unchanged.
+Existing inventory, needs, distributions, shared wording, reports, backups, and Firebase data are preserved.
