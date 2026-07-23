@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.5
+LOVE QUILTS MANAGER — UPDATE 7.8.6
 
 1. Extract this ZIP file.
 2. Open the GitHub repository.
@@ -6,4 +6,4 @@ LOVE QUILTS MANAGER — UPDATE 7.8.5
 4. Upload every extracted file and folder, not the ZIP itself.
 5. Commit the changes.
 6. Wait about one minute, then reopen or refresh the app.
-7. Confirm the splash screen shows Update 7.8.5.
+7. Confirm the splash screen shows Update 7.8.6.

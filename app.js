@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.5';
+const VERSION='7.8.6';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -18,7 +18,7 @@ const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
 const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
 const DEFAULT_SIZES=["Children's Large",'Adult Large','Medium'];
-let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarEditNeedId=null,calendarEditBoxId='homeNeedsCalendar',externalTimer=null,externalReason='Automatic save';
+let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarEditNeedId=null,calendarEditBoxId='homeNeedsCalendar',calendarAddMonth=monthNow(),externalTimer=null,externalReason='Automatic save';
 
 const el=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
@@ -486,6 +486,37 @@ function saveCalendarNeed(event,id){
   return false;
 }
 function cancelCalendarNeedEdit(){calendarEditNeedId=null;renderNeedsCalendar()}
+function calendarAddOptions(selectId,values,placeholder){
+  const select=el(selectId);if(!select)return;
+  select.innerHTML=`<option value="">${esc(placeholder)}</option>`+values.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join('');
+  select.value='';
+}
+function openCalendarAdd(month=monthNow()){
+  calendarAddMonth=String(month||monthNow());calendarEditNeedId=null;
+  calendarAddOptions('calendarAddCharity',data.charities,'Select charity');
+  calendarAddOptions('calendarAddSize',data.sizes,'Select size');
+  el('calendarAddMonth').value=calendarAddMonth;
+  el('calendarAddQty').value='1';el('calendarAddNote').value='';
+  const message=el('calendarAddNotice');message.textContent='';message.className='notice';
+  const modal=el('calendarAddModal');modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(()=>el('calendarAddCharity')?.focus());
+}
+function closeCalendarAdd(){
+  const modal=el('calendarAddModal');if(!modal)return;
+  modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');
+}
+function saveCalendarAdd(event){
+  event?.preventDefault();
+  const saved=persistNeedRecord({
+    month:el('calendarAddMonth').value||calendarAddMonth||monthNow(),
+    charity:el('calendarAddCharity').value,size:el('calendarAddSize').value,
+    qty:el('calendarAddQty').value,note:el('calendarAddNote').value.trim(),
+    fulfilledQty:0,fulfilledDate:'',recordOut:false
+  },null,el('calendarAddNotice'));
+  if(saved)closeCalendarAdd();
+  return false;
+}
 function renderCalendarGrid(boxId,year,charity='',size=''){
   const box=el(boxId);if(!box)return;
   const allocations=allocateNeedsForPlanning(),byId=new Map(allocations.map(item=>[item.n.id,item]));
@@ -510,7 +541,8 @@ function renderCalendarGrid(boxId,year,charity='',size=''){
       return`<div class="month-need"><button type="button" onclick="editCalendarNeed('${n.id}','${boxId}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · ${summary}<span class="calendar-edit-hint">Tap to edit</span></button></div>`;
     }).join(''):'<div class="month-need">No quilts needed</div>';
     const totals=(allComplete||pastDue||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
-    return`<div class="month-card ${state}${editingThisMonth?' editing':''}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}</div>`;
+    const addButton=`<button type="button" class="calendar-add-button" onclick="openCalendarAdd('${month}')"><span aria-hidden="true">＋</span> Add Quilts Needed</button>`;
+    return`<div class="month-card ${state}${editingThisMonth?' editing':''}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}${addButton}</div>`;
   }).join('');
 }
 function renderNeedsCalendar(){
@@ -1022,9 +1054,11 @@ window.lqApplyRemoteData=(remoteData,reason='shared-device update')=>{
 };
 window.lqRefreshSaveStatus=updateSaveStatus;
 
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&el('calendarAddModal')?.classList.contains('open'))closeCalendarAdd()});
+
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.5 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.6 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.5',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.6',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

@@ -1,8 +1,8 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.5 — July 22, 2026
+Current release: Update 7.8.6 — July 22, 2026
 
-## Update 7.8.5 — Home calendar and direct editing
+## Update 7.8.6 — Home calendar and direct editing
 
 - Fixes the Add to Quilts Needed button.
 - Shows the All Quilts Calendar on the Home screen instead of the charity-card list.

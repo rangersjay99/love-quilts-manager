@@ -1,8 +1,7 @@
-Love Quilts Manager Update 7.8.5
+Love Quilts Manager Update 7.8.6
 
-- Fixes the Add to Quilts Needed button.
-- Replaces the Home-screen charity list with the All Quilts Calendar.
-- Allows calendar entries to be edited, saved, canceled, or deleted directly inside the calendar.
-- Renames Quilts Requested to Quilts Needed throughout the app and reports.
-- Keeps Quilts in Storage and Quilts Still Needed wording.
-- Does not change Firebase paths or the saved-data structure.
+- Adds an Add Quilts Needed button to every month in the All Quilts Calendar.
+- Opens a simple pop-up entry window with the selected month already filled in.
+- Adds the new quilts-needed record without leaving the Home calendar.
+- Keeps direct calendar editing from Update 7.8.5.
+- Does not change Firebase paths or saved-data structure.

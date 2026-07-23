@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.5">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.5">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.5">
+<link rel="manifest" href="manifest-v7.json?v=7.8.6">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.6">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.6">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -119,6 +119,16 @@ textarea{min-height:80px;resize:vertical}
 .calendar-edit-actions .inline-cancel{border:1px solid var(--plum);background:#fff;color:var(--plum)}
 @media(max-width:700px){.calendar-edit-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.calendar-edit-grid{grid-template-columns:1fr}.calendar-edit-actions{grid-template-columns:1fr 1fr}.calendar-edit-actions .need-delete-button{grid-column:1/-1}}
+.calendar-add-button{width:100%;min-height:38px;margin-top:8px;padding:7px 8px;border:1px dashed var(--plum);border-radius:9px;background:rgba(255,255,255,.82);color:var(--plum);font-size:11px;font-weight:850;cursor:pointer}
+.calendar-add-button span{font-size:15px;vertical-align:-1px}
+.modal-open{overflow:hidden}
+.calendar-add-modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(38,24,40,.56);backdrop-filter:blur(3px)}
+.calendar-add-modal.open{display:flex}
+.calendar-add-panel{width:min(100%,520px);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 55px rgba(35,20,38,.3)}
+.calendar-add-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px}
+.calendar-add-heading h2{margin:0}.calendar-add-close{flex:0 0 auto;width:42px;height:42px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--plum);font-size:25px;line-height:1;cursor:pointer}
+.calendar-add-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.calendar-add-actions button{margin:0}
+@media(max-width:520px){.calendar-add-modal{padding:10px}.calendar-add-panel{max-height:calc(100vh - 20px);padding:15px}.calendar-add-actions{grid-template-columns:1fr}}
 
 .empty{text-align:center;color:var(--muted);padding:16px 8px}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
@@ -235,7 +245,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.8.5 — Home calendar, direct calendar editing, and Add button fix */
+/* Update 7.8.6 — Home calendar, direct calendar editing, and Add button fix */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -300,14 +310,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.5" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.6" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.5</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.6</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -536,15 +546,33 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.5 · July 22, 2026</span>
+      <b>Version</b><span>Update 7.8.6 · July 22, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.5 places the All Quilts Calendar on Home, lets entries be changed directly in the calendar, fixes Add to Quilts Needed, and uses Quilts Needed wording throughout the app and reports.</p>
+    <p class="small">Update 7.8.6 places the All Quilts Calendar on Home, lets entries be changed directly in the calendar, fixes Add to Quilts Needed, and uses Quilts Needed wording throughout the app and reports.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
 </main>
+
+<div id="calendarAddModal" class="calendar-add-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="calendarAddTitle" onclick="if(event.target===this)closeCalendarAdd()">
+  <form class="calendar-add-panel" onsubmit="return saveCalendarAdd(event)">
+    <div class="calendar-add-heading">
+      <div><h2 id="calendarAddTitle">Add Quilts Needed</h2><p class="small">The month is filled in from the calendar. Choose the charity and size, then enter the quantity.</p></div>
+      <button type="button" class="calendar-add-close" aria-label="Close add quilts needed window" onclick="closeCalendarAdd()">×</button>
+    </div>
+    <label>Month Needed</label><input id="calendarAddMonth" type="month" required>
+    <label>Charity</label><select id="calendarAddCharity" required></select>
+    <label>Size</label><select id="calendarAddSize" required></select>
+    <label>Quilts Needed</label><input id="calendarAddQty" type="number" inputmode="numeric" min="1" step="1" value="1" required>
+    <label>Note <span class="small">(optional)</span></label><input id="calendarAddNote" placeholder="Holiday delivery, annual event, etc.">
+    <div id="calendarAddNotice" class="notice"></div>
+    <div class="calendar-add-actions"><button type="submit" class="primary">Add to Quilts Needed</button><button type="button" class="ghost" onclick="closeCalendarAdd()">Cancel</button></div>
+  </form>
+</div>
+
+
 
 <nav class="bottom-nav">
   <button data-view="home" class="active" onclick="showView('home')"><b>⌂</b>Home</button>
@@ -554,7 +582,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.5"></script>
-<script src="app.js?v=7.8.5"></script>
+<script type="module" src="firebase-sync.js?v=7.8.6"></script>
+<script src="app.js?v=7.8.6"></script>
 </body>
 </html>

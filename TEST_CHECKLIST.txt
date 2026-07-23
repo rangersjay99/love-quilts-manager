@@ -1,8 +1,9 @@
-LOVE QUILTS MANAGER UPDATE 7.8.5 TEST CHECKLIST
+LOVE QUILTS MANAGER UPDATE 7.8.6 TEST CHECKLIST
 
-1. Confirm the splash screen says Update 7.8.5.
-2. On Home, confirm the All Quilts Calendar appears below the totals instead of the charity list.
-3. Tap a calendar entry, change the quantity or another field, and save directly in the calendar.
-4. Open Quilts Needed, enter a new need, and confirm Add to Quilts Needed saves it.
-5. Confirm Quilts Needed replaces Quilts Requested throughout the app and reports.
-6. Confirm a second signed-in device receives the saved changes.
+1. Confirm the splash screen says Update 7.8.6.
+2. On Home, locate the All Quilts Calendar.
+3. Press Add Quilts Needed in a month and confirm the pop-up opens with that month selected.
+4. Choose a charity and size, enter a quantity, and save.
+5. Confirm the new entry appears in the correct calendar month and syncs to the other signed-in device.
+6. Tap the new entry and confirm direct calendar editing still works.
+7. Cancel the pop-up and confirm no record is added.
