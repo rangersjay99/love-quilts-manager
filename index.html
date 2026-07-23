@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.11">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.11">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.11">
+<link rel="manifest" href="manifest-v7.json?v=7.8.12">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.12">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.12">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -229,7 +229,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   body.print-home-summary #reports.view{display:none!important}
   body.print-home-summary #home.view{display:block!important}
   body.print-home-summary #home>.card{display:none!important}
-  body.print-home-summary #homeSummaryReport{display:block!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important}
+  body.print-home-summary #home>#homeSummaryReport.card{display:block!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important}
   body.print-home-summary #homeSummaryReport table{font-size:11px;line-height:1.2}
   body.print-home-summary #homeSummaryReport th,body.print-home-summary #homeSummaryReport td{padding:6px 5px;border-bottom:1px solid #aaa}
   body.print-home-summary #homeSummaryReport tbody tr{break-inside:avoid-page}
@@ -237,7 +237,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.8.11 — shared Home wording synchronization fix */
+/* Update 7.8.12 — Home summary print fix and symmetrical At a Glance layout */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -302,14 +302,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.11" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.12" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.11</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.12</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -566,11 +566,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.11 · July 23, 2026</span>
+      <b>Version</b><span>Update 7.8.12 · July 23, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.11 makes the three At a Glance cards symmetrical, with bold titles above the numbers, aligned status space and buttons, and softer translucent action buttons. Existing shortcuts, shared wording, report fixes, and calendar editing are retained.</p>
+    <p class="small">Update 7.8.12 makes the three At a Glance cards symmetrical, with bold titles above the numbers, aligned status space and buttons, and softer translucent action buttons. Existing shortcuts, shared wording, report fixes, and calendar editing are retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -598,7 +598,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.11"></script>
-<script src="app.js?v=7.8.11"></script>
+<script type="module" src="firebase-sync.js?v=7.8.12"></script>
+<script src="app.js?v=7.8.12"></script>
 </body>
 </html>

@@ -1,16 +1,14 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.11 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.12 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.8.11.
+[ ] App opens and shows Update 7.8.12.
 [ ] Existing inventory, needs, and distribution records remain present.
-[ ] All three At a Glance titles are bold and above their numbers.
-[ ] All three cards have matching vertical spacing.
-[ ] All three action buttons line up along the bottom.
-[ ] Action buttons are slightly translucent but remain easy to read and tap.
-[ ] ＋ Add Quilts opens Love Quilts In.
-[ ] ＋ Add Need opens the add-request form.
-[ ] Distribute Quilts opens the distribution workflow.
-[ ] Shortage is bold red without a minus sign.
-[ ] Surplus is bold green.
+[ ] Home Print Summary opens a populated print preview.
+[ ] The printed summary shows the app/organization heading.
+[ ] The printed summary shows all three totals.
+[ ] The charity comparison table and Grand Total appear.
+[ ] The print preview is not blank.
+[ ] All three At a Glance titles remain bold and above their numbers.
+[ ] All three action buttons remain aligned and slightly translucent.
 [ ] Custom Home wording still appears and syncs between devices.
-[ ] Reports, calendar add/edit, backup, and printing still work.
+[ ] Reports, calendar add/edit, backup, and other printing still work.
 [ ] Both devices return to Shared data verified · All changes synced.

@@ -1,4 +1,4 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.8.11
+LOVE QUILTS MANAGER UPDATE 7.8.12 — FIREBASE PRODUCTION NOTES
 
 No Firebase path or saved-data schema changes are included in this update.
 The new Home buttons and Difference status are interface-only changes.

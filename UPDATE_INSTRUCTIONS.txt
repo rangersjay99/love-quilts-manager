@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.11
+LOVE QUILTS MANAGER — UPDATE 7.8.12
 Released: July 23, 2026
 
 BEFORE UPDATING
@@ -15,9 +15,7 @@ UPLOAD
 6. Close and reopen the app on each device. Refresh once if an older version appears.
 
 THIS UPDATE
-- Makes the three At a Glance cards symmetrical.
-- Places bold titles above all three numbers.
-- Aligns status space and action buttons.
-- Softens the action buttons with slight translucency.
+- Fixes the Home Print Summary button opening a blank print preview.
+- Preserves the 7.8.11 symmetrical At a Glance layout and all existing features.
 
 Existing inventory, needs, distributions, shared wording, reports, backups, and Firebase data are preserved.

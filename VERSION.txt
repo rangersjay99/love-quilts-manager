@@ -1,7 +1,6 @@
-Love Quilts Manager Update 7.8.11
+Love Quilts Manager Update 7.8.12
 Released: July 23, 2026
 
-Makes the three At a Glance cards visually symmetrical.
-All card titles are bold and positioned above their numbers, equal status space keeps the content aligned, and all three action buttons share the same lower position.
+Fixes the Home Print Summary button opening a blank print preview.
 
-The action buttons use slightly translucent backgrounds so the At a Glance totals remain the visual focus. Existing data, wording, shortcuts, reports, calendar tools, and Firebase paths are unchanged.
+The printable Home summary now displays its totals and charity comparison table correctly. The symmetrical At a Glance cards, custom wording, action shortcuts, reports, calendar tools, existing data, and Firebase paths are unchanged.
