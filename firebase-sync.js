@@ -126,6 +126,11 @@ function setState(message, kind = 'normal') {
   window.lqFirebaseState = {message:displayMessage,rawMessage:message,kind,email:currentUser?.email || '',verified,verifiedAt:verified?new Date().toISOString():(previous.verifiedAt||'')};
   const banner = byId('firebaseBannerStatus');
   if (banner) banner.textContent = currentUser ? `${displayMessage} · ${currentUser.email}` : displayMessage;
+  const bannerBox = byId('firebaseBanner');
+  if (bannerBox) {
+    bannerBox.classList.toggle('synced', verified);
+    bannerBox.classList.toggle('not-synced', !verified);
+  }
   const account = byId('firebaseAccountStatus');
   if (account) account.textContent = currentUser?.email || 'Not signed in';
   const loadingStatus = byId('firebaseLoadingStatus');

@@ -1,6 +1,6 @@
-Love Quilts Manager Update 7.8.12
+Love Quilts Manager Update 7.8.13
 Released: July 23, 2026
 
-Fixes the Home Print Summary button opening a blank print preview.
+Streamlines the Home screen, removes duplicate sync and navigation elements, color-codes the persistent bottom navigation, changes the Home calendar filter to Charity, and softens remaining Home action buttons.
 
-The printable Home summary now displays its totals and charity comparison table correctly. The symmetrical At a Glance cards, custom wording, action shortcuts, reports, calendar tools, existing data, and Firebase paths are unchanged.
+Existing Firebase paths and saved-data formats are unchanged.

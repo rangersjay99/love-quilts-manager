@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.12';
+const VERSION='7.8.13';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -157,15 +157,15 @@ function applyNames(){
   el('orgNameInput').value=data.orgName;el('appNameInput').value=data.appName;el('itemNameInput').value=data.itemName;
   el('homeAtAGlanceHeading').textContent=data.homeAtAGlance;el('homeStorageLabel').textContent=data.homeStorageLabel;
   el('homeNeededLabel').textContent=data.homeNeededLabel;el('homeDifferenceLabel').textContent=data.homeDifferenceLabel;
-  el('homeCalendarHeading').textContent=data.homeCalendarHeading;el('homeActionsHeading').textContent=data.homeActionsHeading;
+  el('homeCalendarHeading').textContent=data.homeCalendarHeading;if(el('homeActionsHeading'))el('homeActionsHeading').textContent=data.homeActionsHeading;
   el('homeAtAGlanceInput').value=data.homeAtAGlance;el('homeStorageLabelInput').value=data.homeStorageLabel;
   el('homeNeededLabelInput').value=data.homeNeededLabel;el('homeDifferenceLabelInput').value=data.homeDifferenceLabel;
-  el('homeCalendarHeadingInput').value=data.homeCalendarHeading;el('homeActionsHeadingInput').value=data.homeActionsHeading;
+  el('homeCalendarHeadingInput').value=data.homeCalendarHeading;if(el('homeActionsHeadingInput'))el('homeActionsHeadingInput').value=data.homeActionsHeading;
   if(el('reportTitleInput')){el('reportTitleInput').value=data.reportTitle||'';el('reportTitleInput').placeholder=`${data.itemName} Inventory and Quilts Needed Report`}
   el('splashTagInput').value=data.splashTag;el('splashTagInput').placeholder=DEFAULT_SPLASH_TAG;
   el('splashMessageInput').value=data.splashMessage;el('splashMessageInput').placeholder=automaticSplashMessage;
   el('aboutAppName').textContent=data.appName;el('aboutItemName').textContent=data.itemName;el('aboutOrgName').textContent=data.orgName;
-  el('homeRecordBtn').textContent=`Record ${data.itemName}`;el('recordHeading').textContent=`Record ${data.itemName}`;
+  if(el('homeRecordBtn'))el('homeRecordBtn').textContent=`Record ${data.itemName}`;el('recordHeading').textContent=`Record ${data.itemName}`;
   el('modeIn').textContent=`${data.itemName} In`;el('modeOut').textContent=`${data.itemName} Out`;
   el('historyInOption').textContent=`${data.itemName} In`;el('historyOutOption').textContent=`${data.itemName} Out`;
   el('inventoryNote').textContent=`Choose ${data.itemName} Out only when items physically leave storage. Use Adjust for corrections; adjustments are visibly flagged.`;
@@ -179,7 +179,7 @@ function saveNames(){
   data.orgName=el('orgNameInput').value.trim()||DEFAULT_ORG;data.appName=el('appNameInput').value.trim()||DEFAULT_APP;data.itemName=el('itemNameInput').value.trim()||DEFAULT_ITEM;
   data.homeAtAGlance=el('homeAtAGlanceInput').value.trim()||DEFAULT_HOME_AT_A_GLANCE;data.homeStorageLabel=el('homeStorageLabelInput').value.trim()||DEFAULT_HOME_STORAGE_LABEL;
   data.homeNeededLabel=el('homeNeededLabelInput').value.trim()||DEFAULT_HOME_NEEDED_LABEL;data.homeDifferenceLabel=el('homeDifferenceLabelInput').value.trim()||DEFAULT_HOME_DIFFERENCE_LABEL;
-  data.homeCalendarHeading=el('homeCalendarHeadingInput').value.trim()||DEFAULT_HOME_CALENDAR_HEADING;data.homeActionsHeading=el('homeActionsHeadingInput').value.trim()||DEFAULT_HOME_ACTIONS_HEADING;
+  data.homeCalendarHeading=el('homeCalendarHeadingInput').value.trim()||DEFAULT_HOME_CALENDAR_HEADING;if(el('homeActionsHeadingInput'))data.homeActionsHeading=el('homeActionsHeadingInput').value.trim()||DEFAULT_HOME_ACTIONS_HEADING;
   data.reportTitle=el('reportTitleInput')?.value.trim()||'';data.splashTag=el('splashTagInput').value.trim();data.splashMessage=el('splashMessageInput').value.trim();
   save('Names and Home wording changed');applyNames();renderAll();notice('nameNotice','Names and Home-screen wording saved.',true);
 }
@@ -201,6 +201,7 @@ function refreshSelects(){
   fill('deleteSize',data.sizes);
   fill('historyCharity',data.charities,'<option value="">All charities</option>');
   fill('calendarCharity',data.charities,'<option value="">All charities</option>');
+  fill('homeCalendarCharity',data.charities,'<option value="">All charities</option>');
   fill('calendarSize',data.sizes,'<option value="">All sizes</option>');
   fill('calendarNeedCharity',data.charities,'<option value="">Select charity</option>');
   fill('calendarNeedSize',data.sizes,'<option value="">Select size</option>');
@@ -501,7 +502,7 @@ function fillCalendarYearSelect(id){
   const current=Number(monthNow().slice(0,4)),years=calendarYears(),old=Number(select.value)||current;
   select.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');select.value=years.includes(old)?String(old):String(current);
 }
-function refreshCalendarYears(){fillCalendarYearSelect('calendarYear');fillCalendarYearSelect('homeCalendarYear')}
+function refreshCalendarYears(){fillCalendarYearSelect('calendarYear')}
 function calendarMarkup(year,charity='',size='',showAddButtons=true){
   const allocations=allocateNeedsForPlanning(),byId=new Map(allocations.map(item=>[item.n.id,item]));
   const monthNames=Array.from({length:12},(_,i)=>new Date(year,i,1).toLocaleDateString(undefined,{month:'short'}));
@@ -533,9 +534,9 @@ function renderNeedsCalendar(){
   box.innerHTML=calendarMarkup(year,charity,size,true);
 }
 function renderHomeCalendar(){
-  const box=el('homeNeedsCalendar');if(!box)return;refreshCalendarYears();
-  const year=Number(el('homeCalendarYear')?.value)||Number(monthNow().slice(0,4));
-  box.innerHTML=calendarMarkup(year,'','',true);
+  const box=el('homeNeedsCalendar');if(!box)return;
+  const year=Number(monthNow().slice(0,4)),charity=el('homeCalendarCharity')?.value||'';
+  box.innerHTML=calendarMarkup(year,charity,'',true);
 }
 function openCalendarNeedEditor(id='',month=''){
   const existing=id?data.needs.find(n=>n.id===id):null;if(id&&!existing)return;
@@ -778,7 +779,6 @@ function updateSaveStatus(){
   if(el('localSaveStatus'))el('localSaveStatus').textContent=local;
   if(el('externalSaveStatus'))el('externalSaveStatus').textContent=external;
   if(el('firebaseSaveStatus'))el('firebaseSaveStatus').textContent=firebase;
-  if(el('homeSaveStatus')){el('homeSaveStatus').textContent=firebaseState.verified?firebase:`${local} · Sync: ${firebase}`;el('homeSaveStatus').classList.toggle('verified',!!firebaseState.verified)}
 }
 function pdfPlain(v){
   return String(v??'')
@@ -1070,7 +1070,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.12 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.13 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.12',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.13',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

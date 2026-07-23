@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.12">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.12">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.12">
+<link rel="manifest" href="manifest-v7.json?v=7.8.13">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.13">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.13">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -45,20 +45,20 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .metric .metric-title{display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin:0 0 9px;font-size:11px;font-weight:900;line-height:1.25;color:var(--muted)}
 .metric .metric-status-line{display:flex;align-items:center;justify-content:center;min-height:18px;margin-top:9px;font-size:13px;font-weight:900;line-height:1.15}
 .metric .metric-status-placeholder{visibility:hidden}
-.metric-add-button{width:calc(100% - 12px);min-height:42px;margin:auto 6px 0;padding:8px;border:1px solid rgba(47,125,74,.42);border-radius:9px;background:rgba(47,125,74,.82);color:#fff;font-size:12px;font-weight:900;cursor:pointer}
-.metric-add-button.need-button{border-color:rgba(47,143,138,.42);background:rgba(47,143,138,.82)}
-.metric-add-button.distribute-button{border-color:rgba(109,58,120,.42);background:rgba(109,58,120,.82)}
-.metric-add-button:hover,.metric-add-button:focus{filter:brightness(.92);outline:2px solid rgba(109,58,120,.20)}
+.metric-add-button{width:calc(100% - 12px);min-height:42px;margin:auto 6px 0;padding:8px;border:1px solid rgba(47,125,74,.34);border-radius:9px;background:rgba(47,125,74,.13);color:#24653b;font-size:12px;font-weight:900;cursor:pointer}
+.metric-add-button.need-button{border-color:rgba(47,143,138,.34);background:rgba(47,143,138,.13);color:#276f6b}
+.metric-add-button.distribute-button{border-color:rgba(109,58,120,.34);background:rgba(109,58,120,.13);color:var(--plum-dark)}
+.metric-add-button:hover,.metric-add-button:focus{background:rgba(109,58,120,.20);outline:2px solid rgba(109,58,120,.16)}
 .metric .difference-status.positive{color:var(--green)}
 .metric .difference-status.negative{color:var(--red)}
 .metric .difference-status.balanced{color:var(--gold)}
-.home-calendar-year{display:grid;grid-template-columns:minmax(0,180px);margin-bottom:10px}.home-calendar-year label{margin:0;font-size:12px;color:var(--muted)}.home-calendar-year select{margin-top:5px}
-.month-add-button{width:100%;min-height:34px;margin-top:8px;padding:7px;border:1px solid var(--plum);border-radius:9px;background:#fff;color:var(--plum);font-size:11px;font-weight:900;cursor:pointer}
+.home-calendar-filter{display:grid;grid-template-columns:minmax(0,260px);margin-bottom:10px}.home-calendar-filter label{margin:0;font-size:12px;color:var(--muted)}.home-calendar-filter select{margin-top:5px}
+.month-add-button{width:100%;min-height:34px;margin-top:8px;padding:7px;border:1px solid rgba(109,58,120,.30);border-radius:9px;background:rgba(109,58,120,.06);color:var(--plum-dark);font-size:11px;font-weight:850;cursor:pointer}#home .month-add-button:hover,#home .month-add-button:focus{background:rgba(109,58,120,.12);outline:none}
 .calendar-modal-backdrop{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(35,25,38,.58)}
 .calendar-modal-backdrop.open{display:flex}.calendar-modal-card{width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 60px rgba(30,15,35,.28)}
 .calendar-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.calendar-modal-header h2{margin:0}.calendar-modal-close{width:40px;min-height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--plum);font-size:24px;font-weight:800;cursor:pointer}
 .calendar-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.calendar-modal-actions .primary,.calendar-modal-actions .ghost{margin-top:12px}.calendar-modal-delete{display:none}
-@media(max-width:620px){.metric{min-height:184px;padding:15px 6px}.metric .metric-title{min-height:42px;font-size:10px}.metric-add-button{font-size:10.5px;padding:7px 4px}.home-calendar-year{grid-template-columns:1fr}.calendar-modal-backdrop{align-items:flex-end;padding:0}.calendar-modal-card{width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
+@media(max-width:620px){.metric{min-height:184px;padding:15px 6px}.metric .metric-title{min-height:42px;font-size:10px}.metric-add-button{font-size:10.5px;padding:7px 4px}.home-calendar-filter{grid-template-columns:1fr}.calendar-modal-backdrop{align-items:flex-end;padding:0}.calendar-modal-card{width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
 .home-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
 .home-section-heading h3{margin:0}.home-section-heading span{font-size:12px;color:var(--muted)}
 .home-charity-list{display:grid;gap:9px}
@@ -66,9 +66,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .home-charity-card.has-shortage{border-left-color:var(--red);background:#fff7f8}.home-charity-card.has-surplus{border-left-color:var(--green);background:#f7fcf8}.home-charity-card.balanced{border-left-color:var(--gold);background:#fffcf5}
 .home-charity-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}.home-charity-heading strong{font-size:16px;color:var(--plum-dark)}.home-charity-heading span{font-size:11px;color:var(--muted);font-weight:750}
 .home-charity-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.home-charity-metrics div{padding:9px 5px;border-radius:10px;background:rgba(255,255,255,.8);text-align:center}.home-charity-metrics b{display:block;font-size:21px}.home-charity-metrics span{display:block;margin-top:3px;font-size:10px;color:var(--muted)}
-.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.home-actions button{min-height:76px;border:0;border-radius:15px;color:#fff;font-size:17px;font-weight:800;padding:12px}
-.home-print-summary{margin-top:13px}.home-print-note{margin-top:6px;text-align:center}
+.home-print-summary{margin-top:13px;border:1px solid rgba(37,99,166,.32)!important;background:rgba(37,99,166,.10)!important;color:#24578d!important}.home-print-summary:hover,.home-print-summary:focus{background:rgba(37,99,166,.17)!important;outline:none}.home-print-note{margin-top:6px;text-align:center}
 .home-summary-report h1{margin:0 0 3px;font-size:24px;color:#111}.home-summary-report .summary-meta{margin-bottom:14px;color:#555;font-size:11px}
 .home-summary-report .summary-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0 16px}
 .home-summary-report .summary-metric{padding:10px;border:1px solid #888;text-align:center}.home-summary-report .summary-metric b{display:block;font-size:22px}.home-summary-report .summary-metric span{font-size:10px;color:#555}
@@ -129,9 +127,19 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .report-summary-table .col-charity{width:25%}.report-summary-table .col-size{width:25%}.report-summary-table .col-requested{width:18%}.report-summary-table .col-onhand{width:15%}.report-summary-table .col-difference{width:17%}
 .report-summary-table th:nth-child(n+3),.report-summary-table td:nth-child(n+3){text-align:right}
 .on-hand-value{font-weight:900}.difference-value{white-space:nowrap}
-.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
-.bottom-nav button{border:0;background:transparent;color:var(--muted);font-size:10px;line-height:1.15;font-weight:800;min-height:50px;border-radius:10px;padding:6px 2px}
-.bottom-nav button.active{background:var(--soft);color:var(--plum)}.bottom-nav b{display:block;font-size:20px;line-height:1.1}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:7px 7px calc(7px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
+.bottom-nav button{border:1px solid transparent;font-size:10px;line-height:1.15;font-weight:850;min-height:52px;border-radius:11px;padding:6px 2px;transition:background .15s,color .15s,transform .15s}
+.bottom-nav button:active{transform:scale(.97)}.bottom-nav b{display:block;font-size:20px;line-height:1.1}
+.bottom-nav .nav-home{color:#5b3065;background:rgba(109,58,120,.10);border-color:rgba(109,58,120,.18)}
+.bottom-nav .nav-inventory{color:#24653b;background:rgba(47,125,74,.11);border-color:rgba(47,125,74,.18)}
+.bottom-nav .nav-needs{color:#276f6b;background:rgba(47,143,138,.11);border-color:rgba(47,143,138,.18)}
+.bottom-nav .nav-reports{color:#24578d;background:rgba(37,99,166,.10);border-color:rgba(37,99,166,.18)}
+.bottom-nav .nav-settings{color:#7b560f;background:rgba(201,144,38,.14);border-color:rgba(201,144,38,.22)}
+.bottom-nav .nav-home.active{background:var(--plum);border-color:var(--plum);color:#fff}
+.bottom-nav .nav-inventory.active{background:var(--green);border-color:var(--green);color:#fff}
+.bottom-nav .nav-needs.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.bottom-nav .nav-reports.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.bottom-nav .nav-settings.active{background:#a87316;border-color:#a87316;color:#fff}
 .print-only{display:none}
 .about-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;font-size:14px}.about-grid b{color:var(--plum-dark)}
 
@@ -157,8 +165,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .firebase-gate{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(50,29,55,.72);backdrop-filter:blur(7px)}
 .firebase-gate.hidden{display:none}.firebase-gate-card{width:min(100%,410px);padding:22px;border-radius:18px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.28)}
 .firebase-gate-card h2{color:var(--plum)}.firebase-test-label{display:inline-block;margin-bottom:10px;padding:5px 9px;border-radius:999px;background:#fff0dc;color:#87510f;font-size:12px;font-weight:900;letter-spacing:.06em}
-.firebase-banner{margin:0;padding:9px 14px;background:#fff0dc;border-bottom:1px solid #e4c996;color:#66440c;font-size:12px;font-weight:750;text-align:center}
-.firebase-banner b{color:#8a4c00}.firebase-user-line{margin-top:8px;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.firebase-banner{margin:0;padding:9px 14px;background:#fdebed;border-bottom:1px solid #e5aeb5;color:#8f2633;font-size:12px;font-weight:800;text-align:center;transition:background .2s,border-color .2s,color .2s}
+.firebase-banner b{color:inherit}.firebase-banner.synced{background:#e4f4e8;border-bottom-color:#a9d3b4;color:#24633a}.firebase-banner.not-synced{background:#fdebed;border-bottom-color:#e5aeb5;color:#8f2633}.firebase-user-line{margin-top:8px;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 .firebase-inline-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.firebase-inline-actions button{margin-top:0}
 
 @media(max-width:520px){
@@ -237,7 +245,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.8.12 — Home summary print fix and symmetrical At a Glance layout */
+/* Update 7.8.13 — streamlined Home screen, color-coded navigation, and charity calendar filter */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -302,14 +310,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.12" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.13" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.12</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.13</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -319,7 +327,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <h1 id="headerAppName">Love Quilts Manager</h1>
   <p id="headerSubtitle">Quilts in storage and quilts still needed</p>
 </header>
-<div class="firebase-banner"><b>SHARED DEVICE SYNC</b> · <span id="firebaseBannerStatus">Waiting for sign-in</span></div>
+<div class="firebase-banner not-synced" id="firebaseBanner"><b>SHARED DEVICE SYNC</b> · <span id="firebaseBannerStatus">Waiting for sign-in</span></div>
 
 <main>
 <section id="home" class="view active">
@@ -345,25 +353,15 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
         <button type="button" class="metric-add-button distribute-button" onclick="event.stopPropagation();openDistributeQuilts()">Distribute Quilts</button>
       </div>
     </div>
-    <div id="homeSaveStatus" class="save-status">Saved automatically on this device.</div>
   </div>
   <div class="card">
     <div class="home-section-heading"><h3 id="homeCalendarHeading">All Quilts Calendar</h3><span>Tap an entry to edit</span></div>
-    <div class="home-calendar-year"><label>Year<select id="homeCalendarYear" onchange="renderHomeCalendar()"></select></label></div>
+    <div class="home-calendar-filter"><label>Charity<select id="homeCalendarCharity" onchange="renderHomeCalendar()"></select></label></div>
     <div id="homeNeedsCalendar" class="needs-calendar"></div>
     <button type="button" class="primary home-print-summary" onclick="printHomeSummary()">Print Summary</button>
     <div class="small home-print-note">Prints totals and the charity comparison summary.</div>
   </div>
   <div id="homeSummaryReport" class="card print-only home-summary-report" aria-hidden="true"></div>
-  <div class="card">
-    <h3 id="homeActionsHeading">Choose an Action</h3>
-    <div class="home-actions">
-      <button id="homeRecordBtn" class="btn-plum" onclick="openAddQuilts()">Record Love Quilts</button>
-      <button class="btn-teal" onclick="showView('needs')">Quilts Needed</button>
-      <button class="btn-blue" onclick="showView('reports')">View Reports</button>
-      <button class="btn-gold" onclick="showView('settings')">Settings</button>
-    </div>
-  </div>
 </section>
 
 <section id="inventory" class="view">
@@ -536,8 +534,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <input id="homeDifferenceLabelInput" maxlength="60" placeholder="Difference">
     <label>Calendar Heading</label>
     <input id="homeCalendarHeadingInput" maxlength="60" placeholder="All Quilts Calendar">
-    <label>Action Heading</label>
-    <input id="homeActionsHeadingInput" maxlength="60" placeholder="Choose an Action">
     <h3 style="margin-top:18px">Report and Splash Wording</h3>
     <label>Report Title <span class="small">(optional)</span></label>
     <input id="reportTitleInput" maxlength="120" placeholder="Love Quilts Inventory and Quilts Needed Report">
@@ -566,11 +562,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.12 · July 23, 2026</span>
+      <b>Version</b><span>Update 7.8.13 · July 23, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.12 makes the three At a Glance cards symmetrical, with bold titles above the numbers, aligned status space and buttons, and softer translucent action buttons. Existing shortcuts, shared wording, report fixes, and calendar editing are retained.</p>
+    <p class="small">Update 7.8.13 streamlines Home by removing duplicate navigation and sync text, color-codes the persistent bottom navigation, changes the Home calendar filter from year to charity, and makes Home action buttons less obtrusive. Existing data, reports, calendar editing, and shared wording are retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -591,14 +587,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 </div>
 
 <nav class="bottom-nav">
-  <button data-view="home" class="active" onclick="showView('home')"><b>⌂</b>Home</button>
-  <button data-view="inventory" onclick="showView('inventory')"><b>＋</b>Inventory</button>
-  <button data-view="needs" onclick="showView('needs')"><b>▦</b>Quilts Needed</button>
-  <button data-view="reports" onclick="showView('reports')"><b>▤</b>Reports</button>
-  <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
+  <button data-view="home" class="nav-home active" onclick="showView('home')"><b>⌂</b>Home</button>
+  <button data-view="inventory" class="nav-inventory" onclick="showView('inventory')"><b>＋</b>Inventory</button>
+  <button data-view="needs" class="nav-needs" onclick="showView('needs')"><b>▦</b>Quilts Needed</button>
+  <button data-view="reports" class="nav-reports" onclick="showView('reports')"><b>▤</b>Reports</button>
+  <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.12"></script>
-<script src="app.js?v=7.8.12"></script>
+<script type="module" src="firebase-sync.js?v=7.8.13"></script>
+<script src="app.js?v=7.8.13"></script>
 </body>
 </html>

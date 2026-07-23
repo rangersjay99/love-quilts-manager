@@ -1,14 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.12 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.13 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.8.12.
-[ ] Existing inventory, needs, and distribution records remain present.
-[ ] Home Print Summary opens a populated print preview.
-[ ] The printed summary shows the app/organization heading.
-[ ] The printed summary shows all three totals.
-[ ] The charity comparison table and Grand Total appear.
-[ ] The print preview is not blank.
-[ ] All three At a Glance titles remain bold and above their numbers.
-[ ] All three action buttons remain aligned and slightly translucent.
-[ ] Custom Home wording still appears and syncs between devices.
-[ ] Reports, calendar add/edit, backup, and other printing still work.
-[ ] Both devices return to Shared data verified · All changes synced.
+[ ] App opens and shows Update 7.8.13.
+[ ] Existing inventory and charity requests remain unchanged.
+[ ] The duplicate sync message no longer appears inside Home.
+[ ] The top sync banner turns green after All changes synced.
+[ ] The top sync banner is red while offline, signing in, saving, or in error.
+[ ] The four large Home navigation buttons are removed.
+[ ] The persistent bottom navigation is color-coded on every page.
+[ ] Each bottom navigation button opens the correct page and shows its stronger active color.
+[ ] The Home calendar dropdown is Charity, not Year.
+[ ] Selecting a charity filters the current-year Home calendar.
+[ ] All Charities restores all current-year requests.
+[ ] Home action buttons remain easy to tap but are visually softer.
+[ ] Print Summary still shows totals and the charity comparison table.
+[ ] Add Quilts, Add Need, Distribute Quilts, reports, settings, and Firebase sync still work.

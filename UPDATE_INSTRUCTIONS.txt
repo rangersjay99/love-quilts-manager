@@ -1,10 +1,9 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.12
-Released: July 23, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.13
 
 BEFORE UPDATING
 1. Confirm the app says all changes are synced.
 2. Export a current backup from Settings.
-3. Keep a ZIP backup of the current GitHub repository.
+3. Download a backup ZIP of the current GitHub repository.
 
 UPLOAD
 1. Extract this ZIP.
@@ -12,10 +11,6 @@ UPLOAD
 3. Replace files with the same names.
 4. Do not delete or replace the firebase-test folder.
 5. Wait for GitHub Pages to publish.
-6. Close and reopen the app on each device. Refresh once if an older version appears.
+6. Close and reopen the app on each device. Refresh once if an older version remains.
 
-THIS UPDATE
-- Fixes the Home Print Summary button opening a blank print preview.
-- Preserves the 7.8.11 symmetrical At a Glance layout and all existing features.
-
-Existing inventory, needs, distributions, shared wording, reports, backups, and Firebase data are preserved.
+This update does not clear or reinitialize shared inventory.
