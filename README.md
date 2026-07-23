@@ -1,13 +1,13 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.6 — July 22, 2026
+Current release: Update 7.8.7 — July 22, 2026
 
-## Update 7.8.6 — Home calendar and direct editing
+## Update 7.8.7 — Faster inventory entry
 
-- Fixes the Add to Quilts Needed button.
-- Shows the All Quilts Calendar on the Home screen instead of the charity-card list.
-- Lets a calendar entry be edited, saved, canceled, or deleted directly inside the calendar.
-- Changes Quilts Requested wording to Quilts Needed throughout the app and reports.
-- Keeps the existing Firebase sign-in, syncing, recovery, and saved-data structure.
+- The At a Glance **Total Quilts in Storage** card now includes a **＋ Add Quilts** button.
+- The button opens Inventory in **Love Quilts In** mode.
+- Tapping the rest of the storage card opens the detailed Current Inventory section.
+- The Home **All Quilts Calendar**, month add pop-ups, direct calendar editing, reports, and shared-device synchronization are retained.
 
-Upload every extracted file and folder to the repository root. Do not upload the ZIP itself.
+Copyright © 2026 Jay. Love Quilts Manager. All rights reserved.
+Personal and authorized guild use only. See LICENSE.txt.

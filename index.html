@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.6">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.6">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.6">
+<link rel="manifest" href="manifest-v7.json?v=7.8.7">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.7">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.7">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -39,6 +39,17 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .metric strong{display:block;font-size:29px;line-height:1;color:var(--plum)}
 .metric span{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
 .metric.short strong{color:var(--red)}
+.metric-action{position:relative;cursor:pointer;border:2px solid transparent;transition:border-color .15s,transform .15s}
+.metric-action:focus,.metric-action:hover{border-color:var(--plum);outline:none}.metric-action:active{transform:scale(.99)}
+.metric-add-button{width:calc(100% - 12px);min-height:34px;margin:9px 6px 0;padding:7px 8px;border:0;border-radius:9px;background:var(--green);color:#fff;font-size:12px;font-weight:900;cursor:pointer}
+.metric-add-button:hover,.metric-add-button:focus{filter:brightness(.94);outline:2px solid rgba(47,125,74,.25)}
+.home-calendar-year{display:grid;grid-template-columns:minmax(0,180px);margin-bottom:10px}.home-calendar-year label{margin:0;font-size:12px;color:var(--muted)}.home-calendar-year select{margin-top:5px}
+.month-add-button{width:100%;min-height:34px;margin-top:8px;padding:7px;border:1px solid var(--plum);border-radius:9px;background:#fff;color:var(--plum);font-size:11px;font-weight:900;cursor:pointer}
+.calendar-modal-backdrop{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(35,25,38,.58)}
+.calendar-modal-backdrop.open{display:flex}.calendar-modal-card{width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 60px rgba(30,15,35,.28)}
+.calendar-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.calendar-modal-header h2{margin:0}.calendar-modal-close{width:40px;min-height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--plum);font-size:24px;font-weight:800;cursor:pointer}
+.calendar-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.calendar-modal-actions .primary,.calendar-modal-actions .ghost{margin-top:12px}.calendar-modal-delete{display:none}
+@media(max-width:620px){.metric{min-height:112px}.metric-add-button{font-size:11px}.home-calendar-year{grid-template-columns:1fr}.calendar-modal-backdrop{align-items:flex-end;padding:0}.calendar-modal-card{width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
 .home-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
 .home-section-heading h3{margin:0}.home-section-heading span{font-size:12px;color:var(--muted)}
 .home-charity-list{display:grid;gap:9px}
@@ -102,34 +113,6 @@ textarea{min-height:80px;resize:vertical}
 .restore-warning{margin-top:10px;padding:10px;border-radius:10px;background:#fff0dc;color:#744a0b;font-size:12px;line-height:1.45}
 @media(max-width:700px){.needs-calendar{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.calendar-toolbar{grid-template-columns:1fr}.needs-calendar{grid-template-columns:1fr 1fr}.month-card{padding:9px}.month-need{font-size:10px}}
-
-.home-calendar-toolbar{grid-template-columns:minmax(140px,220px)}
-.calendar-edit-hint{display:block;margin-top:3px;color:var(--plum);font-size:9px;font-weight:800}
-.month-card.editing{grid-column:1/-1;border-color:var(--plum);box-shadow:0 4px 14px rgba(76,36,76,.12)}
-.calendar-edit-wrap{padding-top:9px}
-.calendar-need-editor{padding:9px;border-radius:10px;background:rgba(255,255,255,.9)}
-.calendar-edit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.calendar-edit-grid label{margin:0;font-size:10px;color:var(--muted)}
-.calendar-edit-grid input,.calendar-edit-grid select{min-height:40px;margin-top:4px;padding:7px;font-size:13px}
-.calendar-note-field{grid-column:1/-1}
-.calendar-record-out{margin:9px 0 0;padding:8px;border-radius:8px;background:var(--soft);font-size:11px}
-.calendar-edit-actions{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;margin-top:9px}
-.calendar-edit-actions button{min-height:40px;margin:0;border-radius:9px;font-weight:800}
-.calendar-edit-actions .inline-save{border:0;background:var(--plum);color:#fff}
-.calendar-edit-actions .inline-cancel{border:1px solid var(--plum);background:#fff;color:var(--plum)}
-@media(max-width:700px){.calendar-edit-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.calendar-edit-grid{grid-template-columns:1fr}.calendar-edit-actions{grid-template-columns:1fr 1fr}.calendar-edit-actions .need-delete-button{grid-column:1/-1}}
-.calendar-add-button{width:100%;min-height:38px;margin-top:8px;padding:7px 8px;border:1px dashed var(--plum);border-radius:9px;background:rgba(255,255,255,.82);color:var(--plum);font-size:11px;font-weight:850;cursor:pointer}
-.calendar-add-button span{font-size:15px;vertical-align:-1px}
-.modal-open{overflow:hidden}
-.calendar-add-modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(38,24,40,.56);backdrop-filter:blur(3px)}
-.calendar-add-modal.open{display:flex}
-.calendar-add-panel{width:min(100%,520px);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 55px rgba(35,20,38,.3)}
-.calendar-add-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px}
-.calendar-add-heading h2{margin:0}.calendar-add-close{flex:0 0 auto;width:42px;height:42px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--plum);font-size:25px;line-height:1;cursor:pointer}
-.calendar-add-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.calendar-add-actions button{margin:0}
-@media(max-width:520px){.calendar-add-modal{padding:10px}.calendar-add-panel{max-height:calc(100vh - 20px);padding:15px}.calendar-add-actions{grid-template-columns:1fr}}
-
 .empty{text-align:center;color:var(--muted);padding:16px 8px}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;border-bottom:1px solid var(--line);text-align:left}th{font-size:12px;color:var(--muted)}
@@ -245,7 +228,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 }
 
 
-/* Update 7.8.6 — Home calendar, direct calendar editing, and Add button fix */
+/* Update 7.8.7 — At a Glance inventory shortcut and calendar workflow */
 .need-card{margin:10px 0 0;padding:13px;border:1px solid var(--line);border-radius:14px}
 .need-card:first-child{margin-top:0;padding-top:13px;border-top:1px solid var(--line)}
 .need-card.need-covered{background:#edf8f0;border-color:#b9ddc2}
@@ -310,14 +293,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.6" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.7" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.6</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.7</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -325,7 +308,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <header>
   <div id="headerOrg" class="org">Faithful Circle Quilters</div>
   <h1 id="headerAppName">Love Quilts Manager</h1>
-  <p id="headerSubtitle">Quilts in storage and quilts needed</p>
+  <p id="headerSubtitle">Quilts in storage and quilts still needed</p>
 </header>
 <div class="firebase-banner"><b>SHARED DEVICE SYNC</b> · <span id="firebaseBannerStatus">Waiting for sign-in</span></div>
 
@@ -334,26 +317,27 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card">
     <h2>At a Glance</h2>
     <div class="grid3">
-      <div class="metric"><strong id="homeOnHand">0</strong><span>Total Quilts in Storage</span></div>
-      <div class="metric"><strong id="homeNeeded">0</strong><span>Quilts Needed</span></div>
-      <div class="metric"><strong id="homeDifference">0</strong><span>Quilts Still Needed</span></div>
+      <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts in storage" onclick="openInventoryDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openInventoryDetails()}">
+        <strong id="homeOnHand">0</strong><span>Total Quilts in Storage</span>
+        <button type="button" class="metric-add-button" onclick="event.stopPropagation();openAddQuilts()">＋ Add Quilts</button>
+      </div>
+      <div class="metric"><strong id="homeNeeded">0</strong><span>Quilts Still Needed</span></div>
+      <div class="metric"><strong id="homeDifference">0</strong><span>Difference</span></div>
     </div>
     <div id="homeSaveStatus" class="save-status">Saved automatically on this device.</div>
   </div>
-  <div class="card home-calendar-card">
-    <div class="home-section-heading"><h3>All Quilts Calendar</h3><span>Tap any entry to edit it here</span></div>
-    <div class="calendar-toolbar home-calendar-toolbar">
-      <label>Year<select id="homeCalendarYear" onchange="renderNeedsCalendar()"></select></label>
-    </div>
-    <div id="homeNeedsCalendar" class="needs-calendar home-needs-calendar"></div>
+  <div class="card">
+    <div class="home-section-heading"><h3>All Quilts Calendar</h3><span>Tap an entry to edit</span></div>
+    <div class="home-calendar-year"><label>Year<select id="homeCalendarYear" onchange="renderHomeCalendar()"></select></label></div>
+    <div id="homeNeedsCalendar" class="needs-calendar"></div>
     <button type="button" class="primary home-print-summary" onclick="printHomeSummary()">Print Summary</button>
-    <div class="small home-print-note">Prints the overall totals and charity summary.</div>
+    <div class="small home-print-note">Prints totals and the charity comparison summary.</div>
   </div>
   <div id="homeSummaryReport" class="card print-only home-summary-report" aria-hidden="true"></div>
   <div class="card">
     <h3>Choose an Action</h3>
     <div class="home-actions">
-      <button id="homeRecordBtn" class="btn-plum" onclick="showView('inventory')">Record Love Quilts</button>
+      <button id="homeRecordBtn" class="btn-plum" onclick="openAddQuilts()">Record Love Quilts</button>
       <button class="btn-teal" onclick="showView('needs')">Quilts Needed</button>
       <button class="btn-blue" onclick="showView('reports')">View Reports</button>
       <button class="btn-gold" onclick="showView('settings')">Settings</button>
@@ -362,7 +346,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 </section>
 
 <section id="inventory" class="view">
-  <div class="card">
+  <div id="inventoryEntryCard" class="card">
     <h2 id="recordHeading">Record Love Quilts</h2>
     <div id="inventoryNote" class="section-note">Choose Out only when items physically leave storage. Use Adjust for corrections; adjustments are visibly flagged.</div>
     <div class="mode-row">
@@ -381,7 +365,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <button id="saveTxBtn" class="primary" onclick="saveTransaction()">Add to Inventory</button>
     <button id="cancelTxBtn" class="ghost" style="display:none" onclick="cancelTxEdit()">Cancel Editing</button>
   </div>
-  <div class="card"><h3>Current Inventory</h3><div id="inventoryList"></div></div>
+  <div id="inventoryDetailsCard" class="card"><h3>Current Inventory</h3><div id="inventoryList"></div></div>
   <div class="card">
     <h3>History</h3>
     <div class="filters">
@@ -398,7 +382,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <section id="needs" class="view">
   <div class="card">
     <h2>All Quilts Calendar</h2>
-    <p class="small">View all 12 months. Inventory is allocated in month order: green is covered, gold is partially covered, red is a shortage, orange is past due, and “Distributed” means the quilts needed entry was completed.</p>
+    <p class="small">View all 12 months. Inventory is allocated in month order: green is covered, gold is partially covered, red is a shortage, orange is past due, and “Distributed” means the quilts-needed entry was completed.</p>
     <div class="calendar-toolbar">
       <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
       <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
@@ -409,7 +393,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card"><h3>Quilts Needed</h3><div id="needsList"></div></div>
   <div class="card">
     <h2>Quilts Needed</h2>
-    <div id="needsNote" class="section-note">Enter the number of quilts needed for each month. Current stock and shortage are calculated automatically.</div>
+    <div id="needsNote" class="section-note">Enter the number of quilts requested for each month. Current stock and shortage are calculated automatically.</div>
     <label>Month Needed</label><input id="needMonth" type="month">
     <label>Charity</label><select id="needCharity" required></select>
     <label>Size</label><select id="needSize" required></select>
@@ -417,7 +401,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <label>Note <span class="small">(optional)</span></label><input id="needNote" placeholder="Holiday delivery, annual event, etc.">
     <div class="distribution-fields">
       <h3>Distribution Status</h3>
-      <p class="small">Use these fields when some or all of this quilts needed entry has been delivered.</p>
+      <p class="small">Use these fields when some or all of these quilts have been delivered.</p>
       <label>Quantity Distributed</label><input id="needFulfilledQty" type="number" inputmode="numeric" min="0" step="1" value="0">
       <label>Date Distributed</label><input id="needFulfilledDate" type="date">
       <label class="check-row"><input id="needRecordOut" type="checkbox"><span>Record any newly distributed quantity as <span id="needRecordOutName">Love Quilts</span> Out</span></label>
@@ -434,17 +418,17 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <h2 id="reportHeading">Love Quilts Inventory and Quilts Needed Report</h2><p id="reportDate" class="small"></p>
     <div class="grid3">
       <div class="metric"><strong id="reportOnHand">0</strong><span>Total Quilts in Storage</span></div>
-      <div class="metric"><strong id="reportNeeded">0</strong><span>Quilts Needed</span></div>
+      <div class="metric"><strong id="reportNeeded">0</strong><span>Quilts Still Needed</span></div>
       <div class="metric short"><strong id="reportShortage">0</strong><span>Shortage</span></div>
     </div>
   </div>
-  <div class="card"><h3>Quilts in Storage and Quilts Needed</h3><div id="reportInventory"></div></div>
-  <div class="card"><h3>Quilts Needed</h3><div id="reportNeeds"></div></div>
-  <div class="card"><h3>Quilts Distributed</h3><div id="reportDistributed"></div></div>
+  <div class="card"><h3>Inventory and Quilts Still Needed</h3><div id="reportInventory"></div></div>
+  <div class="card"><h3>Quilts Still Needed</h3><div id="reportNeeds"></div></div>
+  <div class="card"><h3>Distributed Quilts Needed</h3><div id="reportDistributed"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
   <div class="card no-print">
     <h3>Report Downloads</h3>
-    <p class="small">The full PDF includes all quilts in storage, quilts needed, quilts distributed, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
+    <p class="small">The full PDF includes all inventory, quilts needed, distributed quilts, and adjusted transactions and may use multiple pages. The compact PDF remains available as a one-page meeting summary. Neither generated PDF includes the website address.</p>
     <button class="primary" onclick="exportFullPDF()">Download Full PDF Report</button>
     <button class="ghost" onclick="exportCompactPDF()">Download Compact One-Page PDF</button>
     <div class="row"><button class="ghost" onclick="shareFullReport()">Email Full Report</button><button class="ghost" onclick="shareCompactReport()">Email Compact Report</button></div>
@@ -546,33 +530,29 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.6 · July 22, 2026</span>
+      <b>Version</b><span>Update 7.8.7 · July 22, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.6 places the All Quilts Calendar on Home, lets entries be changed directly in the calendar, fixes Add to Quilts Needed, and uses Quilts Needed wording throughout the app and reports.</p>
+    <p class="small">Update 7.8.7 keeps the Home-screen All Quilts Calendar, month-by-month add pop-ups, and direct calendar editing. The Total Quilts in Storage card now includes a ＋ Add Quilts shortcut while the rest of the card opens inventory details.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
 </main>
 
-<div id="calendarAddModal" class="calendar-add-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="calendarAddTitle" onclick="if(event.target===this)closeCalendarAdd()">
-  <form class="calendar-add-panel" onsubmit="return saveCalendarAdd(event)">
-    <div class="calendar-add-heading">
-      <div><h2 id="calendarAddTitle">Add Quilts Needed</h2><p class="small">The month is filled in from the calendar. Choose the charity and size, then enter the quantity.</p></div>
-      <button type="button" class="calendar-add-close" aria-label="Close add quilts needed window" onclick="closeCalendarAdd()">×</button>
-    </div>
-    <label>Month Needed</label><input id="calendarAddMonth" type="month" required>
-    <label>Charity</label><select id="calendarAddCharity" required></select>
-    <label>Size</label><select id="calendarAddSize" required></select>
-    <label>Quilts Needed</label><input id="calendarAddQty" type="number" inputmode="numeric" min="1" step="1" value="1" required>
-    <label>Note <span class="small">(optional)</span></label><input id="calendarAddNote" placeholder="Holiday delivery, annual event, etc.">
-    <div id="calendarAddNotice" class="notice"></div>
-    <div class="calendar-add-actions"><button type="submit" class="primary">Add to Quilts Needed</button><button type="button" class="ghost" onclick="closeCalendarAdd()">Cancel</button></div>
-  </form>
+<div id="calendarNeedModal" class="calendar-modal-backdrop" aria-hidden="true" onclick="if(event.target===this)closeCalendarNeedModal()">
+  <div class="calendar-modal-card" role="dialog" aria-modal="true" aria-labelledby="calendarNeedModalTitle">
+    <div class="calendar-modal-header"><div><h2 id="calendarNeedModalTitle">Add Quilts Needed</h2><div class="small">Enter or edit the charity request for this month.</div></div><button type="button" class="calendar-modal-close" aria-label="Close" onclick="closeCalendarNeedModal()">×</button></div>
+    <label>Month Needed</label><input id="calendarNeedMonth" type="month">
+    <label>Charity</label><select id="calendarNeedCharity"></select>
+    <label>Size</label><select id="calendarNeedSize"></select>
+    <label>Quilts Needed</label><input id="calendarNeedQty" type="number" inputmode="numeric" min="1" step="1" value="1">
+    <label>Note <span class="small">(optional)</span></label><input id="calendarNeedNote" placeholder="Holiday delivery, annual event, etc.">
+    <div id="calendarNeedNotice" class="notice"></div>
+    <div class="calendar-modal-actions"><button type="button" class="primary" onclick="saveCalendarNeed()">Save</button><button type="button" class="ghost" onclick="closeCalendarNeedModal()">Cancel</button></div>
+    <button id="calendarNeedDelete" type="button" class="danger calendar-modal-delete" onclick="deleteCalendarNeed()">Delete This Entry</button>
+  </div>
 </div>
-
-
 
 <nav class="bottom-nav">
   <button data-view="home" class="active" onclick="showView('home')"><b>⌂</b>Home</button>
@@ -582,7 +562,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.6"></script>
-<script src="app.js?v=7.8.6"></script>
+<script type="module" src="firebase-sync.js?v=7.8.7"></script>
+<script src="app.js?v=7.8.7"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
-Love Quilts Manager Update 7.8.6
+Love Quilts Manager Update 7.8.7
 
-- Adds an Add Quilts Needed button to every month in the All Quilts Calendar.
-- Opens a simple pop-up entry window with the selected month already filled in.
-- Adds the new quilts-needed record without leaving the Home calendar.
-- Keeps direct calendar editing from Update 7.8.5.
-- Does not change Firebase paths or saved-data structure.
+- Adds a ＋ Add Quilts button directly to the At a Glance Total Quilts in Storage card.
+- The new button opens Inventory in Love Quilts In mode for immediate entry.
+- Tapping the rest of the storage card opens Current Inventory details.
+- Retains the Home All Quilts Calendar, month-by-month ＋ Add Quilts Needed pop-ups, and direct calendar editing from Update 7.8.6.
+- No Firebase path, synchronization, or saved-data format changes.

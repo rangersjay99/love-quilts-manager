@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.6';
+const VERSION='7.8.7';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -18,7 +18,7 @@ const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
 const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
 const DEFAULT_SIZES=["Children's Large",'Adult Large','Medium'];
-let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarEditNeedId=null,calendarEditBoxId='homeNeedsCalendar',calendarAddMonth=monthNow(),externalTimer=null,externalReason='Automatic save';
+let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarModalNeedId=null,externalTimer=null,externalReason='Automatic save';
 
 const el=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
@@ -178,7 +178,17 @@ function refreshSelects(){
   fill('historyCharity',data.charities,'<option value="">All charities</option>');
   fill('calendarCharity',data.charities,'<option value="">All charities</option>');
   fill('calendarSize',data.sizes,'<option value="">All sizes</option>');
+  fill('calendarNeedCharity',data.charities,'<option value="">Select charity</option>');
+  fill('calendarNeedSize',data.sizes,'<option value="">Select size</option>');
   refreshCalendarYears();
+}
+function openAddQuilts(){
+  cancelTxEdit();setMode('IN');showView('inventory');
+  requestAnimationFrame(()=>{el('inventoryEntryCard')?.scrollIntoView({behavior:'smooth',block:'start'});el('txCharity')?.focus()});
+}
+function openInventoryDetails(){
+  showView('inventory');
+  requestAnimationFrame(()=>el('inventoryDetailsCard')?.scrollIntoView({behavior:'smooth',block:'start'}));
 }
 function setMode(m){
   mode=m;el('modeIn').className=m==='IN'?'active-in':'';el('modeOut').className=m==='OUT'?'active-out':'';el('modeAdjust').className=m==='ADJUST'?'active-adjust':'';
@@ -271,21 +281,6 @@ function needValuesFromMainForm(){
     fulfilledDate:el('needFulfilledDate').value||'',recordOut:!!el('needRecordOut').checked
   };
 }
-function resetNeedEntryForm(){
-  if(el('needMonth'))el('needMonth').value=monthNow();
-  if(el('needCharity'))el('needCharity').value='';
-  if(el('needSize'))el('needSize').value='';
-  if(el('needQty'))el('needQty').value='1';
-  if(el('needNote'))el('needNote').value='';
-  if(el('needFulfilledQty'))el('needFulfilledQty').value='0';
-  if(el('needFulfilledDate'))el('needFulfilledDate').value='';
-  if(el('needRecordOut'))el('needRecordOut').checked=false;
-}
-function saveNeed(){
-  const saved=persistNeedRecord(needValuesFromMainForm(),null,'needNotice');
-  if(saved)resetNeedEntryForm();
-  return saved;
-}
 function needValuesFromInlineForm(form){
   const field=name=>form.querySelector(`[name="${name}"]`);
   return{
@@ -296,7 +291,7 @@ function needValuesFromInlineForm(form){
 }
 function persistNeedRecord(values,id=null,messageTarget='needNotice'){
   const previous=id?data.needs.find(n=>n.id===id):null,stamp=nowIso(),email=currentUserEmail();
-  if(id&&!previous){showNeedSaveMessage(messageTarget,'This quilts needed entry could not be found. It may have changed on another device.');editNeedId=null;renderNeeds();return false}
+  if(id&&!previous){showNeedSaveMessage(messageTarget,'This charity request could not be found. It may have changed on another device.');editNeedId=null;renderNeeds();return false}
   const needQty=Math.floor(Number(values.qty));
   if(!Number.isFinite(needQty)||needQty<1){showNeedSaveMessage(messageTarget,'Quilts Needed must be 1 or more.');return false}
   const sentRaw=Math.floor(Number(values.fulfilledQty||0));
@@ -319,13 +314,21 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice'){
     if(autoOutNeeded>current){showNeedSaveMessage(messageTarget,`Only ${current} are in storage for ${r.charity} — ${r.size}. Leave the Inventory Out box unchecked if this distribution was already recorded.`);return false}
     if(!confirmInventoryChange('OUT',r.charity,r.size,-autoOutNeeded)){showNeedSaveMessage(messageTarget,'Distribution save canceled. No changes were saved.');return false}
     data.transactions.push({id:uid(),date:r.fulfilledDate,type:'OUT',charity:r.charity,size:r.size,qty:autoOutNeeded,adjustment:0,
-      note:`Distributed for ${fmtMonth(r.month)} quilts needed entry`,createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp});
+      note:`Distributed for ${fmtMonth(r.month)} charity request`,createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp});
     r.autoOutQty=priorAutoOut+autoOutNeeded;
   }
   if(id){const i=data.needs.findIndex(n=>n.id===id);if(i<0)return false;data.needs[i]=r}else data.needs.push(r);
-  save(id?'Quilts needed entry edited':'Quilts needed entry added');editNeedId=null;editNeedMode='details';calendarEditNeedId=null;renderAll();
-  if(id)notice('needNotice','Quilts needed entry changes saved.',true);else notice('needNotice',sentRaw>=needQty?'Quilts needed entry marked distributed.':'Quilts needed entry saved.',true);
+  save(id?'Charity request edited':'Charity request added');editNeedId=null;editNeedMode='details';renderAll();
+  if(id)notice('needNotice','Charity request changes saved.',true);else notice('needNotice',sentRaw>=needQty?'Charity request marked distributed.':'Charity request saved.',true);
   return true;
+}
+function saveNeed(){
+  const ok=persistNeedRecord(needValuesFromMainForm(),null,'needNotice');
+  if(ok){
+    el('needMonth').value=monthNow();el('needCharity').value='';el('needSize').value='';el('needQty').value=1;el('needNote').value='';
+    el('needFulfilledQty').value=0;el('needFulfilledDate').value='';el('needRecordOut').checked=false;
+  }
+  return ok;
 }
 function prepareNeedDistribution(id){editNeed(id,true)}
 function editNeed(id,distribution=false){
@@ -359,13 +362,13 @@ function deleteNeed(id){
   const sent=fulfilledQty(n),extra=sent?`
 Distributed: ${sent}${n.fulfilledDate?' on '+fmtDate(n.fulfilledDate):''}
 
-Deleting the quilts needed entry does not delete any Inventory Out transaction.`:'';
-  if(confirm(`Delete this quilts needed entry?
+Deleting the charity request does not delete any Inventory Out transaction.`:'';
+  if(confirm(`Delete this charity request?
 
 ${fmtMonth(n.month)} — ${n.charity} — ${n.size} — Quilts Needed ${n.qty}${extra}
 
 A recovery copy will be kept.`)){
-    createRecoverySnapshot('Before deleting a quilts needed entry');data.needs=data.needs.filter(x=>x.id!==id);if(editNeedId===id){editNeedId=null;editNeedMode='details'}if(calendarEditNeedId===id)calendarEditNeedId=null;save('Quilts needed entry deleted');renderAll();
+    createRecoverySnapshot('Before deleting a charity request');data.needs=data.needs.filter(x=>x.id!==id);if(editNeedId===id){editNeedId=null;editNeedMode='details'}save('Charity request deleted');renderAll();
   }
 }
 function upcoming(){return data.needs.filter(n=>n.month>=monthNow()&&remainingNeed(n)>0)}
@@ -391,13 +394,13 @@ function needInlineEditor(n,stateClass,stateLabel,info,editorMode='details'){
   let metricTwo='',metricThree='';
   if(complete){metricTwo=`<div><b>${sent}</b><span>Sent</span></div>`;metricThree=`<div><b class="positive">0</b><span>Still Needed</span></div>`}
   else if(sent>0||pastDue){metricTwo=`<div><b>${sent}</b><span>Sent</span></div>`;metricThree=`<div><b class="${pastDue?'negative':''}">${remaining}</b><span>Still Needed</span></div>`}
-  else{metricTwo=`<div><b>${available}</b><span>Available for this need</span></div>`;metricThree=`<div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div>`}
+  else{metricTwo=`<div><b>${available}</b><span>Available for this request</span></div>`;metricThree=`<div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div>`}
   const distributionQty=sent||Number(n.qty)||1,distributionDate=n.fulfilledDate||today();
   const planner=editorMode==='distribution'
-    ?`<div class="planner-edit-cell"><input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" oninput="updateInlineNeedPreview(this.form)" aria-label="Quilts needed"><span>Quilts Needed</span></div>
+    ?`<div class="planner-edit-cell"><input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" oninput="updateInlineNeedPreview(this.form)" aria-label="Quilts requested"><span>Quilts Needed</span></div>
       <div class="planner-edit-cell"><input name="fulfilledQty" type="number" inputmode="numeric" min="0" step="1" value="${distributionQty}" oninput="updateInlineNeedPreview(this.form)" aria-label="Quantity sent"><span>Sent</span></div>
       <div><b data-inline-remaining>${Math.max(0,(Number(n.qty)||1)-distributionQty)}</b><span>Still Needed</span></div>`
-    :`<div class="planner-edit-cell"><input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" aria-label="Quilts needed"><span>Quilts Needed</span></div>${metricTwo}${metricThree}`;
+    :`<div class="planner-edit-cell"><input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" aria-label="Quilts requested"><span>Quilts Needed</span></div>${metricTwo}${metricThree}`;
   const distributionFields=editorMode==='distribution'
     ?`<div class="direct-distribution-row"><label>Date Distributed<input name="fulfilledDate" type="date" value="${esc(distributionDate)}"></label><label class="check-row inline-check"><input name="recordOut" type="checkbox"><span>Record newly distributed quantity as ${esc(data.itemName)} Out</span></label></div>
       <p class="small direct-edit-help">Leave the box unchecked when the quilts were already entered on the Inventory screen.</p>`
@@ -427,101 +430,29 @@ function needCard(n,actions=true,allocation=null){
   }else if(sent>0||pastDue){
     stateClass=pastDue?'need-pastdue':'need-partial';stateLabel=pastDue?'Past Due': 'Partially Sent';
     planner=`<div><b>${n.qty}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${pastDue?'negative':''}">${remaining}</b><span>Still Needed</span></div>`;
-    detail=`<div class="distribution-meta">${sent?esc(distributionText(n))+' · ':''}Available for this need ${available} · Short ${short}</div>`;
+    detail=`<div class="distribution-meta">${sent?esc(distributionText(n))+' · ':''}Available for this request ${available} · Short ${short}</div>`;
   }else{
     stateClass=short===0?'need-covered':available>0?'need-partial':'need-shortage';stateLabel=short===0?'Covered':available>0?'Partial':'Shortage';
-    planner=`<div><b>${n.qty}</b><span>Quilts Needed</span></div><div><b>${available}</b><span>Available for this need</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div>`;
+    planner=`<div><b>${n.qty}</b><span>Quilts Needed</span></div><div><b>${available}</b><span>Available for this request</span></div><div><b class="${short?'negative':'positive'}">${short}</b><span>Shortage</span></div>`;
   }
   if(actions&&editNeedId===n.id)return needInlineEditor(n,stateClass,stateLabel,info,editNeedMode);
   const actionButtons=actions?`<div class="actions need-actions"><button class="need-edit-button" onclick="editNeed(this.closest('.need-card').dataset.needId)">Edit</button><button class="need-distribute-button" onclick="prepareNeedDistribution(this.closest('.need-card').dataset.needId)">${complete?'Update Distribution':'Mark Distributed'}</button><button class="need-delete-button" onclick="deleteNeed(this.closest('.need-card').dataset.needId)">Delete</button></div>`:'';
   return`<div class="item need-card ${stateClass}" data-need-id="${esc(n.id)}"><div class="head"><div><div class="title">${fmtMonth(n.month)} — ${esc(n.charity)}</div><div class="meta">${esc(n.size)}${n.note?' · '+esc(n.note):''}</div>${auditText(n)?`<div class="audit-meta">${esc(auditText(n))}</div>`:''}</div><span class="need-status">${stateLabel}</span></div><div class="planner">${planner}</div>${detail}${actionButtons}</div>`;
 }
-function refreshCalendarYears(){
+function calendarYears(){
   const current=Number(monthNow().slice(0,4));
-  const years=unique([current-1,current,current+1,current+2,...data.needs.map(n=>Number(String(n.month).slice(0,4))).filter(Boolean)]).map(Number).sort((a,b)=>a-b);
-  ['calendarYear','homeCalendarYear'].forEach(id=>{
-    const select=el(id);if(!select)return;
-    const old=Number(select.value)||current;
-    select.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
-    select.value=years.includes(old)?String(old):String(current);
-  });
+  return unique([current-1,current,current+1,current+2,...data.needs.map(n=>Number(String(n.month).slice(0,4))).filter(Boolean)]).map(Number).sort((a,b)=>a-b);
 }
-function calendarNeedEditor(n){
-  const charityOptions=data.charities.map(c=>`<option value="${esc(c)}"${c===n.charity?' selected':''}>${esc(c)}</option>`).join('');
-  const sizeOptions=data.sizes.map(s=>`<option value="${esc(s)}"${s===n.size?' selected':''}>${esc(s)}</option>`).join('');
-  const sent=fulfilledQty(n);
-  return`<form class="calendar-need-editor" data-calendar-edit-id="${esc(n.id)}" onsubmit="return saveCalendarNeed(event,this.dataset.calendarEditId)">
-    <div class="calendar-edit-grid">
-      <label>Month Needed<input name="month" type="month" value="${esc(n.month)}" required></label>
-      <label>Charity<select name="charity" required>${charityOptions}</select></label>
-      <label>Size<select name="size" required>${sizeOptions}</select></label>
-      <label>Quilts Needed<input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" required></label>
-      <label>Quantity Sent<input name="fulfilledQty" type="number" inputmode="numeric" min="0" step="1" value="${sent}"></label>
-      <label>Date Sent<input name="fulfilledDate" type="date" value="${esc(n.fulfilledDate||'')}"></label>
-      <label class="calendar-note-field">Note<input name="note" value="${esc(n.note||'')}" placeholder="Optional note"></label>
-    </div>
-    <label class="check-row calendar-record-out"><input name="recordOut" type="checkbox"><span>Record any newly sent quantity as ${esc(data.itemName)} Out</span></label>
-    <div class="notice calendar-edit-notice"></div>
-    <div class="calendar-edit-actions"><button type="submit" class="inline-save">Save Changes</button><button type="button" class="inline-cancel" onclick="cancelCalendarNeedEdit()">Cancel</button><button type="button" class="need-delete-button" onclick="deleteNeed('${esc(n.id)}')">Delete</button></div>
-  </form>`;
+function fillCalendarYearSelect(id){
+  const select=el(id);if(!select)return;
+  const current=Number(monthNow().slice(0,4)),years=calendarYears(),old=Number(select.value)||current;
+  select.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');select.value=years.includes(old)?String(old):String(current);
 }
-function editCalendarNeed(id,boxId='homeNeedsCalendar'){
-  if(!data.needs.some(n=>n.id===id))return;
-  calendarEditNeedId=id;calendarEditBoxId=boxId;editNeedId=null;renderNeedsCalendar();
-  requestAnimationFrame(()=>{
-    const form=el(boxId)?.querySelector('.calendar-need-editor[data-calendar-edit-id="'+id+'"]');
-    if(!form)return;
-    form.querySelector('[name="qty"]')?.focus();
-    form.scrollIntoView({behavior:'smooth',block:'center'});
-  });
-}
-function saveCalendarNeed(event,id){
-  event?.preventDefault();
-  const form=event?.currentTarget;
-  if(!form)return false;
-  const previous=calendarEditNeedId;
-  calendarEditNeedId=null;
-  const saved=persistNeedRecord(needValuesFromInlineForm(form),id,form.querySelector('.calendar-edit-notice'));
-  if(!saved)calendarEditNeedId=previous;
-  return false;
-}
-function cancelCalendarNeedEdit(){calendarEditNeedId=null;renderNeedsCalendar()}
-function calendarAddOptions(selectId,values,placeholder){
-  const select=el(selectId);if(!select)return;
-  select.innerHTML=`<option value="">${esc(placeholder)}</option>`+values.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join('');
-  select.value='';
-}
-function openCalendarAdd(month=monthNow()){
-  calendarAddMonth=String(month||monthNow());calendarEditNeedId=null;
-  calendarAddOptions('calendarAddCharity',data.charities,'Select charity');
-  calendarAddOptions('calendarAddSize',data.sizes,'Select size');
-  el('calendarAddMonth').value=calendarAddMonth;
-  el('calendarAddQty').value='1';el('calendarAddNote').value='';
-  const message=el('calendarAddNotice');message.textContent='';message.className='notice';
-  const modal=el('calendarAddModal');modal.classList.add('open');modal.setAttribute('aria-hidden','false');
-  document.body.classList.add('modal-open');
-  requestAnimationFrame(()=>el('calendarAddCharity')?.focus());
-}
-function closeCalendarAdd(){
-  const modal=el('calendarAddModal');if(!modal)return;
-  modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');
-}
-function saveCalendarAdd(event){
-  event?.preventDefault();
-  const saved=persistNeedRecord({
-    month:el('calendarAddMonth').value||calendarAddMonth||monthNow(),
-    charity:el('calendarAddCharity').value,size:el('calendarAddSize').value,
-    qty:el('calendarAddQty').value,note:el('calendarAddNote').value.trim(),
-    fulfilledQty:0,fulfilledDate:'',recordOut:false
-  },null,el('calendarAddNotice'));
-  if(saved)closeCalendarAdd();
-  return false;
-}
-function renderCalendarGrid(boxId,year,charity='',size=''){
-  const box=el(boxId);if(!box)return;
+function refreshCalendarYears(){fillCalendarYearSelect('calendarYear');fillCalendarYearSelect('homeCalendarYear')}
+function calendarMarkup(year,charity='',size='',showAddButtons=true){
   const allocations=allocateNeedsForPlanning(),byId=new Map(allocations.map(item=>[item.n.id,item]));
   const monthNames=Array.from({length:12},(_,i)=>new Date(year,i,1).toLocaleDateString(undefined,{month:'short'}));
-  box.innerHTML=monthNames.map((name,index)=>{
+  return monthNames.map((name,index)=>{
     const month=`${year}-${String(index+1).padStart(2,'0')}`;
     const list=data.needs.filter(n=>n.month===month&&(!charity||n.charity===charity)&&(!size||n.size===size)).sort((a,b)=>a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size)||String(a.createdAt||a.id).localeCompare(String(b.createdAt||b.id)));
     const rows=list.map(n=>byId.get(n.id)||allocationForNeed(n,allocations));
@@ -529,33 +460,58 @@ function renderCalendarGrid(boxId,year,charity='',size=''){
     const allComplete=list.length>0&&remainingTotal===0,pastDue=month<monthNow()&&remainingTotal>0;
     const hasPartial=rows.some(item=>item.available>0&&item.shortage>0),hasCovered=rows.some(item=>item.remaining>0&&item.shortage===0),hasShort=rows.some(item=>item.shortage>0);
     const state=!list.length?'empty-month':allComplete?'completed':pastDue?'past-due':!hasShort?'covered':(hasPartial||hasCovered)?'partial':'shortage';
-    const label=!list.length?'No need':allComplete?'Distributed':pastDue?'Past Due':!hasShort?'Covered':(hasPartial||hasCovered)?'Partial':'Shortage';
-    const editingThisMonth=boxId===calendarEditBoxId&&list.some(n=>n.id===calendarEditNeedId);
+    const label=!list.length?'No request':allComplete?'Distributed':pastDue?'Past Due':!hasShort?'Covered':(hasPartial||hasCovered)?'Partial':'Shortage';
     const details=list.length?rows.map(item=>{
       const n=item.n,nSent=fulfilledQty(n),nRemaining=remainingNeed(n);
-      if(boxId===calendarEditBoxId&&n.id===calendarEditNeedId)return`<div class="month-need calendar-edit-wrap">${calendarNeedEditor(n)}</div>`;
       let summary;
-      if(nRemaining===0)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Still Needed 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
-      else if(nSent>0||month<monthNow())summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Still Needed ${nRemaining} · Available ${item.available} · Short ${item.shortage}`;
-      else summary=`Quilts Needed ${n.qty} · Available ${item.available} · Short ${item.shortage}`;
-      return`<div class="month-need"><button type="button" onclick="editCalendarNeed('${n.id}','${boxId}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · ${summary}<span class="calendar-edit-hint">Tap to edit</span></button></div>`;
+      if(nRemaining===0)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
+      else if(nSent>0||month<monthNow())summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed ${nRemaining} · In Storage ${item.available} · Short ${item.shortage}`;
+      else summary=`Quilts Needed ${n.qty} · In Storage ${item.available} · Short ${item.shortage}`;
+      return`<div class="month-need"><button type="button" onclick="openCalendarNeedEditor('${n.id}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · ${summary}</button></div>`;
     }).join(''):'<div class="month-need">No quilts needed</div>';
     const totals=(allComplete||pastDue||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
-    const addButton=`<button type="button" class="calendar-add-button" onclick="openCalendarAdd('${month}')"><span aria-hidden="true">＋</span> Add Quilts Needed</button>`;
-    return`<div class="month-card ${state}${editingThisMonth?' editing':''}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}${addButton}</div>`;
+    const add=showAddButtons?`<button type="button" class="month-add-button" onclick="openCalendarNeedEditor('', '${month}')">＋ Add Quilts Needed</button>`:'';
+    return`<div class="month-card ${state}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}${add}</div>`;
   }).join('');
 }
 function renderNeedsCalendar(){
-  refreshCalendarYears();
+  const box=el('needsCalendar');if(!box)return;refreshCalendarYears();
   const year=Number(el('calendarYear')?.value)||Number(monthNow().slice(0,4)),charity=el('calendarCharity')?.value||'',size=el('calendarSize')?.value||'';
-  renderCalendarGrid('needsCalendar',year,charity,size);
-  const homeYear=Number(el('homeCalendarYear')?.value)||Number(monthNow().slice(0,4));
-  renderCalendarGrid('homeNeedsCalendar',homeYear,'','');
+  box.innerHTML=calendarMarkup(year,charity,size,true);
+}
+function renderHomeCalendar(){
+  const box=el('homeNeedsCalendar');if(!box)return;refreshCalendarYears();
+  const year=Number(el('homeCalendarYear')?.value)||Number(monthNow().slice(0,4));
+  box.innerHTML=calendarMarkup(year,'','',true);
+}
+function openCalendarNeedEditor(id='',month=''){
+  const existing=id?data.needs.find(n=>n.id===id):null;if(id&&!existing)return;
+  calendarModalNeedId=existing?.id||null;refreshSelects();
+  el('calendarNeedModalTitle').textContent=existing?'Edit Quilts Needed':'Add Quilts Needed';
+  el('calendarNeedMonth').value=existing?.month||month||monthNow();
+  el('calendarNeedCharity').value=existing?.charity||'';el('calendarNeedSize').value=existing?.size||'';
+  el('calendarNeedQty').value=existing?.qty||1;el('calendarNeedNote').value=existing?.note||'';
+  el('calendarNeedDelete').style.display=existing?'block':'none';
+  const noticeBox=el('calendarNeedNotice');if(noticeBox){noticeBox.textContent='';noticeBox.className='notice'}
+  const modal=el('calendarNeedModal');modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>el('calendarNeedCharity')?.focus());
+}
+function closeCalendarNeedModal(){
+  const modal=el('calendarNeedModal');if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
+  calendarModalNeedId=null;document.body.style.overflow='';
+}
+function saveCalendarNeed(){
+  const previous=calendarModalNeedId?data.needs.find(n=>n.id===calendarModalNeedId):null;
+  const values={month:el('calendarNeedMonth').value||monthNow(),charity:el('calendarNeedCharity').value,size:el('calendarNeedSize').value,qty:el('calendarNeedQty').value,note:el('calendarNeedNote').value.trim(),fulfilledQty:previous?fulfilledQty(previous):0,fulfilledDate:previous?.fulfilledDate||'',recordOut:false};
+  const ok=persistNeedRecord(values,calendarModalNeedId,'calendarNeedNotice');if(ok)closeCalendarNeedModal();return ok;
+}
+function deleteCalendarNeed(){
+  const id=calendarModalNeedId;if(!id)return;deleteNeed(id);if(!data.needs.some(n=>n.id===id))closeCalendarNeedModal();
 }
 function renderNeeds(){
   if(editNeedId&&!data.needs.some(n=>n.id===editNeedId))editNeedId=null;
   renderNeedsCalendar();const allocations=allocateNeedsForPlanning();
-  el('needsList').innerHTML=allocations.length?allocations.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No quilts needed have been entered yet.</div>';
+  el('needsList').innerHTML=allocations.length?allocations.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No quilts needed entered yet.</div>';
 }
 function homeCharitySummaries(){
   const inventory=invMap(),remaining=requestedNeedsMap();
@@ -577,7 +533,7 @@ function renderHomeCharityBreakdown(){
   box.innerHTML=rows.length?rows.map(row=>{
     const state=row.difference<0?'has-shortage':row.difference>0?'has-surplus':'balanced';
     const diffClass=differenceClass(row.difference);
-    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>Quilts in Storage</span></div><div><b>${row.needsRemaining}</b><span>Quilts Needed</span></div><div><b class="${diffClass}">${signedDifference(row.difference)}</b><span>Quilts Still Needed</span></div></div></button>`;
+    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>In Storage</span></div><div><b>${row.needsRemaining}</b><span>Quilts Still Needed</span></div><div><b class="${diffClass}">${signedDifference(row.difference)}</b><span>Difference</span></div></div></button>`;
   }).join(''):'<div class="empty">No charities have been entered yet.</div>';
 }
 function openHomeCharity(charity){
@@ -590,7 +546,7 @@ function renderHomeSummaryReport(){
   const rows=homeCharitySummaries(),onHand=totalOnHand(),needsRemaining=totalNeeded(),difference=onHand-needsRemaining;
   const generated=new Date().toLocaleString();
   const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.needsRemaining}</td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
-  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · At a Glance Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>Total Quilts in Storage</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>Quilts Needed</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>Quilts Still Needed</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>Quilts in Storage</th><th>Quilts Needed</th><th>Quilts Still Needed</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · At a Glance Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>Total Quilts in Storage</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>Quilts Still Needed</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>Difference</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>In Storage</th><th>Quilts Still Needed</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderHome(){
   const difference=totalOnHand()-totalNeeded();
@@ -599,7 +555,7 @@ function renderHome(){
   const differenceBox=el('homeDifference');
   differenceBox.textContent=signedDifference(difference);
   differenceBox.className=differenceClass(difference);
-  renderNeedsCalendar();renderHomeSummaryReport();updateSaveStatus();
+  renderHomeCalendar();renderHomeSummaryReport();updateSaveStatus();
 }
 function inventoryGroups(){const inventory=invMap();return[...data.charities].sort((a,b)=>a.localeCompare(b)).map(c=>{const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));return{charity:c,sizes,total:sizes.reduce((sum,x)=>sum+x.n,0)}})}
 function requestedNeedsMap(){
@@ -647,7 +603,7 @@ function reportInventoryHTML(){
     return`<tr${rowClass}><td>${charityCell}</td><td>${sizeCell}</td><td>${onHandCell}</td><td>${requestedCell}</td><td>${differenceCell}</td></tr>`;
   }).join('');
   const grand=rows.find(row=>row.type==='grand');
-  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>Quilts in Storage</th><th>Quilts Needed</th><th>Quilts Still Needed</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
+  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>In Storage</th><th>Quilts Still Needed</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
 }
 function reportNeedsHTML(){
   const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -659,17 +615,17 @@ function distributedNeedsForReport(){
 function distributionReportStatus(n){return remainingNeed(n)===0?'Distributed':'Partially Sent'}
 function reportDistributedHTML(){
   const list=distributedNeedsForReport();
-  return list.length?`<table><thead><tr><th>Date Sent</th><th>Month Needed</th><th>Charity / Size</th><th>Quilts Needed</th><th>Sent / Still Needed</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} still needed</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No distributed quilts recorded yet.</div>';
+  return list.length?`<table><thead><tr><th>Date Sent</th><th>Month Needed</th><th>Charity / Size</th><th>Quilts Needed</th><th>Sent / Still Needed</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} still needed</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No distributed quilts needed recorded yet.</div>';
 }
 function compactDistributedHTML(limit=6){
   const all=distributedNeedsForReport(),list=all.slice(0,limit);
-  if(!list.length)return'<div class="print-note">No distributed quilts recorded.</div>';
+  if(!list.length)return'<div class="print-note">No distributed quilts needed recorded.</div>';
   return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Sent</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'—'}</td><td>${esc(n.charity)}<br>${esc(n.size)}</td><td>${fulfilledQty(n)}${remainingNeed(n)?`<br><span class="small">${remainingNeed(n)} left</span>`:''}</td></tr>`).join('')}</tbody></table>${all.length>list.length?`<div class="print-note">Showing ${list.length} of ${all.length} distribution records.</div>`:''}`;
 }
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){
   const generated=new Date().toLocaleString();
-  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total Quilts in Storage</div><div class="print-metric"><b>${totalNeeded()}</b>Quilts Needed</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><h2>Quilts in Storage and Quilts Needed</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>Quilts Needed</h2>${reportNeedsHTML()}</div><div><h2>Quilts Distributed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total Quilts in Storage</div><div class="print-metric"><b>${totalNeeded()}</b>Quilts Still Needed</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><h2>Inventory and Quilts Still Needed</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>Quilts Still Needed</h2>${reportNeedsHTML()}</div><div><h2>Distributed Quilts Needed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderReports(){
   el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
@@ -696,7 +652,7 @@ function importBackup(e){
   r.onload=()=>{const d=parse(r.result);if(!d||!Array.isArray(d.transactions)||!Array.isArray(d.charities)){notice('settingsNotice',`That is not a valid ${data.appName} backup.`);e.target.value='';return}
     const imported=normalizeData(d),dates=imported.transactions.map(t=>t.date).filter(Boolean).sort(),range=dates.length?`${fmtDate(dates[0])} through ${fmtDate(dates[dates.length-1])}`:'No transaction dates';
     createRecoverySnapshot(`Automatic backup before restoring ${f.name}`,data,true);
-    const answer=prompt(`RESTORE SHARED BACKUP\n\nFile: ${f.name}\nTransactions: ${imported.transactions.length}\nQuilts needed entries: ${imported.needs.length}\nDate range: ${range}\n\nThis will replace the shared information on every synced device. The current data has already been saved as a recovery copy on this device.\n\nType RESTORE SHARED DATA to continue:`);
+    const answer=prompt(`RESTORE SHARED BACKUP\n\nFile: ${f.name}\nTransactions: ${imported.transactions.length}\nQuilts needed: ${imported.needs.length}\nDate range: ${range}\n\nThis will replace the shared information on every synced device. The current data has already been saved as a recovery copy on this device.\n\nType RESTORE SHARED DATA to continue:`);
     if(answer==='RESTORE SHARED DATA'){
       data=imported;save(`Shared backup restored: ${f.name}`);renderAll();notice('settingsNotice','Shared backup restored and queued to sync.',true)
     }else notice('settingsNotice','Restore canceled. Current shared data was not changed.');
@@ -718,12 +674,12 @@ function clearRecoveryHistory(){if(confirm('Delete all local recovery copies?\n\
 
 function clearInventoryCounts(){
   if(!data.transactions.length)return notice('dangerNotice','Inventory counts are already empty.');
-  if(confirm(`Clear all inventory counts and transaction history?\n\nThis deletes ${data.transactions.length} transaction record(s). Quilts needed entries, names, charities, and sizes will be kept.\n\nA recovery copy will be created first.`)){
-    createRecoverySnapshot('Before clearing inventory counts');data.transactions=[];save('Inventory counts cleared');renderAll();notice('dangerNotice','Inventory counts cleared. Quilts needed entries and settings were kept.',true)
+  if(confirm(`Clear all inventory counts and transaction history?\n\nThis deletes ${data.transactions.length} transaction record(s). Quilts needed, names, charities, and sizes will be kept.\n\nA recovery copy will be created first.`)){
+    createRecoverySnapshot('Before clearing inventory counts');data.transactions=[];save('Inventory counts cleared');renderAll();notice('dangerNotice','Inventory counts cleared. Quilts needed and settings were kept.',true)
   }
 }
 function startFreshForRealUse(){
-  const answer=prompt(`START FRESH FOR REAL USE\n\nThis deletes all ${data.transactions.length} inventory transaction(s) and ${data.needs.length} quilts needed entry(s). Names, charities, and sizes will be kept.\n\nA recovery copy will be created first.\n\nType START FRESH to continue:`);
+  const answer=prompt(`START FRESH FOR REAL USE\n\nThis deletes all ${data.transactions.length} inventory transaction(s) and ${data.needs.length} charity request(s). Names, charities, and sizes will be kept.\n\nA recovery copy will be created first.\n\nType START FRESH to continue:`);
   if(answer!=='START FRESH')return notice('dangerNotice','Start Fresh canceled. Nothing was deleted.');
   createRecoverySnapshot('Before starting fresh for real use');data.transactions=[];data.needs=[];save('Started fresh for real use');renderAll();notice('dangerNotice','All test numbers were cleared. Names and lists were kept.',true);
 }
@@ -790,14 +746,14 @@ function makeOnePagePDF(){
   text(36,726,`Generated ${new Date().toLocaleString()}`,7,false);
 
   const metricY=684,metricH=32,metricW=166;
-  [[36,'Total Quilts in Storage',totalOnHand()],[223,'Quilts Needed',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
+  [[36,'Total Quilts in Storage',totalOnHand()],[223,'Quilts Still Needed',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
     rect(x,metricY,metricW,metricH);text(x+8,metricY+18,String(num),14,true);text(x+42,metricY+19,label,8,true);
   });
 
-  text(36,665,'QUILTS IN STORAGE AND QUILTS NEEDED',10,true);line(36,659,576,659,.7);
+  text(36,665,'INVENTORY AND QUILTS NEEDED TO COMPLETE',10,true);line(36,659,576,659,.7);
   const xCharity=36,xSize=180,xOnHand=365,xRequested=455,xDifference=525;
   let y=645;
-  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand-2,y+3,'QUILTS IN',5.5,true);text(xOnHand-6,y-4,'STORAGE',5.5,true);text(xRequested+2,y+3,'QUILTS',5.5,true);text(xRequested-8,y-4,'NEEDED',5.5,true);text(xDifference-12,y+3,'QUILTS STILL',5.5,true);text(xDifference-6,y-4,'NEEDED',5.5,true);line(36,y-8,576,y-8,.5);y-=20;
+  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand,y,'ON HAND',7,true);text(xRequested-7,y+3,'QUILTS NEEDED',5.5,true);text(xRequested-7,y-4,'TO COMPLETE',5.5,true);text(xDifference-10,y,'DIFFERENCE',7,true);line(36,y-8,576,y-8,.5);y-=20;
   const allRows=reportComparisonRows(),maxSummaryRows=20,shownRows=allRows.slice(0,maxSummaryRows);
   shownRows.forEach(row=>{
     const bold=row.type!=='detail';
@@ -927,15 +883,15 @@ function makeFullPDF(){
 
   newPage();
   const metricY=656,metricH=36,metricW=166;
-  [[36,'Total Quilts in Storage',totalOnHand()],[223,'Quilts Needed',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
+  [[36,'Total Quilts in Storage',totalOnHand()],[223,'Quilts Still Needed',totalNeeded()],[410,'Shortage',shortageTotal()]].forEach(([x,label,num])=>{
     rect(x,metricY,metricW,metricH);text(x+9,metricY+20,String(num),15,true);text(x+49,metricY+21,label,8,true);
   });
   page.y=632;
 
-  beginSection('QUILTS IN STORAGE AND QUILTS NEEDED');
+  beginSection('INVENTORY AND QUILTS NEEDED TO COMPLETE');
   const comparisonRows=reportComparisonRows(),diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
   const drawComparisonHeader=()=>{
-    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(360,page.y+3,'QUILTS IN',5.5,true);text(360,page.y-4,'STORAGE',5.5,true);text(456,page.y+3,'QUILTS',5.5,true);text(448,page.y-4,'NEEDED',5.5,true);text(507,page.y+3,'QUILTS STILL',5.5,true);text(513,page.y-4,'NEEDED',5.5,true);
+    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(365,page.y,'ON HAND',7,true);text(448,page.y+3,'QUILTS NEEDED',5.5,true);text(448,page.y-4,'TO COMPLETE',5.5,true);text(515,page.y,'DIFFERENCE',7,true);
     line(36,page.y-8,576,page.y-8,.5);page.y-=21;
   };
   drawComparisonHeader();
@@ -964,7 +920,7 @@ function makeFullPDF(){
 
   beginSection('DISTRIBUTED NEEDS');
   const distributed=distributedNeedsForReport();
-  if(!distributed.length)addParagraph('No distributed quilts recorded.');
+  if(!distributed.length)addParagraph('No distributed quilts needed recorded.');
   distributed.forEach(n=>{
     addParagraph(`${n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered'} - ${n.charity}`,{size:9,bold:true,after:2});
     addParagraph(`${n.size} | Month Needed: ${fmtMonth(n.month)} | Quilts Needed: ${n.qty} | Sent: ${fulfilledQty(n)} | Still Needed: ${remainingNeed(n)} | Status: ${distributionReportStatus(n)}`,{indent:16,after:n.note?1:6});
@@ -1033,6 +989,7 @@ function printFullReport(){renderReports();clearPrintMode();document.body.classL
 function printMeetingReport(){renderReports();clearPrintMode();document.body.classList.add('print-compact');void document.body.offsetHeight;window.print()}
 function exportMeetingPDF(){exportCompactPDF()}
 window.addEventListener('afterprint',clearPrintMode);
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&el('calendarNeedModal')?.classList.contains('open'))closeCalendarNeedModal()});
 window.addEventListener('online',()=>queueExternalBackup('Internet connection restored'));
 function renderAll(){refreshSelects();applyNames();renderHome();renderInventory();renderHistory();renderNeeds();renderReports();renderRecoveryList();updateSaveStatus()}
 
@@ -1054,11 +1011,9 @@ window.lqApplyRemoteData=(remoteData,reason='shared-device update')=>{
 };
 window.lqRefreshSaveStatus=updateSaveStatus;
 
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&el('calendarAddModal')?.classList.contains('open'))closeCalendarAdd()});
-
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.6 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.7 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.6',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.7',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

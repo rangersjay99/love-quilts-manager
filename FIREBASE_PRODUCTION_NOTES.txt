@@ -1,3 +1,3 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.8.6
+FIREBASE PRODUCTION NOTES — UPDATE 7.8.7
 
-Update 7.8.6 adds the Home-screen calendar, direct calendar editing, and restores the missing Add to Quilts Needed function. Authentication, Firestore paths, synchronization behavior, and the stored-data structure are unchanged.
+Update 7.8.7 changes the Home shortcuts and calendar workflow only. Authentication, Firestore paths, synchronization behavior, and stored-data structure are unchanged.

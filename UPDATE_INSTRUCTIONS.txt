@@ -1,9 +1,17 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.6
+LOVE QUILTS MANAGER — UPDATE 7.8.7
+Released: July 22, 2026
 
-1. Extract this ZIP file.
-2. Open the GitHub repository.
-3. Choose Add file → Upload files.
-4. Upload every extracted file and folder, not the ZIP itself.
-5. Commit the changes.
-6. Wait about one minute, then reopen or refresh the app.
-7. Confirm the splash screen shows Update 7.8.6.
+BEFORE UPDATING
+1. Confirm both devices show all changes synced.
+2. Export a current backup from Settings.
+3. Download a backup ZIP of the current GitHub repository.
+
+UPLOAD
+1. Extract this ZIP.
+2. Upload every extracted file to the GitHub repository main/root folder.
+3. Replace files with the same names.
+4. Do not delete or replace the firebase-test folder.
+5. Wait for GitHub Pages to publish.
+6. Close and reopen the app on each device. Refresh once if the old version remains.
+
+This update does not clear inventory, quilts needed, settings, or shared data.

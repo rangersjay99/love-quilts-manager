@@ -1,9 +1,14 @@
-LOVE QUILTS MANAGER UPDATE 7.8.6 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.7 TEST CHECKLIST
 
-1. Confirm the splash screen says Update 7.8.6.
-2. On Home, locate the All Quilts Calendar.
-3. Press Add Quilts Needed in a month and confirm the pop-up opens with that month selected.
-4. Choose a charity and size, enter a quantity, and save.
-5. Confirm the new entry appears in the correct calendar month and syncs to the other signed-in device.
-6. Tap the new entry and confirm direct calendar editing still works.
-7. Cancel the pop-up and confirm no record is added.
+[ ] App opens and shows Update 7.8.7.
+[ ] Existing inventory and quilts-needed entries remain present.
+[ ] Home shows Total Quilts in Storage.
+[ ] ＋ Add Quilts opens Inventory in Love Quilts In mode.
+[ ] The rest of the storage card opens Current Inventory details.
+[ ] Home All Quilts Calendar still displays all 12 months.
+[ ] Each month still has ＋ Add Quilts Needed.
+[ ] Month add pop-up opens with the selected month prefilled.
+[ ] Tapping an existing calendar entry still opens direct editing.
+[ ] Main Add to Quilts Needed button works.
+[ ] Both approved devices sync changes normally.
+[ ] Reports and printing still work.
