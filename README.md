@@ -1,6 +1,13 @@
 # Love Quilts Manager
 
-Current release: Update 7.7.7 — July 22, 2026
+Current release: Update 7.8.1 — July 22, 2026
+
+## Update 7.8.1 — At-a-Glance printable summary
+
+- Adds a Print Summary button to the opening screen.
+- Prints the overall On Hand, Needs Remaining, and Difference totals.
+- Prints the matching charity breakdown in a clean one-page report.
+- No changes to authentication, Firebase sync, or stored data.
 
 ## Update 7.7.7 — In-place Needs editing
 

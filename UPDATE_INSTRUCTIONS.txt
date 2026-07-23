@@ -1,15 +1,11 @@
-LOVE QUILTS MANAGER — UPDATE 7.7.9
+LOVE QUILTS MANAGER — UPDATE 7.8.1
 
 1. Extract this ZIP file.
-2. Open the GitHub repository on the laptop.
+2. Open the GitHub repository.
 3. Choose Add file, then Upload files.
 4. Upload every extracted file and folder. Do not upload the ZIP itself.
 5. Commit the changes.
-6. Wait about one minute, then fully close and reopen the app.
-7. Confirm the splash screen shows Update 7.7.9.
+6. Wait about one minute, then close and reopen the app.
+7. Confirm the splash screen shows Update 7.8.1.
 
-FIRST CHECKS
-- Open Reports and confirm the numeric headings are On Hand, Requested Needs, Difference.
-- Confirm charity totals and Grand Total align under those headings.
-- Open Planned Needs and press Edit. The existing card fields should become editable without changing to a separate Edit Planned Need layout.
-- Press Update Distribution and confirm the sent quantity and date edit in the same card.
+This update does not change Firebase settings or the saved-data format.

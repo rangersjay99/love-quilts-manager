@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.7.9';
+const VERSION='7.8.1';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -457,10 +457,51 @@ function renderNeeds(){
   if(editNeedId&&!data.needs.some(n=>n.id===editNeedId))editNeedId=null;
   renderNeedsCalendar();const allocations=allocateNeedsForPlanning();
   el('needsList').innerHTML=allocations.length?allocations.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No planned needs entered yet.</div>';
-  const next=allocations.filter(item=>item.n.month>=monthNow()&&item.remaining>0);
-  el('homeNeedsList').innerHTML=next.length?next.map(item=>needCard(item.n,false,item)).join(''):'<div class="empty">No upcoming needs entered yet.</div>';
 }
-function renderHome(){el('homeOnHand').textContent=totalOnHand();el('homeNeeded').textContent=totalNeeded();el('homeShortage').textContent=shortageTotal();updateSaveStatus()}
+function homeCharitySummaries(){
+  const inventory=invMap(),remaining=requestedNeedsMap();
+  const names=unique([
+    ...data.charities,
+    ...Object.keys(inventory).map(key=>key.slice(0,key.lastIndexOf('|'))),
+    ...Object.keys(remaining).map(key=>key.slice(0,key.lastIndexOf('|')))
+  ]).sort((a,b)=>a.localeCompare(b));
+  return names.map(charity=>{
+    const prefix=charity+'|';
+    const onHand=Object.entries(inventory).filter(([key])=>key.startsWith(prefix)).reduce((sum,[,value])=>sum+Number(value||0),0);
+    const needsRemaining=Object.entries(remaining).filter(([key])=>key.startsWith(prefix)).reduce((sum,[,value])=>sum+Number(value||0),0);
+    return{charity,onHand,needsRemaining,difference:onHand-needsRemaining};
+  });
+}
+function renderHomeCharityBreakdown(){
+  const box=el('homeCharityBreakdown');if(!box)return;
+  const rows=homeCharitySummaries();
+  box.innerHTML=rows.length?rows.map(row=>{
+    const state=row.difference<0?'has-shortage':row.difference>0?'has-surplus':'balanced';
+    const diffClass=differenceClass(row.difference);
+    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>On Hand</span></div><div><b>${row.needsRemaining}</b><span>Needs Remaining</span></div><div><b class="${diffClass}">${signedDifference(row.difference)}</b><span>Difference</span></div></div></button>`;
+  }).join(''):'<div class="empty">No charities have been entered yet.</div>';
+}
+function openHomeCharity(charity){
+  const filter=el('calendarCharity');if(filter)filter.value=charity;
+  showView('needs');
+  if(filter){filter.value=charity;renderNeedsCalendar()}
+}
+function renderHomeSummaryReport(){
+  const target=el('homeSummaryReport');if(!target)return;
+  const rows=homeCharitySummaries(),onHand=totalOnHand(),needsRemaining=totalNeeded(),difference=onHand-needsRemaining;
+  const generated=new Date().toLocaleString();
+  const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.needsRemaining}</td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
+  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · At a Glance Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>Total On Hand</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>Needs Remaining</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>Difference</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>On Hand</th><th>Needs Remaining</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+}
+function renderHome(){
+  const difference=totalOnHand()-totalNeeded();
+  el('homeOnHand').textContent=totalOnHand();
+  el('homeNeeded').textContent=totalNeeded();
+  const differenceBox=el('homeDifference');
+  differenceBox.textContent=signedDifference(difference);
+  differenceBox.className=differenceClass(difference);
+  renderHomeCharityBreakdown();renderHomeSummaryReport();updateSaveStatus();
+}
 function inventoryGroups(){const inventory=invMap();return[...data.charities].sort((a,b)=>a.localeCompare(b)).map(c=>{const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));return{charity:c,sizes,total:sizes.reduce((sum,x)=>sum+x.n,0)}})}
 function requestedNeedsMap(){
   const m={};
@@ -507,7 +548,7 @@ function reportInventoryHTML(){
     return`<tr${rowClass}><td>${charityCell}</td><td>${sizeCell}</td><td>${onHandCell}</td><td>${requestedCell}</td><td>${differenceCell}</td></tr>`;
   }).join('');
   const grand=rows.find(row=>row.type==='grand');
-  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th><th>Requested Needs</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
+  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>On Hand</th><th>Needs Remaining</th><th>Difference</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
 }
 function reportNeedsHTML(){
   const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -529,7 +570,7 @@ function compactDistributedHTML(limit=6){
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){
   const generated=new Date().toLocaleString();
-  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><h2>Inventory and Requested Needs</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}</div><div><h2>Distributed Needs</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>Total On Hand</div><div class="print-metric"><b>${totalNeeded()}</b>Upcoming Needs</div><div class="print-metric"><b>${shortageTotal()}</b>Shortage</div></div><h2>Inventory and Needs Remaining</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>Upcoming Needs</h2>${reportNeedsHTML()}</div><div><h2>Distributed Needs</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderReports(){
   el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=shortageTotal();
@@ -654,17 +695,17 @@ function makeOnePagePDF(){
     rect(x,metricY,metricW,metricH);text(x+8,metricY+18,String(num),14,true);text(x+42,metricY+19,label,8,true);
   });
 
-  text(36,665,'INVENTORY AND REQUESTED NEEDS',10,true);line(36,659,576,659,.7);
+  text(36,665,'INVENTORY AND NEEDS REMAINING',10,true);line(36,659,576,659,.7);
   const xCharity=36,xSize=180,xOnHand=365,xRequested=455,xDifference=525;
   let y=645;
-  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand,y,'ON HAND',7,true);text(xRequested,y,'REQUESTED NEEDS',7,true);text(xDifference-10,y,'DIFFERENCE',7,true);line(36,y-5,576,y-5,.5);y-=16;
+  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand,y,'ON HAND',7,true);text(xRequested,y,'NEEDS REMAINING',7,true);text(xDifference-10,y,'DIFFERENCE',7,true);line(36,y-5,576,y-5,.5);y-=16;
   const allRows=reportComparisonRows(),maxSummaryRows=20,shownRows=allRows.slice(0,maxSummaryRows);
   shownRows.forEach(row=>{
     const bold=row.type!=='detail';
     if(row.type!=='detail')line(36,y+8,576,y+8,.35);
     text(xCharity,y,pdfFit(row.charity,row.type==='detail'?25:34),7.2,bold);
     if(row.type==='detail')text(xSize,y,pdfFit(row.size,28),7.2,false);
-    text(xOnHand,y,String(row.onHand),7.2,true);
+    text(xOnHand,y,String(row.onHand),7.2,bold);
     text(xRequested,y,String(row.requestedNeeds),7.2,bold);
     text(xDifference,y,signedDifference(row.difference),7.2,row.type!=='detail',diffColor(row.difference));
     y-=12;
@@ -792,10 +833,10 @@ function makeFullPDF(){
   });
   page.y=632;
 
-  beginSection('INVENTORY AND REQUESTED NEEDS');
+  beginSection('INVENTORY AND NEEDS REMAINING');
   const comparisonRows=reportComparisonRows(),diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
   const drawComparisonHeader=()=>{
-    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(365,page.y,'ON HAND',7,true);text(455,page.y,'REQUESTED NEEDS',7,true);text(515,page.y,'DIFFERENCE',7,true);
+    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(365,page.y,'ON HAND',7,true);text(455,page.y,'NEEDS REMAINING',7,true);text(515,page.y,'DIFFERENCE',7,true);
     line(36,page.y-5,576,page.y-5,.5);page.y-=17;
   };
   drawComparisonHeader();
@@ -805,7 +846,7 @@ function makeFullPDF(){
     if(row.type!=='detail')line(36,page.y+8,576,page.y+8,.35);
     text(36,page.y,pdfFit(row.charity,row.type==='detail'?25:34),7.6,bold);
     if(row.type==='detail')text(185,page.y,pdfFit(row.size,29),7.6,false);
-    text(365,page.y,String(row.onHand),7.6,true);
+    text(365,page.y,String(row.onHand),7.6,bold);
     text(455,page.y,String(row.requestedNeeds),7.6,bold);
     text(525,page.y,signedDifference(row.difference),7.6,row.type!=='detail',diffColor(row.difference));
     page.y-=14;
@@ -887,7 +928,8 @@ async function shareReport(kind){
 }
 function shareFullReport(){shareReport('full')}
 function shareCompactReport(){shareReport('compact')}
-function clearPrintMode(){document.body.classList.remove('print-full','print-compact')}
+function clearPrintMode(){document.body.classList.remove('print-full','print-compact','print-home-summary')}
+function printHomeSummary(){renderHomeSummaryReport();clearPrintMode();document.body.classList.add('print-home-summary');void document.body.offsetHeight;window.print()}
 function printFullReport(){renderReports();clearPrintMode();document.body.classList.add('print-full');void document.body.offsetHeight;window.print()}
 function printMeetingReport(){renderReports();clearPrintMode();document.body.classList.add('print-compact');void document.body.offsetHeight;window.print()}
 function exportMeetingPDF(){exportCompactPDF()}

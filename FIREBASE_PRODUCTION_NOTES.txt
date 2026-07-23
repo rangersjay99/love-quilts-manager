@@ -1,5 +1,5 @@
-FIREBASE PRODUCTION NOTES — UPDATE 7.7.9
+FIREBASE PRODUCTION NOTES — UPDATE 7.8.1
 
 No Firebase configuration changes are required.
 
-Update 7.7.9 changes only the Planned Needs editing interface and report column presentation. Authentication, Firestore paths, synchronization behavior, and stored-data structure are unchanged.
+Update 7.8.1 changes the At-a-Glance presentation and report wording only. Authentication, Firestore paths, synchronization behavior, and stored-data structure are unchanged.

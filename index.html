@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.7.7">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.7.7">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.7.7">
+<link rel="manifest" href="manifest-v7.json?v=7.8.1">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v8.png?v=7.8.1">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v8.png?v=7.8.1">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -39,8 +39,20 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .metric strong{display:block;font-size:29px;line-height:1;color:var(--plum)}
 .metric span{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
 .metric.short strong{color:var(--red)}
+.home-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.home-section-heading h3{margin:0}.home-section-heading span{font-size:12px;color:var(--muted)}
+.home-charity-list{display:grid;gap:9px}
+.home-charity-card{width:100%;padding:12px;border:1px solid var(--line);border-left:5px solid var(--plum);border-radius:14px;background:#fff;color:var(--ink);text-align:left;cursor:pointer}
+.home-charity-card.has-shortage{border-left-color:var(--red);background:#fff7f8}.home-charity-card.has-surplus{border-left-color:var(--green);background:#f7fcf8}.home-charity-card.balanced{border-left-color:var(--gold);background:#fffcf5}
+.home-charity-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}.home-charity-heading strong{font-size:16px;color:var(--plum-dark)}.home-charity-heading span{font-size:11px;color:var(--muted);font-weight:750}
+.home-charity-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.home-charity-metrics div{padding:9px 5px;border-radius:10px;background:rgba(255,255,255,.8);text-align:center}.home-charity-metrics b{display:block;font-size:21px}.home-charity-metrics span{display:block;margin-top:3px;font-size:10px;color:var(--muted)}
 .home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .home-actions button{min-height:76px;border:0;border-radius:15px;color:#fff;font-size:17px;font-weight:800;padding:12px}
+.home-print-summary{margin-top:13px}.home-print-note{margin-top:6px;text-align:center}
+.home-summary-report h1{margin:0 0 3px;font-size:24px;color:#111}.home-summary-report .summary-meta{margin-bottom:14px;color:#555;font-size:11px}
+.home-summary-report .summary-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0 16px}
+.home-summary-report .summary-metric{padding:10px;border:1px solid #888;text-align:center}.home-summary-report .summary-metric b{display:block;font-size:22px}.home-summary-report .summary-metric span{font-size:10px;color:#555}
+.home-summary-report table{table-layout:fixed}.home-summary-report th:not(:first-child),.home-summary-report td:not(:first-child){text-align:right}
 .btn-plum{background:var(--plum)}.btn-teal{background:var(--teal)}.btn-blue{background:var(--blue)}.btn-gold{background:var(--gold)}
 label{display:block;margin-top:12px;font-weight:750}
 input,select,textarea{width:100%;max-width:100%;min-width:0;min-height:48px;margin-top:7px;padding:13px;border:1px solid #cfc4ce;border-radius:12px;background:#fff;color:var(--ink)}
@@ -193,6 +205,15 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   body.print-compact #meetingReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
   body.print-compact #meetingReport .report-summary-table{font-size:7.4px;table-layout:fixed}
   body.print-compact #meetingReport .report-summary-table th,body.print-compact #meetingReport .report-summary-table td{padding:2px 2px}
+  body.print-home-summary .view{display:none!important}
+  body.print-home-summary #reports.view{display:none!important}
+  body.print-home-summary #home.view{display:block!important}
+  body.print-home-summary #home>.card{display:none!important}
+  body.print-home-summary #homeSummaryReport{display:block!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important}
+  body.print-home-summary #homeSummaryReport table{font-size:11px;line-height:1.2}
+  body.print-home-summary #homeSummaryReport th,body.print-home-summary #homeSummaryReport td{padding:6px 5px;border-bottom:1px solid #aaa}
+  body.print-home-summary #homeSummaryReport tbody tr{break-inside:avoid-page}
+  body.print-home-summary #homeSummaryReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
 }
 
 
@@ -261,14 +282,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.7.7" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v8.png?v=7.8.1" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.7.7</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.1</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -286,11 +307,18 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <h2>At a Glance</h2>
     <div class="grid3">
       <div class="metric"><strong id="homeOnHand">0</strong><span>Total On Hand</span></div>
-      <div class="metric"><strong id="homeNeeded">0</strong><span>Upcoming Needs</span></div>
-      <div class="metric short"><strong id="homeShortage">0</strong><span>Shortage</span></div>
+      <div class="metric"><strong id="homeNeeded">0</strong><span>Needs Remaining</span></div>
+      <div class="metric"><strong id="homeDifference">0</strong><span>Difference</span></div>
     </div>
     <div id="homeSaveStatus" class="save-status">Saved automatically on this device.</div>
   </div>
+  <div class="card">
+    <div class="home-section-heading"><h3>By Charity</h3><span>Tap a charity for details</span></div>
+    <div id="homeCharityBreakdown" class="home-charity-list"></div>
+    <button type="button" class="primary home-print-summary" onclick="printHomeSummary()">Print Summary</button>
+    <div class="small home-print-note">Prints the totals and charity breakdown shown on this screen.</div>
+  </div>
+  <div id="homeSummaryReport" class="card print-only home-summary-report" aria-hidden="true"></div>
   <div class="card">
     <h3>Choose an Action</h3>
     <div class="home-actions">
@@ -300,7 +328,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <button class="btn-gold" onclick="showView('settings')">Settings</button>
     </div>
   </div>
-  <div class="card"><h3>Upcoming Needs</h3><div id="homeNeedsList"></div></div>
 </section>
 
 <section id="inventory" class="view">
