@@ -1,6 +1,8 @@
-Love Quilts Manager Update 7.8.4
+Love Quilts Manager Update 7.8.5
 
-- Renames “Needs Remaining” to “Quilts Requested.”
-- Renames “Need/Needs” quantity labels to “Quilts Requested.”
-- Applies the clearer wording to At a Glance, charity cards, quilt request cards, reports, print summary, and PDFs.
-- No Firebase, synchronization, or saved-data format changes.
+- Fixes the Add to Quilts Needed button.
+- Replaces the Home-screen charity list with the All Quilts Calendar.
+- Allows calendar entries to be edited, saved, canceled, or deleted directly inside the calendar.
+- Renames Quilts Requested to Quilts Needed throughout the app and reports.
+- Keeps Quilts in Storage and Quilts Still Needed wording.
+- Does not change Firebase paths or the saved-data structure.

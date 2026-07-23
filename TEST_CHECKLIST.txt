@@ -1,8 +1,8 @@
-LOVE QUILTS MANAGER UPDATE 7.8.4 TEST CHECKLIST
+LOVE QUILTS MANAGER UPDATE 7.8.5 TEST CHECKLIST
 
-1. Confirm the splash screen says Update 7.8.4.
-2. On At a Glance, verify “Quilts Requested” appears in the top totals and every charity block.
-3. Open Quilts Requested and verify request quantities are labeled “Quilts Requested.”
-4. Open Reports and verify remaining quantities are labeled “Quilts Requested.”
-5. Print the At-a-Glance Summary and verify the same wording appears.
-6. Confirm existing inventory, quilt requests, login, and syncing remain intact.
+1. Confirm the splash screen says Update 7.8.5.
+2. On Home, confirm the All Quilts Calendar appears below the totals instead of the charity list.
+3. Tap a calendar entry, change the quantity or another field, and save directly in the calendar.
+4. Open Quilts Needed, enter a new need, and confirm Add to Quilts Needed saves it.
+5. Confirm Quilts Needed replaces Quilts Requested throughout the app and reports.
+6. Confirm a second signed-in device receives the saved changes.
