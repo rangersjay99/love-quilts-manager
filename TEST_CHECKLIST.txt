@@ -1,32 +1,53 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.20 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.21 TEST CHECKLIST
 
 VERSION AND CACHE
-[ ] Splash and About show Update 7.8.20.
-[ ] Previously installed phone receives the new app shell after reopening or refreshing.
+[ ] Splash, Settings Change Log, and About show Update 7.8.21.
+[ ] Previously installed phone receives the updated app shell after reopening or refreshing.
 
-CALENDAR MONTH COLORS
-[ ] Color key appears above the Calendar on Home.
-[ ] Color key appears above the Calendar on Quilts Needed.
-[ ] Past month with all demand met is light green.
-[ ] Past month with unmet demand is light red.
-[ ] Future month fully covered early is light green.
-[ ] Future month that is partial is light yellow.
-[ ] Future month that is short is light yellow.
-[ ] Future month with no request is light yellow.
+HOME AND CALENDAR
+[ ] Calendar remains immediately after At a Glance.
+[ ] Available in Storage retains its direct + Add Quilts button.
+[ ] On Hold / Storage shortcut and count appear in At a Glance.
+[ ] Calendar key appears below the Calendar on Home.
+[ ] Calendar key appears below the Calendar on Quilts Needed.
+[ ] Past met month is light green.
+[ ] Past unmet month is light red.
+[ ] Future covered month is light green.
+[ ] Other future months are light yellow.
 [ ] Current month has a bold plum border.
-[ ] Uncovered current month remains neutral rather than yellow.
-[ ] Calendar remains first after At a Glance.
+[ ] Charity Met and Short sections remain green and red.
 
-CHARITY COLORS INSIDE EACH MONTH
-[ ] Charity section is light green when all of that charity's demand is met or covered.
-[ ] Charity section is light red when that charity is still short.
-[ ] Multiple sizes for the same charity are grouped into one charity section.
-[ ] If one size is short, the combined charity section remains light red.
-[ ] Tapping an individual size line still opens the correct Calendar editor.
+CALENDAR ACTIONS
+[ ] Tap an individual charity/size request.
+[ ] Action menu offers Edit Need, Distribute Quilts, and View Details.
+[ ] Edit Need opens the correct record.
+[ ] View Details opens the corresponding Need entry.
+[ ] Distribute Quilts prefills charity, size, and month.
+[ ] Distribution shows the correct requested, already distributed, and available counts.
+[ ] Saving distribution deducts active inventory once and updates Home, Reports, and Calendar.
 
-RETAINED FEATURES
-[ ] Third Reports summary block is readable on iPhone.
-[ ] Yearly Statistics remain correct.
-[ ] Sync Now works.
+ON HOLD / STORAGE
+[ ] Move a test quantity from active inventory to On Hold / Storage.
+[ ] Active inventory decreases and held count increases by the same quantity.
+[ ] Hold record shows charity, size, date, and location/reason.
+[ ] Return part of the held quantity to active inventory.
+[ ] Distribute the remaining held quantity.
+[ ] Distribution from hold is counted as distributed but does not deduct active inventory again.
+[ ] Hold-related protected History records cannot be edited or deleted unsafely.
+
+PRINTING
+[ ] Print Summary opens normally on iPhone without first using Export CSV.
+[ ] Summary fits on one printed page using normal iPhone print settings.
+[ ] Print 12-Month Calendar uses landscape orientation.
+[ ] All 12 months appear in a 3×4 layout on one page.
+[ ] Selected year and active filters appear on the Calendar printout.
+[ ] Calendar color/status key appears at the bottom of the printout.
+
+REGRESSION SAFEGUARDS
 [ ] Set Current Count can set inventory to zero.
-[ ] Distribution safeguards still prevent duplicate deductions.
+[ ] 26 available and 26 distributed results in 0 active inventory.
+[ ] Repeated save does not deduct a second time.
+[ ] Correcting a distribution restores/deducts only the difference.
+[ ] Yearly Statistics remain correct.
+[ ] Sync Now works and displays a clear status.
+[ ] Existing backup/export/import functions still work.

@@ -1,21 +1,21 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.20
+LOVE QUILTS MANAGER — UPDATE 7.8.21
 
+BEFORE UPDATING
 1. Export an in-app backup and keep the current working ZIP.
-2. Open the unzipped 7.8.20 folder.
-3. Select every file and folder inside it and upload them to the root of the existing GitHub Pages repository, replacing older copies.
-4. Commit the files and allow GitHub Pages to publish.
-5. Open the app and confirm the splash or About screen says Update 7.8.20.
-6. On iPhone/iPad, fully close and reopen the installed app. If an older version still appears, refresh the website once, then reopen the installed app.
+2. Unzip the 7.8.21 download on the laptop.
 
-VERIFY THE CALENDAR
+UPLOAD TO GITHUB PAGES
+3. Open the unzipped 7.8.21 folder.
+4. Select every file and folder INSIDE it.
+5. Upload those contents to the root of the existing GitHub Pages repository, replacing older copies.
+6. Commit the files and allow GitHub Pages to publish.
 
-- Past demand met is light green.
-- Past demand not met is light red.
-- A future month fully covered early is light green.
-- Other future months are light yellow, including months with no request.
-- The current month has a bold plum border and stays neutral unless fully covered.
-- A charity section is light green when that charity is met/covered.
-- A charity section is light red when that charity is still short.
-- The expanded color key appears above the Calendar.
+CONFIRM THE UPDATE
+7. Open the app and confirm the splash, Settings Change Log, or About screen says Update 7.8.21.
+8. On iPhone/iPad, fully close and reopen the installed app. If an older version remains, open the website once in Safari, refresh it, then reopen the installed app.
 
-Existing data and Firebase synchronization are retained.
+WEEKEND VERIFICATION
+9. Follow `WEEKEND_TEST_CHECKLIST.txt` with a small test record before using large live quantities.
+10. Confirm Sync Now after each test and verify the same balances on every approved device.
+
+Existing local data, Firebase collection paths, and current Firestore Rules are retained. Update 7.8.21 adds hold records to the existing shared settings document automatically; it does not require clearing data, reinitializing Firebase, or reinstalling the app.

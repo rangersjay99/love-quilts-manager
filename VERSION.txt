@@ -1,16 +1,24 @@
-Love Quilts Manager Update 7.8.20
+Love Quilts Manager Update 7.8.21
+Weekend Test Build
 Released: July 24, 2026
 
-Future-month and charity status colors.
+NEW IN THIS UPDATE
+- Change Log in Settings.
+- Calendar color/status key moved below both Calendars.
+- Calendar request actions: Edit Need, Distribute Quilts, and View Details.
+- Calendar distribution prefills charity, size, and month.
+- On Hold / Storage workflow with return-to-inventory and distribute-from-hold actions.
+- On Hold / Storage Home shortcut and count.
+- Printable 12-month landscape Calendar in a one-page 3×4 layout.
+- Improved iPhone one-page Summary printing.
+- Weekend live-device verification checklist.
 
-This update applies the agreed Calendar rules:
-- Past demand met: light green.
-- Past demand not met: light red.
-- Future month fully covered early: light green.
-- Other future months: light yellow.
-- Current month: bold plum border; neutral unless fully covered.
-- Charity demand met/covered: light green section.
-- Charity still short: light red section.
-- Multiple sizes for one charity are grouped under one combined charity status.
+RETAINED
+- Verified month and charity Calendar colors from 7.8.20.
+- Home/Reports wording and third Reports summary-block layout.
+- Yearly statistics.
+- Sync Now and Firebase synchronization.
+- Set Current Count, including setting inventory to zero.
+- Distribution confirmation, duplicate-deduction prevention, correction safeguards, and protected linked records.
 
-All 7.8.19 Home, Reports, yearly statistics, syncing, exact-count tools, audit history, zero-balance handling, and distribution safeguards are retained.
+Version 8 remains reserved for a later major release.

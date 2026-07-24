@@ -1,16 +1,18 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Verified July 24, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.20
+IMPLEMENTED THROUGH UPDATE 7.8.21
 
 HOME
 - At a Glance remains first.
 - Calendar is immediately after At a Glance.
+- On Hold / Storage has a direct Home shortcut and current held-quilt count.
 - This Year shows Quilts Made This Year and Quilts Distributed This Year.
 - By Charity shows Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
+- The Available in Storage summary card retains its direct + Add Quilts button.
 - Common summary cards remain tappable for direct actions.
 
-CALENDAR — VERIFIED COLOR RULES
+CALENDAR
 - Past demand met: light green.
 - Past demand not met: light red.
 - Future month fully covered early: light green.
@@ -21,25 +23,42 @@ CALENDAR — VERIFIED COLOR RULES
 - Charity still short: light red charity section.
 - For past months, a charity is met only when its requested quilts were completed/distributed.
 - For current and future months, a charity is met when available inventory covers all remaining demand for that charity in the month.
-- A visible color key appears above the Calendar.
-- Calendar supports direct add/edit.
+- The Calendar color/status key is at the bottom of both Calendars.
+- Tapping a request opens Edit Need, Distribute Quilts, and View Details.
+- Calendar distribution prefills charity, size, and month and uses the protected distribution workflow.
+- A dedicated Print 12-Month Calendar button produces a landscape 3×4 layout.
 
-REPORTS
+REPORTS AND PRINTING
 - Home and Reports use Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
 - Third Reports summary block is full-width on iPhone.
 - Alternating report-row shading remains.
 - Yearly Statistics includes quilts made, quilts distributed, net inventory change, current inventory, charities served, and lifetime distributed.
+- Print Summary uses delayed print preparation for iPhone and a compact one-page layout.
+- On Hold / Storage distributions appear in Reports and PDF output.
 
-INVENTORY AND DISTRIBUTION
+INVENTORY, DISTRIBUTION, AND HOLD STORAGE
 - Set Current Count supports exact counts including zero.
 - Distribution deducts immediately, including 26 out of 26 resulting in zero.
 - Repeat-save protection prevents duplicate deduction.
 - Distribution correction restores or deducts only the difference.
 - Linked distribution transactions are protected.
+- On Hold / Storage removes quilts from active inventory without counting them as distributed.
+- Held records include quantity, charity, size, date, and location/reason.
+- Held quilts can be returned to active inventory or distributed later.
+- Distribution from hold does not deduct active inventory a second time.
+- Hold-linked history records are protected from unsafe editing/deletion.
 
-SYNC
+SETTINGS AND SYNC
+- Change Log shows the current version and newest-first release notes.
 - Sync Now remains visible in the banner and Settings.
-- Firebase syncing is retained.
+- Firebase syncing and backup/restore are retained.
+- On Hold / Storage records and their protected transaction links sync through the existing Firebase paths without a Firestore Rules change.
+
+WEEKEND LIVE VERIFICATION STILL REQUIRED
+- Confirm real synced data appears identically on all approved devices.
+- Confirm a real full distribution takes the selected active balance to zero on every device.
+- Confirm iPhone Print Summary and Print 12-Month Calendar using the actual print/share dialog.
+- Confirm Calendar action prefilling and On Hold / Storage with real records.
 
 VERSIONING
 - Continue with 7.8.x updates.

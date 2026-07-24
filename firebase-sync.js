@@ -179,7 +179,10 @@ function normalizeSettings(source = {}) {
     homeCalendarHeading: cleanString(source.homeCalendarHeading || 'All Quilts Calendar'),
     homeActionsHeading: cleanString(source.homeActionsHeading || 'Choose an Action'),
     charities: Array.isArray(source.charities) ? source.charities.map(cleanString) : [],
-    sizes: Array.isArray(source.sizes) ? source.sizes.map(cleanString) : []
+    sizes: Array.isArray(source.sizes) ? source.sizes.map(cleanString) : [],
+    // Hold records stay in the existing settings/main document so the feature
+    // syncs without adding a new Firestore path or requiring new Rules.
+    holds: Array.isArray(source.holds) ? source.holds.map(normalizeHold).filter(x => x.id) : []
   };
 }
 
@@ -194,6 +197,7 @@ function normalizeTransaction(source = {}) {
     adjustment: Number(source.adjustment || 0),
     note: cleanString(source.note || ''),
     sourceNeedId: cleanString(source.sourceNeedId || ''),
+    sourceHoldId: cleanString(source.sourceHoldId || ''),
     sourceType: cleanString(source.sourceType || ''),
     createdBy: cleanString(source.createdBy || ''),
     createdAt: cleanString(source.createdAt || ''),
@@ -218,6 +222,28 @@ function normalizeNeed(source = {}) {
     fulfilledAt: cleanString(source.fulfilledAt || ''),
     fulfilledHighWater: Math.max(fulfilledQty, Math.floor(Number(source.fulfilledHighWater ?? fulfilledQty) || 0)),
     autoOutQty: Math.max(0, Math.floor(Number(source.autoOutQty || 0))),
+    createdBy: cleanString(source.createdBy || ''),
+    createdAt: cleanString(source.createdAt || ''),
+    updatedBy: cleanString(source.updatedBy || ''),
+    updatedAt: cleanString(source.updatedAt || '')
+  };
+}
+
+function normalizeHold(source = {}) {
+  const qty = Math.max(1, Math.floor(Number(source.qty || 1)));
+  const returned = Math.max(0, Math.floor(Number(source.returnedQty || 0)));
+  const distributed = Math.max(0, Math.floor(Number(source.distributedQty || 0)));
+  const used = Math.min(qty, returned + distributed);
+  const safeReturned = Math.min(returned, used);
+  return {
+    id: cleanString(source.id),
+    date: cleanString(source.date),
+    charity: cleanString(source.charity),
+    size: cleanString(source.size),
+    qty,
+    location: cleanString(source.location || source.reason || ''),
+    returnedQty: safeReturned,
+    distributedQty: Math.max(0, used - safeReturned),
     createdBy: cleanString(source.createdBy || ''),
     createdAt: cleanString(source.createdAt || ''),
     updatedBy: cleanString(source.updatedBy || ''),
@@ -601,7 +627,7 @@ async function initializeProduction() {
   if (!currentUser || !initialCloudReady || cloudInitialized || syncing) return;
   await waitForBridge();
   const localData = normalizeAppData(window.lqGetData());
-  const countText = `${localData.transactions.length} inventory transactions and ${localData.needs.length} planned needs`;
+  const countText = `${localData.transactions.length} inventory transactions, ${localData.needs.length} planned needs, and ${localData.holds.length} On Hold / Storage records`;
   const typed = prompt(
     `This will create the real shared inventory from this device.\n\nIt will upload ${countText}.\n\nType START SHARED INVENTORY exactly to continue.`
   );
