@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.13';
+const VERSION='7.8.14';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -373,7 +373,9 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice'){
   }
   if(id){const i=data.needs.findIndex(n=>n.id===id);if(i<0)return false;data.needs[i]=r}else data.needs.push(r);
   save(id?'Charity request edited':'Charity request added');editNeedId=null;editNeedMode='details';renderAll();
-  if(id)notice('needNotice','Charity request changes saved.',true);else notice('needNotice',sentRaw>=needQty?'Charity request marked distributed.':'Charity request saved.',true);
+  const balance=onHand(r.charity,r.size);
+  if(autoOutNeeded>0)notice('needNotice',`Distribution saved. ${autoOutNeeded} removed from inventory; ${balance} now remain for ${r.charity} — ${r.size}.`,true);
+  else if(id)notice('needNotice','Charity request changes saved.',true);else notice('needNotice',sentRaw>=needQty?'Charity request marked distributed.':'Charity request saved.',true);
   return true;
 }
 function saveNeed(){
@@ -456,8 +458,8 @@ function needInlineEditor(n,stateClass,stateLabel,info,editorMode='details'){
       <div><b data-inline-remaining>${Math.max(0,(Number(n.qty)||1)-distributionQty)}</b><span>Still Needed</span></div>`
     :`<div class="planner-edit-cell"><input name="qty" type="number" inputmode="numeric" min="1" step="1" value="${Number(n.qty)||1}" aria-label="Quilts requested"><span>Quilts Needed</span></div>${metricTwo}${metricThree}`;
   const distributionFields=editorMode==='distribution'
-    ?`<div class="direct-distribution-row"><label>Date Distributed<input name="fulfilledDate" type="date" value="${esc(distributionDate)}"></label><label class="check-row inline-check"><input name="recordOut" type="checkbox"><span>Record newly distributed quantity as ${esc(data.itemName)} Out</span></label></div>
-      <p class="small direct-edit-help">Leave the box unchecked when the quilts were already entered on the Inventory screen.</p>`
+    ?`<div class="direct-distribution-row"><label>Date Distributed<input name="fulfilledDate" type="date" value="${esc(distributionDate)}"></label><label class="check-row inline-check"><input name="recordOut" type="checkbox" checked><span>Remove newly distributed quantity from ${esc(data.itemName)} inventory</span></label></div>
+      <p class="small direct-edit-help">This is checked automatically. Uncheck it only when the same quilts were already entered as Quilts Out on the Inventory screen.</p>`
     :`<input name="fulfilledQty" type="hidden" value="${sent}"><input name="fulfilledDate" type="hidden" value="${esc(n.fulfilledDate||'')}"><input name="recordOut" type="checkbox" hidden>`;
   return`<form class="item need-card need-inline-editor ${stateClass}" data-need-edit-id="${esc(n.id)}" onsubmit="return saveInlineNeed(event,this.dataset.needEditId)">
     <div class="head direct-edit-head">
@@ -1070,7 +1072,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.13 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.14 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.13',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.14',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

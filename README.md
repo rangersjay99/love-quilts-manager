@@ -1,8 +1,8 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.13 — July 23, 2026
+Current release: Update 7.8.14 — July 23, 2026
 
-## Update 7.8.13 — Streamlined Home and color-coded navigation
+## Update 7.8.14 — Quilts Out inventory deduction hotfix
 
 - Removed the duplicate Home sync message; the top sync banner is now green when fully synced and red otherwise.
 - Removed the four large Home navigation buttons.

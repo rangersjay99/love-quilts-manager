@@ -1,6 +1,4 @@
-Love Quilts Manager Update 7.8.13
+Love Quilts Manager Update 7.8.14
 Released: July 23, 2026
 
-Streamlines the Home screen, removes duplicate sync and navigation elements, color-codes the persistent bottom navigation, changes the Home calendar filter to Charity, and softens remaining Home action buttons.
-
-Existing Firebase paths and saved-data formats are unchanged.
+Urgent hotfix: Mark Distributed now selects inventory removal automatically, deducts the newly distributed quantity, and confirms the remaining balance. Existing shared data and synchronization are retained.

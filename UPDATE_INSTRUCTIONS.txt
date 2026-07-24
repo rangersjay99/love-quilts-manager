@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.13
+LOVE QUILTS MANAGER — UPDATE 7.8.14
 
 BEFORE UPDATING
 1. Confirm the app says all changes are synced.
