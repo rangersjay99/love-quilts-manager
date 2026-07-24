@@ -1,0 +1,42 @@
+LOVE QUILTS MANAGER — UPDATE 7.8.18 AUTOMATED TEST RESULTS
+Run: July 24, 2026
+
+Result: PASS
+Checks passed: 24 of 24
+
+PASS — Version 7.8.18 — Love Quilts Manager · Update 7.8.18
+PASS — Calendar first after summary — ["At a Glance","All Quilts Calendar","This Year","By Charity"]
+PASS — Old default storage wording migrates — Available in Storage
+PASS — Old default requested wording migrates — Quilts Requested
+PASS — Old default difference wording migrates — Quilts Needed to be Completed
+PASS — Cross-category shortage total — 5
+PASS — Home requested value — 23
+PASS — Home to-complete value — 5
+PASS — Home to-complete status — Still to Make
+PASS — Reports matching labels
+PASS — Reports to-complete value — 5
+PASS — Grassroots shortage five — {"charity":"Grassroots","sizes":[{"size":"Medium","onHand":10,"requestedNeeds":15,"toComplete":5}],"onHand":10,"requestedNeeds":15,"toComplete":5}
+PASS — SHP surplus does not create negative need — {"charity":"SHP","sizes":[{"size":"Medium","onHand":10,"requestedNeeds":5,"toComplete":0}],"onHand":10,"requestedNeeds":5,"toComplete":0}
+PASS — Past met month light-green class — month-card completed
+PASS — Past unmet month light-red class — month-card past-unmet
+PASS — Current month bold class — month-card empty-month current-month
+PASS — Future covered early class — month-card covered
+PASS — Yearly statistics values — ["28","2","+26","26","1","2"]
+PASS — Compact PDF generated — %PDF-1.4
+%1234
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type
+PASS — Full PDF generated — %PDF-1.4
+%1234
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type
+PASS — Distribution 26 reaches zero — 0
+PASS — Repeat save no duplicate deduction — 0/1
+PASS — Distribution correction restores six — 6
+PASS — Set Current Count reaches zero — 0

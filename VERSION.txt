@@ -1,6 +1,8 @@
-Love Quilts Manager Update 7.8.17
+Love Quilts Manager Update 7.8.18
 Released: July 24, 2026
 
-Yearly statistics, direct Home charity summaries, calendar completion history, and report layout refinement.
+Verified Home, Calendar, and Reports refinement.
 
-This update adds This Year totals on Home, full selectable Yearly Statistics in Reports and PDFs, an immediate By Charity Home summary, green/red past-month results with a bold current month, clearer Available in Storage wording, and a wrapping fix for the third Reports summary block. All 7.8.16 inventory, synchronization, exact-count, and distribution safeguards are retained.
+This update places the Calendar first immediately after At a Glance; retains the agreed light-green/light-red calendar history and bold current-month border; applies Available in Storage, Quilts Requested, and Quilts Needed to be Completed consistently across Home, Reports, printouts, and PDFs; makes the third Reports summary block fully readable on iPhone; and calculates the number still needing completion by charity and size so unrelated surplus inventory cannot hide a shortage.
+
+All 7.8.17 yearly statistics, Home actions, direct calendar editing, syncing, exact-count tools, audit history, zero-balance handling, and distribution safeguards are retained.

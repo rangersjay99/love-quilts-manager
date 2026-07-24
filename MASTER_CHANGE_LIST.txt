@@ -1,0 +1,51 @@
+LOVE QUILTS MANAGER — MASTER CHANGE LIST
+Verified July 24, 2026
+
+IMPLEMENTED IN UPDATE 7.8.18
+
+HOME
+- At a Glance remains first.
+- Calendar is first immediately after At a Glance.
+- This Year shows Quilts Made This Year and Quilts Distributed This Year.
+- By Charity shows Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
+- Summary cards remain tappable for details/actions.
+- Add Quilts remains available directly from the storage summary.
+
+CALENDAR
+- Past demand met: light green.
+- Past demand not met: light red.
+- Future request covered early: light green.
+- Other future months use normal covered/partial/shortage status.
+- Current month has a bold border.
+- Calendar supports direct add/edit.
+
+REPORTS
+- Home and Reports use the same wording:
+  Available in Storage
+  Quilts Requested
+  Quilts Needed to be Completed
+- Third Reports summary block is full-width on iPhone so wording is not cut off.
+- Alternating report-row shading remains.
+- Yearly Statistics includes quilts made, quilts distributed, net inventory change, current inventory, charities served, and lifetime distributed.
+- Compact and Full PDFs use the same verified wording.
+
+INVENTORY AND DISTRIBUTION
+- Set Current Count supports an exact count including zero.
+- Distribution deducts immediately, including 26 out of 26 resulting in zero.
+- Repeat-save protection prevents duplicate deduction.
+- Distribution correction restores/deducts only the difference.
+- Linked distribution transactions are protected.
+
+SYNC
+- Sync Now remains visible in the banner and Settings.
+- Firebase structure and approved-device syncing are retained.
+
+VERSIONING
+- Continue with 7.8.x updates.
+- Hold Version 8 for a later major release.
+
+FUTURE / ROADMAP — NOT PART OF 7.8.18
+- Continue simplifying Home when real-world use identifies additional actions that can safely be moved there.
+- Printable 12-month Calendar refinements and optional one-month-per-page format.
+- Optional monthly reminder emails after core features are complete.
+- Optional modules such as Quilt Show Manager in a later expansion.

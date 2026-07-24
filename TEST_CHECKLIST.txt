@@ -1,45 +1,39 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.17 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.18 TEST CHECKLIST
 
-BASIC UPDATE
-[ ] App opens and shows Update 7.8.17.
-[ ] Existing inventory, charity requests, settings, custom wording, and sync access remain present.
-[ ] Shared data reaches “Shared data verified · All changes synced.”
+VERSION AND CACHE
+[ ] App opens and shows Update 7.8.18.
+[ ] A previously installed phone receives the new app shell after reopening or refreshing.
 
-HOME — THIS YEAR AND BY CHARITY
-[ ] Home shows Quilts Made This Year.
-[ ] Home shows Quilts Distributed This Year.
-[ ] By Charity shows Available in Storage, Quilts Still Needed, and More to Make.
-[ ] Tapping a charity opens the detailed charity calendar.
-[ ] Charities with no shortage show 0 More to Make.
-
-YEARLY STATISTICS
-[ ] Reports show a selectable Statistics Year.
-[ ] Quilts Made matches Love Quilts In entries for the selected year.
-[ ] Distribution-correction inventory restorations are not counted as quilts made.
-[ ] Quilts Distributed matches Love Quilts Out entries for the selected year.
-[ ] Net Inventory Change includes In, Out, and Adjusted transactions.
-[ ] Current Inventory matches the present Home inventory total.
-[ ] Charities Served counts charities with Quilts Out in the selected year.
-[ ] Lifetime Quilts Distributed includes all years.
-[ ] Selected yearly statistics appear in compact and full print/PDF reports.
-
-REPORT LAYOUT
-[ ] Reports still use the same Storage, Needed, and Difference labels configured for Home.
-[ ] The third Reports summary block displays its full label without cutoff on iPhone.
-[ ] Surplus, Shortage, or Balanced remains visible below the third total.
-[ ] Alternating report shading remains visible on screen, print, and PDFs.
+HOME ORDER AND WORDING
+[ ] At a Glance remains the first Home card.
+[ ] Calendar is immediately after At a Glance.
+[ ] This Year follows Calendar.
+[ ] By Charity follows This Year.
+[ ] Summary labels read Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
+[ ] Older default labels migrate automatically; a custom user-entered label remains unchanged.
 
 CALENDAR
-[ ] A past month with all demand met is light green and says Demand Met.
-[ ] A past month with unmet demand is light red and says Demand Not Met.
-[ ] A future month fully covered early is light green.
-[ ] The current month has a noticeably bold border.
-[ ] Calendar details say Available in Storage.
+[ ] Past month with all demand met is light green.
+[ ] Past month with unmet demand is light red.
+[ ] Future month covered early is light green.
+[ ] Uncovered future month retains shortage/partial status.
+[ ] Current month has a noticeably bold border.
+[ ] Calendar entries can be added and edited directly.
 
-7.8.16 SAFEGUARD REGRESSION
-[ ] Sync Now works from the banner and Settings.
-[ ] Set Current Count accepts 0 and records only the difference.
-[ ] Marking the full on-hand amount distributed changes inventory to 0 exactly once.
-[ ] Saving the same distribution again does not deduct inventory twice.
-[ ] Reducing an automatically deducted distribution restores the corrected amount.
-[ ] Linked distribution transactions remain protected from unsafe direct edits or deletion.
+REPORTS
+[ ] Reports use the same three summary labels as Home.
+[ ] On iPhone width, the third summary block spans the full row and no wording is cut off.
+[ ] Quilts Needed to be Completed never displays a surplus value.
+[ ] A shortage in one charity/size is not canceled by surplus in another charity/size.
+[ ] Alternating report-row shading remains visible.
+[ ] Yearly Statistics remain selectable and correct.
+[ ] Compact PDF contains readable wrapped summary labels.
+[ ] Full PDF contains readable wrapped summary labels.
+
+INVENTORY, DISTRIBUTION, AND SYNC
+[ ] Set Current Count can set a balance to zero.
+[ ] Distributing all 26 of 26 quilts leaves zero available.
+[ ] Saving a linked distribution twice does not deduct twice.
+[ ] Correcting a distribution safely restores or deducts only the difference.
+[ ] Protected linked distribution transactions cannot be edited or deleted independently.
+[ ] Sync Now works and status/last-sync information remains clear.

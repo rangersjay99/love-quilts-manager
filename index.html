@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.17">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7817.png?v=7.8.17">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7817.png?v=7.8.17">
+<link rel="manifest" href="manifest-v7.json?v=7.8.18">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.18">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.18">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -65,7 +65,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .home-charity-card{width:100%;padding:12px;border:1px solid var(--line);border-left:5px solid var(--plum);border-radius:14px;background:#fff;color:var(--ink);text-align:left;cursor:pointer}
 .home-charity-card.has-shortage{border-left-color:var(--red);background:#fff7f8}.home-charity-card.has-surplus{border-left-color:var(--green);background:#f7fcf8}.home-charity-card.balanced{border-left-color:var(--gold);background:#fffcf5}
 .home-charity-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}.home-charity-heading strong{font-size:16px;color:var(--plum-dark)}.home-charity-heading span{font-size:11px;color:var(--muted);font-weight:750}
-.home-charity-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.home-charity-metrics div{padding:9px 5px;border-radius:10px;background:rgba(255,255,255,.8);text-align:center}.home-charity-metrics b{display:block;font-size:21px}.home-charity-metrics span{display:block;margin-top:3px;font-size:10px;color:var(--muted)}
+.home-charity-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.home-charity-metrics div{padding:9px 5px;border-radius:10px;background:rgba(255,255,255,.8);text-align:center}.home-charity-metrics b{display:block;font-size:21px}.home-charity-metrics span{display:block;margin-top:3px;font-size:10px;line-height:1.2;color:var(--muted);overflow-wrap:break-word}
 .home-print-summary{margin-top:13px;border:1px solid rgba(37,99,166,.32)!important;background:rgba(37,99,166,.10)!important;color:#24578d!important}.home-print-summary:hover,.home-print-summary:focus{background:rgba(37,99,166,.17)!important;outline:none}.home-print-note{margin-top:6px;text-align:center}
 .home-summary-report h1{margin:0 0 3px;font-size:24px;color:#111}.home-summary-report .summary-meta{margin-bottom:14px;color:#555;font-size:11px}
 .home-summary-report .summary-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0 16px}
@@ -75,8 +75,8 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .home-year-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.home-year-stat{padding:14px 10px;border:1px solid var(--line);border-radius:13px;background:var(--soft);text-align:center}.home-year-stat b{display:block;font-size:29px;line-height:1;color:var(--plum)}.home-year-stat span{display:block;margin-top:6px;font-size:12px;font-weight:800;color:var(--muted)}
 .home-year-link{margin-top:10px}.yearly-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.yearly-stat{min-width:0;padding:12px 8px;border:1px solid var(--line);border-radius:12px;background:var(--soft);text-align:center}.yearly-stat b{display:block;font-size:24px;color:var(--plum);line-height:1.05}.yearly-stat span{display:block;margin-top:6px;font-size:11px;font-weight:800;line-height:1.25;color:var(--muted)}.yearly-stat .positive{color:var(--green)}.yearly-stat .negative{color:var(--red)}
 .yearly-report-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:10px}.yearly-report-heading h3{margin:0}.yearly-report-heading label{width:min(170px,45%);margin:0;font-size:12px;color:var(--muted)}.yearly-report-heading select{min-height:42px;margin-top:4px;padding:8px 10px}
-.report-metrics .metric{min-height:194px;height:auto}.report-metrics .metric-title{height:auto;white-space:normal;overflow:visible;overflow-wrap:anywhere}.report-difference-metric .metric-title{min-height:54px;line-height:1.22}
-@media(max-width:620px){.yearly-stat-grid{grid-template-columns:repeat(2,1fr)}.report-metrics .metric{min-height:202px;padding-left:5px;padding-right:5px}.report-difference-metric .metric-title{min-height:64px;font-size:9.5px}.home-year-grid{gap:7px}.home-year-stat{padding:13px 6px}.home-year-stat b{font-size:26px}}
+.report-metrics .metric{min-height:194px;height:auto}.report-metrics .metric-title{height:auto;white-space:normal;overflow:visible;overflow-wrap:break-word;word-break:normal}.report-difference-metric .metric-title{min-height:62px;line-height:1.18}
+@media(max-width:620px){.yearly-stat-grid{grid-template-columns:repeat(2,1fr)}.report-metrics{grid-template-columns:repeat(2,1fr)}.report-metrics .metric{min-height:178px;padding-left:8px;padding-right:8px}.report-difference-metric{grid-column:1/-1;min-height:152px!important}.report-difference-metric .metric-title{min-height:auto;font-size:11px;line-height:1.25}.home-year-grid{gap:7px}.home-year-stat{padding:13px 6px}.home-year-stat b{font-size:26px}}
 .btn-plum{background:var(--plum)}.btn-teal{background:var(--teal)}.btn-blue{background:var(--blue)}.btn-gold{background:var(--gold)}
 label{display:block;margin-top:12px;font-weight:750}
 input,select,textarea{width:100%;max-width:100%;min-width:0;min-height:48px;margin-top:7px;padding:13px;border:1px solid #cfc4ce;border-radius:12px;background:#fff;color:var(--ink)}
@@ -323,14 +323,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7817.png?v=7.8.17" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.18" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.16</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.18</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -338,7 +338,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <header>
   <div id="headerOrg" class="org">Faithful Circle Quilters</div>
   <h1 id="headerAppName">Love Quilts Manager</h1>
-  <p id="headerSubtitle">Quilts in storage and quilts still needed</p>
+  <p id="headerSubtitle">Available quilts, requests, and quilts still to complete</p>
 </header>
 <div class="firebase-banner not-synced" id="firebaseBanner"><span><b>SHARED DEVICE SYNC</b> · <span id="firebaseBannerStatus">Waiting for sign-in</span></span><button class="sync-now-button" type="button" data-sync-now onclick="syncNow()">Sync Now</button></div>
 
@@ -348,24 +348,31 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <h2 id="homeAtAGlanceHeading">At a Glance</h2>
     <div class="grid3">
       <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts in storage" onclick="openInventoryDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openInventoryDetails()}">
-        <span id="homeStorageLabel" class="metric-title">Total Quilts in Storage</span>
+        <span id="homeStorageLabel" class="metric-title">Available in Storage</span>
         <strong id="homeOnHand">0</strong>
         <span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span>
         <button type="button" class="metric-add-button" onclick="event.stopPropagation();openAddQuilts()">＋ Add Quilts</button>
       </div>
-      <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts still needed" onclick="openNeedsDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNeedsDetails()}">
-        <span id="homeNeededLabel" class="metric-title">Quilts Still Needed</span>
+      <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts requested" onclick="openNeedsDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNeedsDetails()}">
+        <span id="homeNeededLabel" class="metric-title">Quilts Requested</span>
         <strong id="homeNeeded">0</strong>
         <span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span>
         <button type="button" class="metric-add-button need-button" onclick="event.stopPropagation();openAddNeed()">＋ Add Need</button>
       </div>
-      <div class="metric metric-action" role="button" tabindex="0" aria-label="Distribute quilts for a charity request" onclick="openDistributeQuilts()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDistributeQuilts()}">
-        <span id="homeDifferenceLabel" class="metric-title">Difference</span>
+      <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts needed to be completed" onclick="openDistributeQuilts()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDistributeQuilts()}">
+        <span id="homeDifferenceLabel" class="metric-title">Quilts Needed to be Completed</span>
         <strong id="homeDifference">0</strong>
-        <span id="homeDifferenceStatus" class="metric-status-line difference-status balanced">Balanced</span>
+        <span id="homeDifferenceStatus" class="metric-status-line difference-status positive">All Requests Covered</span>
         <button type="button" class="metric-add-button distribute-button" onclick="event.stopPropagation();openDistributeQuilts()">Distribute Quilts</button>
       </div>
     </div>
+  </div>
+  <div class="card">
+    <div class="home-section-heading"><h3 id="homeCalendarHeading">All Quilts Calendar</h3><span>Tap an entry to edit</span></div>
+    <div class="home-calendar-filter"><label>Charity<select id="homeCalendarCharity" onchange="renderHomeCalendar()"></select></label></div>
+    <div id="homeNeedsCalendar" class="needs-calendar"></div>
+    <button type="button" class="primary home-print-summary" onclick="printHomeSummary()">Print Summary</button>
+    <div class="small home-print-note">Prints totals and the charity comparison summary.</div>
   </div>
   <div class="card">
     <div class="home-year-heading"><h3>This Year</h3><span id="homeStatsYear">2026</span></div>
@@ -378,13 +385,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card">
     <div class="home-section-heading"><h3>By Charity</h3><span>Tap a charity for details</span></div>
     <div id="homeCharityBreakdown" class="home-charity-list"></div>
-  </div>
-  <div class="card">
-    <div class="home-section-heading"><h3 id="homeCalendarHeading">All Quilts Calendar</h3><span>Tap an entry to edit</span></div>
-    <div class="home-calendar-filter"><label>Charity<select id="homeCalendarCharity" onchange="renderHomeCalendar()"></select></label></div>
-    <div id="homeNeedsCalendar" class="needs-calendar"></div>
-    <button type="button" class="primary home-print-summary" onclick="printHomeSummary()">Print Summary</button>
-    <div class="small home-print-note">Prints totals and the charity comparison summary.</div>
   </div>
   <div id="homeSummaryReport" class="card print-only home-summary-report" aria-hidden="true"></div>
 </section>
@@ -427,7 +427,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <section id="needs" class="view">
   <div class="card">
     <h2>All Quilts Calendar</h2>
-    <p class="small">View all 12 months. Inventory is allocated in month order: green is covered, gold is partially covered, red is a shortage, orange is past due, and “Distributed” means the quilts-needed entry was completed.</p>
+    <p class="small">View all 12 months. Past months are light green when demand was met and light red when it was not met. Future requests are green when covered, gold when partially covered, and red when short. The current month has a bold border.</p>
     <div class="calendar-toolbar">
       <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
       <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
@@ -462,9 +462,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card">
     <h2 id="reportHeading">Love Quilts Inventory and Quilts Needed Report</h2><p id="reportDate" class="small"></p>
     <div class="grid3 report-metrics">
-      <div class="metric"><span id="reportStorageLabel" class="metric-title">Total Quilts in Storage</span><strong id="reportOnHand">0</strong><span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span></div>
-      <div class="metric"><span id="reportNeededLabel" class="metric-title">Quilts Still Needed</span><strong id="reportNeeded">0</strong><span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span></div>
-      <div class="metric report-difference-metric"><span id="reportDifferenceLabel" class="metric-title">Difference</span><strong id="reportShortage">0</strong><span id="reportDifferenceStatus" class="metric-status-line difference-status balanced">Balanced</span></div>
+      <div class="metric"><span id="reportStorageLabel" class="metric-title">Available in Storage</span><strong id="reportOnHand">0</strong><span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span></div>
+      <div class="metric"><span id="reportNeededLabel" class="metric-title">Quilts Requested</span><strong id="reportNeeded">0</strong><span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span></div>
+      <div class="metric report-difference-metric"><span id="reportDifferenceLabel" class="metric-title">Quilts Needed to be Completed</span><strong id="reportShortage">0</strong><span id="reportDifferenceStatus" class="metric-status-line difference-status positive">All Requests Covered</span></div>
     </div>
   </div>
   <div id="yearlyStatsCard" class="card">
@@ -472,8 +472,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <p class="small">Quilts Made uses Love Quilts In entries. Quilts Distributed uses Quilts Out entries, so corrected inventory restorations are not counted as newly made quilts.</p>
     <div id="reportYearlyStats" class="yearly-stat-grid"></div>
   </div>
-  <div class="card"><h3 id="reportInventoryHeading">Total Quilts in Storage and Quilts Still Needed</h3><div id="reportInventory"></div></div>
-  <div class="card"><h3 id="reportNeedsHeading">Quilts Still Needed</h3><div id="reportNeeds"></div></div>
+  <div class="card"><h3 id="reportInventoryHeading">Available in Storage and Quilts Requested</h3><div id="reportInventory"></div></div>
+  <div class="card"><h3 id="reportNeedsHeading">Quilts Requested</h3><div id="reportNeeds"></div></div>
   <div class="card"><h3 id="reportDistributedHeading">Love Quilts Distributed</h3><div id="reportDistributed"></div></div>
   <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
   <div class="card no-print">
@@ -558,11 +558,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <label>Summary Heading</label>
     <input id="homeAtAGlanceInput" maxlength="60" placeholder="At a Glance">
     <label>Storage Total Label</label>
-    <input id="homeStorageLabelInput" maxlength="60" placeholder="Total Quilts in Storage">
+    <input id="homeStorageLabelInput" maxlength="60" placeholder="Available in Storage">
     <label>Needed Total Label</label>
-    <input id="homeNeededLabelInput" maxlength="60" placeholder="Quilts Still Needed">
-    <label>Difference Label</label>
-    <input id="homeDifferenceLabelInput" maxlength="60" placeholder="Difference">
+    <input id="homeNeededLabelInput" maxlength="60" placeholder="Quilts Requested">
+    <label>Quilts to Complete Label</label>
+    <input id="homeDifferenceLabelInput" maxlength="60" placeholder="Quilts Needed to be Completed">
     <label>Calendar Heading</label>
     <input id="homeCalendarHeadingInput" maxlength="60" placeholder="All Quilts Calendar">
     <h3 style="margin-top:18px">Report and Splash Wording</h3>
@@ -593,11 +593,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.17 · July 24, 2026</span>
+      <b>Version</b><span>Update 7.8.18 · July 24, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.17 adds yearly statistics, a direct By Charity summary on Home, improved calendar completion shading with a bold current month, “Available in Storage” wording, and a corrected third Reports summary block. Existing data, safeguards, reports, and syncing are retained.</p>
+    <p class="small">Update 7.8.18 places the Calendar first after At a Glance, uses the verified Home and Reports wording, makes the third Reports summary block fully readable on iPhone, and shows the exact number of quilts still needing completion. Yearly statistics, calendar status colors, syncing, exact-count tools, and distribution safeguards are retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -625,7 +625,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.17"></script>
-<script src="app.js?v=7.8.17"></script>
+<script type="module" src="firebase-sync.js?v=7.8.18"></script>
+<script src="app.js?v=7.8.18"></script>
 </body>
 </html>

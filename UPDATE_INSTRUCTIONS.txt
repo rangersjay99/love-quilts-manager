@@ -1,32 +1,22 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.17
-Yearly Statistics, Home Charity Summary, and Calendar Completion History
+LOVE QUILTS MANAGER — UPDATE 7.8.18
 
-BEFORE UPDATING
-1. Confirm the current device shows all changes synced.
-2. Export a current backup from Settings.
-3. Keep a ZIP backup of the current GitHub repository.
+1. Keep a backup copy of the current working ZIP and export an in-app backup before replacing files.
+2. Upload every file and folder from this package to the existing GitHub Pages repository, replacing older copies.
+3. Confirm the `icons` folder and the new v7818 icon files are uploaded.
+4. Commit the files and allow GitHub Pages to publish.
+5. Open the app and use Sync Now or refresh once. On iPhone/iPad, fully close and reopen the installed app if an older cached version appears.
 
-UPLOAD
-1. Extract this ZIP.
-2. Upload every extracted file to the main/root folder of the GitHub repository.
-3. Replace files with the same names.
-4. Do not delete or replace the firebase-test folder.
-5. Wait for GitHub Pages to publish.
-6. Close and reopen the app on each device. Refresh once if the old version remains.
+VERIFY AFTER UPDATE
 
-VERIFY
-1. Confirm the splash and About section show Update 7.8.17.
-2. Tap Sync Now and wait for “Shared data verified · All changes synced.”
-3. On Home, confirm This Year and By Charity appear below At a Glance.
-4. Open Reports and confirm Yearly Statistics appears and the year can be changed.
-5. Confirm the third Reports total label wraps fully on iPhone.
-6. Confirm the current calendar month has a bold border.
-7. Confirm a completed past month is green and an unmet past month is red.
-8. Test one small change and confirm it appears on the second approved device.
+1. Splash and About show Update 7.8.18.
+2. Calendar is the first Home card after At a Glance.
+3. Home and Reports show Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
+4. On iPhone, the third Reports summary block spans the full row and the complete wording is visible.
+5. Past calendar months are light green when demand was met and light red when it was not met.
+6. A future request covered early is light green.
+7. The current month has the bold border.
+8. Quilts Needed to be Completed equals the sum of shortages by charity and size; surplus in a different category does not reduce it.
+9. Yearly Statistics, Sync Now, Set Current Count, and distribution safeguards still work.
+10. Generate both Compact and Full PDFs and confirm the three summary labels are readable.
 
-IMPORTANT
-- Quilts Made uses Love Quilts In entries; inventory restorations from distribution corrections are excluded.
-- Quilts Distributed uses Love Quilts Out entries.
-- Current Inventory is today’s balance even when viewing an earlier statistics year.
-- This update does not clear or reinitialize shared data.
-- All Set Current Count and linked-distribution safeguards from 7.8.16 remain active.
+Existing data and Firebase synchronization are retained.

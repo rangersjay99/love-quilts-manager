@@ -173,9 +173,9 @@ function normalizeSettings(source = {}) {
     splashTag: cleanString(source.splashTag || ''),
     splashMessage: cleanString(source.splashMessage || ''),
     homeAtAGlance: cleanString(source.homeAtAGlance || 'At a Glance'),
-    homeStorageLabel: cleanString(source.homeStorageLabel || 'Total Quilts in Storage'),
-    homeNeededLabel: cleanString(source.homeNeededLabel || 'Quilts Still Needed'),
-    homeDifferenceLabel: cleanString(source.homeDifferenceLabel || 'Difference'),
+    homeStorageLabel: cleanString(source.homeStorageLabel || 'Available in Storage'),
+    homeNeededLabel: cleanString(source.homeNeededLabel || 'Quilts Requested'),
+    homeDifferenceLabel: cleanString(source.homeDifferenceLabel || 'Quilts Needed to be Completed'),
     homeCalendarHeading: cleanString(source.homeCalendarHeading || 'All Quilts Calendar'),
     homeActionsHeading: cleanString(source.homeActionsHeading || 'Choose an Action'),
     charities: Array.isArray(source.charities) ? source.charities.map(cleanString) : [],
@@ -273,9 +273,9 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
     ].some(key => !Object.prototype.hasOwnProperty.call(remote.settings, key));
     const localHasCustomHomeWording =
       localBeforeRemote.homeAtAGlance !== 'At a Glance' ||
-      localBeforeRemote.homeStorageLabel !== 'Total Quilts in Storage' ||
-      localBeforeRemote.homeNeededLabel !== 'Quilts Still Needed' ||
-      localBeforeRemote.homeDifferenceLabel !== 'Difference' ||
+      !['Total Quilts in Storage','Quilts in Storage','Available in Storage'].includes(localBeforeRemote.homeStorageLabel) ||
+      !['Quilts Still Needed','Quilts Needed','Charity Requests','Quilts Requested'].includes(localBeforeRemote.homeNeededLabel) ||
+      !['Difference','More to Make','Quilts Needed to be Completed'].includes(localBeforeRemote.homeDifferenceLabel) ||
       localBeforeRemote.homeCalendarHeading !== 'All Quilts Calendar' ||
       localBeforeRemote.homeActionsHeading !== 'Choose an Action';
     const cloudHasData = !!remote.settings || cloudData.transactions.length > 0 || cloudData.needs.length > 0;

@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.17';
+const VERSION='7.8.18';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -15,9 +15,9 @@ const DEFAULT_APP='Love Quilts Manager';
 const DEFAULT_ITEM='Love Quilts';
 const DEFAULT_SPLASH_TAG='MADE WITH LOVE, SHARED WITH CARE';
 const DEFAULT_HOME_AT_A_GLANCE='At a Glance';
-const DEFAULT_HOME_STORAGE_LABEL='Total Quilts in Storage';
-const DEFAULT_HOME_NEEDED_LABEL='Quilts Still Needed';
-const DEFAULT_HOME_DIFFERENCE_LABEL='Difference';
+const DEFAULT_HOME_STORAGE_LABEL='Available in Storage';
+const DEFAULT_HOME_NEEDED_LABEL='Quilts Requested';
+const DEFAULT_HOME_DIFFERENCE_LABEL='Quilts Needed to be Completed';
 const DEFAULT_HOME_CALENDAR_HEADING='All Quilts Calendar';
 const DEFAULT_HOME_ACTIONS_HEADING='Choose an Action';
 const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
@@ -33,6 +33,10 @@ function monthNow(){return today().slice(0,7)}
 function parse(s){try{return JSON.parse(s)}catch{return null}}
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function unique(a){return [...new Set((a||[]).filter(Boolean).map(v=>String(v).trim()).filter(Boolean))]}
+function upgradedSummaryLabel(value,legacy,fallback){
+  const clean=String(value||'').trim();
+  return !clean||legacy.some(item=>clean.toLocaleLowerCase()===String(item).toLocaleLowerCase())?fallback:clean;
+}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}
 function fmtMonth(s){if(!s)return'';const[y,m]=s.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString(undefined,{month:'long',year:'numeric'})}
@@ -91,8 +95,10 @@ function normalizeData(d={}){
   return{
     orgName:String(d.orgName||DEFAULT_ORG),appName:String(d.appName||DEFAULT_APP),itemName:String(d.itemName||DEFAULT_ITEM),
     reportTitle:String(d.reportTitle||''),splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
-    homeAtAGlance:String(d.homeAtAGlance||DEFAULT_HOME_AT_A_GLANCE),homeStorageLabel:String(d.homeStorageLabel||DEFAULT_HOME_STORAGE_LABEL),
-    homeNeededLabel:String(d.homeNeededLabel||DEFAULT_HOME_NEEDED_LABEL),homeDifferenceLabel:String(d.homeDifferenceLabel||DEFAULT_HOME_DIFFERENCE_LABEL),
+    homeAtAGlance:String(d.homeAtAGlance||DEFAULT_HOME_AT_A_GLANCE),
+    homeStorageLabel:upgradedSummaryLabel(d.homeStorageLabel,['Total Quilts in Storage','Quilts in Storage'],DEFAULT_HOME_STORAGE_LABEL),
+    homeNeededLabel:upgradedSummaryLabel(d.homeNeededLabel,['Quilts Still Needed','Quilts Needed','Charity Requests'],DEFAULT_HOME_NEEDED_LABEL),
+    homeDifferenceLabel:upgradedSummaryLabel(d.homeDifferenceLabel,['Difference','More to Make'],DEFAULT_HOME_DIFFERENCE_LABEL),
     homeCalendarHeading:String(d.homeCalendarHeading||DEFAULT_HOME_CALENDAR_HEADING),homeActionsHeading:String(d.homeActionsHeading||DEFAULT_HOME_ACTIONS_HEADING),
     charities:unique([...(Array.isArray(d.charities)?d.charities:[]),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...DEFAULT_CHARITIES]),
     sizes:unique([...(Array.isArray(d.sizes)?d.sizes:[]),...tx.map(t=>t.size),...needs.map(n=>n.size),...DEFAULT_SIZES]),
@@ -522,7 +528,11 @@ function allocationForNeed(target,allocations=null){
   const available=Math.max(0,onHand(target.charity,target.size)),need=remainingNeed(target);
   return(allocations||allocateNeedsForPlanning()).find(item=>item.n.id===target.id)||{n:target,available,shortage:Math.max(0,need-available),covered:Math.min(need,available),remaining:need,fulfilled:fulfilledQty(target)};
 }
-function shortageTotal(){return Math.max(0,totalNeeded()-totalOnHand())}
+function quiltsToCompleteTotal(){
+  const inventory=invMap(),requested=requestedNeedsMap();
+  return unique([...Object.keys(inventory),...Object.keys(requested)]).reduce((sum,key)=>sum+Math.max(0,Number(requested[key]||0)-Number(inventory[key]||0)),0);
+}
+function shortageTotal(){return quiltsToCompleteTotal()}
 function needInlineEditor(n,stateClass,stateLabel,info,editorMode='details'){
   const charityOptions=data.charities.map(c=>`<option value="${esc(c)}"${c===n.charity?' selected':''}>${esc(c)}</option>`).join('');
   const sizeOptions=data.sizes.map(size=>`<option value="${esc(size)}"${size===n.size?' selected':''}>${esc(size)}</option>`).join('');
@@ -658,19 +668,19 @@ function homeCharitySummaries(){
   ]).sort((a,b)=>a.localeCompare(b));
   return names.map(charity=>{
     const prefix=charity+'|';
-    const onHand=Object.entries(inventory).filter(([key])=>key.startsWith(prefix)).reduce((sum,[,value])=>sum+Number(value||0),0);
-    const needsRemaining=Object.entries(remaining).filter(([key])=>key.startsWith(prefix)).reduce((sum,[,value])=>sum+Number(value||0),0);
-    return{charity,onHand,needsRemaining,difference:onHand-needsRemaining};
+    const keys=unique([...Object.keys(inventory),...Object.keys(remaining)]).filter(key=>key.startsWith(prefix));
+    const onHand=keys.reduce((sum,key)=>sum+Number(inventory[key]||0),0);
+    const requested=keys.reduce((sum,key)=>sum+Number(remaining[key]||0),0);
+    const toComplete=keys.reduce((sum,key)=>sum+Math.max(0,Number(remaining[key]||0)-Number(inventory[key]||0)),0);
+    return{charity,onHand,requested,toComplete};
   });
 }
 function renderHomeCharityBreakdown(){
   const box=el('homeCharityBreakdown');if(!box)return;
   const rows=homeCharitySummaries();
   box.innerHTML=rows.length?rows.map(row=>{
-    const state=row.difference<0?'has-shortage':row.difference>0?'has-surplus':'balanced';
-    const diffClass=differenceClass(row.difference);
-    const moreToMake=Math.max(0,-row.difference);
-    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>Available in Storage</span></div><div><b>${row.needsRemaining}</b><span>Quilts Still Needed</span></div><div><b class="${moreToMake?'negative':'positive'}">${moreToMake}</b><span>More to Make</span></div></div></button>`;
+    const state=row.toComplete>0?'has-shortage':row.onHand>row.requested?'has-surplus':'balanced';
+    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div><b>${row.requested}</b><span>${esc(data.homeNeededLabel)}</span></div><div><b class="${row.toComplete?'negative':'positive'}">${row.toComplete}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div></button>`;
   }).join(''):'<div class="empty">No charities have been entered yet.</div>';
 }
 function openHomeCharity(charity){
@@ -680,21 +690,21 @@ function openHomeCharity(charity){
 }
 function renderHomeSummaryReport(){
   const target=el('homeSummaryReport');if(!target)return;
-  const rows=homeCharitySummaries(),onHand=totalOnHand(),needsRemaining=totalNeeded(),difference=onHand-needsRemaining;
+  const rows=homeCharitySummaries(),onHand=totalOnHand(),requested=totalNeeded(),toComplete=quiltsToCompleteTotal();
   const generated=new Date().toLocaleString();
-  const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.needsRemaining}</td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
-  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · ${esc(data.homeAtAGlance)} Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>${esc(data.homeNeededLabel)}</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>Available in Storage</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.requested}</td><td><span class="difference-value ${row.toComplete?'negative':'positive'}">${row.toComplete}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
+  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · ${esc(data.homeAtAGlance)} Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div class="summary-metric"><b>${requested}</b><span>${esc(data.homeNeededLabel)}</span></div><div class="summary-metric"><b class="${toComplete?'negative':'positive'}">${toComplete}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:20%"><col style="width:22%"></colgroup><thead><tr><th>Charity</th><th>${esc(data.homeStorageLabel)}</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${requested}</td><td><span class="difference-value ${toComplete?'negative':'positive'}">${toComplete}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderHome(){
-  const difference=totalOnHand()-totalNeeded();
+  const toComplete=quiltsToCompleteTotal();
   el('homeOnHand').textContent=totalOnHand();
   el('homeNeeded').textContent=totalNeeded();
   const differenceBox=el('homeDifference'),differenceStatus=el('homeDifferenceStatus');
-  differenceBox.textContent=String(Math.abs(difference));
-  differenceBox.className=differenceClass(difference);
+  differenceBox.textContent=String(toComplete);
+  differenceBox.className=toComplete?'negative':'positive';
   if(differenceStatus){
-    differenceStatus.textContent=difference>0?'Surplus':difference<0?'Shortage':'Balanced';
-    differenceStatus.className=`difference-status ${difference>0?'positive':difference<0?'negative':'balanced'}`;
+    differenceStatus.textContent=toComplete?'Still to Make':'All Requests Covered';
+    differenceStatus.className=`difference-status ${toComplete?'negative':'positive'}`;
   }
   renderHomeYearStatistics();renderHomeCharityBreakdown();renderHomeCalendar();renderHomeSummaryReport();updateSaveStatus();
 }
@@ -710,11 +720,11 @@ function reportComparisonGroups(){
   return charities.map(charity=>{
     const prefix=charity+'|';
     const sizes=unique([...data.sizes,...Object.keys(inventory).filter(k=>k.startsWith(prefix)).map(k=>k.slice(prefix.length)),...Object.keys(requested).filter(k=>k.startsWith(prefix)).map(k=>k.slice(prefix.length))])
-      .map(size=>{const key=charity+'|'+size,onHand=Number(inventory[key]||0),requestedNeeds=Number(requested[key]||0);return{size,onHand,requestedNeeds,difference:onHand-requestedNeeds}})
+      .map(size=>{const key=charity+'|'+size,onHand=Number(inventory[key]||0),requestedNeeds=Number(requested[key]||0),toComplete=Math.max(0,requestedNeeds-onHand);return{size,onHand,requestedNeeds,toComplete}})
       .filter(row=>row.onHand!==0||row.requestedNeeds!==0)
       .sort((a,b)=>a.size.localeCompare(b.size));
-    if(!sizes.length)sizes.push({size:'',onHand:0,requestedNeeds:0,difference:0,empty:true});
-    const totals=sizes.reduce((out,row)=>({onHand:out.onHand+row.onHand,requestedNeeds:out.requestedNeeds+row.requestedNeeds,difference:out.difference+row.difference}),{onHand:0,requestedNeeds:0,difference:0});
+    if(!sizes.length)sizes.push({size:'',onHand:0,requestedNeeds:0,toComplete:0,empty:true});
+    const totals=sizes.reduce((out,row)=>({onHand:out.onHand+row.onHand,requestedNeeds:out.requestedNeeds+row.requestedNeeds,toComplete:out.toComplete+row.toComplete}),{onHand:0,requestedNeeds:0,toComplete:0});
     return{charity,sizes,...totals};
   });
 }
@@ -723,10 +733,10 @@ function differenceClass(n){return n>0?'positive':n<0?'negative':''}
 function reportComparisonRows(){
   const rows=[];
   reportComparisonGroups().forEach(group=>{
-    group.sizes.forEach(row=>rows.push({type:'detail',charity:group.charity,size:row.empty?'None in storage':row.size,requestedNeeds:row.requestedNeeds,onHand:row.onHand,difference:row.difference,empty:!!row.empty}));
-    rows.push({type:'subtotal',charity:`Total for ${group.charity}`,size:'',requestedNeeds:group.requestedNeeds,onHand:group.onHand,difference:group.difference});
+    group.sizes.forEach(row=>rows.push({type:'detail',charity:group.charity,size:row.empty?'None in storage':row.size,requestedNeeds:row.requestedNeeds,onHand:row.onHand,toComplete:row.toComplete,empty:!!row.empty}));
+    rows.push({type:'subtotal',charity:`Total for ${group.charity}`,size:'',requestedNeeds:group.requestedNeeds,onHand:group.onHand,toComplete:group.toComplete});
   });
-  rows.push({type:'grand',charity:'Grand Total',size:'',requestedNeeds:totalNeeded(),onHand:totalOnHand(),difference:totalOnHand()-totalNeeded()});
+  rows.push({type:'grand',charity:'Grand Total',size:'',requestedNeeds:totalNeeded(),onHand:totalOnHand(),toComplete:quiltsToCompleteTotal()});
   return rows;
 }
 function reportInventoryHTML(){
@@ -739,12 +749,12 @@ function reportInventoryHTML(){
     const onHandCell=isTotal?`<b class="on-hand-value">${row.onHand}</b>`:String(row.onHand);
     const requestedCell=isTotal?`<b>${row.requestedNeeds}</b>`:String(row.requestedNeeds);
     const differenceCell=isTotal
-      ?`<b><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></b>`
-      :`<span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span>`;
+      ?`<b><span class="difference-value ${row.toComplete?'negative':'positive'}">${row.toComplete}</span></b>`
+      :`<span class="difference-value ${row.toComplete?'negative':'positive'}">${row.toComplete}</span>`;
     return`<tr${rowClass}><td>${charityCell}</td><td>${sizeCell}</td><td>${onHandCell}</td><td>${requestedCell}</td><td>${differenceCell}</td></tr>`;
   }).join('');
   const grand=rows.find(row=>row.type==='grand');
-  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>${esc(data.homeStorageLabel)}</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${differenceClass(grand.difference)}">${signedDifference(grand.difference)}</span></b></td></tr></tfoot></table>`;
+  return`<table class="report-summary-table"><colgroup><col class="col-charity"><col class="col-size"><col class="col-onhand"><col class="col-requested"><col class="col-difference"></colgroup><thead><tr><th>Charity</th><th>Size</th><th>${esc(data.homeStorageLabel)}</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td></td><td><b class="on-hand-value">${grand.onHand}</b></td><td><b>${grand.requestedNeeds}</b></td><td><b><span class="difference-value ${grand.toComplete?'negative':'positive'}">${grand.toComplete}</span></b></td></tr></tfoot></table>`;
 }
 function reportNeedsHTML(){
   const list=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
@@ -765,15 +775,15 @@ function compactDistributedHTML(limit=6){
 }
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){
-  const generated=new Date().toLocaleString(),difference=totalOnHand()-totalNeeded(),differenceStatus=difference>0?'Surplus':difference<0?'Shortage':'Balanced';
+  const generated=new Date().toLocaleString(),toComplete=quiltsToCompleteTotal(),completionStatus=toComplete?'Still to Make':'All Requests Covered';
   const stats=yearlyStatistics(selectedStatisticsYear());
-  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>${esc(data.homeStorageLabel)}</div><div class="print-metric"><b>${totalNeeded()}</b>${esc(data.homeNeededLabel)}</div><div class="print-metric"><b class="${differenceClass(difference)}">${Math.abs(difference)}</b>${esc(data.homeDifferenceLabel)} · ${differenceStatus}</div></div><h2>${stats.year} Yearly Statistics</h2><div class="print-note">Made ${stats.made} · Distributed ${stats.distributed} · Net change ${signedDifference(stats.netChange)} · Current inventory ${stats.currentInventory} · Charities served ${stats.charitiesServed} · Lifetime distributed ${stats.lifetimeDistributed}</div><h2>${esc(data.homeStorageLabel)} and ${esc(data.homeNeededLabel)}</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>${esc(data.homeNeededLabel)}</h2>${reportNeedsHTML()}</div><div><h2>${esc(data.itemName)} Distributed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>${esc(data.homeStorageLabel)}</div><div class="print-metric"><b>${totalNeeded()}</b>${esc(data.homeNeededLabel)}</div><div class="print-metric"><b class="${toComplete?'negative':'positive'}">${toComplete}</b>${esc(data.homeDifferenceLabel)} · ${completionStatus}</div></div><h2>${stats.year} Yearly Statistics</h2><div class="print-note">Made ${stats.made} · Distributed ${stats.distributed} · Net change ${signedDifference(stats.netChange)} · Current inventory ${stats.currentInventory} · Charities served ${stats.charitiesServed} · Lifetime distributed ${stats.lifetimeDistributed}</div><h2>${esc(data.homeStorageLabel)} and ${esc(data.homeNeededLabel)}</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>${esc(data.homeNeededLabel)}</h2>${reportNeedsHTML()}</div><div><h2>${esc(data.itemName)} Distributed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderReports(){
   const statsYear=fillStatisticsYearSelect(),stats=yearlyStatistics(statsYear);
-  const difference=totalOnHand()-totalNeeded(),differenceStatus=difference>0?'Surplus':difference<0?'Shortage':'Balanced';
-  el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=Math.abs(difference);
-  if(el('reportStorageLabel'))el('reportStorageLabel').textContent=data.homeStorageLabel;if(el('reportNeededLabel'))el('reportNeededLabel').textContent=data.homeNeededLabel;if(el('reportDifferenceLabel'))el('reportDifferenceLabel').textContent=data.homeDifferenceLabel;if(el('reportDifferenceStatus')){el('reportDifferenceStatus').textContent=differenceStatus;el('reportDifferenceStatus').className=`metric-status-line difference-status ${difference>0?'positive':difference<0?'negative':'balanced'}`}
+  const toComplete=quiltsToCompleteTotal(),completionStatus=toComplete?'Still to Make':'All Requests Covered';
+  el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=toComplete;
+  if(el('reportStorageLabel'))el('reportStorageLabel').textContent=data.homeStorageLabel;if(el('reportNeededLabel'))el('reportNeededLabel').textContent=data.homeNeededLabel;if(el('reportDifferenceLabel'))el('reportDifferenceLabel').textContent=data.homeDifferenceLabel;if(el('reportDifferenceStatus')){el('reportDifferenceStatus').textContent=completionStatus;el('reportDifferenceStatus').className=`metric-status-line difference-status ${toComplete?'negative':'positive'}`}
   if(el('reportInventoryHeading'))el('reportInventoryHeading').textContent=`${data.homeStorageLabel} and ${data.homeNeededLabel}`;if(el('reportNeedsHeading'))el('reportNeedsHeading').textContent=data.homeNeededLabel;if(el('reportDistributedHeading'))el('reportDistributedHeading').textContent=`${data.itemName} Distributed`;
   if(el('reportYearlyStats'))el('reportYearlyStats').innerHTML=yearlyStatisticsHTML(stats);
   el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();el('reportDistributed').innerHTML=reportDistributedHTML();
@@ -897,9 +907,10 @@ function makeOnePagePDF(){
   text(36,726,`Generated ${new Date().toLocaleString()}`,7,false);
 
   const metricY=684,metricH=32,metricW=166;
-  const reportDifference=totalOnHand()-totalNeeded(),reportDifferenceStatus=reportDifference>0?'Surplus':reportDifference<0?'Shortage':'Balanced';
-  [[36,data.homeStorageLabel,totalOnHand()],[223,data.homeNeededLabel,totalNeeded()],[410,`${data.homeDifferenceLabel} · ${reportDifferenceStatus}`,Math.abs(reportDifference)]].forEach(([x,label,num])=>{
-    rect(x,metricY,metricW,metricH);text(x+8,metricY+18,String(num),14,true);text(x+42,metricY+19,pdfFit(label,25),7.4,true);
+  const toComplete=quiltsToCompleteTotal();
+  [[36,data.homeStorageLabel,totalOnHand()],[223,data.homeNeededLabel,totalNeeded()],[410,data.homeDifferenceLabel,toComplete]].forEach(([x,label,num])=>{
+    rect(x,metricY,metricW,metricH);text(x+8,metricY+18,String(num),14,true);
+    pdfWrap(label,24).slice(0,2).forEach((part,i)=>text(x+42,metricY+21-i*9,pdfFit(part,24),6.8,true));
   });
 
   const stats=yearlyStatistics(selectedStatisticsYear());
@@ -907,7 +918,8 @@ function makeOnePagePDF(){
   text(36,653,pdfFit(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`,74),10,true);line(36,647,576,647,.7);
   const xCharity=36,xSize=180,xOnHand=365,xRequested=455,xDifference=525;
   let y=633;
-  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand,y,pdfFit(data.homeStorageLabel.toUpperCase(),16),5.5,true);text(xRequested-7,y+3,pdfFit(data.homeNeededLabel.toUpperCase(),18),5.2,true);text(xRequested-7,y-4,'TO COMPLETE',5.2,true);text(xDifference-10,y,pdfFit(data.homeDifferenceLabel.toUpperCase(),13),6.2,true);line(36,y-8,576,y-8,.5);y-=20;
+  const drawSummaryHeader=(x,label,maxChars,size)=>pdfWrap(label.toUpperCase(),maxChars).slice(0,3).forEach((part,i)=>text(x,y+7-i*7,pdfFit(part,maxChars),size,true));
+  text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);drawSummaryHeader(xOnHand-9,data.homeStorageLabel,14,5.5);drawSummaryHeader(xRequested-8,data.homeNeededLabel,14,5.5);drawSummaryHeader(xDifference-15,data.homeDifferenceLabel,13,5.5);line(36,y-14,576,y-14,.5);y-=29;
   const allRows=reportComparisonRows(),maxSummaryRows=20,shownRows=allRows.slice(0,maxSummaryRows);
   shownRows.forEach((row,rowIndex)=>{
     const bold=row.type!=='detail';
@@ -917,7 +929,7 @@ function makeOnePagePDF(){
     if(row.type==='detail')text(xSize,y,pdfFit(row.size,28),7.2,false);
     text(xOnHand,y,String(row.onHand),7.2,bold);
     text(xRequested,y,String(row.requestedNeeds),7.2,bold);
-    text(xDifference,y,signedDifference(row.difference),7.2,row.type!=='detail',diffColor(row.difference));
+    text(xDifference,y,String(row.toComplete),7.2,row.type!=='detail',row.toComplete?'0.71 0.23 0.28':'0.18 0.49 0.29');
     y-=12;
   });
   if(allRows.length>shownRows.length){text(36,y,`+ ${allRows.length-shownRows.length} summary rows not shown`,7,true);y-=12}
@@ -1039,9 +1051,10 @@ function makeFullPDF(){
 
   newPage();
   const metricY=656,metricH=36,metricW=166;
-  const reportDifference=totalOnHand()-totalNeeded(),reportDifferenceStatus=reportDifference>0?'Surplus':reportDifference<0?'Shortage':'Balanced';
-  [[36,data.homeStorageLabel,totalOnHand()],[223,data.homeNeededLabel,totalNeeded()],[410,`${data.homeDifferenceLabel} · ${reportDifferenceStatus}`,Math.abs(reportDifference)]].forEach(([x,label,num])=>{
-    rect(x,metricY,metricW,metricH);text(x+9,metricY+20,String(num),15,true);text(x+49,metricY+21,pdfFit(label,25),7.4,true);
+  const toComplete=quiltsToCompleteTotal();
+  [[36,data.homeStorageLabel,totalOnHand()],[223,data.homeNeededLabel,totalNeeded()],[410,data.homeDifferenceLabel,toComplete]].forEach(([x,label,num])=>{
+    rect(x,metricY,metricW,metricH);text(x+9,metricY+20,String(num),15,true);
+    pdfWrap(label,24).slice(0,2).forEach((part,i)=>text(x+49,metricY+23-i*9,pdfFit(part,24),6.8,true));
   });
   page.y=632;
 
@@ -1053,8 +1066,9 @@ function makeFullPDF(){
   beginSection(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`);
   const comparisonRows=reportComparisonRows(),diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
   const drawComparisonHeader=()=>{
-    text(36,page.y,'CHARITY',7,true);text(185,page.y,'SIZE',7,true);text(365,page.y,pdfFit(data.homeStorageLabel.toUpperCase(),16),5.5,true);text(448,page.y+3,pdfFit(data.homeNeededLabel.toUpperCase(),18),5.2,true);text(448,page.y-4,'TO COMPLETE',5.2,true);text(515,page.y,pdfFit(data.homeDifferenceLabel.toUpperCase(),13),6.2,true);
-    line(36,page.y-8,576,page.y-8,.5);page.y-=21;
+    const headerY=page.y,drawHeader=(x,label,maxChars,size)=>pdfWrap(label.toUpperCase(),maxChars).slice(0,3).forEach((part,i)=>text(x,headerY+7-i*7,pdfFit(part,maxChars),size,true));
+    text(36,headerY,'CHARITY',7,true);text(185,headerY,'SIZE',7,true);drawHeader(356,data.homeStorageLabel,14,5.5);drawHeader(447,data.homeNeededLabel,14,5.5);drawHeader(510,data.homeDifferenceLabel,13,5.5);
+    line(36,headerY-14,576,headerY-14,.5);page.y-=30;
   };
   drawComparisonHeader();
   comparisonRows.forEach((row,rowIndex)=>{
@@ -1066,7 +1080,7 @@ function makeFullPDF(){
     if(row.type==='detail')text(185,page.y,pdfFit(row.size,29),7.6,false);
     text(365,page.y,String(row.onHand),7.6,bold);
     text(455,page.y,String(row.requestedNeeds),7.6,bold);
-    text(525,page.y,signedDifference(row.difference),7.6,row.type!=='detail',diffColor(row.difference));
+    text(525,page.y,String(row.toComplete),7.6,row.type!=='detail',row.toComplete?'0.71 0.23 0.28':'0.18 0.49 0.29');
     page.y-=14;
   });
   page.y-=8;
@@ -1176,7 +1190,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.17 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.18 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.17',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.18',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
