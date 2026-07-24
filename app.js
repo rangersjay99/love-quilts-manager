@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.18';
+const VERSION='7.8.19';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -605,8 +605,9 @@ function calendarMarkup(year,charity='',size='',showAddButtons=true){
     const needed=list.reduce((sum,n)=>sum+Number(n.qty||0),0),sent=list.reduce((sum,n)=>sum+fulfilledQty(n),0),remainingTotal=list.reduce((sum,n)=>sum+remainingNeed(n),0),shortage=rows.reduce((sum,item)=>sum+item.shortage,0);
     const allComplete=list.length>0&&remainingTotal===0,isPast=month<monthNow(),isCurrent=month===monthNow();
     const hasPartial=rows.some(item=>item.available>0&&item.shortage>0),hasCovered=rows.some(item=>item.remaining>0&&item.shortage===0),hasShort=rows.some(item=>item.shortage>0);
-    const state=!list.length?'empty-month':isPast?(allComplete?'completed':'past-unmet'):allComplete?'completed':!hasShort?'covered':(hasPartial||hasCovered)?'partial':'shortage';
-    const label=!list.length?'No request':isPast?(allComplete?'Demand Met':'Demand Not Met'):allComplete?'Distributed':!hasShort?'Covered':(hasPartial||hasCovered)?'Partial':'Shortage';
+    const futureCovered=list.length>0&&!hasShort;
+    const state=!list.length?'empty-month':isPast?(allComplete?'completed':'past-unmet'):futureCovered?'covered':'future-open';
+    const label=!list.length?'No request':isPast?(allComplete?'Demand Met':'Demand Not Met'):allComplete?'Distributed':futureCovered?'Covered':(hasPartial||hasCovered||sent>0)?'Partial':'Shortage';
     const details=list.length?rows.map(item=>{
       const n=item.n,nSent=fulfilledQty(n),nRemaining=remainingNeed(n);
       let summary;
@@ -1190,7 +1191,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.18 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.19 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.18',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.19',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

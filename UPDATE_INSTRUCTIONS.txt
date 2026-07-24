@@ -1,22 +1,19 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.18
+LOVE QUILTS MANAGER — UPDATE 7.8.19
 
-1. Keep a backup copy of the current working ZIP and export an in-app backup before replacing files.
-2. Upload every file and folder from this package to the existing GitHub Pages repository, replacing older copies.
-3. Confirm the `icons` folder and the new v7818 icon files are uploaded.
+1. Export an in-app backup and keep the current working ZIP.
+2. Open the unzipped 7.8.19 folder.
+3. Select every file and folder inside it and upload them to the root of the existing GitHub Pages repository, replacing older copies.
 4. Commit the files and allow GitHub Pages to publish.
-5. Open the app and use Sync Now or refresh once. On iPhone/iPad, fully close and reopen the installed app if an older cached version appears.
+5. Open the app and confirm the splash or About screen says Update 7.8.19.
+6. On iPhone/iPad, fully close and reopen the installed app. If 7.8.18 still appears, refresh the website once, then reopen the installed app.
 
-VERIFY AFTER UPDATE
+VERIFY THE CALENDAR
 
-1. Splash and About show Update 7.8.18.
-2. Calendar is the first Home card after At a Glance.
-3. Home and Reports show Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
-4. On iPhone, the third Reports summary block spans the full row and the complete wording is visible.
-5. Past calendar months are light green when demand was met and light red when it was not met.
-6. A future request covered early is light green.
-7. The current month has the bold border.
-8. Quilts Needed to be Completed equals the sum of shortages by charity and size; surplus in a different category does not reduce it.
-9. Yearly Statistics, Sync Now, Set Current Count, and distribution safeguards still work.
-10. Generate both Compact and Full PDFs and confirm the three summary labels are readable.
+- Past demand met is light green.
+- Past demand not met is light red.
+- A future month fully covered early is light green.
+- A future month that is partial or short remains neutral rather than gold or red.
+- The current month has a bold plum border.
+- The color key appears above the Calendar.
 
 Existing data and Firebase synchronization are retained.

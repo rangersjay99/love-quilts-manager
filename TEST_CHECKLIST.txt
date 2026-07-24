@@ -1,39 +1,23 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.18 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.19 TEST CHECKLIST
 
 VERSION AND CACHE
-[ ] App opens and shows Update 7.8.18.
-[ ] A previously installed phone receives the new app shell after reopening or refreshing.
-
-HOME ORDER AND WORDING
-[ ] At a Glance remains the first Home card.
-[ ] Calendar is immediately after At a Glance.
-[ ] This Year follows Calendar.
-[ ] By Charity follows This Year.
-[ ] Summary labels read Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
-[ ] Older default labels migrate automatically; a custom user-entered label remains unchanged.
+[ ] Splash and About show Update 7.8.19.
+[ ] Previously installed phone receives the new app shell after reopening or refreshing.
 
 CALENDAR
+[ ] Color key appears above the Calendar on Home.
+[ ] Color key appears above the Calendar on Quilts Needed.
 [ ] Past month with all demand met is light green.
 [ ] Past month with unmet demand is light red.
-[ ] Future month covered early is light green.
-[ ] Uncovered future month retains shortage/partial status.
-[ ] Current month has a noticeably bold border.
-[ ] Calendar entries can be added and edited directly.
+[ ] Future month fully covered early is light green.
+[ ] Future month that is partial remains neutral.
+[ ] Future month that is short remains neutral.
+[ ] Current month has a bold plum border.
+[ ] Calendar remains first after At a Glance.
 
-REPORTS
-[ ] Reports use the same three summary labels as Home.
-[ ] On iPhone width, the third summary block spans the full row and no wording is cut off.
-[ ] Quilts Needed to be Completed never displays a surplus value.
-[ ] A shortage in one charity/size is not canceled by surplus in another charity/size.
-[ ] Alternating report-row shading remains visible.
-[ ] Yearly Statistics remain selectable and correct.
-[ ] Compact PDF contains readable wrapped summary labels.
-[ ] Full PDF contains readable wrapped summary labels.
-
-INVENTORY, DISTRIBUTION, AND SYNC
-[ ] Set Current Count can set a balance to zero.
-[ ] Distributing all 26 of 26 quilts leaves zero available.
-[ ] Saving a linked distribution twice does not deduct twice.
-[ ] Correcting a distribution safely restores or deducts only the difference.
-[ ] Protected linked distribution transactions cannot be edited or deleted independently.
-[ ] Sync Now works and status/last-sync information remains clear.
+RETAINED FEATURES
+[ ] Third Reports summary block is readable on iPhone.
+[ ] Yearly Statistics remain correct.
+[ ] Sync Now works.
+[ ] Set Current Count can set inventory to zero.
+[ ] Distribution safeguards still prevent duplicate deductions.
