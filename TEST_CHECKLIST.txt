@@ -1,19 +1,28 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.19 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.20 TEST CHECKLIST
 
 VERSION AND CACHE
-[ ] Splash and About show Update 7.8.19.
+[ ] Splash and About show Update 7.8.20.
 [ ] Previously installed phone receives the new app shell after reopening or refreshing.
 
-CALENDAR
+CALENDAR MONTH COLORS
 [ ] Color key appears above the Calendar on Home.
 [ ] Color key appears above the Calendar on Quilts Needed.
 [ ] Past month with all demand met is light green.
 [ ] Past month with unmet demand is light red.
 [ ] Future month fully covered early is light green.
-[ ] Future month that is partial remains neutral.
-[ ] Future month that is short remains neutral.
+[ ] Future month that is partial is light yellow.
+[ ] Future month that is short is light yellow.
+[ ] Future month with no request is light yellow.
 [ ] Current month has a bold plum border.
+[ ] Uncovered current month remains neutral rather than yellow.
 [ ] Calendar remains first after At a Glance.
+
+CHARITY COLORS INSIDE EACH MONTH
+[ ] Charity section is light green when all of that charity's demand is met or covered.
+[ ] Charity section is light red when that charity is still short.
+[ ] Multiple sizes for the same charity are grouped into one charity section.
+[ ] If one size is short, the combined charity section remains light red.
+[ ] Tapping an individual size line still opens the correct Calendar editor.
 
 RETAINED FEATURES
 [ ] Third Reports summary block is readable on iPhone.

@@ -1,19 +1,21 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.19
+LOVE QUILTS MANAGER — UPDATE 7.8.20
 
 1. Export an in-app backup and keep the current working ZIP.
-2. Open the unzipped 7.8.19 folder.
+2. Open the unzipped 7.8.20 folder.
 3. Select every file and folder inside it and upload them to the root of the existing GitHub Pages repository, replacing older copies.
 4. Commit the files and allow GitHub Pages to publish.
-5. Open the app and confirm the splash or About screen says Update 7.8.19.
-6. On iPhone/iPad, fully close and reopen the installed app. If 7.8.18 still appears, refresh the website once, then reopen the installed app.
+5. Open the app and confirm the splash or About screen says Update 7.8.20.
+6. On iPhone/iPad, fully close and reopen the installed app. If an older version still appears, refresh the website once, then reopen the installed app.
 
 VERIFY THE CALENDAR
 
 - Past demand met is light green.
 - Past demand not met is light red.
 - A future month fully covered early is light green.
-- A future month that is partial or short remains neutral rather than gold or red.
-- The current month has a bold plum border.
-- The color key appears above the Calendar.
+- Other future months are light yellow, including months with no request.
+- The current month has a bold plum border and stays neutral unless fully covered.
+- A charity section is light green when that charity is met/covered.
+- A charity section is light red when that charity is still short.
+- The expanded color key appears above the Calendar.
 
 Existing data and Firebase synchronization are retained.

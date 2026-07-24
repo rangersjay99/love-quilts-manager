@@ -1,7 +1,7 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Verified July 24, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.19
+IMPLEMENTED THROUGH UPDATE 7.8.20
 
 HOME
 - At a Glance remains first.
@@ -14,8 +14,13 @@ CALENDAR — VERIFIED COLOR RULES
 - Past demand met: light green.
 - Past demand not met: light red.
 - Future month fully covered early: light green.
-- All other future months remain neutral; partial and shortage status do not tint the whole future-month card.
-- Current month has a bold plum border.
+- Other future months: light yellow, including months with no request yet.
+- An uncovered current month remains neutral and has a bold plum border.
+- Each charity is grouped inside its month card across all requested sizes.
+- Charity demand met/covered: light green charity section.
+- Charity still short: light red charity section.
+- For past months, a charity is met only when its requested quilts were completed/distributed.
+- For current and future months, a charity is met when available inventory covers all remaining demand for that charity in the month.
 - A visible color key appears above the Calendar.
 - Calendar supports direct add/edit.
 

@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.19';
+const VERSION='7.8.20';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -606,15 +606,26 @@ function calendarMarkup(year,charity='',size='',showAddButtons=true){
     const allComplete=list.length>0&&remainingTotal===0,isPast=month<monthNow(),isCurrent=month===monthNow();
     const hasPartial=rows.some(item=>item.available>0&&item.shortage>0),hasCovered=rows.some(item=>item.remaining>0&&item.shortage===0),hasShort=rows.some(item=>item.shortage>0);
     const futureCovered=list.length>0&&!hasShort;
-    const state=!list.length?'empty-month':isPast?(allComplete?'completed':'past-unmet'):futureCovered?'covered':'future-open';
+    const isFuture=month>monthNow();
+    const state=!list.length?(isFuture?'future-open empty-month':isCurrent?'current-open empty-month':'empty-month'):isPast?(allComplete?'completed':'past-unmet'):futureCovered?'covered':isCurrent?'current-open':'future-open';
     const label=!list.length?'No request':isPast?(allComplete?'Demand Met':'Demand Not Met'):allComplete?'Distributed':futureCovered?'Covered':(hasPartial||hasCovered||sent>0)?'Partial':'Shortage';
-    const details=list.length?rows.map(item=>{
-      const n=item.n,nSent=fulfilledQty(n),nRemaining=remainingNeed(n);
-      let summary;
-      if(nRemaining===0)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
-      else if(nSent>0||month<monthNow())summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed ${nRemaining} · Available in Storage ${item.available} · Short ${item.shortage}`;
-      else summary=`Quilts Needed ${n.qty} · Available in Storage ${item.available} · Short ${item.shortage}`;
-      return`<div class="month-need"><button type="button" onclick="openCalendarNeedEditor('${n.id}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · ${summary}</button></div>`;
+    const charityGroups=[];
+    rows.forEach(item=>{
+      let group=charityGroups.find(entry=>entry.charity===item.n.charity);
+      if(!group){group={charity:item.n.charity,items:[]};charityGroups.push(group)}
+      group.items.push(item);
+    });
+    const details=list.length?charityGroups.map(group=>{
+      const groupMet=isPast?group.items.every(item=>remainingNeed(item.n)===0):group.items.every(item=>item.shortage===0);
+      const lines=group.items.map(item=>{
+        const n=item.n,nSent=fulfilledQty(n),nRemaining=remainingNeed(n);
+        let summary;
+        if(nRemaining===0)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
+        else if(nSent>0||isPast)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed ${nRemaining} · Available in Storage ${item.available} · Short ${item.shortage}`;
+        else summary=`Quilts Needed ${n.qty} · Available in Storage ${item.available} · Short ${item.shortage}`;
+        return`<button type="button" class="month-need-line" onclick="openCalendarNeedEditor('${n.id}')"><span class="month-need-size">${esc(n.size)}</span> · ${summary}</button>`;
+      }).join('');
+      return`<div class="month-charity-status ${groupMet?'charity-met':'charity-short'}"><div class="month-charity-heading"><b>${esc(group.charity)}</b><span>${groupMet?'Met':'Short'}</span></div>${lines}</div>`;
     }).join(''):'<div class="month-need">No quilts needed</div>';
     const totals=(allComplete||isPast||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
     const add=showAddButtons?`<button type="button" class="month-add-button" onclick="openCalendarNeedEditor('', '${month}')">＋ Add Quilts Needed</button>`:'';
@@ -1191,7 +1202,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.19 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.20 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.19',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.20',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

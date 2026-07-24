@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.19">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.19">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.19">
+<link rel="manifest" href="manifest-v7.json?v=7.8.20">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.20">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.20">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -53,7 +53,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .metric .difference-status.negative{color:var(--red)}
 .metric .difference-status.balanced{color:var(--gold)}
 .home-calendar-filter{display:grid;grid-template-columns:minmax(0,260px);margin-bottom:10px}.home-calendar-filter label{margin:0;font-size:12px;color:var(--muted)}.home-calendar-filter select{margin-top:5px}
-.calendar-legend{display:flex;flex-wrap:wrap;gap:6px 10px;margin:0 0 10px;font-size:11px;color:var(--muted)}.calendar-legend span{display:inline-flex;align-items:center;gap:5px}.calendar-swatch{width:15px;height:15px;border:2px solid var(--line);border-radius:5px;background:#fff}.calendar-swatch.met{border-color:#62a875;background:#e3f4e8}.calendar-swatch.unmet{border-color:#cb6671;background:#f9e1e5}.calendar-swatch.current{border:4px solid var(--plum);background:#fff}
+.calendar-legend{display:flex;flex-wrap:wrap;gap:6px 10px;margin:0 0 10px;font-size:11px;color:var(--muted)}.calendar-legend span{display:inline-flex;align-items:center;gap:5px}.calendar-swatch{width:15px;height:15px;border:2px solid var(--line);border-radius:5px;background:#fff}.calendar-swatch.met{border-color:#62a875;background:#e3f4e8}.calendar-swatch.unmet{border-color:#cb6671;background:#f9e1e5}.calendar-swatch.future{border-color:#ead28f;background:#fff8e5}.calendar-swatch.current{border:4px solid var(--plum);background:#fff}.calendar-swatch.charity-met{border-color:#8fc79d;background:#edf8f0}.calendar-swatch.charity-short{border-color:#e0a1aa;background:#fff0f1}
 .month-add-button{width:100%;min-height:34px;margin-top:8px;padding:7px;border:1px solid rgba(109,58,120,.30);border-radius:9px;background:rgba(109,58,120,.06);color:var(--plum-dark);font-size:11px;font-weight:850;cursor:pointer}#home .month-add-button:hover,#home .month-add-button:focus{background:rgba(109,58,120,.12);outline:none}
 .calendar-modal-backdrop{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(35,25,38,.58)}
 .calendar-modal-backdrop.open{display:flex}.calendar-modal-card{width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 60px rgba(30,15,35,.28)}
@@ -115,15 +115,14 @@ textarea{min-height:80px;resize:vertical}
 .calendar-toolbar select{margin-top:5px}
 .needs-calendar{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .month-card{min-width:0;padding:11px;border:2px solid var(--line);border-radius:13px;background:#fff}
-.month-card.covered,.month-card.completed{border-color:#62a875;background:#e3f4e8}.month-card.past-unmet,.month-card.past-due{border-color:#cb6671;background:#f9e1e5}.month-card.future-open{border-color:var(--line);background:#fff}.month-card.empty-month{background:#f7f4f7}.month-card.current-month{border-width:4px;border-color:var(--plum);box-shadow:0 0 0 2px rgba(109,58,120,.26),0 4px 14px rgba(61,39,63,.14)}
+.month-card.covered,.month-card.completed{border-color:#62a875;background:#e3f4e8}.month-card.past-unmet,.month-card.past-due{border-color:#cb6671;background:#f9e1e5}.month-card.empty-month{background:#f7f4f7}.month-card.current-open{background:#fff}.month-card.future-open{border-color:#ead28f;background:#fff8e5}.month-card.current-month{border-width:4px;border-color:var(--plum);box-shadow:0 0 0 2px rgba(109,58,120,.26),0 4px 14px rgba(61,39,63,.14)}
 .month-card h4{display:flex;justify-content:space-between;gap:6px;margin:0 0 7px;color:var(--plum-dark);font-size:14px}
 .month-status{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
-.month-card.covered .month-status,.month-card.completed .month-status{color:var(--green)}.month-card.past-unmet .month-status,.month-card.past-due .month-status{color:var(--red)}.month-card.future-open .month-status,.month-card.empty-month .month-status{color:var(--muted)}
+.month-card.covered .month-status,.month-card.completed .month-status{color:var(--green)}.month-card.past-unmet .month-status,.month-card.past-due .month-status{color:var(--red)}.month-card.future-open .month-status,.month-card.current-open .month-status,.month-card.empty-month .month-status{color:var(--muted)}
 .month-totals{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:7px}
 .month-totals div{padding:6px;border-radius:8px;background:rgba(255,255,255,.76);text-align:center}
 .month-totals b{display:block;font-size:17px}.month-totals span{display:block;font-size:9px;color:var(--muted)}
-.month-need{padding:6px 0;border-top:1px solid rgba(100,80,100,.15);font-size:11px;line-height:1.3}
-.month-need:first-of-type{border-top:0}.month-need button{width:100%;border:0;padding:0;text-align:left;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.month-charity-status{margin:7px 0;padding:7px 8px;border:1px solid;border-radius:9px;font-size:11px;line-height:1.3}.month-charity-status.charity-met{border-color:#b9ddc2;background:#edf8f0}.month-charity-status.charity-short{border-color:#e7b5bb;background:#fff0f1}.month-charity-heading{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:3px}.month-charity-heading b{font-size:11px}.month-charity-heading span{flex:0 0 auto;padding:2px 6px;border-radius:999px;background:rgba(255,255,255,.72);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.03em}.charity-met .month-charity-heading span{color:var(--green)}.charity-short .month-charity-heading span{color:var(--red)}.month-need-line{display:block;width:100%;border:0;border-top:1px solid rgba(100,80,100,.13);padding:5px 0 0;margin-top:5px;text-align:left;background:transparent;color:inherit;font:inherit;cursor:pointer}.month-need-line:first-of-type{border-top:0;padding-top:0;margin-top:0}.month-need-size{font-weight:800}.month-need{padding:6px 0;border-top:1px solid rgba(100,80,100,.15);font-size:11px;line-height:1.3}.month-need:first-of-type{border-top:0}
 .audit-meta{margin-top:5px;font-size:11px;color:var(--muted);line-height:1.35}
 .restore-warning{margin-top:10px;padding:10px;border-radius:10px;background:#fff0dc;color:#744a0b;font-size:12px;line-height:1.45}
 @media(max-width:700px){.needs-calendar{grid-template-columns:repeat(2,1fr)}}
@@ -320,14 +319,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.19" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.20" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.19</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.20</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -366,7 +365,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   </div>
   <div class="card">
     <div class="home-section-heading"><h3 id="homeCalendarHeading">All Quilts Calendar</h3><span>Tap an entry to edit</span></div>
-    <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch current"></i>Current month</span></div>
+    <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch future"></i>Future month</span><span><i class="calendar-swatch current"></i>Current month</span><span><i class="calendar-swatch charity-met"></i>Charity met</span><span><i class="calendar-swatch charity-short"></i>Charity short</span></div>
     <div class="home-calendar-filter"><label>Charity<select id="homeCalendarCharity" onchange="renderHomeCalendar()"></select></label></div>
     <div id="homeNeedsCalendar" class="needs-calendar"></div>
     <button type="button" class="primary home-print-summary" onclick="printHomeSummary()">Print Summary</button>
@@ -425,8 +424,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <section id="needs" class="view">
   <div class="card">
     <h2>All Quilts Calendar</h2>
-    <p class="small">View all 12 months. Past months are light green when demand was met and light red when it was not met. A future month turns light green only when it is fully covered early. Other future months remain neutral. The current month has a bold border.</p>
-    <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch current"></i>Current month</span></div>
+    <p class="small">View all 12 months. Past months are light green when demand was met and light red when it was not met. A future month turns light green only when it is fully covered early. Other future months are light yellow. The current month has a bold border. Charity sections are light green when that charity is met and light red when it is still short.</p>
+    <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch future"></i>Future month</span><span><i class="calendar-swatch current"></i>Current month</span><span><i class="calendar-swatch charity-met"></i>Charity met</span><span><i class="calendar-swatch charity-short"></i>Charity short</span></div>
     <div class="calendar-toolbar">
       <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
       <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
@@ -592,11 +591,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.19 · July 24, 2026</span>
+      <b>Version</b><span>Update 7.8.20 · July 24, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.19 places the Calendar first after At a Glance, uses the verified Home and Reports wording, makes the third Reports summary block fully readable on iPhone, and shows the exact number of quilts still needing completion. Calendar shading now follows the verified rules exactly: past met green, past unmet red, future covered early green, and all other future months neutral. Yearly statistics, syncing, exact-count tools, and distribution safeguards are retained.</p>
+    <p class="small">Update 7.8.20 keeps the Calendar first after At a Glance and adds the agreed quick visual colors. Past demand met is green, past demand not met is red, ordinary future months are light yellow, future months covered early are green, and the current month keeps its bold border. Each charity section is also green when its demand is met and light red when it is still short. Yearly statistics, verified report wording, syncing, exact-count tools, and distribution safeguards are retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -624,7 +623,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.19"></script>
-<script src="app.js?v=7.8.19"></script>
+<script type="module" src="firebase-sync.js?v=7.8.20"></script>
+<script src="app.js?v=7.8.20"></script>
 </body>
 </html>

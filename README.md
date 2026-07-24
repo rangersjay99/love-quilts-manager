@@ -1,17 +1,20 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.19 — July 24, 2026
+Current release: Update 7.8.20 — July 24, 2026
 
-## Update 7.8.19 — Calendar color-rule correction
+## Update 7.8.20 — Future-month and charity status colors
 
-- Corrects the Calendar to follow the verified rules exactly:
+- Restores the earlier **light yellow** background for ordinary future months, including future months with no request yet.
+- Keeps a future month **light green** when every request in that month is already covered early.
+- Keeps past-month status colors:
   - Past demand met: **light green**.
   - Past demand not met: **light red**.
-  - Future month fully covered early: **light green**.
-  - Other future months: **neutral**, even when partial or short.
-  - Current month: **bold plum border**.
-- Makes the light green and light red shading easier to recognize while remaining soft.
-- Adds a compact color key above the Calendar on Home and the Quilts Needed screen.
+- Keeps the current month easy to find with a **bold plum border**. An uncovered current month remains neutral rather than yellow.
+- Adds charity-level quick visual status inside every month card:
+  - Charity demand met or covered: **light green**.
+  - Charity still short: **light red**.
+  - All sizes for the same charity are grouped together and receive one combined charity status.
+- Expands the Calendar key on Home and the Quilts Needed screen.
 - Retains Calendar-first Home order, verified Home/Reports wording, the third Reports block fix, yearly statistics, Sync Now, Set Current Count, report shading, and distribution safeguards.
 
 Copyright © 2026 Jay. Love Quilts Manager. All rights reserved.

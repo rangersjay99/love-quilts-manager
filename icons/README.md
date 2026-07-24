@@ -1,1 +1,1 @@
-Approved patchwork-heart app icons with white stitch lines and solid red thread through the needle. Update 7.8.19 uses the v7818 copies to force reliable icon and app-shell cache refreshes.
+Approved patchwork-heart app icons with white stitch lines and solid red thread through the needle. Update 7.8.20 continues using the v7818 icon copies; the 7.8.20 query string and service-worker cache name force the updated app shell to refresh without creating unnecessary duplicate icon files.

@@ -1,28 +1,43 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.19 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.20 VALIDATION RESULTS
 Run: July 24, 2026
 
 Result: PASS
-Checks passed: 22 of 22
+Checks passed: 47 of 47
 
-PASS — Version in splash
-PASS — Version constant
-PASS — Service worker cache version
-PASS — Calendar first after summary
-PASS — Past met green CSS
-PASS — Past unmet red CSS
-PASS — Other future neutral CSS
-PASS — Current month bold plum border
-PASS — Color key on both calendars — 2
-PASS — Future state only covered or neutral
-PASS — No future gold/red state assignment
-PASS — Reports third block mobile full width
-PASS — Verified report wording
-PASS — Logic past met
-PASS — Logic past unmet
-PASS — Logic future covered
-PASS — Logic future partial neutral
-PASS — Logic future shortage neutral
-PASS — Referenced assets exist — []
-PASS — app.js syntax
-PASS — firebase-sync.js syntax
-PASS — sw.js syntax
+PACKAGE, SOURCE, AND SYNTAX — 34 PASS
+- Version shown in splash/About and app constant.
+- Service-worker cache and app-shell query strings use 7.8.20.
+- Both manifests are valid JSON and use the 7.8.20 start URL.
+- Calendar remains first after At a Glance.
+- Future-month light-yellow CSS is present.
+- Past met green, past unmet red, neutral current-month, and bold current border CSS are present.
+- Future, current, charity-met, and charity-short color-key styles are present.
+- Expanded color key appears on both Calendars.
+- Future empty, partial, and short months use the future-open state.
+- Future covered months use the covered state.
+- Current uncovered/no-request month uses the neutral current-open state.
+- Charity entries are grouped by charity name.
+- Past charity status uses completed/distributed demand.
+- Current/future charity status uses available-inventory coverage.
+- Individual charity/size lines remain editable.
+- Third Reports summary block mobile full-width fix remains.
+- Verified Home/Reports wording remains.
+- Linked distribution protection remains.
+- Master Change List and README are updated.
+- All locally referenced assets exist.
+- app.js, firebase-sync.js, and sw.js pass JavaScript syntax checks.
+
+CALENDAR RUNTIME LOGIC — 13 PASS
+- Past completed month receives completed state.
+- Past unmet month receives past-unmet state.
+- Current uncovered month receives neutral current-open plus current-month state.
+- Future partial/short month receives future-open state.
+- Future covered month receives covered state.
+- Future no-request month receives future-open plus empty-month state.
+- Past completed charity receives Met status.
+- Past unmet charity receives Short status.
+- Future short charity receives Short status.
+- Future covered charity receives Met status.
+- Fully covered future charity receives Met status.
+- Multiple sizes for Bridges render under one grouped charity section.
+- A grouped charity with one short size remains Short while showing both sizes.
