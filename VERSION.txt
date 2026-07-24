@@ -1,6 +1,6 @@
-Love Quilts Manager Update 7.8.15
+Love Quilts Manager Update 7.8.16
 Released: July 23, 2026
 
-Completed-distribution inventory repair.
+Report consistency, exact inventory counts, manual sync, and distribution safeguards.
 
-This update fixes requests that were already marked distributed while their quilts remained in inventory. Inventory removal now uses the amount actually recorded out, so the missing quantity can be deducted once without double-counting.
+This update matches report wording to the Home screen, adds alternating row shading, adds a visible Sync Now control, adds Set Current Count for exact physical inventory, and protects distribution-linked inventory transactions from duplicate removal or unsafe edits.

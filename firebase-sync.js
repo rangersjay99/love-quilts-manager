@@ -135,6 +135,8 @@ function setState(message, kind = 'normal') {
   if (account) account.textContent = currentUser?.email || 'Not signed in';
   const loadingStatus = byId('firebaseLoadingStatus');
   if (loadingStatus && !byId('firebaseGate')?.classList.contains('hidden')) loadingStatus.textContent = displayMessage;
+  const syncBusy = /syncing|waiting to sync|loading shared/i.test(displayMessage);
+  document.querySelectorAll('[data-sync-now]').forEach(button => { button.disabled = syncBusy || !currentUser; button.textContent = syncBusy ? 'Syncing…' : 'Sync Now'; });
   if (typeof window.lqRefreshSaveStatus === 'function') window.lqRefreshSaveStatus();
 }
 
@@ -191,6 +193,8 @@ function normalizeTransaction(source = {}) {
     qty: Math.max(1, Number(source.qty || 1)),
     adjustment: Number(source.adjustment || 0),
     note: cleanString(source.note || ''),
+    sourceNeedId: cleanString(source.sourceNeedId || ''),
+    sourceType: cleanString(source.sourceType || ''),
     createdBy: cleanString(source.createdBy || ''),
     createdAt: cleanString(source.createdAt || ''),
     updatedBy: cleanString(source.updatedBy || ''),

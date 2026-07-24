@@ -1,13 +1,39 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.15 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.16 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.8.15.
-[ ] Existing inventory and charity requests remain present.
-[ ] Open a request already marked 26 distributed with auto-out quantity still 0.
-[ ] Mark Distributed shows that 26 distributed quilts have not yet been removed.
-[ ] Leave the removal box checked and save.
-[ ] Exactly one OUT transaction for 26 is created.
-[ ] Inventory for that charity and size changes from 26 to 0.
-[ ] Home, Inventory, Reports, and the Home summary all show 0 remaining.
-[ ] Saving the same distribution again does not create another OUT transaction.
-[ ] The second approved device receives the corrected 0 balance after sync.
-[ ] Existing report, calendar, Home wording, and navigation features still work.
+BASIC UPDATE
+[ ] App opens and shows Update 7.8.16.
+[ ] Existing inventory, charity requests, settings, and custom Home wording remain present.
+[ ] Shared data reaches “Shared data verified · All changes synced.”
+
+REPORT WORDING AND SHADING
+[ ] Reports use the same Storage, Needed, and Difference labels configured for Home.
+[ ] The third report total shows Difference with Surplus, Shortage, or Balanced status.
+[ ] Comparison rows alternate light shading on screen.
+[ ] Alternating shading appears when printing and in both generated PDFs.
+[ ] Compact and full PDFs still open and contain no website address.
+
+SYNC NOW
+[ ] Sync Now is visible in the shared-sync banner.
+[ ] Sync Now is visible in Settings.
+[ ] Tapping Sync Now changes the button to Syncing and returns to Sync Now after verification.
+[ ] A change appears on the second approved device after manual sync.
+
+SET CURRENT COUNT
+[ ] Open Inventory and choose Set Current Count.
+[ ] Select a charity and size with a known balance.
+[ ] Enter the exact physically counted number and confirm the before/after totals.
+[ ] Only the difference is recorded as an Adjusted inventory transaction.
+[ ] Entering 0 is allowed and changes the balance to 0.
+[ ] Entering the existing count creates no transaction.
+
+DISTRIBUTION SAFEGUARDS
+[ ] Mark Distributed with removal checked shows current and resulting inventory before saving.
+[ ] Saving creates one protected linked Out transaction.
+[ ] An automatic distribution Out created in 7.8.15 is linked and protected after upgrading.
+[ ] Saving the same quantity again does not remove inventory twice.
+[ ] Direct Edit or Delete on the linked transaction redirects to Mark Distributed.
+[ ] Increasing distributed quantity with removal unchecked warns that inventory will not change.
+[ ] Reducing an automatically deducted distribution confirms and adds the difference back to inventory.
+[ ] Changing charity or size is blocked while automatic inventory remains linked.
+[ ] A request with protected linked inventory history cannot be deleted; corrections must be made through Mark Distributed.
+[ ] Home, Inventory, Reports, and the second device show the same final balance.

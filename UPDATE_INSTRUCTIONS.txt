@@ -1,5 +1,5 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.15
-Completed-Distribution Inventory Repair
+LOVE QUILTS MANAGER — UPDATE 7.8.16
+Report Consistency, Exact Counts, Sync Now, and Distribution Safeguards
 
 BEFORE UPDATING
 1. Confirm the current device shows all changes synced.
@@ -14,15 +14,15 @@ UPLOAD
 5. Wait for GitHub Pages to publish.
 6. Close and reopen the app on each device. Refresh once if the old version remains.
 
-REPAIR PROJECT LINUS
-1. Open Quilts Needed.
-2. Find the Project Linus request that already shows 26 distributed.
-3. Tap Mark Distributed.
-4. Leave “Remove newly distributed quantity from Love Quilts inventory” checked.
-5. Save the distribution.
-6. Confirm the message says 26 were removed and 0 remain for that charity and size.
-7. Wait for “Shared data verified · All changes synced” before checking another device.
+VERIFY
+1. Confirm the splash and About section show Update 7.8.16.
+2. Tap Sync Now and wait for “Shared data verified · All changes synced.”
+3. Open Reports and confirm wording matches Home and rows alternate shading.
+4. Test Set Current Count with a known charity and size.
+5. Test one small distribution and confirm the inventory balance changes exactly once.
 
 IMPORTANT
-- If those same 26 quilts were already entered separately on the Inventory screen as Quilts Out, uncheck the removal box to avoid a duplicate deduction.
+- Set Current Count is intended for a physical recount. It records the difference as an adjusted transaction so the audit history remains intact.
+- Leave distribution inventory removal unchecked only when the same quilts were already entered separately as Quilts Out.
+- Linked automatic distribution transactions are intentionally protected; correct them through Mark Distributed.
 - This update does not clear or reinitialize shared data.
