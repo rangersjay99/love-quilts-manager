@@ -1,42 +1,37 @@
-LOVE QUILTS MANAGER — 7.8.21 WEEKEND LIVE-DEVICE CHECK
+LOVE QUILTS MANAGER — 7.8.22 WEEKEND LIVE-DEVICE CHECK
 
-Use small test quantities first. Export a backup before beginning.
+VERSION AND SYNC
+[ ] Confirm Update 7.8.22 on the laptop and iPhone/iPad.
+[ ] Press Sync Now and confirm the status completes successfully.
+[ ] Confirm both devices show the same inventory, requests, and distributions.
 
-1. VERSION AND SYNC
-[ ] Confirm 7.8.21 on the laptop and iPhone/iPad.
-[ ] Tap Sync Now on the first device.
-[ ] Open the second device and confirm the same current inventory, needs, distributions, and hold count.
+HOME AND CALENDAR
+[ ] Confirm Calendar is directly below At a Glance.
+[ ] Confirm there is no On Hold / Storage shortcut on Home.
+[ ] Confirm there is no instruction above the Home Calendar.
+[ ] Confirm no month card has an Add Quilts Needed button.
+[ ] Confirm the At a Glance + Add Need action opens the request form.
+[ ] Confirm each populated month ends with “Tap charity to edit.”
+[ ] Tap a charity entry and test Edit Need, Distribute Quilts, and View Details.
+[ ] Confirm past met = green, past unmet = red, future = yellow, covered future = green, and current month = bold border.
+[ ] Confirm charity met sections are green and short sections are light red.
+[ ] Confirm the Calendar key is at the bottom.
 
-2. CALENDAR ACTIONS
-[ ] Tap one charity/size entry in a Calendar month.
-[ ] Confirm Edit Need, Distribute Quilts, and View Details appear.
-[ ] Open Distribute Quilts and confirm charity, size, and month are prefilled correctly.
-[ ] Cancel without saving, then repeat and save a small test distribution.
-[ ] Confirm Home, Inventory, Reports, and Calendar update immediately.
+INVENTORY AND DISTRIBUTION
+[ ] Confirm On Hold / Storage controls are absent from Inventory.
+[ ] Add a temporary inventory record and confirm it syncs.
+[ ] Test Set Current Count, including setting a category to zero.
+[ ] Test 26 available and 26 distributed; confirm 0 remains on Home, Inventory, and Reports.
+[ ] Try saving the same distribution again and confirm inventory is not deducted twice.
+[ ] Correct a distribution quantity and confirm only the difference changes inventory.
 
-3. ZERO-BALANCE TEST
-[ ] Choose a test charity/size with a known active balance, or add a temporary test quantity.
-[ ] Distribute the full active balance—for example, 26 available and 26 distributed.
-[ ] Confirm active inventory becomes exactly 0 on the first device.
-[ ] Tap Sync Now and confirm the second device also shows 0.
-[ ] Confirm the distribution appears once in Reports and History.
+PRINTING AND REPORTS
+[ ] Print Summary from an iPhone and confirm the third block wording is complete.
+[ ] Print the 12-month Calendar and confirm US Letter portrait orientation.
+[ ] Confirm all 12 months use a 3-column × 4-row layout and the key is at the bottom.
+[ ] Confirm status colors remain visible in print preview when background graphics are enabled.
+[ ] Confirm Yearly Statistics and report shading remain correct.
 
-4. ON HOLD / STORAGE
-[ ] Add or choose a small active quantity, such as 10.
-[ ] Move 6 to On Hold / Storage with a location/reason.
-[ ] Confirm active inventory is 4 and held quantity is 6.
-[ ] Return 2 from hold; confirm active is 6 and held is 4.
-[ ] Distribute the remaining 4 from hold.
-[ ] Confirm active remains 6, hold becomes 0, and distributed total increases by 4.
-[ ] Sync and verify the same results on the second device.
-
-5. PRINTING ON IPHONE
-[ ] Tap Print Summary directly—do not tap Export CSV first.
-[ ] Confirm the print/share preview opens and the summary is one page.
-[ ] Tap Print 12-Month Calendar.
-[ ] Confirm landscape orientation, all 12 months, selected year/filters, and the key at the bottom.
-
-6. FINAL CHECK
-[ ] Remove any temporary test records or restore the saved backup if appropriate.
-[ ] Tap Sync Now on both devices.
-[ ] Confirm no unexplained differences remain.
+CLEANUP
+[ ] Delete temporary test records after testing.
+[ ] Press Sync Now on both devices and confirm final live numbers match.

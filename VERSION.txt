@@ -1,24 +1,13 @@
-Love Quilts Manager Update 7.8.21
-Weekend Test Build
-Released: July 24, 2026
+Love Quilts Manager Update 7.8.22
+Calendar Simplification and Portrait Print Update
+July 24, 2026
 
-NEW IN THIS UPDATE
-- Change Log in Settings.
-- Calendar color/status key moved below both Calendars.
-- Calendar request actions: Edit Need, Distribute Quilts, and View Details.
-- Calendar distribution prefills charity, size, and month.
-- On Hold / Storage workflow with return-to-inventory and distribute-from-hold actions.
-- On Hold / Storage Home shortcut and count.
-- Printable 12-month landscape Calendar in a one-page 3×4 layout.
-- Improved iPhone one-page Summary printing.
-- Weekend live-device verification checklist.
-
-RETAINED
-- Verified month and charity Calendar colors from 7.8.20.
-- Home/Reports wording and third Reports summary-block layout.
-- Yearly statistics.
-- Sync Now and Firebase synchronization.
-- Set Current Count, including setting inventory to zero.
-- Distribution confirmation, duplicate-deduction prevention, correction safeguards, and protected linked records.
-
-Version 8 remains reserved for a later major release.
+Included:
+- Removes repeated Add Quilts Needed buttons from Calendar month cards.
+- Uses the existing At a Glance Add Need action as the single place to add a request.
+- Removes the instructional message above the Home Calendar.
+- Adds a subtle “Tap charity to edit” note at the bottom of each populated month card.
+- Removes On Hold / Storage from the active Home and Inventory workflows for now.
+- Preserves any older deferred record data internally so an upgrade does not discard data.
+- Changes Print 12-Month Calendar to US Letter portrait in a 3-column × 4-row layout.
+- Retains Calendar actions, bottom color key, yearly statistics, Sync Now, Set Current Count, report fixes, and distribution safeguards.

@@ -1,53 +1,37 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.21 TEST CHECKLIST
+LOVE QUILTS MANAGER — 7.8.22 WEEKEND LIVE-DEVICE CHECK
 
-VERSION AND CACHE
-[ ] Splash, Settings Change Log, and About show Update 7.8.21.
-[ ] Previously installed phone receives the updated app shell after reopening or refreshing.
+VERSION AND SYNC
+[ ] Confirm Update 7.8.22 on the laptop and iPhone/iPad.
+[ ] Press Sync Now and confirm the status completes successfully.
+[ ] Confirm both devices show the same inventory, requests, and distributions.
 
 HOME AND CALENDAR
-[ ] Calendar remains immediately after At a Glance.
-[ ] Available in Storage retains its direct + Add Quilts button.
-[ ] On Hold / Storage shortcut and count appear in At a Glance.
-[ ] Calendar key appears below the Calendar on Home.
-[ ] Calendar key appears below the Calendar on Quilts Needed.
-[ ] Past met month is light green.
-[ ] Past unmet month is light red.
-[ ] Future covered month is light green.
-[ ] Other future months are light yellow.
-[ ] Current month has a bold plum border.
-[ ] Charity Met and Short sections remain green and red.
+[ ] Confirm Calendar is directly below At a Glance.
+[ ] Confirm there is no On Hold / Storage shortcut on Home.
+[ ] Confirm there is no instruction above the Home Calendar.
+[ ] Confirm no month card has an Add Quilts Needed button.
+[ ] Confirm the At a Glance + Add Need action opens the request form.
+[ ] Confirm each populated month ends with “Tap charity to edit.”
+[ ] Tap a charity entry and test Edit Need, Distribute Quilts, and View Details.
+[ ] Confirm past met = green, past unmet = red, future = yellow, covered future = green, and current month = bold border.
+[ ] Confirm charity met sections are green and short sections are light red.
+[ ] Confirm the Calendar key is at the bottom.
 
-CALENDAR ACTIONS
-[ ] Tap an individual charity/size request.
-[ ] Action menu offers Edit Need, Distribute Quilts, and View Details.
-[ ] Edit Need opens the correct record.
-[ ] View Details opens the corresponding Need entry.
-[ ] Distribute Quilts prefills charity, size, and month.
-[ ] Distribution shows the correct requested, already distributed, and available counts.
-[ ] Saving distribution deducts active inventory once and updates Home, Reports, and Calendar.
+INVENTORY AND DISTRIBUTION
+[ ] Confirm On Hold / Storage controls are absent from Inventory.
+[ ] Add a temporary inventory record and confirm it syncs.
+[ ] Test Set Current Count, including setting a category to zero.
+[ ] Test 26 available and 26 distributed; confirm 0 remains on Home, Inventory, and Reports.
+[ ] Try saving the same distribution again and confirm inventory is not deducted twice.
+[ ] Correct a distribution quantity and confirm only the difference changes inventory.
 
-ON HOLD / STORAGE
-[ ] Move a test quantity from active inventory to On Hold / Storage.
-[ ] Active inventory decreases and held count increases by the same quantity.
-[ ] Hold record shows charity, size, date, and location/reason.
-[ ] Return part of the held quantity to active inventory.
-[ ] Distribute the remaining held quantity.
-[ ] Distribution from hold is counted as distributed but does not deduct active inventory again.
-[ ] Hold-related protected History records cannot be edited or deleted unsafely.
+PRINTING AND REPORTS
+[ ] Print Summary from an iPhone and confirm the third block wording is complete.
+[ ] Print the 12-month Calendar and confirm US Letter portrait orientation.
+[ ] Confirm all 12 months use a 3-column × 4-row layout and the key is at the bottom.
+[ ] Confirm status colors remain visible in print preview when background graphics are enabled.
+[ ] Confirm Yearly Statistics and report shading remain correct.
 
-PRINTING
-[ ] Print Summary opens normally on iPhone without first using Export CSV.
-[ ] Summary fits on one printed page using normal iPhone print settings.
-[ ] Print 12-Month Calendar uses landscape orientation.
-[ ] All 12 months appear in a 3×4 layout on one page.
-[ ] Selected year and active filters appear on the Calendar printout.
-[ ] Calendar color/status key appears at the bottom of the printout.
-
-REGRESSION SAFEGUARDS
-[ ] Set Current Count can set inventory to zero.
-[ ] 26 available and 26 distributed results in 0 active inventory.
-[ ] Repeated save does not deduct a second time.
-[ ] Correcting a distribution restores/deducts only the difference.
-[ ] Yearly Statistics remain correct.
-[ ] Sync Now works and displays a clear status.
-[ ] Existing backup/export/import functions still work.
+CLEANUP
+[ ] Delete temporary test records after testing.
+[ ] Press Sync Now on both devices and confirm final live numbers match.

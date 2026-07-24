@@ -180,8 +180,7 @@ function normalizeSettings(source = {}) {
     homeActionsHeading: cleanString(source.homeActionsHeading || 'Choose an Action'),
     charities: Array.isArray(source.charities) ? source.charities.map(cleanString) : [],
     sizes: Array.isArray(source.sizes) ? source.sizes.map(cleanString) : [],
-    // Hold records stay in the existing settings/main document so the feature
-    // syncs without adding a new Firestore path or requiring new Rules.
+    // Legacy deferred records are preserved for backward compatibility.
     holds: Array.isArray(source.holds) ? source.holds.map(normalizeHold).filter(x => x.id) : []
   };
 }
@@ -627,7 +626,7 @@ async function initializeProduction() {
   if (!currentUser || !initialCloudReady || cloudInitialized || syncing) return;
   await waitForBridge();
   const localData = normalizeAppData(window.lqGetData());
-  const countText = `${localData.transactions.length} inventory transactions, ${localData.needs.length} planned needs, and ${localData.holds.length} On Hold / Storage records`;
+  const countText = `${localData.transactions.length} inventory transactions and ${localData.needs.length} planned needs`;
   const typed = prompt(
     `This will create the real shared inventory from this device.\n\nIt will upload ${countText}.\n\nType START SHARED INVENTORY exactly to continue.`
   );

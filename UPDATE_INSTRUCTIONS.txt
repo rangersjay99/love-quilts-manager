@@ -1,21 +1,12 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.21
+LOVE QUILTS MANAGER — UPDATE 7.8.22
 
-BEFORE UPDATING
-1. Export an in-app backup and keep the current working ZIP.
-2. Unzip the 7.8.21 download on the laptop.
+1. Keep a backup copy of the current repository and app data.
+2. Unzip the 7.8.22 download on the laptop.
+3. Open the unzipped folder and select every file and folder inside it.
+4. Upload those contents to the ROOT of the GitHub repository, replacing matching files.
+5. Do not upload the outer 7.8.22 folder itself.
+6. Commit the changes and allow GitHub Pages a few minutes to publish.
+7. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.22.
+8. If an installed phone copy still shows an older version, fully close it, reopen it while online, and use Sync Now.
 
-UPLOAD TO GITHUB PAGES
-3. Open the unzipped 7.8.21 folder.
-4. Select every file and folder INSIDE it.
-5. Upload those contents to the root of the existing GitHub Pages repository, replacing older copies.
-6. Commit the files and allow GitHub Pages to publish.
-
-CONFIRM THE UPDATE
-7. Open the app and confirm the splash, Settings Change Log, or About screen says Update 7.8.21.
-8. On iPhone/iPad, fully close and reopen the installed app. If an older version remains, open the website once in Safari, refresh it, then reopen the installed app.
-
-WEEKEND VERIFICATION
-9. Follow `WEEKEND_TEST_CHECKLIST.txt` with a small test record before using large live quantities.
-10. Confirm Sync Now after each test and verify the same balances on every approved device.
-
-Existing local data, Firebase collection paths, and current Firestore Rules are retained. Update 7.8.21 adds hold records to the existing shared settings document automatically; it does not require clearing data, reinitializing Firebase, or reinstalling the app.
+Existing inventory, requests, settings, Firebase paths, and Firestore Rules are retained. On Hold / Storage is no longer shown as an active workflow, but any older deferred data is preserved internally rather than discarded.

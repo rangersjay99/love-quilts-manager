@@ -1,60 +1,36 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.21 VALIDATION RESULTS
-Run: July 24, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.22 VALIDATION RESULTS
+July 24, 2026
 
-Result: PASS
-Checks passed: 91 of 91
+RESULT: PASSED
 
-PACKAGE, SOURCE, AND SYNTAX — 44 PASS
-- Splash, About, Change Log, app constant, service-worker cache, and manifests use 7.8.21.
-- Both manifests parse as valid JSON and use the 7.8.21 start URL.
-- Calendar keys are below the Home and Quilts Needed Calendars.
-- Calendar action menu and prefilled direct-distribution fields are present.
-- On Hold / Storage form, Home shortcut, records, transfers, reporting, and protected links are present.
-- The direct + Add Quilts shortcut remains on the Available in Storage card.
-- Print Summary uses delayed iPhone print preparation.
-- Print 12-Month Calendar uses a four-column landscape layout.
-- Print-only CSS hides sign-in, splash, and action overlays.
-- Verified month and charity Calendar color rules remain.
-- Set Current Count, duplicate-deduction protection, and distribution-correction safeguards remain.
-- Weekend checklist, Master Change List, version notes, and update instructions are current.
-- All referenced icon assets exist.
-- app.js, firebase-sync.js, and sw.js pass JavaScript syntax checks.
-- On Hold / Storage records sync through the existing settings/main Firebase document.
-- sourceHoldId is preserved through Firebase normalization.
-- No new Firestore collection or Rules change is required.
+66 automated checks passed:
+- 43 static package, version, manifest, syntax, and feature-retention checks.
+- 23 browser-based behavior and layout checks using a mobile-size Chromium session.
 
-BROWSER RUNTIME — 39 PASS
-- The Home + Add Quilts shortcut opens Inventory entry directly.
-- Calendar request action modal opens and identifies the selected record.
-- Direct distribution prefills month, charity, size, and quantity.
-- 26 available and 26 distributed results in 0 active inventory.
-- Repeating the save does not create a duplicate inventory deduction.
-- Reducing the distribution from 26 to 20 restores 6 to inventory.
-- Increasing it back to 26 removes only the corrected difference.
-- Set Current Count changes a known balance to exactly 0 and records the adjustment.
-- Moving 6 of 10 to On Hold / Storage leaves 4 active and 6 held.
-- Returning 2 leaves 6 active and 4 held.
-- Distributing the remaining 4 from hold leaves 6 active and 0 held.
-- Hold distribution is counted in yearly statistics without a second inventory deduction.
-- Hold distributions appear in Reports.
-- Past met, past unmet, current, future open, future covered, and future empty month states are correct.
-- Charity Met and Short classes are correct.
-- Calendar print report renders 12 months and places its key at the bottom.
-- Home and Quilts Needed Calendar keys remain below their grids.
-- Compact and full PDF generators return valid PDF files.
-- No browser page errors occurred.
+VERIFIED CHANGES
+- Splash, About, Change Log, app constant, service-worker cache, and manifests use 7.8.22.
+- Repeated Add Quilts Needed buttons are absent from Calendar month cards.
+- The instruction above the Home Calendar is absent.
+- Every month card shows the subtle Tap charity to edit note on screen.
+- The print version omits the tap instruction because printed cards are not interactive.
+- The At a Glance Add Need action remains the single add-request entry point.
+- On Hold / Storage is absent from Home, Inventory, controls, and active workflow functions.
+- Older deferred data fields remain preserved internally for upgrade safety.
+- Print 12-Month Calendar uses US Letter portrait with a 3-column × 4-row layout.
+- The portrait Calendar remains one page, includes all 12 months, status colors, and the key at the bottom.
 
-FIREBASE NORMALIZER UNIT TEST — 3 PASS
-- A hold record survives normalization.
-- Returned/distributed quantities are safely limited to the original held quantity.
-- The linked transaction sourceHoldId survives normalization.
+REGRESSION TESTS
+- Calendar actions still open from a charity entry.
+- Distribution fields prefill the month, charity, and size.
+- 26 available and 26 distributed leaves 0 remaining.
+- Saving the same distribution again does not create a duplicate deduction.
+- Correcting the distribution from 26 to 20 restores 6 to inventory.
+- Future covered, past unmet, ordinary future, current-month, charity-met, and charity-short styles remain.
+- Yearly statistics, Sync Now, Set Current Count, report fixes, and distribution safeguards remain.
+- app.js, firebase-sync.js, and sw.js pass JavaScript syntax validation.
+- Both manifests parse as valid JSON.
+- No browser script errors occurred during the behavior test.
 
-PRINT AND PDF LAYOUT — 5 PASS
-- Print Summary generated without browser errors.
-- Print Summary is one-page US Letter portrait.
-- Print 12-Month Calendar generated without browser errors.
-- Print Calendar is one-page US Letter landscape.
-- Rendered pages were visually checked with no sign-in overlay, clipping, or broken layout.
-
-LIVE DEVICE CHECK STILL REQUIRED
-Automated tests cannot confirm the real Firebase account, GitHub Pages cache, or the physical iPhone print/share dialog. Use WEEKEND_TEST_CHECKLIST.txt after uploading the build.
+PRINT VERIFICATION
+- Chromium generated a one-page, non-rotated US Letter portrait Calendar PDF.
+- The PDF was rendered to PNG and visually checked for clipping, overlap, missing months, and legend placement.

@@ -1,13 +1,7 @@
-LOVE QUILTS MANAGER UPDATE 7.8.21 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.22 — FIREBASE PRODUCTION NOTES
 
-No new Firebase collection path or Firestore Rules change is required.
+No Firestore Rules or collection-path changes are required.
 
-Update 7.8.21 stores On Hold / Storage records in the existing:
-organizations/faithful-circle-love-quilts/settings/main
+The update continues using the existing shared settings, transactions, and needs data. Older deferred storage fields are preserved internally for backward compatibility, but On Hold / Storage is not shown as an active workflow in 7.8.22.
 
-document, alongside the existing shared settings. Related inventory transactions continue using the existing transactions collection. The sync normalizer also preserves each transaction's sourceHoldId so protected hold links remain matched on every device.
-
-Production Firestore root:
-organizations/faithful-circle-love-quilts
-
-Do not recreate or reinitialize the shared inventory. Upload the app update normally, sign in, and use Sync Now. The first hold-related save will add the hold-record field to the existing settings document automatically.
+Upload the app update normally, sign in, and use Sync Now. Do not clear or recreate the shared inventory.

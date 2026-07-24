@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.21">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.21">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.21">
+<link rel="manifest" href="manifest-v7.json?v=7.8.22">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.22">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.22">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -54,7 +54,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .metric .difference-status.balanced{color:var(--gold)}
 .home-calendar-filter{display:grid;grid-template-columns:minmax(0,260px);margin-bottom:10px}.home-calendar-filter label{margin:0;font-size:12px;color:var(--muted)}.home-calendar-filter select{margin-top:5px}
 .calendar-legend{display:flex;flex-wrap:wrap;gap:6px 10px;margin:0 0 10px;font-size:11px;color:var(--muted)}.calendar-legend span{display:inline-flex;align-items:center;gap:5px}.calendar-swatch{width:15px;height:15px;border:2px solid var(--line);border-radius:5px;background:#fff}.calendar-swatch.met{border-color:#62a875;background:#e3f4e8}.calendar-swatch.unmet{border-color:#cb6671;background:#f9e1e5}.calendar-swatch.future{border-color:#ead28f;background:#fff8e5}.calendar-swatch.current{border:4px solid var(--plum);background:#fff}.calendar-swatch.charity-met{border-color:#8fc79d;background:#edf8f0}.calendar-swatch.charity-short{border-color:#e0a1aa;background:#fff0f1}
-.month-add-button{width:100%;min-height:34px;margin-top:8px;padding:7px;border:1px solid rgba(109,58,120,.30);border-radius:9px;background:rgba(109,58,120,.06);color:var(--plum-dark);font-size:11px;font-weight:850;cursor:pointer}#home .month-add-button:hover,#home .month-add-button:focus{background:rgba(109,58,120,.12);outline:none}
+.month-edit-hint{margin-top:8px;padding-top:6px;border-top:1px dashed rgba(109,58,120,.22);color:var(--muted);font-size:9px;font-weight:800;line-height:1.2;text-align:center}
 .calendar-modal-backdrop{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(35,25,38,.58)}
 .calendar-modal-backdrop.open{display:flex}.calendar-modal-card{width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 60px rgba(30,15,35,.28)}
 .calendar-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.calendar-modal-header h2{margin:0}.calendar-modal-close{width:40px;min-height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--plum);font-size:24px;font-weight:800;cursor:pointer}
@@ -64,12 +64,9 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .calendar-action-buttons{display:grid;gap:8px}.calendar-action-buttons button{margin:0}.calendar-action-buttons .primary{background:var(--teal)}
 .calendar-print-button{margin-top:10px;border-color:rgba(37,99,166,.35)!important;background:rgba(37,99,166,.10)!important;color:#24578d!important}
 .calendar-print-button:hover,.calendar-print-button:focus{background:rgba(37,99,166,.17)!important}
-.hold-entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hold-entry-grid label{margin-top:0}.hold-entry-grid .hold-wide{grid-column:1/-1}
-.hold-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0;padding:11px;border-radius:12px;background:#fff8e5;border:1px solid #ead28f}.hold-summary b{font-size:22px;color:#7b560f}.hold-card{padding:12px;border:1px solid #ead28f;border-left:5px solid var(--gold);border-radius:13px;background:#fffdf6;margin-top:9px}.hold-card.closed{border-color:var(--line);border-left-color:var(--muted);background:#fafafa;opacity:.82}.hold-card .hold-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.hold-card .hold-metrics div{padding:7px;border-radius:9px;background:rgba(255,255,255,.78);text-align:center}.hold-card .hold-metrics b{display:block;font-size:18px}.hold-card .hold-metrics span{display:block;font-size:9px;color:var(--muted)}.hold-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.hold-actions button{min-height:39px;border-radius:10px;font-weight:800}.hold-return{border:1px solid var(--green);background:#fff;color:var(--green)}.hold-distribute{border:0;background:var(--plum);color:#fff}
 .change-log-current{padding:12px;border-radius:12px;background:#edf8f0;border:1px solid #b9ddc2;margin-bottom:10px}.change-log-current b{display:block;color:var(--green)}.change-log-entry{padding:11px 0;border-top:1px solid var(--line)}.change-log-entry:first-of-type{border-top:0}.change-log-entry h4{margin:0 0 4px;color:var(--plum-dark)}.change-log-entry p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
-.home-quick-hold{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin-top:10px;padding:10px 12px;border:1px solid #ead28f;border-radius:11px;background:#fff8e5;color:#73520f;font-weight:850}.home-quick-hold b{min-width:34px;padding:4px 8px;border-radius:999px;background:#fff;text-align:center}
 #calendarPrintReport{display:none}.calendar-print-header{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:8px}.calendar-print-header h1{margin:0;font-size:20px}.calendar-print-meta{font-size:9px;color:#555;text-align:right}
-@media(max-width:620px){.hold-entry-grid{grid-template-columns:1fr}.hold-entry-grid .hold-wide{grid-column:auto}.calendar-action-buttons{grid-template-columns:1fr}}
+@media(max-width:620px){.calendar-action-buttons{grid-template-columns:1fr}}
 @media(max-width:620px){.mode-row{grid-template-columns:1fr 1fr}.metric{min-height:184px;padding:15px 6px}.metric .metric-title{min-height:42px;font-size:10px}.metric-add-button{font-size:10.5px;padding:7px 4px}.home-calendar-filter{grid-template-columns:1fr}.calendar-modal-backdrop{align-items:flex-end;padding:0}.calendar-modal-card{width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
 .home-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
 .home-section-heading h3{margin:0}.home-section-heading span{font-size:12px;color:var(--muted)}
@@ -275,17 +272,17 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   body.print-home-summary #homeSummaryReport tfoot td{font-weight:900;background:#e9e9e9;border-top:2px solid #333;color:#111}
   body.print-calendar .view,body.print-calendar #reports.view,body.print-calendar header,body.print-calendar .bottom-nav,body.print-calendar .firebase-banner{display:none!important}
   body.print-calendar #calendarPrintReport{display:block!important;width:100%;margin:0!important;padding:0!important}
-  body.print-calendar #calendarPrintReport .needs-calendar{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important}
-  body.print-calendar #calendarPrintReport .month-card{padding:5px!important;border-width:1px!important;border-radius:7px!important;box-shadow:none!important;break-inside:avoid;font-size:7px!important;min-height:0!important}
+  body.print-calendar #calendarPrintReport .needs-calendar{display:grid!important;grid-template-columns:repeat(3,1fr)!important;grid-auto-rows:minmax(0,1fr)!important;gap:5px!important;min-height:8.25in!important}
+  body.print-calendar #calendarPrintReport .month-card{padding:7px!important;border-width:1px!important;border-radius:7px!important;box-shadow:none!important;break-inside:avoid;font-size:8px!important;min-height:0!important}
   body.print-calendar #calendarPrintReport .month-card.current-month{border-width:2px!important}
-  body.print-calendar #calendarPrintReport .month-card h4{font-size:9px!important;margin-bottom:3px!important}
-  body.print-calendar #calendarPrintReport .month-status{font-size:6px!important}
-  body.print-calendar #calendarPrintReport .month-totals{gap:2px!important;margin-bottom:3px!important}.month-totals div{padding:2px!important}.month-totals b{font-size:9px!important}.month-totals span{font-size:5.5px!important}
-  body.print-calendar #calendarPrintReport .month-charity-status{margin:3px 0!important;padding:3px!important;border-radius:5px!important;font-size:6.3px!important;line-height:1.15!important}
-  body.print-calendar #calendarPrintReport .month-charity-heading{margin-bottom:1px!important}.month-charity-heading b{font-size:7px!important}.month-charity-heading span{font-size:5.5px!important;padding:1px 3px!important}
-  body.print-calendar #calendarPrintReport .month-need-line{font-size:6px!important;padding-top:2px!important;margin-top:2px!important;cursor:default!important}
-  body.print-calendar #calendarPrintReport .month-add-button{display:none!important}
-  body.print-calendar #calendarPrintReport .calendar-legend{font-size:7px!important;gap:3px 7px!important;margin:6px 0 0!important}.calendar-swatch{width:9px!important;height:9px!important;border-width:1px!important}.calendar-swatch.current{border-width:2px!important}
+  body.print-calendar #calendarPrintReport .month-card h4{font-size:11px!important;margin-bottom:4px!important}
+  body.print-calendar #calendarPrintReport .month-status{font-size:6.7px!important}
+  body.print-calendar #calendarPrintReport .month-totals{gap:2px!important;margin-bottom:3px!important}.month-totals div{padding:2px!important}.month-totals b{font-size:11px!important}.month-totals span{font-size:6px!important}
+  body.print-calendar #calendarPrintReport .month-charity-status{margin:3px 0!important;padding:3px!important;border-radius:5px!important;font-size:7px!important;line-height:1.18!important}
+  body.print-calendar #calendarPrintReport .month-charity-heading{margin-bottom:1px!important}.month-charity-heading b{font-size:8px!important}.month-charity-heading span{font-size:6px!important;padding:1px 3px!important}
+  body.print-calendar #calendarPrintReport .month-need-line{font-size:6.8px!important;padding-top:2px!important;margin-top:2px!important;cursor:default!important}
+  body.print-calendar #calendarPrintReport .month-edit-hint{display:none!important}
+  body.print-calendar #calendarPrintReport .calendar-legend{font-size:7.5px!important;gap:3px 7px!important;margin:6px 0 0!important}.calendar-swatch{width:9px!important;height:9px!important;border-width:1px!important}.calendar-swatch.current{border-width:2px!important}
 }
 
 
@@ -350,14 +347,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.21" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.22" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.21</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.22</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -393,15 +390,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
         <button type="button" class="metric-add-button distribute-button" onclick="event.stopPropagation();openDistributeQuilts()">Distribute Quilts</button>
       </div>
     </div>
-    <button type="button" class="home-quick-hold" onclick="openHoldStorage()"><span>On Hold / Storage</span><b id="homeHoldTotal">0</b></button>
   </div>
   <div class="card">
-    <div class="home-section-heading"><h3 id="homeCalendarHeading">All Quilts Calendar</h3><span>Tap an entry for actions</span></div>
+    <div class="home-section-heading"><h3 id="homeCalendarHeading">All Quilts Calendar</h3></div>
     <div class="home-calendar-filter"><label>Charity<select id="homeCalendarCharity" onchange="renderHomeCalendar()"></select></label></div>
     <div id="homeNeedsCalendar" class="needs-calendar"></div>
     <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch future"></i>Future month</span><span><i class="calendar-swatch current"></i>Current month</span><span><i class="calendar-swatch charity-met"></i>Charity met</span><span><i class="calendar-swatch charity-short"></i>Charity short</span></div>
     <div class="row"><button type="button" class="primary home-print-summary" onclick="printHomeSummary()">Print Summary</button><button type="button" class="ghost calendar-print-button" onclick="printCalendar('home')">Print 12-Month Calendar</button></div>
-    <div class="small home-print-note">Summary prints totals by charity. Calendar prints a landscape 12-month plan.</div>
+    <div class="small home-print-note">Summary prints totals by charity. Calendar prints a portrait 12-month plan.</div>
   </div>
   <div class="card">
     <div class="home-year-heading"><h3>This Year</h3><span id="homeStatsYear">2026</span></div>
@@ -440,22 +436,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <button id="cancelTxBtn" class="ghost" style="display:none" onclick="cancelTxEdit()">Cancel Editing</button>
   </div>
   <div id="inventoryDetailsCard" class="card"><h3>Current Inventory</h3><div id="inventoryList"></div></div>
-  <div id="holdStorageCard" class="card">
-    <h2>On Hold / Storage</h2>
-    <p class="small">Use this when quilts leave active inventory but have not yet been delivered to a charity. They do not count as distributed until you choose Distribute from Hold.</p>
-    <div class="hold-summary"><span>Currently On Hold / Storage</span><b id="holdTotal">0</b></div>
-    <div class="hold-entry-grid">
-      <label>Date Moved<input id="holdDate" type="date"></label>
-      <label>Quantity<input id="holdQty" type="number" inputmode="numeric" min="1" step="1" value="1"></label>
-      <label>Charity<select id="holdCharity"></select></label>
-      <label>Size<select id="holdSize"></select></label>
-      <label class="hold-wide">Location or Reason<input id="holdLocation" maxlength="120" placeholder="Storage unit, quilt show, reserved, awaiting pickup, etc."></label>
-    </div>
-    <div id="holdNotice" class="notice"></div>
-    <button type="button" class="primary" onclick="moveToHold()">Move to On Hold / Storage</button>
-    <h3 style="margin-top:18px">On Hold Records</h3>
-    <div id="holdList"></div>
-  </div>
   <div class="card">
     <h3>History</h3>
     <div class="filters">
@@ -636,7 +616,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.21</b><span class="small">Weekend test build · July 24, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.22</b><span class="small">Calendar simplification update · July 24, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.22</h4><p>Simplified Calendar month cards, added a small Tap charity to edit note inside populated months, removed On Hold / Storage from the active app, and changed 12-month Calendar printing to portrait.</p></div>
     <div class="change-log-entry"><h4>7.8.21</h4><p>Calendar entry actions, bottom Calendar key, direct Calendar distribution, On Hold / Storage workflow, 12-month Calendar printing, iPhone summary-print improvements, and weekend verification checklist.</p></div>
     <div class="change-log-entry"><h4>7.8.20</h4><p>Future months light yellow, covered future months green, and charity-level Met / Short coloring.</p></div>
     <div class="change-log-entry"><h4>7.8.19</h4><p>Corrected month-level Calendar color rules.</p></div>
@@ -651,11 +632,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.21 · July 24, 2026</span>
+      <b>Version</b><span>Update 7.8.22 · July 24, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.21 adds direct Calendar actions, On Hold / Storage tracking, bottom Calendar keys, landscape Calendar printing, and improved iPhone summary printing. All 7.8.20 Calendar colors, yearly statistics, syncing, exact-count tools, and distribution safeguards are retained.</p>
+    <p class="small">Update 7.8.22 simplifies the Calendar, keeps the edit instruction inside each populated month, removes On Hold / Storage from the active workflow, and changes the printable 12-month Calendar to portrait. Calendar actions, yearly statistics, syncing, exact-count tools, and distribution safeguards are retained.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -705,7 +686,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.21"></script>
-<script src="app.js?v=7.8.21"></script>
+<script type="module" src="firebase-sync.js?v=7.8.22"></script>
+<script src="app.js?v=7.8.22"></script>
 </body>
 </html>
