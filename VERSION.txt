@@ -1,4 +1,6 @@
-Love Quilts Manager Update 7.8.14
+Love Quilts Manager Update 7.8.15
 Released: July 23, 2026
 
-Urgent hotfix: Mark Distributed now selects inventory removal automatically, deducts the newly distributed quantity, and confirms the remaining balance. Existing shared data and synchronization are retained.
+Completed-distribution inventory repair.
+
+This update fixes requests that were already marked distributed while their quilts remained in inventory. Inventory removal now uses the amount actually recorded out, so the missing quantity can be deducted once without double-counting.

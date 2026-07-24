@@ -1,16 +1,13 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.14 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.15 TEST CHECKLIST
 
-[ ] App opens and shows Update 7.8.14.
-[ ] Existing inventory and charity requests remain unchanged.
-[ ] The duplicate sync message no longer appears inside Home.
-[ ] The top sync banner turns green after All changes synced.
-[ ] The top sync banner is red while offline, signing in, saving, or in error.
-[ ] The four large Home navigation buttons are removed.
-[ ] The persistent bottom navigation is color-coded on every page.
-[ ] Each bottom navigation button opens the correct page and shows its stronger active color.
-[ ] The Home calendar dropdown is Charity, not Year.
-[ ] Selecting a charity filters the current-year Home calendar.
-[ ] All Charities restores all current-year requests.
-[ ] Home action buttons remain easy to tap but are visually softer.
-[ ] Print Summary still shows totals and the charity comparison table.
-[ ] Add Quilts, Add Need, Distribute Quilts, reports, settings, and Firebase sync still work.
+[ ] App opens and shows Update 7.8.15.
+[ ] Existing inventory and charity requests remain present.
+[ ] Open a request already marked 26 distributed with auto-out quantity still 0.
+[ ] Mark Distributed shows that 26 distributed quilts have not yet been removed.
+[ ] Leave the removal box checked and save.
+[ ] Exactly one OUT transaction for 26 is created.
+[ ] Inventory for that charity and size changes from 26 to 0.
+[ ] Home, Inventory, Reports, and the Home summary all show 0 remaining.
+[ ] Saving the same distribution again does not create another OUT transaction.
+[ ] The second approved device receives the corrected 0 balance after sync.
+[ ] Existing report, calendar, Home wording, and navigation features still work.

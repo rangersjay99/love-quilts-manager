@@ -1,16 +1,28 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.14
+LOVE QUILTS MANAGER — UPDATE 7.8.15
+Completed-Distribution Inventory Repair
 
 BEFORE UPDATING
-1. Confirm the app says all changes are synced.
+1. Confirm the current device shows all changes synced.
 2. Export a current backup from Settings.
-3. Download a backup ZIP of the current GitHub repository.
+3. Keep a ZIP backup of the current GitHub repository.
 
 UPLOAD
 1. Extract this ZIP.
-2. Upload every extracted file to the GitHub repository main/root folder.
+2. Upload every extracted file to the main/root folder of the GitHub repository.
 3. Replace files with the same names.
 4. Do not delete or replace the firebase-test folder.
 5. Wait for GitHub Pages to publish.
-6. Close and reopen the app on each device. Refresh once if an older version remains.
+6. Close and reopen the app on each device. Refresh once if the old version remains.
 
-This update does not clear or reinitialize shared inventory.
+REPAIR PROJECT LINUS
+1. Open Quilts Needed.
+2. Find the Project Linus request that already shows 26 distributed.
+3. Tap Mark Distributed.
+4. Leave “Remove newly distributed quantity from Love Quilts inventory” checked.
+5. Save the distribution.
+6. Confirm the message says 26 were removed and 0 remain for that charity and size.
+7. Wait for “Shared data verified · All changes synced” before checking another device.
+
+IMPORTANT
+- If those same 26 quilts were already entered separately on the Inventory screen as Quilts Out, uncheck the removal box to avoid a duplicate deduction.
+- This update does not clear or reinitialize shared data.

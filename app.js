@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.14';
+const VERSION='7.8.15';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -358,7 +358,7 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice'){
   const fulfillmentChanged=sentRaw!==fulfilledQty(previous)||sentDate!==String(previous?.fulfilledDate||'');
   const previousSent=fulfilledQty(previous),priorAutoOut=Math.max(0,Math.floor(Number(previous?.autoOutQty||0)));
   const priorHighWater=Math.max(previousSent,Math.floor(Number(previous?.fulfilledHighWater??previousSent)||0));
-  const recordOut=!!values.recordOut,autoOutNeeded=recordOut?Math.max(0,sentRaw-priorHighWater):0;
+  const recordOut=!!values.recordOut,autoOutNeeded=recordOut?Math.max(0,sentRaw-priorAutoOut):0;
   const r={id:id||uid(),month:String(values.month||monthNow()),charity,size,qty:needQty,note:String(values.note||'').trim(),
     fulfilledQty:sentRaw,fulfilledDate:sentRaw?sentDate:'',fulfilledBy:fulfillmentChanged?(sentRaw?email:''):String(previous?.fulfilledBy||''),fulfilledAt:fulfillmentChanged?(sentRaw?stamp:''):String(previous?.fulfilledAt||''),
     fulfilledHighWater:Math.max(priorHighWater,sentRaw),autoOutQty:priorAutoOut,
@@ -394,7 +394,8 @@ function editNeed(id,distribution=false){
     const form=[...document.querySelectorAll('.need-inline-editor')].find(x=>x.dataset.needEditId===id);if(!form)return;
     if(distribution){
       const qtyField=form.querySelector('[name="fulfilledQty"]'),dateField=form.querySelector('[name="fulfilledDate"]');
-      showNeedSaveMessage(form.querySelector('.inline-need-notice'),`Edit the distribution directly in this card. Check “Record as ${data.itemName} Out” only if it has not already been entered in Inventory.`);
+      const missingOut=Math.max(0,fulfilledQty(n)-Math.max(0,Math.floor(Number(n.autoOutQty||0))));
+      showNeedSaveMessage(form.querySelector('.inline-need-notice'),missingOut>0?`${missingOut} distributed ${lowerName()} have not yet been removed from inventory. Leave the box checked and save to remove them now.`:`Edit the distribution directly in this card. Leave the box checked only for newly distributed quilts that have not already been entered as Quilts Out.`);
       qtyField?.focus();
     }else form.querySelector('[name="month"]')?.focus();
     form.scrollIntoView({behavior:'smooth',block:'center'});
@@ -1072,7 +1073,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.14 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.15 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.14',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.15',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
