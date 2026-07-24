@@ -1,6 +1,6 @@
-Love Quilts Manager Update 7.8.16
-Released: July 23, 2026
+Love Quilts Manager Update 7.8.17
+Released: July 24, 2026
 
-Report consistency, exact inventory counts, manual sync, and distribution safeguards.
+Yearly statistics, direct Home charity summaries, calendar completion history, and report layout refinement.
 
-This update matches report wording to the Home screen, adds alternating row shading, adds a visible Sync Now control, adds Set Current Count for exact physical inventory, and protects distribution-linked inventory transactions from duplicate removal or unsafe edits.
+This update adds This Year totals on Home, full selectable Yearly Statistics in Reports and PDFs, an immediate By Charity Home summary, green/red past-month results with a bold current month, clearer Available in Storage wording, and a wrapping fix for the third Reports summary block. All 7.8.16 inventory, synchronization, exact-count, and distribution safeguards are retained.

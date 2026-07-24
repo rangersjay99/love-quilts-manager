@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.16';
+const VERSION='7.8.17';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -482,6 +482,33 @@ A recovery copy will be kept.`)){
 }
 function upcoming(){return data.needs.filter(n=>n.month>=monthNow()&&remainingNeed(n)>0)}
 function totalNeeded(){return upcoming().reduce((a,n)=>a+remainingNeed(n),0)}
+function yearOf(value){const match=String(value||'').match(/^(\d{4})/);return match?Number(match[1]):0}
+function statisticsYears(){
+  const current=Number(monthNow().slice(0,4));
+  return unique([current,...data.transactions.map(t=>yearOf(t.date)).filter(Boolean),...data.needs.map(n=>yearOf(n.fulfilledDate)).filter(Boolean)]).map(Number).sort((a,b)=>b-a);
+}
+function fillStatisticsYearSelect(){
+  const select=el('reportStatsYear');if(!select)return Number(monthNow().slice(0,4));
+  const current=Number(monthNow().slice(0,4)),years=statisticsYears(),old=Number(select.value)||current;
+  select.innerHTML=years.map(year=>`<option value="${year}">${year}</option>`).join('');select.value=years.includes(old)?String(old):String(current);return Number(select.value)||current;
+}
+function selectedStatisticsYear(){return Number(el('reportStatsYear')?.value)||Number(monthNow().slice(0,4))}
+function yearlyStatistics(year=Number(monthNow().slice(0,4))){
+  const transactions=data.transactions.filter(t=>yearOf(t.date)===Number(year));
+  const made=transactions.filter(t=>t.type==='IN'&&t.sourceType!=='NEED_DISTRIBUTION_CORRECTION').reduce((sum,t)=>sum+Math.max(0,Number(t.qty)||0),0);
+  const distributed=transactions.filter(t=>t.type==='OUT').reduce((sum,t)=>sum+Math.max(0,Number(t.qty)||0),0);
+  const netChange=transactions.reduce((sum,t)=>sum+value(t),0);
+  const charitiesServed=new Set(transactions.filter(t=>t.type==='OUT'&&t.charity).map(t=>t.charity)).size;
+  const lifetimeDistributed=data.transactions.filter(t=>t.type==='OUT').reduce((sum,t)=>sum+Math.max(0,Number(t.qty)||0),0);
+  return{year:Number(year),made,distributed,netChange,currentInventory:totalOnHand(),charitiesServed,lifetimeDistributed,reportDate:today()};
+}
+function yearlyStatisticsHTML(stats){
+  return`<div class="yearly-stat"><b>${stats.made}</b><span>Quilts Made in ${stats.year}</span></div><div class="yearly-stat"><b>${stats.distributed}</b><span>Quilts Distributed in ${stats.year}</span></div><div class="yearly-stat"><b class="${differenceClass(stats.netChange)}">${signedDifference(stats.netChange)}</b><span>Net Inventory Change</span></div><div class="yearly-stat"><b>${stats.currentInventory}</b><span>Current Inventory</span></div><div class="yearly-stat"><b>${stats.charitiesServed}</b><span>Charities Served</span></div><div class="yearly-stat"><b>${stats.lifetimeDistributed}</b><span>Lifetime Quilts Distributed</span></div>`;
+}
+function renderHomeYearStatistics(){
+  const stats=yearlyStatistics();if(el('homeStatsYear'))el('homeStatsYear').textContent=String(stats.year);if(el('homeMadeThisYear'))el('homeMadeThisYear').textContent=String(stats.made);if(el('homeDistributedThisYear'))el('homeDistributedThisYear').textContent=String(stats.distributed);
+}
+function openYearlyStatistics(){showView('reports');renderReports();requestAnimationFrame(()=>el('yearlyStatsCard')?.scrollIntoView({behavior:'smooth',block:'start'}))}
 function sortedNeedsForPlanning(list=data.needs){return[...list].sort((a,b)=>a.month.localeCompare(b.month)||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size)||String(a.createdAt||a.id).localeCompare(String(b.createdAt||b.id)))}
 function allocateNeedsForPlanning(list=data.needs){
   const remaining=invMap();
@@ -566,21 +593,21 @@ function calendarMarkup(year,charity='',size='',showAddButtons=true){
     const list=data.needs.filter(n=>n.month===month&&(!charity||n.charity===charity)&&(!size||n.size===size)).sort((a,b)=>a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size)||String(a.createdAt||a.id).localeCompare(String(b.createdAt||b.id)));
     const rows=list.map(n=>byId.get(n.id)||allocationForNeed(n,allocations));
     const needed=list.reduce((sum,n)=>sum+Number(n.qty||0),0),sent=list.reduce((sum,n)=>sum+fulfilledQty(n),0),remainingTotal=list.reduce((sum,n)=>sum+remainingNeed(n),0),shortage=rows.reduce((sum,item)=>sum+item.shortage,0);
-    const allComplete=list.length>0&&remainingTotal===0,pastDue=month<monthNow()&&remainingTotal>0;
+    const allComplete=list.length>0&&remainingTotal===0,isPast=month<monthNow(),isCurrent=month===monthNow();
     const hasPartial=rows.some(item=>item.available>0&&item.shortage>0),hasCovered=rows.some(item=>item.remaining>0&&item.shortage===0),hasShort=rows.some(item=>item.shortage>0);
-    const state=!list.length?'empty-month':allComplete?'completed':pastDue?'past-due':!hasShort?'covered':(hasPartial||hasCovered)?'partial':'shortage';
-    const label=!list.length?'No request':allComplete?'Distributed':pastDue?'Past Due':!hasShort?'Covered':(hasPartial||hasCovered)?'Partial':'Shortage';
+    const state=!list.length?'empty-month':isPast?(allComplete?'completed':'past-unmet'):allComplete?'completed':!hasShort?'covered':(hasPartial||hasCovered)?'partial':'shortage';
+    const label=!list.length?'No request':isPast?(allComplete?'Demand Met':'Demand Not Met'):allComplete?'Distributed':!hasShort?'Covered':(hasPartial||hasCovered)?'Partial':'Shortage';
     const details=list.length?rows.map(item=>{
       const n=item.n,nSent=fulfilledQty(n),nRemaining=remainingNeed(n);
       let summary;
       if(nRemaining===0)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
-      else if(nSent>0||month<monthNow())summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed ${nRemaining} · In Storage ${item.available} · Short ${item.shortage}`;
-      else summary=`Quilts Needed ${n.qty} · In Storage ${item.available} · Short ${item.shortage}`;
+      else if(nSent>0||month<monthNow())summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed ${nRemaining} · Available in Storage ${item.available} · Short ${item.shortage}`;
+      else summary=`Quilts Needed ${n.qty} · Available in Storage ${item.available} · Short ${item.shortage}`;
       return`<div class="month-need"><button type="button" onclick="openCalendarNeedEditor('${n.id}')"><b>${esc(n.charity)}</b><br>${esc(n.size)} · ${summary}</button></div>`;
     }).join(''):'<div class="month-need">No quilts needed</div>';
-    const totals=(allComplete||pastDue||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
+    const totals=(allComplete||isPast||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
     const add=showAddButtons?`<button type="button" class="month-add-button" onclick="openCalendarNeedEditor('', '${month}')">＋ Add Quilts Needed</button>`:'';
-    return`<div class="month-card ${state}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}${add}</div>`;
+    return`<div class="month-card ${state}${isCurrent?' current-month':''}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}${add}</div>`;
   }).join('');
 }
 function renderNeedsCalendar(){
@@ -642,7 +669,8 @@ function renderHomeCharityBreakdown(){
   box.innerHTML=rows.length?rows.map(row=>{
     const state=row.difference<0?'has-shortage':row.difference>0?'has-surplus':'balanced';
     const diffClass=differenceClass(row.difference);
-    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>In Storage</span></div><div><b>${row.needsRemaining}</b><span>Quilts Still Needed</span></div><div><b class="${diffClass}">${signedDifference(row.difference)}</b><span>Difference</span></div></div></button>`;
+    const moreToMake=Math.max(0,-row.difference);
+    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>Available in Storage</span></div><div><b>${row.needsRemaining}</b><span>Quilts Still Needed</span></div><div><b class="${moreToMake?'negative':'positive'}">${moreToMake}</b><span>More to Make</span></div></div></button>`;
   }).join(''):'<div class="empty">No charities have been entered yet.</div>';
 }
 function openHomeCharity(charity){
@@ -655,7 +683,7 @@ function renderHomeSummaryReport(){
   const rows=homeCharitySummaries(),onHand=totalOnHand(),needsRemaining=totalNeeded(),difference=onHand-needsRemaining;
   const generated=new Date().toLocaleString();
   const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.needsRemaining}</td><td><span class="difference-value ${differenceClass(row.difference)}">${signedDifference(row.difference)}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
-  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · ${esc(data.homeAtAGlance)} Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>${esc(data.homeNeededLabel)}</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>In Storage</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · ${esc(data.homeAtAGlance)} Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div class="summary-metric"><b>${needsRemaining}</b><span>${esc(data.homeNeededLabel)}</span></div><div class="summary-metric"><b class="${differenceClass(difference)}">${signedDifference(difference)}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:24%"><col style="width:18%"></colgroup><thead><tr><th>Charity</th><th>Available in Storage</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${needsRemaining}</td><td><span class="difference-value ${differenceClass(difference)}">${signedDifference(difference)}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderHome(){
   const difference=totalOnHand()-totalNeeded();
@@ -668,7 +696,7 @@ function renderHome(){
     differenceStatus.textContent=difference>0?'Surplus':difference<0?'Shortage':'Balanced';
     differenceStatus.className=`difference-status ${difference>0?'positive':difference<0?'negative':'balanced'}`;
   }
-  renderHomeCalendar();renderHomeSummaryReport();updateSaveStatus();
+  renderHomeYearStatistics();renderHomeCharityBreakdown();renderHomeCalendar();renderHomeSummaryReport();updateSaveStatus();
 }
 function inventoryGroups(){const inventory=invMap();return[...data.charities].sort((a,b)=>a.localeCompare(b)).map(c=>{const sizes=data.sizes.map(s=>({s,n:inventory[c+'|'+s]||0})).filter(x=>x.n!==0).sort((a,b)=>a.s.localeCompare(b.s));return{charity:c,sizes,total:sizes.reduce((sum,x)=>sum+x.n,0)}})}
 function requestedNeedsMap(){
@@ -738,13 +766,16 @@ function compactDistributedHTML(limit=6){
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){
   const generated=new Date().toLocaleString(),difference=totalOnHand()-totalNeeded(),differenceStatus=difference>0?'Surplus':difference<0?'Shortage':'Balanced';
-  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>${esc(data.homeStorageLabel)}</div><div class="print-metric"><b>${totalNeeded()}</b>${esc(data.homeNeededLabel)}</div><div class="print-metric"><b class="${differenceClass(difference)}">${Math.abs(difference)}</b>${esc(data.homeDifferenceLabel)} · ${differenceStatus}</div></div><h2>${esc(data.homeStorageLabel)} and ${esc(data.homeNeededLabel)}</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>${esc(data.homeNeededLabel)}</h2>${reportNeedsHTML()}</div><div><h2>${esc(data.itemName)} Distributed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  const stats=yearlyStatistics(selectedStatisticsYear());
+  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>${esc(data.homeStorageLabel)}</div><div class="print-metric"><b>${totalNeeded()}</b>${esc(data.homeNeededLabel)}</div><div class="print-metric"><b class="${differenceClass(difference)}">${Math.abs(difference)}</b>${esc(data.homeDifferenceLabel)} · ${differenceStatus}</div></div><h2>${stats.year} Yearly Statistics</h2><div class="print-note">Made ${stats.made} · Distributed ${stats.distributed} · Net change ${signedDifference(stats.netChange)} · Current inventory ${stats.currentInventory} · Charities served ${stats.charitiesServed} · Lifetime distributed ${stats.lifetimeDistributed}</div><h2>${esc(data.homeStorageLabel)} and ${esc(data.homeNeededLabel)}</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>${esc(data.homeNeededLabel)}</h2>${reportNeedsHTML()}</div><div><h2>${esc(data.itemName)} Distributed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderReports(){
+  const statsYear=fillStatisticsYearSelect(),stats=yearlyStatistics(statsYear);
   const difference=totalOnHand()-totalNeeded(),differenceStatus=difference>0?'Surplus':difference<0?'Shortage':'Balanced';
   el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=Math.abs(difference);
   if(el('reportStorageLabel'))el('reportStorageLabel').textContent=data.homeStorageLabel;if(el('reportNeededLabel'))el('reportNeededLabel').textContent=data.homeNeededLabel;if(el('reportDifferenceLabel'))el('reportDifferenceLabel').textContent=data.homeDifferenceLabel;if(el('reportDifferenceStatus')){el('reportDifferenceStatus').textContent=differenceStatus;el('reportDifferenceStatus').className=`metric-status-line difference-status ${difference>0?'positive':difference<0?'negative':'balanced'}`}
   if(el('reportInventoryHeading'))el('reportInventoryHeading').textContent=`${data.homeStorageLabel} and ${data.homeNeededLabel}`;if(el('reportNeedsHeading'))el('reportNeedsHeading').textContent=data.homeNeededLabel;if(el('reportDistributedHeading'))el('reportDistributedHeading').textContent=`${data.itemName} Distributed`;
+  if(el('reportYearlyStats'))el('reportYearlyStats').innerHTML=yearlyStatisticsHTML(stats);
   el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();el('reportDistributed').innerHTML=reportDistributedHTML();
   const a=data.transactions.filter(t=>t.type==='ADJUST').sort((x,y)=>y.date.localeCompare(x.date));
   el('reportAdjustments').innerHTML=a.length?a.map(x=>`<div class="item report-shaded-item"><div class="head"><div><div class="title">${value(x)>0?'+':''}${value(x)} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}${x.note?' · '+esc(x.note):''}</div></div><span class="flag">Adjusted</span></div></div>`).join(''):'<div class="empty">No adjusted transactions.</div>';
@@ -871,9 +902,11 @@ function makeOnePagePDF(){
     rect(x,metricY,metricW,metricH);text(x+8,metricY+18,String(num),14,true);text(x+42,metricY+19,pdfFit(label,25),7.4,true);
   });
 
-  text(36,665,pdfFit(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`,74),10,true);line(36,659,576,659,.7);
+  const stats=yearlyStatistics(selectedStatisticsYear());
+  text(36,668,pdfFit(`${stats.year}: Made ${stats.made} | Distributed ${stats.distributed} | Net ${signedDifference(stats.netChange)} | Charities ${stats.charitiesServed} | Lifetime ${stats.lifetimeDistributed}`,92),7.2,true);
+  text(36,653,pdfFit(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`,74),10,true);line(36,647,576,647,.7);
   const xCharity=36,xSize=180,xOnHand=365,xRequested=455,xDifference=525;
-  let y=645;
+  let y=633;
   text(xCharity,y,'CHARITY',7,true);text(xSize,y,'SIZE',7,true);text(xOnHand,y,pdfFit(data.homeStorageLabel.toUpperCase(),16),5.5,true);text(xRequested-7,y+3,pdfFit(data.homeNeededLabel.toUpperCase(),18),5.2,true);text(xRequested-7,y-4,'TO COMPLETE',5.2,true);text(xDifference-10,y,pdfFit(data.homeDifferenceLabel.toUpperCase(),13),6.2,true);line(36,y-8,576,y-8,.5);y-=20;
   const allRows=reportComparisonRows(),maxSummaryRows=20,shownRows=allRows.slice(0,maxSummaryRows);
   shownRows.forEach((row,rowIndex)=>{
@@ -1012,6 +1045,11 @@ function makeFullPDF(){
   });
   page.y=632;
 
+  const stats=yearlyStatistics(selectedStatisticsYear());
+  beginSection(`${stats.year} YEARLY STATISTICS`);
+  addParagraph(`Quilts Made: ${stats.made} | Quilts Distributed: ${stats.distributed} | Net Inventory Change: ${signedDifference(stats.netChange)}`,{size:8.5,bold:true,after:3});
+  addParagraph(`Current Inventory: ${stats.currentInventory} | Charities Served: ${stats.charitiesServed} | Lifetime Quilts Distributed: ${stats.lifetimeDistributed}`,{size:8.5,after:9});
+
   beginSection(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`);
   const comparisonRows=reportComparisonRows(),diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
   const drawComparisonHeader=()=>{
@@ -1138,7 +1176,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.16 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.17 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.16',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.17',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

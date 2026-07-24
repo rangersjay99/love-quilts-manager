@@ -1,39 +1,45 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.16 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.17 TEST CHECKLIST
 
 BASIC UPDATE
-[ ] App opens and shows Update 7.8.16.
-[ ] Existing inventory, charity requests, settings, and custom Home wording remain present.
+[ ] App opens and shows Update 7.8.17.
+[ ] Existing inventory, charity requests, settings, custom wording, and sync access remain present.
 [ ] Shared data reaches “Shared data verified · All changes synced.”
 
-REPORT WORDING AND SHADING
-[ ] Reports use the same Storage, Needed, and Difference labels configured for Home.
-[ ] The third report total shows Difference with Surplus, Shortage, or Balanced status.
-[ ] Comparison rows alternate light shading on screen.
-[ ] Alternating shading appears when printing and in both generated PDFs.
-[ ] Compact and full PDFs still open and contain no website address.
+HOME — THIS YEAR AND BY CHARITY
+[ ] Home shows Quilts Made This Year.
+[ ] Home shows Quilts Distributed This Year.
+[ ] By Charity shows Available in Storage, Quilts Still Needed, and More to Make.
+[ ] Tapping a charity opens the detailed charity calendar.
+[ ] Charities with no shortage show 0 More to Make.
 
-SYNC NOW
-[ ] Sync Now is visible in the shared-sync banner.
-[ ] Sync Now is visible in Settings.
-[ ] Tapping Sync Now changes the button to Syncing and returns to Sync Now after verification.
-[ ] A change appears on the second approved device after manual sync.
+YEARLY STATISTICS
+[ ] Reports show a selectable Statistics Year.
+[ ] Quilts Made matches Love Quilts In entries for the selected year.
+[ ] Distribution-correction inventory restorations are not counted as quilts made.
+[ ] Quilts Distributed matches Love Quilts Out entries for the selected year.
+[ ] Net Inventory Change includes In, Out, and Adjusted transactions.
+[ ] Current Inventory matches the present Home inventory total.
+[ ] Charities Served counts charities with Quilts Out in the selected year.
+[ ] Lifetime Quilts Distributed includes all years.
+[ ] Selected yearly statistics appear in compact and full print/PDF reports.
 
-SET CURRENT COUNT
-[ ] Open Inventory and choose Set Current Count.
-[ ] Select a charity and size with a known balance.
-[ ] Enter the exact physically counted number and confirm the before/after totals.
-[ ] Only the difference is recorded as an Adjusted inventory transaction.
-[ ] Entering 0 is allowed and changes the balance to 0.
-[ ] Entering the existing count creates no transaction.
+REPORT LAYOUT
+[ ] Reports still use the same Storage, Needed, and Difference labels configured for Home.
+[ ] The third Reports summary block displays its full label without cutoff on iPhone.
+[ ] Surplus, Shortage, or Balanced remains visible below the third total.
+[ ] Alternating report shading remains visible on screen, print, and PDFs.
 
-DISTRIBUTION SAFEGUARDS
-[ ] Mark Distributed with removal checked shows current and resulting inventory before saving.
-[ ] Saving creates one protected linked Out transaction.
-[ ] An automatic distribution Out created in 7.8.15 is linked and protected after upgrading.
-[ ] Saving the same quantity again does not remove inventory twice.
-[ ] Direct Edit or Delete on the linked transaction redirects to Mark Distributed.
-[ ] Increasing distributed quantity with removal unchecked warns that inventory will not change.
-[ ] Reducing an automatically deducted distribution confirms and adds the difference back to inventory.
-[ ] Changing charity or size is blocked while automatic inventory remains linked.
-[ ] A request with protected linked inventory history cannot be deleted; corrections must be made through Mark Distributed.
-[ ] Home, Inventory, Reports, and the second device show the same final balance.
+CALENDAR
+[ ] A past month with all demand met is light green and says Demand Met.
+[ ] A past month with unmet demand is light red and says Demand Not Met.
+[ ] A future month fully covered early is light green.
+[ ] The current month has a noticeably bold border.
+[ ] Calendar details say Available in Storage.
+
+7.8.16 SAFEGUARD REGRESSION
+[ ] Sync Now works from the banner and Settings.
+[ ] Set Current Count accepts 0 and records only the difference.
+[ ] Marking the full on-hand amount distributed changes inventory to 0 exactly once.
+[ ] Saving the same distribution again does not deduct inventory twice.
+[ ] Reducing an automatically deducted distribution restores the corrected amount.
+[ ] Linked distribution transactions remain protected from unsafe direct edits or deletion.

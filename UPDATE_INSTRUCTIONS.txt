@@ -1,5 +1,5 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.16
-Report Consistency, Exact Counts, Sync Now, and Distribution Safeguards
+LOVE QUILTS MANAGER — UPDATE 7.8.17
+Yearly Statistics, Home Charity Summary, and Calendar Completion History
 
 BEFORE UPDATING
 1. Confirm the current device shows all changes synced.
@@ -15,14 +15,18 @@ UPLOAD
 6. Close and reopen the app on each device. Refresh once if the old version remains.
 
 VERIFY
-1. Confirm the splash and About section show Update 7.8.16.
+1. Confirm the splash and About section show Update 7.8.17.
 2. Tap Sync Now and wait for “Shared data verified · All changes synced.”
-3. Open Reports and confirm wording matches Home and rows alternate shading.
-4. Test Set Current Count with a known charity and size.
-5. Test one small distribution and confirm the inventory balance changes exactly once.
+3. On Home, confirm This Year and By Charity appear below At a Glance.
+4. Open Reports and confirm Yearly Statistics appears and the year can be changed.
+5. Confirm the third Reports total label wraps fully on iPhone.
+6. Confirm the current calendar month has a bold border.
+7. Confirm a completed past month is green and an unmet past month is red.
+8. Test one small change and confirm it appears on the second approved device.
 
 IMPORTANT
-- Set Current Count is intended for a physical recount. It records the difference as an adjusted transaction so the audit history remains intact.
-- Leave distribution inventory removal unchecked only when the same quilts were already entered separately as Quilts Out.
-- Linked automatic distribution transactions are intentionally protected; correct them through Mark Distributed.
+- Quilts Made uses Love Quilts In entries; inventory restorations from distribution corrections are excluded.
+- Quilts Distributed uses Love Quilts Out entries.
+- Current Inventory is today’s balance even when viewing an earlier statistics year.
 - This update does not clear or reinitialize shared data.
+- All Set Current Count and linked-distribution safeguards from 7.8.16 remain active.
