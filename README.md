@@ -1,6 +1,14 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.33 — Editable Distribution Dates and App Feedback — July 25, 2026**
+Current release: **Update 7.8.34 — Future Modules Preview — July 25, 2026**
+
+## Update 7.8.34
+
+- Adds a display-only **Future Modules** section in Settings, positioned between Change Log and About.
+- Shows five possible expansion areas: Quilt Show Manager, Personal Quilt Collection, Fabric & Supply Inventory, Guild Member Manager, and Analytics & Statistics.
+- Every module is clearly marked **Future Concept** and has no buttons or active functions.
+- Adds the subtle splash-screen message **“Designed to grow with your quilting needs.”**
+- Makes no changes to inventory, reports, Firebase, syncing, permissions, or stored data.
 
 ## Update 7.8.33
 

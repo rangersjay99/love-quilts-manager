@@ -1,11 +1,11 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.33
+LOVE QUILTS MANAGER — UPDATE 7.8.34
 
 1. Do not clear data or recreate the shared inventory.
 2. Export a current app backup and keep a copy of the present GitHub repository.
-3. Unzip the 7.8.33 download on the laptop.
+3. Unzip the 7.8.34 download on the laptop.
 4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
 5. Commit the changes and allow GitHub Pages to publish.
-6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.33.
+6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.34.
 7. Open Reports, find a distributed charity request, and tap Edit Date.
 8. Confirm only Date Distributed is editable; quantity and inventory controls should not appear.
 9. Change the date, review the Current and Proposed details, and save.

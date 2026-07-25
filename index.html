@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.33">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.33">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.33">
+<link rel="manifest" href="manifest-v7.json?v=7.8.34">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.34">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.34">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -79,6 +79,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .calendar-print-button:hover,.calendar-print-button:focus{background:rgba(37,99,166,.17)!important}
 .list-management-divider{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
 .change-log-current{padding:12px;border-radius:12px;background:#edf8f0;border:1px solid #b9ddc2;margin-bottom:10px}.change-log-current b{display:block;color:var(--green)}.change-log-entry{padding:11px 0;border-top:1px solid var(--line)}.change-log-entry:first-of-type{border-top:0}.change-log-entry h4{margin:0 0 4px;color:var(--plum-dark)}.change-log-entry p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.future-modules-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.future-modules-header h2{margin-bottom:4px}.future-modules-badge{flex:0 0 auto;padding:5px 9px;border:1px solid #d8c7dc;border-radius:999px;background:#f5eef6;color:var(--plum-dark);font-size:10px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}.future-modules-note{margin:0 0 13px;padding:10px 11px;border:1px solid #ead28f;border-radius:11px;background:#fff8e5;color:#6b500d;font-size:12px;line-height:1.45}.future-module-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.future-module-card{position:relative;min-width:0;padding:14px 13px 12px;border:1px solid var(--line);border-left:5px solid var(--plum);border-radius:13px;background:#fff;box-shadow:0 2px 8px rgba(61,39,63,.05)}.future-module-card.show{border-left-color:var(--plum);background:#fbf7fc}.future-module-card.collection{border-left-color:var(--rose);background:#fff8fb}.future-module-card.supplies{border-left-color:var(--green);background:#f8fcf9}.future-module-card.members{border-left-color:var(--teal);background:#f6fbfb}.future-module-card.analytics{border-left-color:var(--blue);background:#f7faff}.future-module-title{display:flex;align-items:center;gap:9px;margin:0 0 6px;color:var(--plum-dark);font-size:15px}.future-module-icon{display:inline-flex;align-items:center;justify-content:center;width:31px;height:31px;border-radius:9px;background:rgba(109,58,120,.10);font-size:18px}.future-module-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}.future-module-status{display:inline-block;margin-top:9px;padding:4px 7px;border-radius:999px;background:rgba(109,58,120,.09);color:var(--plum-dark);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}.splash-growth{margin:4px 0 11px;color:var(--muted);font-family:Georgia,"Times New Roman",serif;font-size:12px;font-style:italic;line-height:1.35}@media(max-width:560px){.future-module-grid{grid-template-columns:1fr}.future-modules-header{display:block}.future-modules-badge{display:inline-block;margin-top:4px}}
 #calendarPrintReport{display:none}.calendar-print-header{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:8px}.calendar-print-header h1{margin:0;font-size:20px}.calendar-print-meta{font-size:9px;color:#555;text-align:right}
 @media(max-width:620px){.calendar-action-buttons{grid-template-columns:1fr}}
 @media(max-width:620px){.mode-row{grid-template-columns:1fr 1fr}.metric{min-height:184px;padding:15px 6px}.metric .metric-title{min-height:42px;font-size:10px}.metric-add-button{font-size:10.5px;padding:7px 4px}.home-calendar-filter{grid-template-columns:1fr}.calendar-modal-backdrop{align-items:flex-end;padding:0}.calendar-modal-card{width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
@@ -366,14 +367,15 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.33" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.34" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
+    <div class="splash-growth">Designed to grow with your quilting needs.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.33</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.34</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -648,7 +650,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <div id="appCheckResults" class="app-check-results" aria-live="polite"></div>
     </div>
     <h3>Report a Bug or Request a Change</h3>
-    <p class="feedback-note small">The request automatically includes Update 7.8.33, the date and time, signed-in user, current screen, and device/browser information.</p>
+    <p class="feedback-note small">The request automatically includes Update 7.8.34, the date and time, signed-in user, current screen, and device/browser information.</p>
     <div class="feedback-grid">
       <label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
       <label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected>Other</option></select></label>
@@ -665,7 +667,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.33</b><span class="small">Editable distribution dates and App Check / Feedback · July 25, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.34</b><span class="small">Future Modules preview and splash growth message · July 25, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.34</h4><p>Added a display-only Future Modules section in Settings with five possible expansion areas. Added the subtle splash-screen line “Designed to grow with your quilting needs.” No module functions, data fields, or Firebase changes were added.</p></div>
     <div class="change-log-entry"><h4>7.8.33</h4><p>Added Edit Date beside distributed records in Reports, with linked inventory and yearly statistics following the revised date. Added a Settings tool that checks common data problems and creates structured bug reports or change requests for sharing, copying, or downloading.</p></div>
     <div class="change-log-entry"><h4>7.8.32</h4><p>Reports now use the selected date when inventory changed or quilts were distributed, including backdated distribution edits and corrections. Entry timestamps remain available for audit history.</p></div>
     <div class="change-log-entry"><h4>7.8.31</h4><p>Fixed the blank Compact Report print preview and restored Compact One-Page PDF downloads.</p></div>
@@ -686,17 +689,52 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div class="change-log-entry"><h4>7.8.16</h4><p>Sync Now, Set Current Count, alternating report shading, and distribution safeguards.</p></div>
   </div>
 
+  <div class="card" id="futureModulesCard">
+    <div class="future-modules-header">
+      <div><h2>Future Modules</h2><div class="small">Ideas for expanding Love Quilts Manager without making the core charity-quilt workflow more complicated.</div></div>
+      <span class="future-modules-badge">Preview Only</span>
+    </div>
+    <div class="future-modules-note"><b>Nothing here is active yet.</b> These cards are informational only and do not change inventory, reports, accounts, syncing, or stored data.</div>
+    <div class="future-module-grid">
+      <div class="future-module-card show">
+        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">🏆</span>Quilt Show Manager</h3>
+        <p>Register show quilts, assign entry numbers, organize categories, manage check-in and check-out, and track judging or ribbons.</p>
+        <span class="future-module-status">Future Concept</span>
+      </div>
+      <div class="future-module-card collection">
+        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">🖼️</span>Personal Quilt Collection</h3>
+        <p>Catalog personal quilts with photos, maker, pattern, dates, size, ownership, notes, and storage location.</p>
+        <span class="future-module-status">Future Concept</span>
+      </div>
+      <div class="future-module-card supplies">
+        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">🧵</span>Fabric &amp; Supply Inventory</h3>
+        <p>Track fabric, batting, thread, notions, quantities, colors, and where supplies are stored.</p>
+        <span class="future-module-status">Future Concept</span>
+      </div>
+      <div class="future-module-card members">
+        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">👥</span>Guild Member Manager</h3>
+        <p>Organize a member directory, roles, committees, volunteer assignments, and other guild information.</p>
+        <span class="future-module-status">Future Concept</span>
+      </div>
+      <div class="future-module-card analytics">
+        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">📊</span>Analytics &amp; Statistics</h3>
+        <p>Explore longer-term trends, yearly comparisons, charity totals, production, distribution, and planning patterns.</p>
+        <span class="future-module-status">Future Concept</span>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <h3>About</h3>
     <div class="about-grid">
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.33 · July 25, 2026</span>
+      <b>Version</b><span>Update 7.8.34 · July 25, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.33 adds editable Date Distributed controls in Reports and an App Check / Feedback tool in Settings. Update 7.8.32 made reports and yearly totals use the actual selected activity date.</p>
+    <p class="small">Update 7.8.34 adds a display-only Future Modules preview in Settings and the splash-screen growth message. Update 7.8.33 added editable Date Distributed controls and App Check / Feedback.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -754,7 +792,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.33"></script>
-<script src="app.js?v=7.8.33"></script>
+<script type="module" src="firebase-sync.js?v=7.8.34"></script>
+<script src="app.js?v=7.8.34"></script>
 </body>
 </html>

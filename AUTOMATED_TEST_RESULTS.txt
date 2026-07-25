@@ -1,27 +1,21 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.33 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.34 VALIDATION RESULTS
 
 VALIDATED JULY 25, 2026
 
-EDITABLE DATE DISTRIBUTED
-- PASS: Reports render an Edit Date action beside each distributed charity request.
-- PASS: The Reports editor opens in date-only mode with quantity and inventory controls hidden.
-- PASS: Saving a revised Date Distributed preserves the distributed quantity and total inventory.
-- PASS: Linked NEED_DISTRIBUTION and NEED_DISTRIBUTION_CORRECTION activity moves to the revised effective date.
-- PASS: Yearly distributed totals move from the old year to the newly selected year.
-- PASS: The date change still uses the detailed Current / Proposed verification screen.
-- PASS: Existing distributions recorded separately as Quilts Out no longer default to a second inventory deduction when reopened.
+FUTURE MODULES PREVIEW
+- PASS: Settings includes Future Modules between Change Log and About.
+- PASS: Five display-only cards appear for Quilt Show Manager, Personal Quilt Collection, Fabric & Supply Inventory, Guild Member Manager, and Analytics & Statistics.
+- PASS: Every card is marked Future Concept and contains no activation link, form control, or data-changing action.
+- PASS: The section clearly states that it does not affect inventory, reports, accounts, syncing, or stored data.
+- PASS: Mobile styling changes the module card layout from two columns to one column on narrow screens.
 
-APP CHECK AND FEEDBACK
-- PASS: App Check reports clean sample data as having no common data problems.
-- PASS: App Check detects invalid dates/quantities, negative inventory, orphaned links, linked-date mismatches, and duplicate IDs without modifying data.
-- PASS: Bug Report and Change Request labels change appropriately.
-- PASS: Generated feedback includes summary, screen, priority, Update 7.8.33, date/time, signed-in user, current view, device/browser, details, expected result/benefit, and reproduction steps/workflow.
-- PASS: Copy, download, and native-share fallback functions are present and error-handled.
+SPLASH SCREEN
+- PASS: The splash screen displays “Designed to grow with your quilting needs.” beneath the existing welcome message.
+- PASS: Existing organization, app, program, custom tagline, custom splash message, Continue button, and copyright elements remain.
 
 REGRESSION CHECKS
 - PASS: app.js and sw.js pass JavaScript syntax checks.
-- PASS: Compact and full PDF generators produce nonblank PDF byte output.
-- PASS: Report Edit controls use no-print styling and do not appear in printed or PDF output.
-- PASS: Version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings identify Update 7.8.33.
-- PASS: The service-worker cache name changed to love-quilts-v7-8-33 so installed devices request the corrected files.
-- PASS: No Firebase schema, Firestore Rules, login, collection, or database changes are required.
+- PASS: Update 7.8.34 is identified by the version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings.
+- PASS: The service-worker cache name changed to love-quilts-v7-8-34 so installed devices request the new files.
+- PASS: No Firebase schema, Firestore Rules, login, collection, permission, or database changes are required.
+- PASS: Existing App Check, Bug Reporting, editable distribution dates, reporting, printing, and PDF functions remain unchanged.

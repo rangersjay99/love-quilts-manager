@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.33
+IMPLEMENTED THROUGH UPDATE 7.8.34
+- Update 7.8.34 adds a display-only Future Modules section in Settings with Quilt Show Manager, Personal Quilt Collection, Fabric & Supply Inventory, Guild Member Manager, and Analytics & Statistics concepts. It also adds the splash message “Designed to grow with your quilting needs.” No module functions or data changes are included.
 - Update 7.8.33 adds a safe Edit Date action beside distributed records in Reports. Date-only edits keep quantity and inventory unchanged while moving linked distribution activity and yearly statistics to the revised date. Settings now includes Run App Check plus a structured Bug Report / Change Request tool that can share, copy, or download a complete feedback report.
 - Update 7.8.32 makes Reports, transaction history, CSV exports, and yearly statistics use the selected date of the actual inventory change or distribution. Backdated distribution edits and corrections keep their linked inventory activity on that effective date, and yearly distributed totals use the corrected net quantity, while entry timestamps remain available for audit history.
 - Update 7.8.31 fixes blank Compact Report printing and restores Compact One-Page PDF downloads.
@@ -58,6 +59,7 @@ INVENTORY, DISTRIBUTION, AND SYNC
 - Firebase shared-device paths and existing data remain compatible.
 
 SETTINGS AND LIST MANAGEMENT
+- Future Modules provides a clearly labeled, display-only preview of optional expansion ideas without changing the core app or stored data.
 - App Check scans for common data consistency problems without changing records.
 - Bug reports and change requests can be built in Settings with automatic version, date, user, screen, and device/browser details, then shared, copied, or downloaded.
 - Charity names can be safely renamed without changing current quantities, dates, needs, distributions, or reports.
@@ -68,5 +70,5 @@ DEFERRED / FUTURE ROADMAP
 - On Hold / Storage workflow is removed from the active app for now; preserve the idea for a later optional workflow.
 - Optional first-of-month reminder emails remain lower priority.
 - Custom logo and guided first-use setup remain future customization work.
-- Photo support, standalone edition, Quilt Show Manager, and other optional modules remain long-term items.
+- Photo support, standalone edition, Quilt Show Manager, and other optional modules remain long-term items; Update 7.8.34 displays these concepts without activating them.
 - Hold Version 8 for a later major release.

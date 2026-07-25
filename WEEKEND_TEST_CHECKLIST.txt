@@ -1,7 +1,7 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.33 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.34 TEST CHECKLIST
 
 [ ] Export a backup before testing.
-[ ] Confirm Update 7.8.33 appears on the splash, Change Log, or About screen.
+[ ] Confirm Update 7.8.34 appears on the splash, Change Log, or About screen.
 [ ] Reports: Print Compact Report opens a populated one-page print preview.
 [ ] Reports: Download Compact One-Page PDF creates a nonblank PDF file.
 
