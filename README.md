@@ -1,8 +1,8 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.25 — Two-Device Sync Verification Hotfix — July 24, 2026**
+Current release: **Update 7.8.26 — Two-Device Sync Verification Hotfix — July 24, 2026**
 
-## Update 7.8.25
+## Update 7.8.26
 
 - Fixes the case where the sync banner turned green even though the other device had not received the corrected numbers.
 - Green now appears only after Firebase returns a server-confirmed copy that matches the device.

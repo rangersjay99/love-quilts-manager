@@ -1,11 +1,1 @@
-Love Quilts Manager Update 7.8.25
-Two-Device Sync Verification Hotfix
-July 24, 2026
-
-Included:
-- Green sync status now requires a server-confirmed matching Firebase copy.
-- Sync Now no longer blindly uploads stale data from a second device.
-- The device with the proven full distribution repairs both needs and linked inventory transactions.
-- A second device safely receives the latest shared copy.
-- Harmless transaction and need ordering differences no longer prevent verification.
-- Retains full over-distribution quantities and all 7.8.23 review safeguards.
+7.8.26

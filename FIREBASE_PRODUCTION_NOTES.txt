@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER UPDATE 7.8.25 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.26 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules or collection-path changes are required.
 
@@ -12,4 +12,4 @@ CORRECTION
 - Manual repair rewrites both transactions and needs.
 - Array order is normalized only for comparison, preventing harmless Firestore ordering differences from causing a false mismatch.
 
-Upload normally. Do not clear or recreate shared inventory. Use Sync Now first on the device with the correct numbers, then once on the second device after both show 7.8.25.
+Upload normally. Do not clear or recreate shared inventory. Use Sync Now first on the device with the correct numbers, then once on the second device after both show 7.8.26.

@@ -1,14 +1,14 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.25
+LOVE QUILTS MANAGER — UPDATE 7.8.26
 
 1. Do not clear data or recreate the shared inventory.
 2. Keep a backup copy of the current repository and app data.
-3. Unzip the 7.8.25 download on the laptop.
+3. Unzip the 7.8.26 download on the laptop.
 4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
 5. Commit the changes and allow GitHub Pages to publish.
 6. Open the device that currently shows the correct distribution and inventory numbers.
-7. Confirm the splash, Change Log, or About screen says Update 7.8.25.
+7. Confirm the splash, Change Log, or About screen says Update 7.8.26.
 8. Press Sync Now on that correct device. Wait for the green message: “Shared data verified · All changes synced.”
-9. Open the second device and confirm it also says Update 7.8.25.
+9. Open the second device and confirm it also says Update 7.8.26.
 10. Press Sync Now once. On this device, Sync Now will receive the latest shared copy instead of sending its older copy.
 11. Verify both devices show the same full distributed quantity, inventory balance, requests, and reports.
 
