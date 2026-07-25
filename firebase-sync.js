@@ -51,10 +51,17 @@ let remoteApplyTimer = null;
 let remote = blankRemote();
 let lastRemoteData = null;
 let authStateResolved = false;
+let verificationTarget = null;
 
 const byId = id => document.getElementById(id);
 const clone = value => JSON.parse(JSON.stringify(value));
 const stable = value => JSON.stringify(value);
+function stableData(value) {
+  const copy = clone(value || {});
+  if (Array.isArray(copy.transactions)) copy.transactions.sort((a, b) => cleanString(a.id).localeCompare(cleanString(b.id)));
+  if (Array.isArray(copy.needs)) copy.needs.sort((a, b) => cleanString(a.id).localeCompare(cleanString(b.id)));
+  return stable(copy);
+}
 const cleanString = value => String(value ?? '');
 pendingSave = loadPendingSave();
 
@@ -135,7 +142,7 @@ function setState(message, kind = 'normal') {
   if (account) account.textContent = currentUser?.email || 'Not signed in';
   const loadingStatus = byId('firebaseLoadingStatus');
   if (loadingStatus && !byId('firebaseGate')?.classList.contains('hidden')) loadingStatus.textContent = displayMessage;
-  const syncBusy = /syncing|waiting to sync|loading shared/i.test(displayMessage);
+  const syncBusy = /syncing|waiting to sync|loading shared|saving changes|waiting for firebase confirmation|applying latest shared/i.test(displayMessage);
   document.querySelectorAll('[data-sync-now]').forEach(button => { button.disabled = syncBusy || !currentUser; button.textContent = syncBusy ? 'Syncing…' : 'Sync Now'; });
   if (typeof window.lqRefreshSaveStatus === 'function') window.lqRefreshSaveStatus();
 }
@@ -283,6 +290,33 @@ function hasPendingWrites() {
   return remote.orgPending || remote.settingsPending || remote.transactionsPending || remote.needsPending;
 }
 
+
+function remoteConfirmedByServer() {
+  return allRemoteReady() && !hasPendingWrites() &&
+    !remote.orgFromCache && !remote.settingsFromCache &&
+    !remote.transactionsFromCache && !remote.needsFromCache;
+}
+
+function localHasAuthoritativeDistributionRepair(localData, cloudData) {
+  const cloudNeeds = mapById(cloudData.needs || []);
+  const cloudTransactions = mapById(cloudData.transactions || []);
+  for (const need of localData.needs || []) {
+    const cloudNeed = cloudNeeds.get(need.id);
+    const localFulfilled = Math.max(0, Number(need.fulfilledQty || 0));
+    const cloudFulfilled = Math.max(0, Number(cloudNeed?.fulfilledQty || 0));
+    const localAutoOut = Math.max(0, Number(need.autoOutQty || 0));
+    const cloudAutoOut = Math.max(0, Number(cloudNeed?.autoOutQty || 0));
+    const localHighWater = Math.max(localFulfilled, Number(need.fulfilledHighWater || 0));
+    if (localFulfilled > cloudFulfilled && (localAutoOut >= localFulfilled || localHighWater >= localFulfilled)) return true;
+    if (localAutoOut > cloudAutoOut) return true;
+  }
+  for (const transaction of localData.transactions || []) {
+    if (!cloudTransactions.has(transaction.id) && transaction.sourceNeedId &&
+        ['NEED_DISTRIBUTION','NEED_DISTRIBUTION_CORRECTION'].includes(transaction.sourceType)) return true;
+  }
+  return false;
+}
+
 function updateInitializationPanel() {
   const panel = byId('firebaseInitializePanel');
   const button = byId('firebaseInitializeButton');
@@ -352,14 +386,42 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
     }
 
     const localData = normalizeAppData(window.lqGetData());
-    if (stable(localData) !== stable(cloudData)) {
+
+    if (verificationTarget) {
+      if (remoteConfirmedByServer() && stableData(cloudData) === stableData(verificationTarget)) {
+        lastRemoteData = clone(cloudData);
+        verificationTarget = null;
+        setState('All changes synced');
+      } else {
+        setState('Waiting for Firebase confirmation…');
+      }
+      releaseGate();
+      return;
+    }
+
+    if (stableData(localData) !== stableData(cloudData)) {
+      // Do not let a clipped cloud copy overwrite the device that still contains
+      // the proven full distribution and its linked inventory transaction.
+      if (localHasAuthoritativeDistributionRepair(localData, cloudData)) {
+        setState('Full distribution found on this device — press Sync Now to repair shared data');
+        releaseGate();
+        return;
+      }
       applyingRemote = true;
       window.lqApplyRemoteData(cloudData, reason);
       applyingRemote = false;
-      // The remote copy has now been applied locally, so both sides are verified equal.
+      const appliedData = normalizeAppData(window.lqGetData());
+      if (stableData(appliedData) === stableData(cloudData) && remoteConfirmedByServer()) {
+        lastRemoteData = clone(cloudData);
+        setState('All changes synced');
+      } else {
+        setState('Applying latest shared data…');
+      }
+    } else if (remoteConfirmedByServer()) {
+      lastRemoteData = clone(cloudData);
       setState('All changes synced');
     } else {
-      setState('All changes synced');
+      setState('Waiting for Firebase confirmation…');
     }
     releaseGate();
   }, 150);
@@ -372,6 +434,7 @@ function stopRealtime() {
   unsubscribe = [];
   remote = blankRemote();
   lastRemoteData = null;
+  verificationTarget = null;
   initialCloudReady = false;
   cloudInitialized = false;
   updateInitializationPanel();
@@ -472,7 +535,7 @@ async function flushSave() {
 
   try {
     const localData = normalizeAppData(task.data);
-    const baseline = task.initialize ? normalizeAppData({}) : (lastRemoteData || normalizeAppData({}));
+    const baseline = task.initialize ? normalizeAppData({}) : (allRemoteReady() ? normalizeAppData(composeRemoteData()) : (lastRemoteData || normalizeAppData({})));
     const operations = [];
     const localSettings = normalizeSettings(localData);
     const oldSettings = normalizeSettings(baseline);
@@ -492,7 +555,8 @@ async function flushSave() {
       });
     }
 
-    addDiffOperations(operations, 'transactions', localData.transactions, baseline.transactions);
+    // A manual repair sync rewrites both collections so a stale second device cannot preserve a missing inventory transaction.
+    addDiffOperations(operations, 'transactions', localData.transactions, baseline.transactions, task.force);
     // Manual Sync Now rewrites need records so a quantity clipped by 7.8.23 is repaired in Firestore.
     addDiffOperations(operations, 'needs', localData.needs, baseline.needs, task.force);
 
@@ -514,8 +578,8 @@ async function flushSave() {
     pendingSave = null;
     persistPendingSave();
     cloudInitialized = true;
-    lastRemoteData = clone(localData);
-    setState('All changes synced');
+    verificationTarget = clone(localData);
+    setState('Waiting for Firebase confirmation…');
     updateInitializationPanel();
     if (task.initialize) showNotice('firebaseSettingsNotice', 'Real shared inventory created.', true);
   } catch (error) {
@@ -569,7 +633,7 @@ window.lqFirebaseForceSync = () => {
     showNotice('firebaseSettingsNotice', 'Sign in before syncing.');
     return;
   }
-  if (!initialCloudReady) {
+  if (!initialCloudReady || !allRemoteReady()) {
     showNotice('firebaseSettingsNotice', 'Firebase is still loading. Try again in a moment.');
     return;
   }
@@ -579,9 +643,36 @@ window.lqFirebaseForceSync = () => {
     return;
   }
   if (typeof window.lqGetData !== 'function') return;
-  pendingSave = { data: normalizeAppData(window.lqGetData()), reason: 'Manual Sync Now', force: true, initialize: false };
-  persistPendingSave();
-  flushSave();
+
+  const localData = normalizeAppData(window.lqGetData());
+  const cloudData = normalizeAppData(composeRemoteData());
+
+  // Preserve a real unsent local edit. Otherwise, Sync Now is safe on a second
+  // device: it downloads the server copy instead of blindly uploading stale data.
+  if (pendingSave || localHasAuthoritativeDistributionRepair(localData, cloudData)) {
+    pendingSave = { data: localData, reason: 'Manual Sync Now', force: true, initialize: false };
+    persistPendingSave();
+    flushSave();
+    return;
+  }
+
+  if (stableData(localData) !== stableData(cloudData)) {
+    applyingRemote = true;
+    window.lqApplyRemoteData(cloudData, 'manual Sync Now');
+    applyingRemote = false;
+    const appliedData = normalizeAppData(window.lqGetData());
+    if (stableData(appliedData) === stableData(cloudData) && remoteConfirmedByServer()) {
+      lastRemoteData = clone(cloudData);
+      setState('All changes synced');
+      showNotice('firebaseSettingsNotice', 'Latest shared data received on this device.', true);
+    } else {
+      setState('Applying latest shared data…');
+    }
+    return;
+  }
+
+  if (remoteConfirmedByServer()) setState('All changes synced');
+  else setState('Waiting for Firebase confirmation…');
 };
 
 window.lqFirebaseSignOut = async () => {

@@ -1,11 +1,11 @@
-Love Quilts Manager Update 7.8.24
-Sync Over-Distribution Hotfix
+Love Quilts Manager Update 7.8.25
+Two-Device Sync Verification Hotfix
 July 24, 2026
 
 Included:
-- Fixes Sync Now remaining red after a distributed quantity exceeded the original request.
-- Removes the remaining Firebase-side cap on Quantity Distributed.
-- Repairs a 7.8.23 synchronized record when linked inventory proves the full amount distributed.
-- Refreshes any older pending Firebase save from the current local app data before upload.
-- Makes Sync Now rewrite need records so the corrected full quantity is stored in Firestore.
-- Retains the 7.8.23 entry-review screens and all prior inventory, Calendar, reporting, and synchronization safeguards.
+- Green sync status now requires a server-confirmed matching Firebase copy.
+- Sync Now no longer blindly uploads stale data from a second device.
+- The device with the proven full distribution repairs both needs and linked inventory transactions.
+- A second device safely receives the latest shared copy.
+- Harmless transaction and need ordering differences no longer prevent verification.
+- Retains full over-distribution quantities and all 7.8.23 review safeguards.

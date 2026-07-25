@@ -1,15 +1,15 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.24 — Sync Over-Distribution Hotfix — July 24, 2026**
+Current release: **Update 7.8.25 — Two-Device Sync Verification Hotfix — July 24, 2026**
 
-## Update 7.8.24
+## Update 7.8.25
 
-- Fixes the red Sync Now status that could remain after Quantity Distributed was greater than Quilts Needed.
-- Firebase normalization now retains the complete distributed quantity rather than reducing it to the original request.
-- If 7.8.23 already clipped a synchronized record, the linked automatic inventory-out amount is used to safely recover the full distributed quantity.
-- Any pending save left by 7.8.23 is refreshed from the current local app data before it uploads.
-- Pressing Sync Now rewrites charity-need records so the repaired full quantity is stored in Firestore and shared with the other device.
+- Fixes the case where the sync banner turned green even though the other device had not received the corrected numbers.
+- Green now appears only after Firebase returns a server-confirmed copy that matches the device.
+- **Sync Now chooses the safe direction:** the device containing the proven full distribution repairs Firebase; a stale second device receives the latest shared copy instead of uploading its older copy.
+- A repair sync rewrites both the linked inventory transactions and charity-need records.
+- Record comparison ignores harmless transaction/need ordering differences between devices.
+- Retains the complete distributed quantity above the original request and all 7.8.23 review screens.
 - No Firestore Rules, Firebase paths, sign-ins, or database recreation are required.
-- All 7.8.23 entry-review screens and earlier Calendar, reporting, inventory, and distribution safeguards remain.
 
 Upload all files inside this folder to the root of the GitHub Pages repository, replacing matching files. Do not upload the outer folder as a subfolder.

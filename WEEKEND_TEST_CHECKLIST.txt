@@ -1,13 +1,13 @@
-LOVE QUILTS MANAGER — 7.8.24 SYNC HOTFIX CHECK
+LOVE QUILTS MANAGER — 7.8.25 TWO-DEVICE SYNC CHECK
 
 [ ] Do not clear data or recreate shared inventory.
-[ ] Confirm Update 7.8.24 on the device with the correct numbers.
-[ ] Confirm a request may show Quantity Distributed above Quilts Needed.
-[ ] Press Sync Now and confirm the red banner changes to green.
-[ ] Confirm the full Quantity Distributed remains unchanged after syncing.
-[ ] Confirm Quilts Still Needed remains 0.
-[ ] Confirm inventory still reflects the full number physically distributed.
-[ ] Open the second device and confirm Update 7.8.24.
-[ ] Press Sync Now and confirm it turns green.
-[ ] Confirm both devices show identical inventory, requests, and distributed totals.
-[ ] Confirm new inventory and charity-need entries still require the 7.8.23 Review screen.
+[ ] Confirm Update 7.8.25 on the device with the correct numbers.
+[ ] Confirm the full Quantity Distributed and inventory balance are correct there.
+[ ] Press Sync Now on the correct device.
+[ ] Confirm it stays non-green while waiting for Firebase confirmation.
+[ ] Confirm it turns green only with “Shared data verified · All changes synced.”
+[ ] Open the second device and confirm Update 7.8.25.
+[ ] Press Sync Now once on the second device.
+[ ] Confirm the second device receives the shared numbers rather than sending its older numbers.
+[ ] Confirm both devices show identical inventory, requests, distributed totals, Home, Calendar, and Reports.
+[ ] Confirm new inventory and charity-need entries still require the Review screen.

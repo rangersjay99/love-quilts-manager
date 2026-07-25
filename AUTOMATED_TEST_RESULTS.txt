@@ -1,34 +1,32 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.24 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.25 VALIDATION RESULTS
 July 24, 2026
 
 RESULT: PASSED
 
-57 checks passed:
-- 55 source, JavaScript syntax, manifest, required-file, version, recovery, and synchronization-logic checks.
+38 checks passed:
+- 36 required-file, JavaScript syntax, version, service-worker, manifest, synchronization-direction, server-verification, and behavioral-model checks.
 - 1 final ZIP integrity test.
-- 1 clean-extraction verification of the packaged hotfix files.
+- 1 clean-extraction verification of the packaged update.
 
 ROOT CAUSE VERIFIED
-- Update 7.8.23 correctly allowed Quantity Distributed above Quilts Needed in the main app.
-- Firebase normalization still reduced fulfilledQty to the original request quantity.
-- That mismatch could cause Sync Now to remain red and could send a clipped need record to Firestore.
+- Update 7.8.24 could turn the local banner green immediately after a write completed, before Firebase realtime listeners returned a matching server-confirmed copy.
+- Sync Now always uploaded the current device. Pressing it on a stale second device could resend older numbers instead of receiving the corrected shared copy.
 
 HOTFIX VERIFIED
-- Firebase no longer caps Quantity Distributed at Quilts Needed.
-- A 7.8.23 record with autoOutQty above fulfilledQty safely recovers the full amount already removed from inventory.
-- The app also repairs that clipped local state during normalization.
-- A pending 7.8.23 Firebase save is refreshed from the current local app copy before upload.
-- Manual Sync Now rewrites need records so the corrected quantity is stored in Firestore.
-- After remote data is applied locally, the status is marked All changes synced so the banner turns green.
-- The Firebase organization path, pending-save key, authentication setup, and Firestore schema remain unchanged.
+- Green requires all four Firebase listeners to be server-confirmed, have no pending writes, and match the device data.
+- The device containing the proven full distribution is protected from having that value replaced by a clipped cloud copy.
+- Sync Now on that correct device repairs both charity-need records and linked inventory transactions.
+- Sync Now on a stale second device receives the current shared copy rather than blindly uploading stale local data.
+- Transaction and need ordering differences are ignored during equality verification.
+- Quantity Distributed remains allowed above Quilts Needed.
 
-DYNAMIC QUANTITY TESTS
-- Request 10 / Distributed 12 / Auto inventory out 12 => retains 12.
-- Clipped request 10 / Fulfilled 10 / Auto inventory out 12 => repairs to 12.
-- Corrected current amount 11 / prior high-water 12 / no auto out => remains 11.
-- Partial amount 8 => remains 8.
-- Zero distributed => remains 0.
-- Request 10 / Distributed 26 => retains 26.
+BEHAVIORAL SCENARIOS PASSED
+- Correct device: Request 10 / Distributed 12 / linked inventory out 12 versus clipped cloud 10 => repair upload selected.
+- Stale device: local 10 versus shared 12 => shared download selected.
+- Missing linked distribution transaction in Firebase => repair upload selected.
+- Same records in different order => treated as equal.
+- Mismatched server copy => cannot display verified green.
+- Matching server copy => eligible for verified green.
 
 LIMITATION
-- These checks validate the packaged code and repair logic. They do not connect to the user's live Firebase account from the test container. Complete the included two-device live check after GitHub Pages publishes the update.
+- The test container cannot sign in to the user's live Firebase account. Complete the included two-device live check after GitHub Pages publishes the update.

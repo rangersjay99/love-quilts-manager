@@ -1,9 +1,15 @@
-LOVE QUILTS MANAGER UPDATE 7.8.24 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.25 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules or collection-path changes are required.
 
-This hotfix removes the remaining Firebase-side cap that could reduce Quantity Distributed to Quilts Needed during synchronization. It also repairs the common 7.8.23 clipped state when autoOutQty proves that a larger amount was already removed from inventory.
+ROOT CAUSE
+Update 7.8.24 could mark the local save green immediately after the write completed, before the realtime listeners returned a server-confirmed matching copy. Its Sync Now action also always uploaded the current device, so pressing it on a stale second device could resend older numbers.
 
-A pending 7.8.23 save is refreshed from the current local app copy before upload. Manual Sync Now rewrites need records so corrected quantities are stored in Firestore.
+CORRECTION
+- Green requires all Firebase listeners to be server-confirmed, have no pending writes, and match the device data.
+- The correct device can repair the full distribution and linked inventory transaction.
+- A stale second device receives the latest shared copy instead of blindly uploading its local copy.
+- Manual repair rewrites both transactions and needs.
+- Array order is normalized only for comparison, preventing harmless Firestore ordering differences from causing a false mismatch.
 
-Upload the update normally. Do not clear or recreate shared inventory. After both devices show 7.8.24, press Sync Now first on the device with the correct numbers, then open the second device and press Sync Now there.
+Upload normally. Do not clear or recreate shared inventory. Use Sync Now first on the device with the correct numbers, then once on the second device after both show 7.8.25.
