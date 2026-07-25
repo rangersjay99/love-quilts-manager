@@ -1,12 +1,12 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.22
+LOVE QUILTS MANAGER — UPDATE 7.8.23
 
 1. Keep a backup copy of the current repository and app data.
-2. Unzip the 7.8.22 download on the laptop.
+2. Unzip the 7.8.23 download on the laptop.
 3. Open the unzipped folder and select every file and folder inside it.
 4. Upload those contents to the ROOT of the GitHub repository, replacing matching files.
-5. Do not upload the outer 7.8.22 folder itself.
+5. Do not upload the outer 7.8.23 folder itself.
 6. Commit the changes and allow GitHub Pages a few minutes to publish.
-7. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.22.
+7. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.23.
 8. If an installed phone copy still shows an older version, fully close it, reopen it while online, and use Sync Now.
 
-Existing inventory, requests, settings, Firebase paths, and Firestore Rules are retained. On Hold / Storage is no longer shown as an active workflow, but any older deferred data is preserved internally rather than discarded.
+Existing inventory, requests, distribution history, settings, Firebase paths, and Firestore Rules are retained. Do not clear or recreate the shared inventory.

@@ -1,7 +1,9 @@
-LOVE QUILTS MANAGER UPDATE 7.8.22 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.23 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules or collection-path changes are required.
 
-The update continues using the existing shared settings, transactions, and needs data. Older deferred storage fields are preserved internally for backward compatibility, but On Hold / Storage is not shown as an active workflow in 7.8.22.
+The update continues using the existing shared settings, transactions, needs, distribution fields, and audit data. Quantity Distributed is no longer capped at the original request during normalization or display, so synchronized records retain the complete distributed amount.
+
+The new entry-review screens are interface safeguards only and do not change the Firebase schema.
 
 Upload the app update normally, sign in, and use Sync Now. Do not clear or recreate the shared inventory.

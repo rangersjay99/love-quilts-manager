@@ -1,7 +1,7 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 24, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.22
+IMPLEMENTED THROUGH UPDATE 7.8.23
 
 HOME
 - At a Glance provides Add Quilts, Add Need, and Distribute Quilts actions.
@@ -32,6 +32,9 @@ REPORTS AND STATISTICS
 - Full, compact, Summary, Calendar, CSV, backup, print, and email/share tools remain.
 
 INVENTORY, DISTRIBUTION, AND SYNC
+- Every new inventory entry requires a review screen showing the entered details and resulting inventory totals before saving.
+- Every new charity need/request requires a review screen showing the entered details and resulting request totals before saving.
+- Quantity Distributed may exceed the original request; the full quantity is recorded and reported while Quilts Still Needed remains zero.
 - Set Current Count accepts exact counts, including zero.
 - A full distribution immediately reduces active inventory to zero when appropriate.
 - Duplicate deductions are prevented.

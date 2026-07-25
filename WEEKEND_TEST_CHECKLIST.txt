@@ -1,37 +1,39 @@
-LOVE QUILTS MANAGER — 7.8.22 WEEKEND LIVE-DEVICE CHECK
+LOVE QUILTS MANAGER — 7.8.23 LIVE-DEVICE CHECK
 
 VERSION AND SYNC
-[ ] Confirm Update 7.8.22 on the laptop and iPhone/iPad.
+[ ] Confirm Update 7.8.23 on the laptop and iPhone/iPad.
 [ ] Press Sync Now and confirm the status completes successfully.
 [ ] Confirm both devices show the same inventory, requests, and distributions.
 
-HOME AND CALENDAR
-[ ] Confirm Calendar is directly below At a Glance.
-[ ] Confirm there is no On Hold / Storage shortcut on Home.
-[ ] Confirm there is no instruction above the Home Calendar.
-[ ] Confirm no month card has an Add Quilts Needed button.
-[ ] Confirm the At a Glance + Add Need action opens the request form.
-[ ] Confirm each populated month ends with “Tap charity to edit.”
-[ ] Tap a charity entry and test Edit Need, Distribute Quilts, and View Details.
-[ ] Confirm past met = green, past unmet = red, future = yellow, covered future = green, and current month = bold border.
-[ ] Confirm charity met sections are green and short sections are light red.
-[ ] Confirm the Calendar key is at the bottom.
+NEW INVENTORY REVIEW
+[ ] Start a Love Quilts In entry and tap Add to Inventory.
+[ ] Confirm nothing saves yet and the Review screen appears.
+[ ] Confirm it shows entry type, charity, size, quantity, date, selected inventory before/after, and total inventory before/after.
+[ ] Tap Go Back and confirm the form remains available and no entry was saved.
+[ ] Open Review again, tap Save Inventory Entry, and confirm the entry appears once and syncs.
+[ ] Repeat with Love Quilts Out and Set Current Count as practical.
 
-INVENTORY AND DISTRIBUTION
-[ ] Confirm On Hold / Storage controls are absent from Inventory.
-[ ] Add a temporary inventory record and confirm it syncs.
-[ ] Test Set Current Count, including setting a category to zero.
-[ ] Test 26 available and 26 distributed; confirm 0 remains on Home, Inventory, and Reports.
-[ ] Try saving the same distribution again and confirm inventory is not deducted twice.
-[ ] Correct a distribution quantity and confirm only the difference changes inventory.
+NEW CHARITY NEED REVIEW
+[ ] Start a new need from the regular Quilts Needed form.
+[ ] Confirm the Review screen shows month, charity, size, quantity, month request total before/after, and total active request total before/after.
+[ ] Tap Go Back and confirm nothing was saved.
+[ ] Save from Review and confirm the request appears once and syncs.
+[ ] Add a second temporary request from the Calendar and confirm the same Review screen is required.
 
-PRINTING AND REPORTS
-[ ] Print Summary from an iPhone and confirm the third block wording is complete.
-[ ] Print the 12-month Calendar and confirm US Letter portrait orientation.
-[ ] Confirm all 12 months use a 3-column × 4-row layout and the key is at the bottom.
-[ ] Confirm status colors remain visible in print preview when background graphics are enabled.
-[ ] Confirm Yearly Statistics and report shading remain correct.
+DISTRIBUTION ABOVE REQUEST
+[ ] Create a temporary request for 10 quilts with at least 12 matching quilts in storage.
+[ ] Enter Quantity Distributed = 12 and save with inventory removal checked.
+[ ] Confirm the app accepts 12, records Sent 12, and shows Quilts Still Needed 0.
+[ ] Confirm active inventory decreases by the full 12.
+[ ] Confirm Calendar, Needs, Reports, yearly statistics, and the other device show the full 12 distributed.
+[ ] Edit the distribution down from 12 to 11 and confirm exactly 1 returns to inventory.
+[ ] Edit it back to 12 and confirm exactly 1 is removed again.
+
+REGRESSION
+[ ] Confirm Calendar colors, Tap charity to edit, bottom key, portrait 12-month printing, Summary printing, and report shading remain correct.
+[ ] Confirm 26 available and 26 distributed leaves 0 remaining.
+[ ] Confirm saving an unchanged distribution does not deduct inventory twice.
 
 CLEANUP
-[ ] Delete temporary test records after testing.
+[ ] Delete or correct temporary test records.
 [ ] Press Sync Now on both devices and confirm final live numbers match.

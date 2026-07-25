@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.22';
+const VERSION='7.8.23';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -24,7 +24,7 @@ const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
 const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
 const DEFAULT_SIZES=["Children's Large",'Adult Large','Medium'];
-let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarModalNeedId=null,calendarActionNeedId=null,calendarDistributionNeedId=null,externalTimer=null,externalReason='Automatic save';
+let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarModalNeedId=null,calendarActionNeedId=null,calendarDistributionNeedId=null,entryReviewAction=null,externalTimer=null,externalReason='Automatic save';
 
 const el=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
@@ -74,7 +74,7 @@ function normalizeData(d={}){
   const needs=Array.isArray(d.needs)?d.needs.map(n=>{
     const needQty=Math.max(1,Math.floor(Number(n.qty||1)));
     const legacyComplete=n.completed===true||String(n.status||'').toLocaleLowerCase()==='completed';
-    const fulfilled=Math.max(0,Math.min(needQty,Math.floor(Number(n.fulfilledQty??(legacyComplete?needQty:0))||0)));
+    const fulfilled=Math.max(0,Math.floor(Number(n.fulfilledQty??(legacyComplete?needQty:0))||0));
     return{
       id:n.id||uid(),month:n.month||monthNow(),charity:String(n.charity||DEFAULT_CHARITIES[0]),
       size:String(n.size||DEFAULT_SIZES[0]),qty:needQty,note:String(n.note||''),
@@ -299,7 +299,7 @@ function confirmSetCurrentCount(c,s,current,target,exclude=null){
   const change=target-current,totalCurrent=totalOnHand(exclude),totalNext=totalCurrent+change;
   return confirm(`SET CURRENT COUNT\n\n${c} — ${s}\n\nCurrent count: ${current}\nNew exact count: ${target}\nAdjustment recorded: ${change>0?'+':''}${change}\n\nTotal ${lowerName()} in storage: ${totalCurrent} → ${totalNext}\n\nContinue only after physically counting the quilts in storage.`);
 }
-function saveTransaction(){
+function saveTransaction(reviewed=false,reviewedAdjustment=null){
   const rawQuantity=String(el('qtyInput')?.value??'').trim();
   syncQtyInput();
   if(rawQuantity==='')return notice('txNotice',mode==='SET'?'Please enter the exact current count, including 0 when none remain.':'Please enter a quantity of 1 or more.');
@@ -311,15 +311,31 @@ function saveTransaction(){
   if(mode==='SET'){
     adj=qty-current;
     if(adj===0)return notice('txNotice',`The current count is already ${qty} for ${c} — ${s}. No change was needed.`,true);
-    if(!confirmSetCurrentCount(c,s,current,qty,editTxId))return notice('txNotice','Set Current Count canceled. No changes were saved.');
+    if(editTxId&&!confirmSetCurrentCount(c,s,current,qty,editTxId))return notice('txNotice','Set Current Count canceled. No changes were saved.');
     storedMode='ADJUST';storedNote=`Set current count to ${qty}${noteText?' — '+noteText:''}`;
   }else if(mode==='ADJUST'){
-    adj=confirm(`Choose the adjustment direction:\n\nPress OK to ADD ${qty}.\nPress Cancel to SUBTRACT ${qty}.`)?qty:-qty;
+    adj=reviewed&&Number.isFinite(reviewedAdjustment)?reviewedAdjustment:(confirm(`Choose the adjustment direction:\n\nPress OK to ADD ${qty}.\nPress Cancel to SUBTRACT ${qty}.`)?qty:-qty);
     if(current+adj<0)return notice('txNotice','That adjustment would make inventory negative.');
-    if(!confirmInventoryChange('ADJUST',c,s,adj,editTxId))return notice('txNotice','Adjustment canceled. No changes were saved.');
+    if(editTxId&&!confirmInventoryChange('ADJUST',c,s,adj,editTxId))return notice('txNotice','Adjustment canceled. No changes were saved.');
   }
-  if(mode==='OUT'&&!confirmInventoryChange('OUT',c,s,-qty,editTxId))return notice('txNotice',`${data.itemName} Out canceled. No changes were saved.`);
-  const editing=!!editTxId,previous=editTxId?data.transactions.find(t=>t.id===editTxId):null,stamp=nowIso(),email=currentUserEmail();
+  if(mode==='OUT'&&editTxId&&!confirmInventoryChange('OUT',c,s,-qty,editTxId))return notice('txNotice',`${data.itemName} Out canceled. No changes were saved.`);
+
+  const editing=!!editTxId;
+  const inventoryChange=storedMode==='IN'?qty:storedMode==='OUT'?-qty:adj;
+  const next=current+inventoryChange,totalCurrent=totalOnHand(editTxId),totalNext=totalCurrent+inventoryChange;
+  if(!editing&&!reviewed){
+    const typeLabel=mode==='IN'?`${data.itemName} In`:mode==='OUT'?`${data.itemName} Out`:mode==='SET'?'Set Current Count':'Inventory Adjustment';
+    const quantityLabel=mode==='SET'?`Exact count: ${qty}`:mode==='ADJUST'?`Change: ${adj>0?'+':''}${adj}`:`Quantity: ${qty}`;
+    const summary=[
+      reviewLine('Entry type',typeLabel),reviewLine('Charity',c),reviewLine('Size',s),reviewLine(mode==='SET'?'New count':'Quantity',mode==='SET'?String(qty):mode==='ADJUST'?`${adj>0?'+':''}${adj}`:String(qty)),reviewLine('Date',fmtDate(d)),
+      noteText?reviewLine('Note',noteText):'',reviewTotals(`Inventory for ${c} — ${s}`,current,next),reviewTotals(`Total ${lowerName()} in storage`,totalCurrent,totalNext),
+      mode==='SET'?`<div class="entry-review-note">This saves an adjustment of ${adj>0?'+':''}${adj} so the exact count becomes ${qty}.</div>`:''
+    ].join('');
+    openEntryReview(`Review ${typeLabel}`,summary,'Save Inventory Entry',()=>saveTransaction(true,adj));
+    return;
+  }
+
+  const previous=editTxId?data.transactions.find(t=>t.id===editTxId):null,stamp=nowIso(),email=currentUserEmail();
   const r={id:editTxId||uid(),date:d,type:storedMode,charity:c,size:s,qty:storedMode==='ADJUST'?Math.max(1,Math.abs(adj)):qty,adjustment:adj,note:storedNote,
     sourceNeedId:String(previous?.sourceNeedId||''),sourceType:String(previous?.sourceType||''),
     createdBy:previous?.createdBy||email,createdAt:previous?.createdAt||stamp,updatedBy:email,updatedAt:stamp};
@@ -349,7 +365,7 @@ function renderHistory(){
   const list=[...data.transactions].filter(x=>(!c||x.charity===c)&&(!t||x.type===t)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
   el('historyList').innerHTML=list.length?list.map(x=>{const n=activityValue(x),inventoryEffect=value(x);return`<div class="item"><div class="head"><div><div class="title ${n<0?'negative':'positive'}">${n>0?'+':''}${n} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}</div>${x.note?`<div class="meta">${esc(x.note)}</div>`:''}${x.sourceType==='HOLD_DISTRIBUTION'?'<div class="meta">Earlier deferred distribution record.</div>':''}${auditText(x)?`<div class="audit-meta">${esc(auditText(x))}</div>`:''}${x.type==='ADJUST'?'<div class="meta"><span class="flag">Adjusted inventory</span></div>':''}${x.sourceNeedId?'<div class="meta"><span class="flag distribution-link-flag">Linked distribution</span></div>':''}${x.sourceHoldId?'<div class="meta"><span class="flag">Deferred record</span></div>':''}</div><b>${transactionLabel(x)}</b></div><div class="actions"><button onclick="editTx('${x.id}')">Edit</button><button onclick="deleteTx('${x.id}')">Delete</button></div></div>`}).join(''):'<div class="empty">No matching history.</div>';
 }
-function fulfilledQty(n){return Math.max(0,Math.min(Math.max(1,Number(n?.qty||1)),Math.floor(Number(n?.fulfilledQty||0))))}
+function fulfilledQty(n){return Math.max(0,Math.floor(Number(n?.fulfilledQty||0)))}
 function remainingNeed(n){return Math.max(0,Math.max(1,Number(n?.qty||1))-fulfilledQty(n))}
 function needIsComplete(n){return remainingNeed(n)===0}
 function needIsPastDue(n){return String(n?.month||'')<monthNow()&&!needIsComplete(n)}
@@ -363,6 +379,21 @@ function showNeedSaveMessage(target,msg,good=false){
   target.textContent=msg;target.className='notice show'+(good?' good':'');
   clearTimeout(target.t);target.t=setTimeout(()=>target.className='notice',5000);
 }
+function openEntryReview(title,summaryHtml,confirmLabel,action){
+  entryReviewAction=typeof action==='function'?action:null;
+  el('entryReviewTitle').textContent=title;
+  el('entryReviewSummary').innerHTML=summaryHtml;
+  el('entryReviewConfirm').textContent=confirmLabel||'Save Entry';
+  modalOpen('entryReviewModal');
+  requestAnimationFrame(()=>el('entryReviewConfirm')?.focus());
+}
+function closeEntryReview(){modalClose('entryReviewModal');entryReviewAction=null}
+function confirmEntryReview(){
+  const action=entryReviewAction;entryReviewAction=null;modalClose('entryReviewModal');
+  if(action)action();
+}
+function reviewLine(label,value){return`<div class="entry-review-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`}
+function reviewTotals(label,current,next){return`<div class="entry-review-total"><span>${esc(label)}</span><b>${esc(current)} → ${esc(next)}</b></div>`}
 function needValuesFromMainForm(){
   return{
     month:el('needMonth').value||monthNow(),charity:el('needCharity').value,size:el('needSize').value,
@@ -378,18 +409,35 @@ function needValuesFromInlineForm(form){
     fulfilledDate:field('fulfilledDate')?.value||'',recordOut:!!field('recordOut')?.checked
   };
 }
-function persistNeedRecord(values,id=null,messageTarget='needNotice'){
+function persistNeedRecord(values,id=null,messageTarget='needNotice',options={}){
   const previous=id?data.needs.find(n=>n.id===id):null,stamp=nowIso(),email=currentUserEmail();
   if(id&&!previous){showNeedSaveMessage(messageTarget,'This charity request could not be found. It may have changed on another device.');editNeedId=null;renderNeeds();return false}
   const needQty=Math.floor(Number(values.qty));
   if(!Number.isFinite(needQty)||needQty<1){showNeedSaveMessage(messageTarget,'Quilts Needed must be 1 or more.');return false}
   const sentRaw=Math.floor(Number(values.fulfilledQty||0));
   if(!Number.isFinite(sentRaw)||sentRaw<0){showNeedSaveMessage(messageTarget,'Quantity Distributed must be zero or more.');return false}
-  if(sentRaw>needQty){showNeedSaveMessage(messageTarget,'Quantity Distributed cannot be greater than Quilts Needed.');return false}
   const sentDate=String(values.fulfilledDate||'');
   if(sentRaw>0&&!sentDate){showNeedSaveMessage(messageTarget,'Please enter the distribution date.');return false}
   const charity=String(values.charity||''),size=String(values.size||'');
   if(!charity||!size){showNeedSaveMessage(messageTarget,'Please select a charity and size.');return false}
+  if(!id&&!options.reviewed){
+    const month=String(values.month||monthNow()),remaining=Math.max(0,needQty-sentRaw);
+    const monthCurrent=data.needs.filter(n=>String(n.month||'')===month).reduce((sum,n)=>sum+Math.max(1,Math.floor(Number(n.qty||1))),0);
+    const monthAfter=monthCurrent+needQty,activeCurrent=totalNeeded(),activeAfter=activeCurrent+(month>=monthNow()?remaining:0);
+    const currentInventory=onHand(charity,size),totalInventory=totalOnHand(),recordOut=!!values.recordOut;
+    if(recordOut&&sentRaw>currentInventory){showNeedSaveMessage(messageTarget,`Only ${currentInventory} are in storage for ${charity} — ${size}. Leave the Inventory Out box unchecked only if this distribution was already recorded separately.`);return false}
+    const summary=[
+      reviewLine('Month needed',fmtMonth(month)),reviewLine('Charity',charity),reviewLine('Size',size),reviewLine('Quilts needed',String(needQty)),
+      String(values.note||'').trim()?reviewLine('Note',String(values.note||'').trim()):'',sentRaw?reviewLine('Quantity distributed',String(sentRaw)):'',sentRaw?reviewLine('Date distributed',fmtDate(sentDate)):'',
+      reviewTotals(`Requests in ${fmtMonth(month)}`,monthCurrent,monthAfter),reviewTotals('Total active quilts requested',activeCurrent,activeAfter),
+      sentRaw&&recordOut?reviewTotals(`Inventory for ${charity} — ${size}`,currentInventory,currentInventory-sentRaw):'',
+      sentRaw&&recordOut?reviewTotals(`Total ${lowerName()} in storage`,totalInventory,totalInventory-sentRaw):'',
+      sentRaw&&!recordOut?'<div class="entry-review-warning">Inventory will not change. Continue only when these distributed quilts were already recorded separately as Quilts Out.</div>':'',
+      sentRaw>needQty?`<div class="entry-review-note">The full distributed quantity will be recorded. Quilts Still Needed will remain 0, including ${sentRaw-needQty} above the original request.</div>`:''
+    ].join('');
+    openEntryReview('Review New Charity Need',summary,'Save Charity Need',options.onConfirm||(()=>persistNeedRecord(values,null,messageTarget,{reviewed:true})));
+    return false;
+  }
   const previousSent=fulfilledQty(previous),priorAutoOut=Math.max(0,Math.floor(Number(previous?.autoOutQty||0)));
   if(previous&&priorAutoOut>0&&(charity!==previous.charity||size!==previous.size)){
     showNeedSaveMessage(messageTarget,'This request already has inventory linked to its distribution. Keep the same charity and size, or first reduce Quantity Distributed to 0 so the linked inventory can be restored safely.');return false
@@ -402,11 +450,11 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice'){
     const current=onHand(charity,size);
     if(autoOutNeeded>current){showNeedSaveMessage(messageTarget,`Only ${current} are in storage for ${charity} — ${size}. Leave the Inventory Out box unchecked only if this distribution was already recorded separately.`);return false}
     const next=current-autoOutNeeded;
-    if(!confirm(`DISTRIBUTION INVENTORY SAFEGUARD\n\nThis will mark ${sentRaw} distributed and remove ${autoOutNeeded} from inventory now.\n\n${charity} — ${size}\nCurrent inventory: ${current}\nInventory after distribution: ${next}\nPreviously removed automatically: ${priorAutoOut}\n\nContinue only if these ${autoOutNeeded} quilts have NOT already been entered as Quilts Out.`)){
+    if((id||!options.reviewed)&&!confirm(`DISTRIBUTION INVENTORY SAFEGUARD\n\nThis will mark ${sentRaw} distributed and remove ${autoOutNeeded} from inventory now.\n\n${charity} — ${size}\nCurrent inventory: ${current}\nInventory after distribution: ${next}\nPreviously removed automatically: ${priorAutoOut}\n\nContinue only if these ${autoOutNeeded} quilts have NOT already been entered as Quilts Out.`)){
       showNeedSaveMessage(messageTarget,'Distribution save canceled. No changes were saved.');return false
     }
   }else if(sentRaw>previousSent&&!recordOut){
-    if(!confirm(`INVENTORY WILL NOT CHANGE\n\nQuantity Distributed is increasing from ${previousSent} to ${sentRaw}, but the inventory-removal box is unchecked.\n\nContinue only if the matching ${sentRaw-previousSent} quilts were already entered separately as Quilts Out.`)){
+    if((id||!options.reviewed)&&!confirm(`INVENTORY WILL NOT CHANGE\n\nQuantity Distributed is increasing from ${previousSent} to ${sentRaw}, but the inventory-removal box is unchecked.\n\nContinue only if the matching ${sentRaw-previousSent} quilts were already entered separately as Quilts Out.`)){
       showNeedSaveMessage(messageTarget,'Distribution save canceled. No changes were saved.');return false
     }
   }
@@ -437,8 +485,8 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice'){
   else if(id)notice('needNotice','Charity request changes saved. Inventory was not changed.',true);else notice('needNotice',sentRaw>=needQty?'Charity request marked distributed.':'Charity request saved.',true);
   return true;
 }
-function saveNeed(){
-  const ok=persistNeedRecord(needValuesFromMainForm(),null,'needNotice');
+function saveNeed(reviewed=false){
+  const ok=persistNeedRecord(needValuesFromMainForm(),null,'needNotice',{reviewed,onConfirm:()=>saveNeed(true)});
   if(ok){
     el('needMonth').value=monthNow();el('needCharity').value='';el('needSize').value='';el('needQty').value=1;el('needNote').value='';
     el('needFulfilledQty').value=0;el('needFulfilledDate').value='';el('needRecordOut').checked=false;
@@ -469,7 +517,7 @@ function saveInlineNeed(event,id){
 function updateInlineNeedPreview(form){
   if(!form)return;
   const qty=Math.max(1,Math.floor(Number(form.querySelector('[name="qty"]')?.value||1)));
-  const sent=Math.max(0,Math.min(qty,Math.floor(Number(form.querySelector('[name="fulfilledQty"]')?.value||0))));
+  const sent=Math.max(0,Math.floor(Number(form.querySelector('[name="fulfilledQty"]')?.value||0)));
   const target=form.querySelector('[data-inline-remaining]');if(target)target.textContent=String(Math.max(0,qty-sent));
 }
 function cancelNeedEdit(){editNeedId=null;editNeedMode='details';renderNeeds()}
@@ -672,7 +720,7 @@ function openCalendarDistributionModal(id){
   const sent=fulfilledQty(n),remaining=remainingNeed(n),info=allocationForNeed(n);
   el('calendarDistributionIdentity').textContent=`${fmtMonth(n.month)} · ${n.charity} · ${n.size}`;
   el('calendarDistributionSummary').innerHTML=`<b>${n.qty} requested · ${sent} already distributed</b><span>${remaining} still needed · ${info.available} available for this request · ${info.shortage} short</span>`;
-  el('calendarDistributionQty').value=String(sent||n.qty);el('calendarDistributionQty').max=String(n.qty);
+  el('calendarDistributionQty').value=String(sent||n.qty);el('calendarDistributionQty').removeAttribute('max');
   el('calendarDistributionDate').value=n.fulfilledDate||today();el('calendarDistributionRecordOut').checked=true;
   const nb=el('calendarDistributionNotice');if(nb){nb.textContent='';nb.className='notice'}
   modalOpen('calendarDistributionModal');requestAnimationFrame(()=>el('calendarDistributionQty')?.focus());
@@ -700,10 +748,10 @@ function closeCalendarNeedModal(){
   const modal=el('calendarNeedModal');if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
   calendarModalNeedId=null;document.body.style.overflow='';
 }
-function saveCalendarNeed(){
+function saveCalendarNeed(reviewed=false){
   const previous=calendarModalNeedId?data.needs.find(n=>n.id===calendarModalNeedId):null;
   const values={month:el('calendarNeedMonth').value||monthNow(),charity:el('calendarNeedCharity').value,size:el('calendarNeedSize').value,qty:el('calendarNeedQty').value,note:el('calendarNeedNote').value.trim(),fulfilledQty:previous?fulfilledQty(previous):0,fulfilledDate:previous?.fulfilledDate||'',recordOut:false};
-  const ok=persistNeedRecord(values,calendarModalNeedId,'calendarNeedNotice');if(ok)closeCalendarNeedModal();return ok;
+  const ok=persistNeedRecord(values,calendarModalNeedId,'calendarNeedNotice',{reviewed,onConfirm:()=>saveCalendarNeed(true)});if(ok)closeCalendarNeedModal();return ok;
 }
 function deleteCalendarNeed(){
   const id=calendarModalNeedId;if(!id)return;deleteNeed(id);if(!data.needs.some(n=>n.id===id))closeCalendarNeedModal();
@@ -817,7 +865,7 @@ function reportNeedsHTML(){
 function distributedNeedsForReport(){
   return data.needs.filter(n=>fulfilledQty(n)>0).sort((a,b)=>String(b.fulfilledDate||'').localeCompare(String(a.fulfilledDate||''))||String(b.month||'').localeCompare(String(a.month||''))||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size));
 }
-function distributionReportStatus(n){return remainingNeed(n)===0?'Distributed':'Partially Sent'}
+function distributionReportStatus(n){const sent=fulfilledQty(n),requested=Math.max(1,Number(n.qty)||1);return sent>requested?`Distributed (${sent-requested} over request)`:remainingNeed(n)===0?'Distributed':'Partially Sent'}
 function holdDistributionsForReport(){return data.transactions.filter(t=>t.sourceType==='HOLD_DISTRIBUTION').sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size))}
 function reportDistributedHTML(){
   const list=distributedNeedsForReport();
@@ -1242,7 +1290,7 @@ function printFullReport(){renderReports();runPrintMode('print-full','letter por
 function printMeetingReport(){renderReports();runPrintMode('print-compact','letter portrait','.3in')}
 function exportMeetingPDF(){exportCompactPDF()}
 window.addEventListener('afterprint',clearPrintMode);
-document.addEventListener('keydown',event=>{if(event.key!=='Escape')return;if(el('calendarDistributionModal')?.classList.contains('open'))closeCalendarDistributionModal();else if(el('calendarActionModal')?.classList.contains('open'))closeCalendarActionModal();else if(el('calendarNeedModal')?.classList.contains('open'))closeCalendarNeedModal()});
+document.addEventListener('keydown',event=>{if(event.key!=='Escape')return;if(el('entryReviewModal')?.classList.contains('open'))closeEntryReview();else if(el('calendarDistributionModal')?.classList.contains('open'))closeCalendarDistributionModal();else if(el('calendarActionModal')?.classList.contains('open'))closeCalendarActionModal();else if(el('calendarNeedModal')?.classList.contains('open'))closeCalendarNeedModal()});
 window.addEventListener('online',()=>queueExternalBackup('Internet connection restored'));
 function renderAll(){refreshSelects();applyNames();renderHome();renderInventory();renderHistory();renderNeeds();renderReports();renderRecoveryList();updateSaveStatus()}
 
@@ -1266,7 +1314,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.22 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.23 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.22',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.23',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.22">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.22">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.22">
+<link rel="manifest" href="manifest-v7.json?v=7.8.23">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.23">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.23">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -59,6 +59,11 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .calendar-modal-backdrop.open{display:flex}.calendar-modal-card{width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 18px 60px rgba(30,15,35,.28)}
 .calendar-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.calendar-modal-header h2{margin:0}.calendar-modal-close{width:40px;min-height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--plum);font-size:24px;font-weight:800;cursor:pointer}
 .calendar-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.calendar-modal-actions .primary,.calendar-modal-actions .ghost{margin-top:12px}.calendar-modal-delete{display:none}
+.entry-review-summary{margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.entry-review-row,.entry-review-total{display:flex;justify-content:space-between;gap:14px;padding:10px 12px;border-bottom:1px solid var(--line);align-items:flex-start}
+.entry-review-row:last-child,.entry-review-total:last-child{border-bottom:0}.entry-review-row span,.entry-review-total span{color:var(--muted);font-size:13px}.entry-review-row b,.entry-review-total b{text-align:right;color:var(--ink)}
+.entry-review-total{background:#f3ebf4}.entry-review-total b{font-size:16px;color:var(--plum-dark)}
+.entry-review-note,.entry-review-warning{margin-top:12px;padding:11px 12px;border-radius:11px;font-size:13px;font-weight:750;line-height:1.45}.entry-review-note{background:#e8f5ec;color:#245f38}.entry-review-warning{background:#fff3d8;color:#6b500d}
 .calendar-action-summary{margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
 .calendar-action-summary b{display:block;color:var(--plum-dark);font-size:16px}.calendar-action-summary span{display:block;margin-top:4px;color:var(--muted);font-size:12px;line-height:1.4}
 .calendar-action-buttons{display:grid;gap:8px}.calendar-action-buttons button{margin:0}.calendar-action-buttons .primary{background:var(--teal)}
@@ -347,14 +352,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.22" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.23" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.22</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.23</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -473,7 +478,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <label>Note <span class="small">(optional)</span></label><input id="needNote" placeholder="Holiday delivery, annual event, etc.">
     <div class="distribution-fields">
       <h3>Distribution Status</h3>
-      <p class="small">Use these fields when some or all of these quilts have been delivered.</p>
+      <p class="small">Use these fields when some or all of these quilts have been delivered. The distributed quantity may be higher than the original request.</p>
       <label>Quantity Distributed</label><input id="needFulfilledQty" type="number" inputmode="numeric" min="0" step="1" value="0">
       <label>Date Distributed</label><input id="needFulfilledDate" type="date">
       <label class="check-row"><input id="needRecordOut" type="checkbox"><span>Record any newly distributed quantity as <span id="needRecordOutName">Love Quilts</span> Out</span></label>
@@ -616,7 +621,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.22</b><span class="small">Calendar simplification update · July 24, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.23</b><span class="small">Entry review and over-distribution update · July 24, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.23</h4><p>Added a clear review screen before saving every new inventory entry or charity need, and now records the full quantity distributed even when it is above the original request.</p></div>
     <div class="change-log-entry"><h4>7.8.22</h4><p>Simplified Calendar month cards, added a small Tap charity to edit note inside populated months, removed On Hold / Storage from the active app, and changed 12-month Calendar printing to portrait.</p></div>
     <div class="change-log-entry"><h4>7.8.21</h4><p>Calendar entry actions, bottom Calendar key, direct Calendar distribution, On Hold / Storage workflow, 12-month Calendar printing, iPhone summary-print improvements, and weekend verification checklist.</p></div>
     <div class="change-log-entry"><h4>7.8.20</h4><p>Future months light yellow, covered future months green, and charity-level Met / Short coloring.</p></div>
@@ -632,11 +638,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.22 · July 24, 2026</span>
+      <b>Version</b><span>Update 7.8.23 · July 24, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.22 simplifies the Calendar, keeps the edit instruction inside each populated month, removes On Hold / Storage from the active workflow, and changes the printable 12-month Calendar to portrait. Calendar actions, yearly statistics, syncing, exact-count tools, and distribution safeguards are retained.</p>
+    <p class="small">Update 7.8.23 adds a clear review step before every new inventory or charity-need entry is saved. Distribution totals may now exceed the original request; the full amount remains recorded and reported while Quilts Still Needed stays at zero.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -670,11 +676,19 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div class="calendar-modal-header"><div><h2 id="calendarDistributionTitle">Distribute Quilts</h2><div id="calendarDistributionIdentity" class="small"></div></div><button type="button" class="calendar-modal-close" aria-label="Close" onclick="closeCalendarDistributionModal()">×</button></div>
     <div id="calendarDistributionSummary" class="calendar-action-summary"></div>
     <label>Total Quantity Distributed</label><input id="calendarDistributionQty" type="number" inputmode="numeric" min="0" step="1">
-    <p class="small">Enter the total sent for this request. To distribute the full request, leave the prefilled total as shown.</p>
+    <p class="small">Enter the full total sent for this request. This may be higher than the original request.</p>
     <label>Date Distributed</label><input id="calendarDistributionDate" type="date">
     <label class="check-row"><input id="calendarDistributionRecordOut" type="checkbox" checked><span>Remove the newly distributed quantity from active inventory</span></label>
     <div id="calendarDistributionNotice" class="notice"></div>
     <div class="calendar-modal-actions"><button type="button" class="primary" onclick="saveCalendarDistribution()">Save Distribution</button><button type="button" class="ghost" onclick="closeCalendarDistributionModal()">Cancel</button></div>
+  </div>
+</div>
+
+<div id="entryReviewModal" class="calendar-modal-backdrop" aria-hidden="true" onclick="if(event.target===this)closeEntryReview()">
+  <div class="calendar-modal-card" role="dialog" aria-modal="true" aria-labelledby="entryReviewTitle">
+    <div class="calendar-modal-header"><div><h2 id="entryReviewTitle">Review Entry</h2><div class="small">Check these details before anything is saved.</div></div><button type="button" class="calendar-modal-close" aria-label="Go back" onclick="closeEntryReview()">×</button></div>
+    <div id="entryReviewSummary" class="entry-review-summary"></div>
+    <div class="calendar-modal-actions"><button id="entryReviewConfirm" type="button" class="primary" onclick="confirmEntryReview()">Save Entry</button><button type="button" class="ghost" onclick="closeEntryReview()">Go Back</button></div>
   </div>
 </div>
 
@@ -686,7 +700,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.22"></script>
-<script src="app.js?v=7.8.22"></script>
+<script type="module" src="firebase-sync.js?v=7.8.23"></script>
+<script src="app.js?v=7.8.23"></script>
 </body>
 </html>

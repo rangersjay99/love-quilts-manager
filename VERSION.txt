@@ -1,13 +1,12 @@
-Love Quilts Manager Update 7.8.22
-Calendar Simplification and Portrait Print Update
+Love Quilts Manager Update 7.8.23
+Entry Review and Full Distribution Totals
 July 24, 2026
 
 Included:
-- Removes repeated Add Quilts Needed buttons from Calendar month cards.
-- Uses the existing At a Glance Add Need action as the single place to add a request.
-- Removes the instructional message above the Home Calendar.
-- Adds a subtle “Tap charity to edit” note at the bottom of each populated month card.
-- Removes On Hold / Storage from the active Home and Inventory workflows for now.
-- Preserves any older deferred record data internally so an upgrade does not discard data.
-- Changes Print 12-Month Calendar to US Letter portrait in a 3-column × 4-row layout.
-- Retains Calendar actions, bottom color key, yearly statistics, Sync Now, Set Current Count, report fixes, and distribution safeguards.
+- Adds a review screen before every new inventory entry is saved.
+- Shows charity, size, quantity, date, and resulting selected and total inventory balances.
+- Adds a review screen before every new charity need/request is saved, including Calendar add actions.
+- Shows month, charity, size, requested quantity, and resulting request totals.
+- Allows Quantity Distributed to exceed Quilts Needed.
+- Keeps Quilts Still Needed at zero after the request is met while retaining and reporting the complete distributed quantity.
+- Retains protected linked inventory transactions, difference-only distribution deductions/restorations, Firebase sync, Calendar actions, portrait printing, reports, and yearly statistics.
