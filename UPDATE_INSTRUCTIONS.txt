@@ -1,18 +1,21 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.31
+LOVE QUILTS MANAGER — UPDATE 7.8.32
 
 1. Do not clear data or recreate the shared inventory.
 2. Export a current app backup and keep a copy of the present GitHub repository.
-3. Unzip the 7.8.31 download on the laptop.
+3. Unzip the 7.8.32 download on the laptop.
 4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
 5. Commit the changes and allow GitHub Pages to publish.
-6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.31.
-7. Open Reports and choose Print Compact Report. Confirm the preview contains the report instead of a blank page.
-8. Choose Download Compact One-Page PDF. Open the downloaded file and confirm it contains the report.
-9. Open Inventory and verify Adjust now provides an explicit Add/Subtract direction choice.
-10. Review a new inventory entry, edit an existing transaction, and start deleting a transaction. Confirm each uses the detailed Home-style Before/After screen. Cancel any test deletion that should not be completed.
-11. Open a saved charity need and verify Edit, Mark Distributed, and Delete all use the detailed verification screen.
-12. In Settings > Manage Lists, rename a charity or size only when you intend to keep the new name. Verify the review shows unchanged Home totals and states that all existing records will be kept.
-13. After renaming, confirm Inventory, Needs, Calendar, Reports, and history show the new name with exactly the same numbers.
-14. Confirm both devices show “Shared data verified · All changes synced” and display the same renamed choices and totals.
+6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.32.
+7. Enter or edit a distribution using a past Date Distributed, then open Reports and confirm that past date appears as the Date Distributed.
+8. Confirm Yearly Statistics count that distribution in the year of the selected date, not the year it was entered.
+9. In Inventory history, confirm the selected date is labeled Activity date while the separate audit line still shows when the record was entered or edited.
+10. Open Reports and choose Print Compact Report. Confirm the preview contains the report instead of a blank page.
+11. Choose Download Compact One-Page PDF. Open the downloaded file and confirm it contains the report.
+12. Open Inventory and verify Adjust now provides an explicit Add/Subtract direction choice.
+13. Review a new inventory entry, edit an existing transaction, and start deleting a transaction. Confirm each uses the detailed Home-style Before/After screen. Cancel any test deletion that should not be completed.
+14. Open a saved charity need and verify Edit, Mark Distributed, and Delete all use the detailed verification screen.
+15. In Settings > Manage Lists, rename a charity or size only when you intend to keep the new name. Verify the review shows unchanged Home totals and states that all existing records will be kept.
+16. After renaming, confirm Inventory, Needs, Calendar, Reports, and history show the new name with exactly the same numbers.
+17. Confirm both devices show “Shared data verified · All changes synced” and display the same renamed choices and totals.
 
 No Firebase, Firestore Rules, login, collection, or database changes are needed.

@@ -1,22 +1,24 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.31 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.32 VALIDATION RESULTS
 
 VALIDATED JULY 25, 2026
 
-COMPACT REPORT FIXES
-- PASS: The Compact One-Page PDF generator completes without a JavaScript ReferenceError.
-- PASS: Download Compact One-Page PDF produced a valid, nonblank PDF with report text and totals.
-- PASS: Compact report print CSS displays #meetingReport as a visible block in print media.
-- PASS: Print Compact Report reached window.print with populated report text visible.
-- PASS: Normal charity distributions and earlier On Hold / Storage distributions both appear in the compact report activity section.
-- PASS: A visible success notice appears after the compact PDF is created.
+ACTUAL ACTIVITY DATE FIXES
+- PASS: Existing linked distribution inventory records normalize to the charity request's selected Date Distributed.
+- PASS: Changing a distribution date updates linked inventory-out and correction records to the selected effective date.
+- PASS: Reducing or clearing a backdated distribution creates the restoring correction on the effective distribution date instead of today's entry date.
+- PASS: Reports label distribution and adjustment dates clearly as Date Distributed or Change Date.
+- PASS: Inventory history labels the selected transaction date as Activity date and keeps the separate entered/edited audit timestamp.
+- PASS: CSV export labels the selected date as Activity Date while retaining Entered At and Last Edited At columns.
+- PASS: Yearly statistics calculate from transaction activity dates, so repaired linked records fall in the correct year.
+- PASS: Distribution correction records reduce yearly and lifetime distributed totals to the corrected net quantity.
 
 REGRESSION CHECKS
-- PASS: Full PDF Report still downloads and contains report content.
 - PASS: app.js and firebase-sync.js pass JavaScript syntax checks.
-- PASS: Version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings identify Update 7.8.31.
-- PASS: The service-worker cache name changed to love-quilts-v7-8-31 so installed devices request the corrected files.
+- PASS: Compact and full PDF generators produced valid nonblank byte output after the activity-date changes.
+- PASS: Version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings identify Update 7.8.32.
+- PASS: The service-worker cache name changed to love-quilts-v7-8-32 so installed devices request the corrected files.
 
 DEVICE CHECKS AFTER GITHUB PAGES PUBLISHES
-- Confirm Print Compact Report shows the populated one-page preview on the device normally used for reporting.
-- Confirm Download Compact One-Page PDF appears in Downloads or Files and opens with report content.
-- Confirm both approved devices return to “Shared data verified · All changes synced.”
+- Enter one test transaction with a past date and confirm Reports/history show that selected date.
+- Edit a linked distribution date and confirm both devices show the same report year and date after sync verification.
+- Recheck Print Compact Report and Download Compact One-Page PDF.

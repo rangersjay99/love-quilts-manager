@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.31';
+const VERSION='7.8.32';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -56,6 +56,21 @@ function auditText(record){
   if(createdBy)return`Entered by ${createdBy}${createdAt?' '+fmtDateTime(createdAt):''}`;
   return'';
 }
+function isLinkedNeedDistributionTransaction(record){
+  return !!record?.sourceNeedId&&['NEED_DISTRIBUTION','NEED_DISTRIBUTION_CORRECTION'].includes(String(record.sourceType||''));
+}
+function syncLinkedNeedDistributionDates(needId,effectiveDate,email='',stamp=''){
+  if(!needId||!effectiveDate)return 0;
+  let changed=0;
+  data.transactions.forEach(record=>{
+    if(record.sourceNeedId!==needId||!isLinkedNeedDistributionTransaction(record)||record.date===effectiveDate)return;
+    record.date=effectiveDate;
+    if(email)record.updatedBy=email;
+    if(stamp)record.updatedAt=stamp;
+    changed++;
+  });
+  return changed;
+}
 
 function normalizeData(d={}){
   let tx=Array.isArray(d.transactions)?d.transactions.map(t=>({
@@ -101,6 +116,13 @@ function normalizeData(d={}){
     tx.filter(t=>!t.sourceNeedId&&t.type==='OUT'&&t.charity===n.charity&&t.size===n.size&&t.note===expectedNote)
       .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||String(a.id||'').localeCompare(String(b.id||'')))
       .forEach(t=>{const amount=Math.max(1,Math.floor(Number(t.qty||1)));if(amount<=remaining){t.sourceNeedId=n.id;t.sourceType='NEED_DISTRIBUTION';remaining-=amount}});
+  });
+  // A charity request currently stores one effective distribution date. Keep every linked
+  // inventory transaction on that selected date so reports and yearly totals reflect when
+  // the quilts actually moved, not when the correction was entered.
+  needs.forEach(n=>{
+    if(!n.fulfilledDate)return;
+    tx.forEach(t=>{if(t.sourceNeedId===n.id&&isLinkedNeedDistributionTransaction(t))t.date=n.fulfilledDate});
   });
   return{
     orgName:String(d.orgName||DEFAULT_ORG),appName:String(d.appName||DEFAULT_APP),itemName:String(d.itemName||DEFAULT_ITEM),
@@ -379,7 +401,7 @@ function renderInventory(){
 function renderHistory(){
   const c=el('historyCharity').value,t=el('historyType').value;
   const list=[...data.transactions].filter(x=>(!c||x.charity===c)&&(!t||x.type===t)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
-  el('historyList').innerHTML=list.length?list.map(x=>{const n=activityValue(x),inventoryEffect=value(x);return`<div class="item"><div class="head"><div><div class="title ${n<0?'negative':'positive'}">${n>0?'+':''}${n} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}</div>${x.note?`<div class="meta">${esc(x.note)}</div>`:''}${x.sourceType==='HOLD_DISTRIBUTION'?'<div class="meta">Earlier deferred distribution record.</div>':''}${auditText(x)?`<div class="audit-meta">${esc(auditText(x))}</div>`:''}${x.type==='ADJUST'?'<div class="meta"><span class="flag">Adjusted inventory</span></div>':''}${x.sourceNeedId?'<div class="meta"><span class="flag distribution-link-flag">Linked distribution</span></div>':''}${x.sourceHoldId?'<div class="meta"><span class="flag">Deferred record</span></div>':''}</div><b>${transactionLabel(x)}</b></div><div class="actions"><button onclick="editTx('${x.id}')">Edit</button><button onclick="deleteTx('${x.id}')">Delete</button></div></div>`}).join(''):'<div class="empty">No matching history.</div>';
+  el('historyList').innerHTML=list.length?list.map(x=>{const n=activityValue(x),inventoryEffect=value(x);return`<div class="item"><div class="head"><div><div class="title ${n<0?'negative':'positive'}">${n>0?'+':''}${n} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · Activity date ${fmtDate(x.date)}</div>${x.note?`<div class="meta">${esc(x.note)}</div>`:''}${x.sourceType==='HOLD_DISTRIBUTION'?'<div class="meta">Earlier deferred distribution record.</div>':''}${auditText(x)?`<div class="audit-meta">${esc(auditText(x))}</div>`:''}${x.type==='ADJUST'?'<div class="meta"><span class="flag">Adjusted inventory</span></div>':''}${x.sourceNeedId?'<div class="meta"><span class="flag distribution-link-flag">Linked distribution</span></div>':''}${x.sourceHoldId?'<div class="meta"><span class="flag">Deferred record</span></div>':''}</div><b>${transactionLabel(x)}</b></div><div class="actions"><button onclick="editTx('${x.id}')">Edit</button><button onclick="deleteTx('${x.id}')">Delete</button></div></div>`}).join(''):'<div class="empty">No matching history.</div>';
 }
 function fulfilledQty(n){return Math.max(0,Math.floor(Number(n?.fulfilledQty||0)))}
 function remainingNeed(n){return Math.max(0,Math.max(1,Number(n?.qty||1))-fulfilledQty(n))}
@@ -559,8 +581,10 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice',options={})
     fulfilledQty:sentRaw,fulfilledDate:sentRaw?sentDate:'',fulfilledBy:fulfillmentChanged?(sentRaw?email:''):String(previous?.fulfilledBy||''),fulfilledAt:fulfillmentChanged?(sentRaw?stamp:''):String(previous?.fulfilledAt||''),
     fulfilledHighWater:Math.max(priorHighWater,sentRaw),autoOutQty:Math.max(0,priorAutoOut-autoRestoreNeeded),
     createdBy:previous?.createdBy||email,createdAt:previous?.createdAt||stamp,updatedBy:email,updatedAt:stamp};
+  if(previous&&sentRaw>0&&sentDate&&sentDate!==String(previous.fulfilledDate||''))syncLinkedNeedDistributionDates(r.id,sentDate,email,stamp);
+  const effectiveCorrectionDate=sentRaw>0&&sentDate?sentDate:String(previous?.fulfilledDate||sentDate||today());
   if(autoRestoreNeeded>0){
-    data.transactions.push({id:uid(),date:today(),type:'IN',charity:r.charity,size:r.size,qty:autoRestoreNeeded,adjustment:0,
+    data.transactions.push({id:uid(),date:effectiveCorrectionDate,type:'IN',charity:r.charity,size:r.size,qty:autoRestoreNeeded,adjustment:0,
       note:`Distribution correction for ${fmtMonth(r.month)} charity request`,sourceNeedId:r.id,sourceType:'NEED_DISTRIBUTION_CORRECTION',createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp});
   }
   if(autoOutNeeded>0){
@@ -645,14 +669,21 @@ function fillStatisticsYearSelect(){
   select.innerHTML=years.map(year=>`<option value="${year}">${year}</option>`).join('');select.value=years.includes(old)?String(old):String(current);return Number(select.value)||current;
 }
 function selectedStatisticsYear(){return Number(el('reportStatsYear')?.value)||Number(monthNow().slice(0,4))}
+function distributionActivityValue(record){
+  const amount=Math.max(0,Number(record?.qty)||0);
+  if(record?.type==='OUT'&&record.sourceType!=='HOLD_TRANSFER_OUT')return amount;
+  if(record?.type==='IN'&&record.sourceType==='NEED_DISTRIBUTION_CORRECTION')return-amount;
+  return 0;
+}
 function yearlyStatistics(year=Number(monthNow().slice(0,4))){
   const transactions=data.transactions.filter(t=>yearOf(t.date)===Number(year));
   const made=transactions.filter(t=>t.type==='IN'&&!['NEED_DISTRIBUTION_CORRECTION','HOLD_RETURN'].includes(t.sourceType)).reduce((sum,t)=>sum+Math.max(0,Number(t.qty)||0),0);
-  const isDistribution=t=>t.type==='OUT'&&t.sourceType!=='HOLD_TRANSFER_OUT';
-  const distributed=transactions.filter(isDistribution).reduce((sum,t)=>sum+Math.max(0,Number(t.qty)||0),0);
+  const distributed=Math.max(0,transactions.reduce((sum,t)=>sum+distributionActivityValue(t),0));
   const netChange=transactions.reduce((sum,t)=>sum+value(t),0);
-  const charitiesServed=new Set(transactions.filter(t=>isDistribution(t)&&t.charity).map(t=>t.charity)).size;
-  const lifetimeDistributed=data.transactions.filter(isDistribution).reduce((sum,t)=>sum+Math.max(0,Number(t.qty)||0),0);
+  const charityDistributionTotals={};
+  transactions.forEach(t=>{const amount=distributionActivityValue(t);if(amount&&t.charity)charityDistributionTotals[t.charity]=(charityDistributionTotals[t.charity]||0)+amount});
+  const charitiesServed=Object.values(charityDistributionTotals).filter(amount=>amount>0).length;
+  const lifetimeDistributed=Math.max(0,data.transactions.reduce((sum,t)=>sum+distributionActivityValue(t),0));
   return{year:Number(year),made,distributed,netChange,currentInventory:totalOnHand(),charitiesServed,lifetimeDistributed,reportDate:today()};
 }
 function yearlyStatisticsHTML(stats){
@@ -885,7 +916,7 @@ function renderHomeSummaryReport(){
   const rows=homeCharitySummaries(),onHand=totalOnHand(),requested=totalNeeded(),toComplete=quiltsToCompleteTotal();
   const generated=new Date().toLocaleString();
   const body=rows.length?rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.onHand}</td><td>${row.requested}</td><td><span class="difference-value ${row.toComplete?'negative':'positive'}">${row.toComplete}</span></td></tr>`).join(''):`<tr><td colspan="4">No charities have been entered.</td></tr>`;
-  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · ${esc(data.homeAtAGlance)} Summary · Generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div class="summary-metric"><b>${requested}</b><span>${esc(data.homeNeededLabel)}</span></div><div class="summary-metric"><b class="${toComplete?'negative':'positive'}">${toComplete}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:20%"><col style="width:22%"></colgroup><thead><tr><th>Charity</th><th>${esc(data.homeStorageLabel)}</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${requested}</td><td><span class="difference-value ${toComplete?'negative':'positive'}">${toComplete}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  target.innerHTML=`<h1>${esc(data.appName)}</h1><div class="summary-meta">${esc(data.orgName)} · ${esc(data.homeAtAGlance)} Summary · Report generated ${esc(generated)}</div><div class="summary-metrics"><div class="summary-metric"><b>${onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div class="summary-metric"><b>${requested}</b><span>${esc(data.homeNeededLabel)}</span></div><div class="summary-metric"><b class="${toComplete?'negative':'positive'}">${toComplete}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div><table><colgroup><col style="width:40%"><col style="width:18%"><col style="width:20%"><col style="width:22%"></colgroup><thead><tr><th>Charity</th><th>${esc(data.homeStorageLabel)}</th><th>${esc(data.homeNeededLabel)}</th><th>${esc(data.homeDifferenceLabel)}</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Grand Total</td><td>${onHand}</td><td>${requested}</td><td><span class="difference-value ${toComplete?'negative':'positive'}">${toComplete}</span></td></tr></tfoot></table><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderHome(){
   const toComplete=quiltsToCompleteTotal();
@@ -960,7 +991,7 @@ function holdDistributionsForReport(){return data.transactions.filter(t=>t.sourc
 function reportDistributedHTML(){
   const list=distributedNeedsForReport();
   if(!list.length)return'<div class="empty">No distributed charity requests recorded yet.</div>';
-  const needsTable=list.length?`<table><thead><tr><th>Date Sent</th><th>Month Needed</th><th>Charity / Size</th><th>Original Request</th><th>Sent / ${esc(data.homeNeededLabel)}</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} ${esc(data.homeNeededLabel.toLocaleLowerCase())}</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'';
+  const needsTable=list.length?`<table><thead><tr><th>Date Distributed</th><th>Month Needed</th><th>Charity / Size</th><th>Original Request</th><th>Sent / ${esc(data.homeNeededLabel)}</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} ${esc(data.homeNeededLabel.toLocaleLowerCase())}</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'';
   return needsTable;
 }
 function compactDistributedHTML(limit=6){
@@ -968,24 +999,24 @@ function compactDistributedHTML(limit=6){
   const deferredRows=holdDistributionsForReport().map(t=>({date:t.date||'',charity:t.charity,size:t.size,qty:Math.max(0,Number(t.qty)||0),left:0,deferred:true}));
   const combined=[...needRows,...deferredRows].sort((a,b)=>String(b.date).localeCompare(String(a.date))||a.charity.localeCompare(b.charity));
   const list=combined.slice(0,limit);if(!list.length)return'<div class="print-note">No distributed quilts recorded.</div>';
-  return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Sent</th></tr></thead><tbody>${list.map(row=>`<tr><td>${row.date?fmtDate(row.date):'—'}</td><td>${esc(row.charity)}<br>${esc(row.size)}</td><td>${row.qty}${row.deferred?'<br><span class="small">From On Hold / Storage</span>':row.left?`<br><span class="small">${row.left} left</span>`:''}</td></tr>`).join('')}</tbody></table>${combined.length>list.length?`<div class="print-note">Showing ${list.length} of ${combined.length} distribution records.</div>`:''}`;
+  return`<table><thead><tr><th>Date Distributed</th><th>Charity / Size</th><th>Sent</th></tr></thead><tbody>${list.map(row=>`<tr><td>${row.date?fmtDate(row.date):'—'}</td><td>${esc(row.charity)}<br>${esc(row.size)}</td><td>${row.qty}${row.deferred?'<br><span class="small">From On Hold / Storage</span>':row.left?`<br><span class="small">${row.left} left</span>`:''}</td></tr>`).join('')}</tbody></table>${combined.length>list.length?`<div class="print-note">Showing ${list.length} of ${combined.length} distribution records.</div>`:''}`;
 }
-function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
+function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Change Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){
   const generated=new Date().toLocaleString(),toComplete=quiltsToCompleteTotal(),completionStatus=toComplete?'Still to Make':'All Requests Covered';
   const stats=yearlyStatistics(selectedStatisticsYear());
-  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>${esc(data.homeStorageLabel)}</div><div class="print-metric"><b>${totalNeeded()}</b>${esc(data.homeNeededLabel)}</div><div class="print-metric"><b class="${toComplete?'negative':'positive'}">${toComplete}</b>${esc(data.homeDifferenceLabel)} · ${completionStatus}</div></div><h2>${stats.year} Yearly Statistics</h2><div class="print-note">Made ${stats.made} · Distributed ${stats.distributed} · Net change ${signedDifference(stats.netChange)} · Current inventory ${stats.currentInventory} · Charities served ${stats.charitiesServed} · Lifetime distributed ${stats.lifetimeDistributed}</div><h2>${esc(data.homeStorageLabel)} and ${esc(data.homeNeededLabel)}</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>${esc(data.homeNeededLabel)}</h2>${reportNeedsHTML()}</div><div><h2>${esc(data.itemName)} Distributed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
+  el('meetingReport').innerHTML=`<h1>${esc(data.appName)}</h1><div class="print-meta">${esc(data.orgName)} · ${esc(effectiveReportTitle())} · Report generated ${esc(generated)}</div><div class="print-metrics"><div class="print-metric"><b>${totalOnHand()}</b>${esc(data.homeStorageLabel)}</div><div class="print-metric"><b>${totalNeeded()}</b>${esc(data.homeNeededLabel)}</div><div class="print-metric"><b class="${toComplete?'negative':'positive'}">${toComplete}</b>${esc(data.homeDifferenceLabel)} · ${completionStatus}</div></div><h2>${stats.year} Yearly Statistics</h2><div class="print-note">Made ${stats.made} · Distributed ${stats.distributed} · Net change ${signedDifference(stats.netChange)} · Current inventory ${stats.currentInventory} · Charities served ${stats.charitiesServed} · Lifetime distributed ${stats.lifetimeDistributed}</div><h2>${esc(data.homeStorageLabel)} and ${esc(data.homeNeededLabel)}</h2>${reportInventoryHTML()}<div class="print-columns"><div><h2>${esc(data.homeNeededLabel)}</h2>${reportNeedsHTML()}</div><div><h2>${esc(data.itemName)} Distributed</h2>${compactDistributedHTML()}<h2>Recent Adjustments</h2>${compactAdjustmentsHTML()}</div></div><div class="print-copyright">${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</div>`;
 }
 function renderReports(){
   const statsYear=fillStatisticsYearSelect(),stats=yearlyStatistics(statsYear);
   const toComplete=quiltsToCompleteTotal(),completionStatus=toComplete?'Still to Make':'All Requests Covered';
-  el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Generated ${new Date().toLocaleString()}`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=toComplete;
+  el('reportHeading').textContent=effectiveReportTitle();el('reportDate').textContent=`${data.orgName} · Report generated ${new Date().toLocaleString()} · Activity dates use the selected date of the actual change`;el('reportOnHand').textContent=totalOnHand();el('reportNeeded').textContent=totalNeeded();el('reportShortage').textContent=toComplete;
   if(el('reportStorageLabel'))el('reportStorageLabel').textContent=data.homeStorageLabel;if(el('reportNeededLabel'))el('reportNeededLabel').textContent=data.homeNeededLabel;if(el('reportDifferenceLabel'))el('reportDifferenceLabel').textContent=data.homeDifferenceLabel;if(el('reportDifferenceStatus')){el('reportDifferenceStatus').textContent=completionStatus;el('reportDifferenceStatus').className=`metric-status-line difference-status ${toComplete?'negative':'positive'}`}
   if(el('reportInventoryHeading'))el('reportInventoryHeading').textContent=`${data.homeStorageLabel} and ${data.homeNeededLabel}`;if(el('reportNeedsHeading'))el('reportNeedsHeading').textContent=data.homeNeededLabel;if(el('reportDistributedHeading'))el('reportDistributedHeading').textContent=`${data.itemName} Distributed`;
   if(el('reportYearlyStats'))el('reportYearlyStats').innerHTML=yearlyStatisticsHTML(stats);
   el('reportInventory').innerHTML=reportInventoryHTML();el('reportNeeds').innerHTML=reportNeedsHTML();el('reportDistributed').innerHTML=reportDistributedHTML();
   const a=data.transactions.filter(t=>t.type==='ADJUST').sort((x,y)=>y.date.localeCompare(x.date));
-  el('reportAdjustments').innerHTML=a.length?a.map(x=>`<div class="item report-shaded-item"><div class="head"><div><div class="title">${value(x)>0?'+':''}${value(x)} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}${x.note?' · '+esc(x.note):''}</div></div><span class="flag">Adjusted</span></div></div>`).join(''):'<div class="empty">No adjusted transactions.</div>';
+  el('reportAdjustments').innerHTML=a.length?a.map(x=>`<div class="item report-shaded-item"><div class="head"><div><div class="title">${value(x)>0?'+':''}${value(x)} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · Change date ${fmtDate(x.date)}${x.note?' · '+esc(x.note):''}</div></div><span class="flag">Adjusted</span></div></div>`).join(''):'<div class="empty">No adjusted transactions.</div>';
   renderMeetingReport();
 }
 function sameName(a,b){return String(a||'').trim().toLocaleLowerCase()===String(b||'').trim().toLocaleLowerCase()}
@@ -1077,7 +1108,7 @@ function importBackup(e){
     }else notice('settingsNotice','Restore canceled. Current shared data was not changed.');
     e.target.value='';};r.readAsText(f);
 }
-function exportCSV(){const rows=[['Date','Activity','Charity','Size','Activity Quantity','Inventory Change','Note','Source','Entered By','Entered At','Last Edited By','Last Edited At']];data.transactions.forEach(t=>rows.push([t.date,transactionLabel(t),t.charity,t.size,activityValue(t),value(t),t.note||'',t.sourceType||'',t.createdBy||'',t.createdAt||'',t.updatedBy||'',t.updatedAt||'']));const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');download(`${filePart(data.itemName)}_Transactions_${today()}.csv`,csv,'text/csv')}
+function exportCSV(){const rows=[['Activity Date','Activity','Charity','Size','Activity Quantity','Inventory Change','Note','Source','Entered By','Entered At','Last Edited By','Last Edited At']];data.transactions.forEach(t=>rows.push([t.date,transactionLabel(t),t.charity,t.size,activityValue(t),value(t),t.note||'',t.sourceType||'',t.createdBy||'',t.createdAt||'',t.updatedBy||'',t.updatedAt||'']));const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');download(`${filePart(data.itemName)}_Transactions_${today()}.csv`,csv,'text/csv')}
 
 function renderRecoveryList(){
   const box=el('recoveryList');if(!box)return;const list=getRecovery().slice(0,10);
@@ -1166,7 +1197,7 @@ function makeOnePagePDF(){
 
   text(36,754,pdfFit(data.appName,62),17,true);
   text(36,738,pdfFit(`${data.orgName} - ${effectiveReportTitle()}`,92),9,false);
-  text(36,726,`Generated ${new Date().toLocaleString()}`,7,false);
+  text(36,726,`Report generated ${new Date().toLocaleString()}`,7,false);
 
   const metricY=684,metricH=32,metricW=166;
   const toComplete=quiltsToCompleteTotal();
@@ -1286,7 +1317,7 @@ function makeFullPDF(){
     const line=(x1,y1,x2,y2,w=.5)=>page.commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
     text(36,754,pdfFit(data.appName,68),16,true);
     text(36,738,pdfFit(`${data.orgName} - ${effectiveReportTitle()}`,96),9,false);
-    text(36,726,`Generated ${generated}`,7,false);
+    text(36,726,`Report generated ${generated}`,7,false);
     line(36,716,576,716,.7);
     return page;
   };
@@ -1474,7 +1505,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.31 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.32 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.31',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.32',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

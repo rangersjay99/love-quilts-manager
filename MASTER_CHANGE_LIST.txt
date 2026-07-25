@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.31
+IMPLEMENTED THROUGH UPDATE 7.8.32
+- Update 7.8.32 makes Reports, transaction history, CSV exports, and yearly statistics use the selected date of the actual inventory change or distribution. Backdated distribution edits and corrections keep their linked inventory activity on that effective date, and yearly distributed totals use the corrected net quantity, while entry timestamps remain available for audit history.
 - Update 7.8.31 fixes blank Compact Report printing and restores Compact One-Page PDF downloads.
 - Update 7.8.30 adds safe charity and quilt-size renaming while preserving all current records and numbers. It also applies the detailed Home-style Before/After verification screen to inventory additions, edits, adjustments, Set Current Count, transaction deletions, charity-need edits, distributions, corrections, and charity-need deletions.
 - Update 7.8.29 moves Add Quilts Needed to the top of the Needs tab, color-codes changed request totals, and gives the separate distribution reminder a purple informational style.
@@ -31,6 +32,8 @@ CALENDAR
 - The 12-month printout uses portrait orientation in a 3 × 4 layout.
 
 REPORTS AND STATISTICS
+- Activity dates use the selected date of the actual change or distribution, not the timestamp when information was entered.
+- Backdated linked distributions and corrections are assigned to the correct reporting year.
 - Report wording matches Home wording.
 - The third Reports summary block displays fully on iPhone.
 - Alternating row shading is used on screen and in output.

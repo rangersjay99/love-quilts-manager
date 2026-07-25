@@ -1,7 +1,7 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.31 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.32 TEST CHECKLIST
 
 [ ] Export a backup before testing.
-[ ] Confirm Update 7.8.31 appears on the splash, Change Log, or About screen.
+[ ] Confirm Update 7.8.32 appears on the splash, Change Log, or About screen.
 [ ] Reports: Print Compact Report opens a populated one-page print preview.
 [ ] Reports: Download Compact One-Page PDF creates a nonblank PDF file.
 [ ] Add inventory and verify Home-style Before/After bubbles appear before saving.
@@ -16,3 +16,10 @@ LOVE QUILTS MANAGER — UPDATE 7.8.31 TEST CHECKLIST
 [ ] Complete a desired charity rename and confirm all Inventory, Needs, Calendar, Reports, and history records use the new name with unchanged numbers.
 [ ] Review or complete a desired quilt-size rename and verify the same preservation behavior.
 [ ] Confirm both approved devices receive the changes and show “Shared data verified · All changes synced.”
+
+ACTUAL ACTIVITY DATE CHECKS
+[ ] Add or edit an inventory transaction with a past selected date; Reports/history show that selected activity date.
+[ ] Mark a charity request distributed using a past date; Reports show that Date Distributed.
+[ ] Change the date on an existing linked distribution; linked inventory activity and yearly statistics move to the newly selected date/year.
+[ ] Reduce a past linked distribution; the correction uses the distribution's effective date rather than today's entry date.
+[ ] Audit history still shows who entered/edited the record and the actual entry timestamp separately.

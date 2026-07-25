@@ -1,6 +1,14 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.31 — Compact Report Fix — July 25, 2026**
+Current release: **Update 7.8.32 — Actual Activity Dates — July 25, 2026**
+
+## Update 7.8.32
+
+- Reports now show the selected activity date—the date inventory actually changed or quilts were distributed—rather than using the date the information was entered.
+- Backdated distribution edits and quantity corrections now keep all linked inventory transactions on the selected distribution date.
+- Existing linked distribution records are repaired automatically when their stored inventory date differs from the request's distribution date.
+- Yearly statistics now place those distributions and corrections in the year of the actual selected date and use the corrected net quantity.
+- Audit information still preserves who entered or edited a record and when.
 
 ## Update 7.8.31
 
