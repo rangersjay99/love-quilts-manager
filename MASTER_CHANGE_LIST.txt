@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
-Updated July 24, 2026
+Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.26
+IMPLEMENTED THROUGH UPDATE 7.8.27
+- Update 7.8.27 separates Add Quilts Needed from distribution and moves color-coded Home-style Before/After bubbles to the top of verification.
 - Update 7.8.26 moves Quilts Needed to the top, returns to Home after new additions, and adds exact Home Before/After verification bubbles.
 
 HOME
@@ -34,7 +35,8 @@ REPORTS AND STATISTICS
 
 INVENTORY, DISTRIBUTION, AND SYNC
 - Every new inventory entry requires a review screen showing the entered details and resulting inventory totals before saving.
-- Every new charity need/request requires a review screen showing the entered details and resulting request totals before saving.
+- Every new charity need/request requires a review screen with Home-style Before/After bubbles at the top, followed by entered details and resulting request totals.
+- Adding a charity need is separate from distribution; distributions are entered later through Mark Distributed or the Calendar action.
 - Quantity Distributed may exceed the original request; the full quantity is recorded and reported while Quilts Still Needed remains zero.
 - Set Current Count accepts exact counts, including zero.
 - A full distribution immediately reduces active inventory to zero when appropriate.

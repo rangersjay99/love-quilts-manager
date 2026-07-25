@@ -1,32 +1,39 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.26 VALIDATION RESULTS
-July 24, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.27 VALIDATION RESULTS
+July 25, 2026
 
 RESULT: PASSED
 
-38 checks passed:
-- 36 required-file, JavaScript syntax, version, service-worker, manifest, synchronization-direction, server-verification, and behavioral-model checks.
-- 1 final ZIP integrity test.
-- 1 clean-extraction verification of the packaged update.
+24 checks passed:
+- PASS: Add Need form title is distinct
+- PASS: Distribution Status removed from Add Need form
+- PASS: Distribution entry fields removed from Add Need form
+- PASS: Separate distribution guidance shown
+- PASS: Mark Distributed workflow retained
+- PASS: Calendar distribution workflow retained
+- PASS: Main Add Need values cannot include distribution
+- PASS: Need review bubbles are first
+- PASS: Inventory review bubbles are first
+- PASS: Review uses state classes
+- PASS: Increase highlight styling present
+- PASS: Decrease highlight styling present
+- PASS: Unchanged neutral styling present
+- PASS: Exact add/subtract/no-change wording retained
+- PASS: Version constant updated
+- PASS: Splash and About updated
+- PASS: Service worker cache updated
+- PASS: manifest.json start URL updated
+- PASS: manifest-v7.json start URL updated
+- PASS: VERSION.txt updated
+- PASS: app.js JavaScript syntax check.
+- PASS: firebase-sync.js JavaScript syntax check.
+- PASS: Home review-bubble function behavior in an isolated JavaScript VM (increase, decrease, unchanged, and exact wording).
+- PASS: Main Add Need values force distribution fields to zero/blank/false in the JavaScript VM.
 
-ROOT CAUSE VERIFIED
-- Update 7.8.24 could turn the local banner green immediately after a write completed, before Firebase realtime listeners returned a matching server-confirmed copy.
-- Sync Now always uploaded the current device. Pressing it on a stale second device could resend older numbers instead of receiving the corrected shared copy.
+PACKAGE SCOPE
+- Add Quilts Needed and distribution are now separate workflows.
+- Before/After Home-style bubbles appear first on both new inventory and new need verification screens.
+- Changed totals receive green or red highlighting; unchanged totals remain neutral.
+- The existing two-device synchronization safeguards are unchanged.
 
-HOTFIX VERIFIED
-- Green requires all four Firebase listeners to be server-confirmed, have no pending writes, and match the device data.
-- The device containing the proven full distribution is protected from having that value replaced by a clipped cloud copy.
-- Sync Now on that correct device repairs both charity-need records and linked inventory transactions.
-- Sync Now on a stale second device receives the current shared copy rather than blindly uploading stale local data.
-- Transaction and need ordering differences are ignored during equality verification.
-- Quantity Distributed remains allowed above Quilts Needed.
-
-BEHAVIORAL SCENARIOS PASSED
-- Correct device: Request 10 / Distributed 12 / linked inventory out 12 versus clipped cloud 10 => repair upload selected.
-- Stale device: local 10 versus shared 12 => shared download selected.
-- Missing linked distribution transaction in Firebase => repair upload selected.
-- Same records in different order => treated as equal.
-- Mismatched server copy => cannot display verified green.
-- Matching server copy => eligible for verified green.
-
-LIMITATION
-- The test container cannot sign in to the user's live Firebase account. Complete the included two-device live check after GitHub Pages publishes the update.
+LIVE TEST NOTE
+- The package passed static, syntax, and isolated behavior tests. Complete the normal device test after GitHub Pages publishes Update 7.8.27.

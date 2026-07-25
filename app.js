@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.26';
+const VERSION='7.8.27';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -332,9 +332,10 @@ function saveTransaction(reviewed=false,reviewedAdjustment=null){
     const quantityLabel=mode==='SET'?`Exact count: ${qty}`:mode==='ADJUST'?`Change: ${adj>0?'+':''}${adj}`:`Quantity: ${qty}`;
     const homeMetrics=homePreviewMetrics(c,s,inventoryChange,0);
     const summary=[
+      homeReviewBubbles(homeMetrics),
+      '<div class="entry-review-details-heading">Inventory entry details</div>',
       reviewLine('Entry type',typeLabel),reviewLine('Charity',c),reviewLine('Size',s),reviewLine(mode==='SET'?'New count':'Quantity',mode==='SET'?String(qty):mode==='ADJUST'?`${adj>0?'+':''}${adj}`:String(qty)),reviewLine('Date',fmtDate(d)),
       noteText?reviewLine('Note',noteText):'',reviewTotals(`Inventory for ${c} — ${s}`,current,next),reviewTotals(`Total ${lowerName()} in storage`,totalCurrent,totalNext),
-      homeReviewBubbles(homeMetrics),
       mode==='SET'?`<div class="entry-review-note">This saves an adjustment of ${adj>0?'+':''}${adj} so the exact count becomes ${qty}.</div>`:''
     ].join('');
     openEntryReview(`Review ${typeLabel}`,summary,'Save Inventory Entry',()=>saveTransaction(true,adj));
@@ -420,13 +421,12 @@ function homeReviewBubbles(metrics){
     {key:'needed',label:data.homeNeededLabel||DEFAULT_HOME_NEEDED_LABEL},
     {key:'difference',label:data.homeDifferenceLabel||DEFAULT_HOME_DIFFERENCE_LABEL}
   ];
-  return`<div class="entry-review-home-heading">How the Home screen will change</div><div class="entry-review-home-grid">${cards.map(card=>{const before=metrics.before[card.key],after=metrics.after[card.key];return`<div class="entry-review-home-card"><span>${esc(card.label)}</span><div class="entry-review-before-after"><div><small>Before</small><b>${before}</b></div><div class="entry-review-arrow">→</div><div><small>After</small><b>${after}</b></div></div>${reviewChangeText(card.label,before,after)}</div>`}).join('')}</div>`
+  return`<div class="entry-review-home-wrap"><div class="entry-review-home-heading">Home screen preview</div><div class="entry-review-home-grid">${cards.map(card=>{const before=metrics.before[card.key],after=metrics.after[card.key],state=after>before?'increase':after<before?'decrease':'unchanged';return`<div class="entry-review-home-card change-${state}"><span>${esc(card.label)}</span><div class="entry-review-before-after"><div><small>Before</small><b>${before}</b></div><div class="entry-review-arrow">→</div><div><small>After</small><b>${after}</b></div></div>${reviewChangeText(card.label,before,after)}</div>`}).join('')}</div></div>`
 }
 function needValuesFromMainForm(){
   return{
     month:el('needMonth').value||monthNow(),charity:el('needCharity').value,size:el('needSize').value,
-    qty:el('needQty').value,note:el('needNote').value.trim(),fulfilledQty:el('needFulfilledQty').value,
-    fulfilledDate:el('needFulfilledDate').value||'',recordOut:!!el('needRecordOut').checked
+    qty:el('needQty').value,note:el('needNote').value.trim(),fulfilledQty:0,fulfilledDate:'',recordOut:false
   };
 }
 function needValuesFromInlineForm(form){
@@ -449,22 +449,18 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice',options={})
   const charity=String(values.charity||''),size=String(values.size||'');
   if(!charity||!size){showNeedSaveMessage(messageTarget,'Please select a charity and size.');return false}
   if(!id&&!options.reviewed){
-    const month=String(values.month||monthNow()),remaining=Math.max(0,needQty-sentRaw);
+    const month=String(values.month||monthNow());
     const monthCurrent=data.needs.filter(n=>String(n.month||'')===month).reduce((sum,n)=>sum+Math.max(1,Math.floor(Number(n.qty||1))),0);
-    const monthAfter=monthCurrent+needQty,activeCurrent=totalNeeded(),activeAfter=activeCurrent+(month>=monthNow()?remaining:0);
-    const currentInventory=onHand(charity,size),totalInventory=totalOnHand(),recordOut=!!values.recordOut;
-    if(recordOut&&sentRaw>currentInventory){showNeedSaveMessage(messageTarget,`Only ${currentInventory} are in storage for ${charity} — ${size}. Leave the Inventory Out box unchecked only if this distribution was already recorded separately.`);return false}
-    const activeNeededChange=month>=monthNow()?remaining:0,inventoryChange=sentRaw&&recordOut?-sentRaw:0;
-    const homeMetrics=homePreviewMetrics(charity,size,inventoryChange,activeNeededChange);
+    const monthAfter=monthCurrent+needQty,activeCurrent=totalNeeded(),activeAfter=activeCurrent+(month>=monthNow()?needQty:0);
+    const activeNeededChange=month>=monthNow()?needQty:0;
+    const homeMetrics=homePreviewMetrics(charity,size,0,activeNeededChange);
     const summary=[
-      reviewLine('Month needed',fmtMonth(month)),reviewLine('Charity',charity),reviewLine('Size',size),reviewLine('Quilts needed',String(needQty)),
-      String(values.note||'').trim()?reviewLine('Note',String(values.note||'').trim()):'',sentRaw?reviewLine('Quantity distributed',String(sentRaw)):'',sentRaw?reviewLine('Date distributed',fmtDate(sentDate)):'',
-      reviewTotals(`Requests in ${fmtMonth(month)}`,monthCurrent,monthAfter),reviewTotals('Total active quilts requested',activeCurrent,activeAfter),
-      sentRaw&&recordOut?reviewTotals(`Inventory for ${charity} — ${size}`,currentInventory,currentInventory-sentRaw):'',
-      sentRaw&&recordOut?reviewTotals(`Total ${lowerName()} in storage`,totalInventory,totalInventory-sentRaw):'',
       homeReviewBubbles(homeMetrics),
-      sentRaw&&!recordOut?'<div class="entry-review-warning">Inventory will not change. Continue only when these distributed quilts were already recorded separately as Quilts Out.</div>':'',
-      sentRaw>needQty?`<div class="entry-review-note">The full distributed quantity will be recorded. Quilts Still Needed will remain 0, including ${sentRaw-needQty} above the original request.</div>`:''
+      '<div class="entry-review-details-heading">Need details</div>',
+      reviewLine('Month needed',fmtMonth(month)),reviewLine('Charity',charity),reviewLine('Size',size),reviewLine('Quilts needed',String(needQty)),
+      String(values.note||'').trim()?reviewLine('Note',String(values.note||'').trim()):'',
+      reviewTotals(`Requests in ${fmtMonth(month)}`,monthCurrent,monthAfter),reviewTotals('Total active quilts requested',activeCurrent,activeAfter),
+      '<div class="entry-review-note">Distribution is not part of this entry. After saving, use Mark Distributed on the request when quilts are delivered.</div>'
     ].join('');
     openEntryReview('Review New Charity Need',summary,'Save Charity Need',options.onConfirm||(()=>persistNeedRecord(values,null,messageTarget,{reviewed:true})));
     return false;
@@ -521,7 +517,6 @@ function saveNeed(reviewed=false){
   const ok=persistNeedRecord(needValuesFromMainForm(),null,'needNotice',{reviewed,onConfirm:()=>saveNeed(true)});
   if(ok){
     el('needMonth').value=monthNow();el('needCharity').value='';el('needSize').value='';el('needQty').value=1;el('needNote').value='';
-    el('needFulfilledQty').value=0;el('needFulfilledDate').value='';el('needRecordOut').checked=false;
   }
   return ok;
 }
@@ -1346,7 +1341,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.26 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.27 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.26',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.27',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
