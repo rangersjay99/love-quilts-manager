@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.30">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.30">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.30">
+<link rel="manifest" href="manifest-v7.json?v=7.8.31">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.31">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.31">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -250,9 +250,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   #reports th,#reports td{padding:5px 4px}
   #reports tr{break-inside:avoid-page}
   #reports table tbody tr:nth-child(even) td,#meetingReport table tbody tr:nth-child(even) td,.home-summary-report table tbody tr:nth-child(even) td{background:#f1f1f1!important}
-  body.print-compact #reports>.card{display:none!important}
+  body.print-compact #reports>.card:not(#meetingReport){display:none!important}
   body.print-compact .report-copyright{display:none!important}
-  body.print-compact #meetingReport{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
+  body.print-compact #reports>#meetingReport.card{display:block!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;font-size:9px;line-height:1.16}
   body.print-compact #meetingReport h1{font-size:18px;margin:0 0 2px}
   body.print-compact #meetingReport h2{font-size:12px;margin:7px 0 3px}
   body.print-compact #meetingReport .print-meta{font-size:8px;color:#555;margin-bottom:6px}
@@ -361,14 +361,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.30" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.31" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.30</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.31</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -634,7 +634,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.30</b><span class="small">Safe renaming and detailed verification for every transaction · July 25, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.31</b><span class="small">Compact report printing and PDF download fix · July 25, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.31</h4><p>Fixed the blank Compact Report print preview and restored Compact One-Page PDF downloads.</p></div>
     <div class="change-log-entry"><h4>7.8.30</h4><p>Added safe charity and quilt-size renaming that preserves all existing records and numbers. Replaced old inventory edit/delete and charity-need edit/distribution/delete pop-ups with the detailed Home-style Before/After verification screen.</p></div>
     <div class="change-log-entry"><h4>7.8.29</h4><p>Moved Add Quilts Needed to the top of the Needs tab, colored changed request totals green or red, and changed the separate distribution reminder to purple.</p></div>
     <div class="change-log-entry"><h4>7.8.28</h4><p>Changed unchanged verification bubbles to a calm gray so they do not appear to signal a problem.</p></div>
@@ -658,11 +659,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.30 · July 25, 2026</span>
+      <b>Version</b><span>Update 7.8.31 · July 25, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.30 adds safe charity and quilt-size renaming while keeping every existing number, and uses the detailed Home-style verification screen for inventory entries, edits, adjustments, deletions, charity-need edits, distributions, and deletions.</p>
+    <p class="small">Update 7.8.31 fixes Compact Report printing and Compact One-Page PDF downloads. Update 7.8.30 added safe charity and quilt-size renaming plus detailed Home-style verification screens.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -720,7 +721,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.30"></script>
-<script src="app.js?v=7.8.30"></script>
+<script type="module" src="firebase-sync.js?v=7.8.31"></script>
+<script src="app.js?v=7.8.31"></script>
 </body>
 </html>

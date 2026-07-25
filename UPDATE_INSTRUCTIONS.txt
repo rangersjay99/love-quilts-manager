@@ -1,16 +1,18 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.30
+LOVE QUILTS MANAGER — UPDATE 7.8.31
 
 1. Do not clear data or recreate the shared inventory.
 2. Export a current app backup and keep a copy of the present GitHub repository.
-3. Unzip the 7.8.30 download on the laptop.
+3. Unzip the 7.8.31 download on the laptop.
 4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
 5. Commit the changes and allow GitHub Pages to publish.
-6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.30.
-7. Open Inventory and verify Adjust now provides an explicit Add/Subtract direction choice.
-8. Review a new inventory entry, edit an existing transaction, and start deleting a transaction. Confirm each uses the detailed Home-style Before/After screen. Cancel any test deletion that should not be completed.
-9. Open a saved charity need and verify Edit, Mark Distributed, and Delete all use the detailed verification screen.
-10. In Settings > Manage Lists, rename a charity or size only when you intend to keep the new name. Verify the review shows unchanged Home totals and states that all existing records will be kept.
-11. After renaming, confirm Inventory, Needs, Calendar, Reports, and history show the new name with exactly the same numbers.
-12. Confirm both devices show “Shared data verified · All changes synced” and display the same renamed choices and totals.
+6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.31.
+7. Open Reports and choose Print Compact Report. Confirm the preview contains the report instead of a blank page.
+8. Choose Download Compact One-Page PDF. Open the downloaded file and confirm it contains the report.
+9. Open Inventory and verify Adjust now provides an explicit Add/Subtract direction choice.
+10. Review a new inventory entry, edit an existing transaction, and start deleting a transaction. Confirm each uses the detailed Home-style Before/After screen. Cancel any test deletion that should not be completed.
+11. Open a saved charity need and verify Edit, Mark Distributed, and Delete all use the detailed verification screen.
+12. In Settings > Manage Lists, rename a charity or size only when you intend to keep the new name. Verify the review shows unchanged Home totals and states that all existing records will be kept.
+13. After renaming, confirm Inventory, Needs, Calendar, Reports, and history show the new name with exactly the same numbers.
+14. Confirm both devices show “Shared data verified · All changes synced” and display the same renamed choices and totals.
 
 No Firebase, Firestore Rules, login, collection, or database changes are needed.

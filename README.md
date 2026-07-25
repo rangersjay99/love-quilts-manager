@@ -1,6 +1,12 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.30 — Safe Renaming and Detailed Transaction Verification — July 25, 2026**
+Current release: **Update 7.8.31 — Compact Report Fix — July 25, 2026**
+
+## Update 7.8.31
+
+- Fixed blank Compact Report print previews.
+- Fixed Compact One-Page PDF downloads that stopped before creating a file.
+- Retains all Update 7.8.30 safe-renaming and detailed-verification improvements.
 
 ## Update 7.8.30
 

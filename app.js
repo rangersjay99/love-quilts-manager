@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.30';
+const VERSION='7.8.31';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -964,9 +964,11 @@ function reportDistributedHTML(){
   return needsTable;
 }
 function compactDistributedHTML(limit=6){
-  const combined=distributedNeedsForReport().map(n=>({date:n.fulfilledDate||'',charity:n.charity,size:n.size,qty:fulfilledQty(n),left:remainingNeed(n)})).sort((a,b)=>String(b.date).localeCompare(String(a.date))||a.charity.localeCompare(b.charity));
+  const needRows=distributedNeedsForReport().map(n=>({date:n.fulfilledDate||'',charity:n.charity,size:n.size,qty:fulfilledQty(n),left:remainingNeed(n),deferred:false}));
+  const deferredRows=holdDistributionsForReport().map(t=>({date:t.date||'',charity:t.charity,size:t.size,qty:Math.max(0,Number(t.qty)||0),left:0,deferred:true}));
+  const combined=[...needRows,...deferredRows].sort((a,b)=>String(b.date).localeCompare(String(a.date))||a.charity.localeCompare(b.charity));
   const list=combined.slice(0,limit);if(!list.length)return'<div class="print-note">No distributed quilts recorded.</div>';
-  return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Sent</th></tr></thead><tbody>${list.map(row=>`<tr><td>${row.date?fmtDate(row.date):'—'}</td><td>${esc(row.charity)}<br>${esc(row.size)}</td><td>${row.qty}${row.left?`<br><span class="small">${row.left} left</span>`:''}</td></tr>`).join('')}</tbody></table>${combined.length>list.length?`<div class="print-note">Showing ${list.length} of ${combined.length} distribution records.</div>`:''}`;
+  return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Sent</th></tr></thead><tbody>${list.map(row=>`<tr><td>${row.date?fmtDate(row.date):'—'}</td><td>${esc(row.charity)}<br>${esc(row.size)}</td><td>${row.qty}${row.deferred?'<br><span class="small">From On Hold / Storage</span>':row.left?`<br><span class="small">${row.left} left</span>`:''}</td></tr>`).join('')}</tbody></table>${combined.length>list.length?`<div class="print-note">Showing ${list.length} of ${combined.length} distribution records.</div>`:''}`;
 }
 function compactAdjustmentsHTML(){const list=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);if(!list.length)return'<div class="print-note">No adjusted transactions.</div>';return`<table><thead><tr><th>Date</th><th>Charity / Size</th><th>Change</th></tr></thead><tbody>${list.map(t=>`<tr><td>${fmtDate(t.date)}</td><td>${esc(t.charity)}<br>${esc(t.size)}</td><td>${value(t)>0?'+':''}${value(t)}</td></tr>`).join('')}</tbody></table>${data.transactions.filter(t=>t.type==='ADJUST').length>list.length?`<div class="print-note">Showing the ${list.length} most recent adjustments.</div>`:''}`}
 function renderMeetingReport(){
@@ -1210,12 +1212,15 @@ function makeOnePagePDF(){
   });
 
   const activityRows=[];
-  const distributed=distributedNeedsForReport();
+  const distributed=distributedNeedsForReport(),heldDistributed=holdDistributionsForReport();
   activityRows.push({text:`DISTRIBUTION RECORDS: ${distributed.length+heldDistributed.length}`,bold:true});
-  const recentDistributionRows=distributed.map(n=>({date:n.fulfilledDate||'',charity:n.charity,size:n.size,qty:fulfilledQty(n),left:remainingNeed(n)})).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const recentDistributionRows=[
+    ...distributed.map(n=>({date:n.fulfilledDate||'',charity:n.charity,size:n.size,qty:fulfilledQty(n),left:remainingNeed(n),deferred:false})),
+    ...heldDistributed.map(t=>({date:t.date||'',charity:t.charity,size:t.size,qty:Math.max(0,Number(t.qty)||0),left:0,deferred:true}))
+  ].sort((a,b)=>String(b.date).localeCompare(String(a.date))||a.charity.localeCompare(b.charity));
   recentDistributionRows.slice(0,6).forEach(row=>{
     activityRows.push({text:`${row.date?fmtDate(row.date):'Date not entered'} - ${row.charity}`,bold:true});
-    activityRows.push({text:`  ${row.size} | Sent ${row.qty}${row.left?` | Still Needed ${row.left}`:''}`,bold:false});
+    activityRows.push({text:`  ${row.size} | Sent ${row.qty}${row.deferred?' | From On Hold / Storage':row.left?` | Still Needed ${row.left}`:''}`,bold:false});
   });
   if(recentDistributionRows.length>6)activityRows.push({text:`  + ${recentDistributionRows.length-6} earlier distribution records`,bold:false});
   const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date));
@@ -1410,7 +1415,7 @@ function makeFullPDF(){
 }
 
 function exportFullPDF(){renderReports();const bytes=makeFullPDF();downloadBlob(`${filePart(data.itemName)}_Full_Report_${today()}.pdf`,new Blob([bytes],{type:'application/pdf'}))}
-function exportCompactPDF(){renderReports();const bytes=makeOnePagePDF();downloadBlob(`${filePart(data.itemName)}_Compact_Report_${today()}.pdf`,new Blob([bytes],{type:'application/pdf'}))}
+function exportCompactPDF(){try{renderReports();const bytes=makeOnePagePDF();downloadBlob(`${filePart(data.itemName)}_Compact_Report_${today()}.pdf`,new Blob([bytes],{type:'application/pdf'}));notice('reportNotice','Compact one-page PDF created.',true)}catch(error){console.error('Compact PDF export failed',error);notice('reportNotice','The compact PDF could not be created. Refresh the app and try again.')}}
 async function shareReport(kind){
   renderReports();const full=kind==='full',bytes=full?makeFullPDF():makeOnePagePDF();
   const filename=`${filePart(data.itemName)}_${full?'Full':'Compact'}_Report_${today()}.pdf`,blob=new Blob([bytes],{type:'application/pdf'}),file=new File([blob],filename,{type:'application/pdf'});
@@ -1469,7 +1474,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.30 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.31 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.30',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.31',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

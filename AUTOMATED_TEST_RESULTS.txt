@@ -1,51 +1,22 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.30 VALIDATION RESULTS
-July 25, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.31 VALIDATION RESULTS
 
-RESULT: PASSED
+VALIDATED JULY 25, 2026
 
-44 validation checks passed.
+COMPACT REPORT FIXES
+- PASS: The Compact One-Page PDF generator completes without a JavaScript ReferenceError.
+- PASS: Download Compact One-Page PDF produced a valid, nonblank PDF with report text and totals.
+- PASS: Compact report print CSS displays #meetingReport as a visible block in print media.
+- PASS: Print Compact Report reached window.print with populated report text visible.
+- PASS: Normal charity distributions and earlier On Hold / Storage distributions both appear in the compact report activity section.
+- PASS: A visible success notice appears after the compact PDF is created.
 
-VERSION AND PACKAGE
-- PASS: VERSION.txt, app constant, splash, Change Log, About, manifests, service worker cache, and asset query strings all identify Update 7.8.30.
-- PASS: Required application, documentation, manifest, and checklist files are present.
-- PASS: All local images, scripts, manifests, and linked text files referenced by index.html exist.
-- PASS: No duplicate HTML IDs were found.
-- PASS: app.js, firebase-sync.js, and sw.js passed JavaScript syntax checks.
+REGRESSION CHECKS
+- PASS: Full PDF Report still downloads and contains report content.
+- PASS: app.js and firebase-sync.js pass JavaScript syntax checks.
+- PASS: Version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings identify Update 7.8.31.
+- PASS: The service-worker cache name changed to love-quilts-v7-8-31 so installed devices request the corrected files.
 
-SAFE RENAME SUPPORT
-- PASS: Rename Charity and Rename Size controls are present in Settings.
-- PASS: Charity renaming updates the charity list, inventory transactions, charity needs, and preserved deferred records.
-- PASS: Quilt-size renaming updates the size list, inventory transactions, charity needs, and preserved deferred records.
-- PASS: Existing quantities, dates, distributions, and Home totals remain unchanged after a rename.
-- PASS: Renamed default choices do not reappear when saved data is normalized or reloaded.
-- PASS: Duplicate destination names are blocked.
-
-DETAILED TRANSACTION VERIFICATION
-- PASS: New inventory entries use the Home-style Before/After review.
-- PASS: Inventory edits show both the current and proposed transaction before saving.
-- PASS: Inventory deletion shows the exact record and expected Home changes before deletion.
-- PASS: Adjust uses an explicit Add to inventory / Subtract from inventory selection rather than the old OK/Cancel direction pop-up.
-- PASS: Set Current Count reports the exact adjustment that will be recorded.
-- PASS: New charity needs retain the detailed review screen.
-- PASS: Charity-need edits show current and proposed details.
-- PASS: Distribution entries and corrections show exact inventory and requested-total changes.
-- PASS: Charity-need deletion shows the expected Home changes before deletion.
-- PASS: Calendar need and Calendar distribution actions return through the same reviewed save path.
-- PASS: No browser confirm pop-up remains inside the normal inventory or charity-need transaction workflows.
-
-CALCULATION TESTS
-- PASS: Deleting an Inventory Out transaction correctly previews inventory being added back.
-- PASS: Moving inventory between charities correctly recalculates charity/size shortages.
-- PASS: Recording distribution with inventory removal correctly changes storage and remaining requests.
-- PASS: Deleting an active charity need correctly removes its remaining requested quantity without changing inventory.
-- PASS: Charity and size renaming preserve storage, requested, and still-to-complete totals exactly.
-
-PRESERVED BEHAVIOR
-- PASS: Add Quilts Needed remains the first card on the Needs tab.
-- PASS: Green increase, red decrease, and calm gray unchanged verification styles remain.
-- PASS: Exact added, subtracted, and no-change wording remains under the Home-style bubbles.
-- PASS: Update 7.8.25 two-device synchronization safeguards remain in the package.
-
-LIVE TEST NOTE
-- Static, syntax, structure, calculation, transaction-flow, rename, and data-preservation tests passed.
-- Complete the included device checklist after GitHub Pages publishes Update 7.8.30, especially one intended charity or size rename and a two-device sync check.
+DEVICE CHECKS AFTER GITHUB PAGES PUBLISHES
+- Confirm Print Compact Report shows the populated one-page preview on the device normally used for reporting.
+- Confirm Download Compact One-Page PDF appears in Downloads or Files and opens with report content.
+- Confirm both approved devices return to “Shared data verified · All changes synced.”

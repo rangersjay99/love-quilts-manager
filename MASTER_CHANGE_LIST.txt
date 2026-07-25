@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.30
+IMPLEMENTED THROUGH UPDATE 7.8.31
+- Update 7.8.31 fixes blank Compact Report printing and restores Compact One-Page PDF downloads.
 - Update 7.8.30 adds safe charity and quilt-size renaming while preserving all current records and numbers. It also applies the detailed Home-style Before/After verification screen to inventory additions, edits, adjustments, Set Current Count, transaction deletions, charity-need edits, distributions, corrections, and charity-need deletions.
 - Update 7.8.29 moves Add Quilts Needed to the top of the Needs tab, color-codes changed request totals, and gives the separate distribution reminder a purple informational style.
 - Update 7.8.28 changes unchanged verification bubbles to a calm gray so they do not appear to signal a problem.
