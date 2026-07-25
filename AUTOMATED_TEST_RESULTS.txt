@@ -1,39 +1,36 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.27 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.28 VALIDATION RESULTS
 July 25, 2026
 
 RESULT: PASSED
 
-24 checks passed:
-- PASS: Add Need form title is distinct
-- PASS: Distribution Status removed from Add Need form
-- PASS: Distribution entry fields removed from Add Need form
-- PASS: Separate distribution guidance shown
-- PASS: Mark Distributed workflow retained
-- PASS: Calendar distribution workflow retained
-- PASS: Main Add Need values cannot include distribution
-- PASS: Need review bubbles are first
-- PASS: Inventory review bubbles are first
-- PASS: Review uses state classes
-- PASS: Increase highlight styling present
-- PASS: Decrease highlight styling present
-- PASS: Unchanged neutral styling present
-- PASS: Exact add/subtract/no-change wording retained
+20 checks passed:
 - PASS: Version constant updated
-- PASS: Splash and About updated
+- PASS: Splash updated
+- PASS: About updated
+- PASS: Change Log current updated
+- PASS: 7.8.27 retained in change history
+- PASS: Unchanged background is soft gray
+- PASS: Unchanged numbers are gray
+- PASS: Unchanged arrow is gray
+- PASS: Unchanged wording is gray
+- PASS: Increase remains green
+- PASS: Decrease remains red
+- PASS: Distribution status still separated
 - PASS: Service worker cache updated
-- PASS: manifest.json start URL updated
-- PASS: manifest-v7.json start URL updated
+- PASS: Service worker assets updated
+- PASS: manifest.json updated
+- PASS: manifest-v7.json updated
 - PASS: VERSION.txt updated
+- PASS: No stale 7.8.27 active cache/version query
 - PASS: app.js JavaScript syntax check.
 - PASS: firebase-sync.js JavaScript syntax check.
-- PASS: Home review-bubble function behavior in an isolated JavaScript VM (increase, decrease, unchanged, and exact wording).
-- PASS: Main Add Need values force distribution fields to zero/blank/false in the JavaScript VM.
 
 PACKAGE SCOPE
-- Add Quilts Needed and distribution are now separate workflows.
-- Before/After Home-style bubbles appear first on both new inventory and new need verification screens.
-- Changed totals receive green or red highlighting; unchanged totals remain neutral.
-- The existing two-device synchronization safeguards are unchanged.
+- Unchanged verification bubbles now use a calm soft-gray treatment rather than plum or warning colors.
+- Green remains reserved for increasing totals.
+- Red remains reserved for decreasing totals.
+- Exact add/subtract/no-change wording remains visible under every bubble.
+- The separated Add Need and Distribution flow, return-to-Home behavior, and two-device sync safeguards are unchanged.
 
 LIVE TEST NOTE
-- The package passed static, syntax, and isolated behavior tests. Complete the normal device test after GitHub Pages publishes Update 7.8.27.
+- The package passed static and syntax checks. Complete the normal device test after GitHub Pages publishes Update 7.8.28.

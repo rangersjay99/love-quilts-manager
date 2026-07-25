@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.27
+IMPLEMENTED THROUGH UPDATE 7.8.28
+- Update 7.8.28 changes unchanged verification bubbles to a calm gray so they do not appear to signal a problem.
 - Update 7.8.27 separates Add Quilts Needed from distribution and moves color-coded Home-style Before/After bubbles to the top of verification.
 - Update 7.8.26 moves Quilts Needed to the top, returns to Home after new additions, and adds exact Home Before/After verification bubbles.
 

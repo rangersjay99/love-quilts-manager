@@ -1,16 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.27
+LOVE QUILTS MANAGER — UPDATE 7.8.28
 
 1. Do not clear data or recreate the shared inventory.
 2. Keep a backup copy of the current repository and app data.
-3. Unzip the 7.8.27 download on the laptop.
+3. Unzip the 7.8.28 download on the laptop.
 4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
 5. Commit the changes and allow GitHub Pages to publish.
-6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.27.
-7. Open Add Quilts Needed and verify Distribution Status is no longer in that form.
-8. Enter a test need and verify the Home-style Before/After bubbles appear at the top of Review New Charity Need.
-9. Verify changed totals are highlighted and unchanged totals remain neutral.
-10. Save and confirm the app returns to Home.
-11. Open the saved request and use Mark Distributed to confirm distribution remains a separate workflow.
+6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.28.
+7. Open either Add Quilts or Add Quilts Needed and continue to the verification screen.
+8. Verify unchanged bubbles use a soft gray background, gray border, gray numbers, and gray arrow.
+9. Verify increases remain green and decreases remain red.
+10. Confirm the exact add/subtract/no-change wording remains beneath every bubble.
+11. Save and confirm the app returns to Home.
 12. Confirm both devices still show “Shared data verified · All changes synced.”
 
 No Firebase, Firestore Rules, login, collection, or database changes are needed.
