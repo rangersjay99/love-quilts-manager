@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.28">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.28">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.28">
+<link rel="manifest" href="manifest-v7.json?v=7.8.29">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.29">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.29">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -62,8 +62,11 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .entry-review-summary{margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
 .entry-review-row,.entry-review-total{display:flex;justify-content:space-between;gap:14px;padding:10px 12px;border-bottom:1px solid var(--line);align-items:flex-start}
 .entry-review-row:last-child,.entry-review-total:last-child{border-bottom:0}.entry-review-row span,.entry-review-total span{color:var(--muted);font-size:13px}.entry-review-row b,.entry-review-total b{text-align:right;color:var(--ink)}
-.entry-review-total{background:#f3ebf4}.entry-review-total b{font-size:16px;color:var(--plum-dark)}
-.entry-review-note,.entry-review-warning{margin-top:12px;padding:11px 12px;border-radius:11px;font-size:13px;font-weight:750;line-height:1.45}.entry-review-note{background:#e8f5ec;color:#245f38}.entry-review-warning{background:#fff3d8;color:#6b500d}
+.entry-review-total{background:#f1f2f4}.entry-review-total b{font-size:16px;color:#666d75}
+.entry-review-total.change-increase{background:#e8f5ec;border-bottom-color:#c4e1cc}.entry-review-total.change-increase span,.entry-review-total.change-increase b{color:#245f38}
+.entry-review-total.change-decrease{background:#fff0f1;border-bottom-color:#e7b5bb}.entry-review-total.change-decrease span,.entry-review-total.change-decrease b{color:#8d2935}
+.entry-review-total.change-unchanged{background:#f1f2f4}.entry-review-total.change-unchanged span,.entry-review-total.change-unchanged b{color:#666d75}
+.entry-review-note,.entry-review-warning{margin-top:12px;padding:11px 12px;border-radius:11px;font-size:13px;font-weight:750;line-height:1.45}.entry-review-note{background:#e8f5ec;color:#245f38}.entry-review-distribution-note{background:#f3ebf4;color:var(--plum-dark);border:1px solid #ddcbe0}.entry-review-warning{background:#fff3d8;color:#6b500d}
 .entry-review-home-wrap{padding:12px;border-bottom:1px solid var(--line);background:#fff}
 .entry-review-home-heading{margin:0 0 9px;font-size:14px;font-weight:900;color:var(--plum-dark);text-align:center}
 .entry-review-home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:0}.entry-review-home-card{min-height:164px;padding:15px 8px;border:2px solid transparent;border-radius:14px;background:var(--soft);text-align:center;display:flex;flex-direction:column;align-items:center}.entry-review-home-card>span{display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin:0 0 7px;font-size:11px;font-weight:900;line-height:1.25;color:var(--muted)}.entry-review-before-after{display:grid;grid-template-columns:1fr auto 1fr;gap:5px;align-items:center;width:100%;margin-top:3px}.entry-review-before-after small{display:block;font-size:9px;text-transform:uppercase;color:var(--muted)}.entry-review-before-after b{display:block;font-size:29px;line-height:1.05;color:var(--plum)}.entry-review-arrow{font-weight:900;color:var(--plum)}.entry-review-change{width:100%;margin-top:auto;padding-top:9px;border-top:1px solid rgba(109,58,120,.16);font-size:10px;font-weight:850;line-height:1.3}.entry-review-home-card.change-increase{border-color:rgba(47,125,74,.50);background:#edf8f0}.entry-review-home-card.change-increase .entry-review-before-after div:last-child b,.entry-review-change.increase{color:var(--green)}.entry-review-home-card.change-decrease{border-color:rgba(181,59,71,.50);background:#fff0f1}.entry-review-home-card.change-decrease .entry-review-before-after div:last-child b,.entry-review-change.decrease{color:var(--red)}.entry-review-home-card.change-unchanged{border-color:#c9cdd2;background:#f1f2f4}.entry-review-home-card.change-unchanged>span,.entry-review-home-card.change-unchanged .entry-review-before-after small,.entry-review-home-card.change-unchanged .entry-review-before-after b,.entry-review-home-card.change-unchanged .entry-review-arrow,.entry-review-change.unchanged{color:#666d75}.entry-review-home-card.change-unchanged .entry-review-change{border-top-color:#d4d7db}
@@ -357,14 +360,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.28" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.29" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.28</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.29</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -460,19 +463,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 </section>
 
 <section id="needs" class="view">
-  <div class="card"><h3>Quilts Needed</h3><div id="needsList"></div></div>
-  <div class="card">
-    <h2>All Quilts Calendar</h2>
-    <p class="small">View all 12 months. Past months are light green when demand was met and light red when it was not met. A future month turns light green only when it is fully covered early. Other future months are light yellow. The current month has a bold border. Charity sections are light green when that charity is met and light red when it is still short.</p>
-    <div class="calendar-toolbar">
-      <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
-      <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
-      <label>Size<select id="calendarSize" onchange="renderNeedsCalendar()"></select></label>
-    </div>
-    <div id="needsCalendar" class="needs-calendar"></div>
-    <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch future"></i>Future month</span><span><i class="calendar-swatch current"></i>Current month</span><span><i class="calendar-swatch charity-met"></i>Charity met</span><span><i class="calendar-swatch charity-short"></i>Charity short</span></div>
-    <button type="button" class="ghost calendar-print-button" onclick="printCalendar('needs')">Print 12-Month Calendar</button>
-  </div>
   <div id="needsEntryCard" class="card">
     <h2>Add Quilts Needed</h2>
     <div id="needsNote" class="section-note">Enter the number of quilts requested for each month. Current stock and shortage are calculated automatically.</div>
@@ -486,7 +476,20 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <button id="saveNeedBtn" class="primary" onclick="saveNeed()">Add to Quilts Needed</button>
     <button id="cancelNeedBtn" class="ghost" style="display:none" onclick="cancelNeedEdit()">Cancel Editing</button>
   </div>
-</section>
+  <div class="card"><h3>Quilts Needed</h3><div id="needsList"></div></div>
+  <div class="card">
+    <h2>All Quilts Calendar</h2>
+    <p class="small">View all 12 months. Past months are light green when demand was met and light red when it was not met. A future month turns light green only when it is fully covered early. Other future months are light yellow. The current month has a bold border. Charity sections are light green when that charity is met and light red when it is still short.</p>
+    <div class="calendar-toolbar">
+      <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
+      <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
+      <label>Size<select id="calendarSize" onchange="renderNeedsCalendar()"></select></label>
+    </div>
+    <div id="needsCalendar" class="needs-calendar"></div>
+    <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch future"></i>Future month</span><span><i class="calendar-swatch current"></i>Current month</span><span><i class="calendar-swatch charity-met"></i>Charity met</span><span><i class="calendar-swatch charity-short"></i>Charity short</span></div>
+    <button type="button" class="ghost calendar-print-button" onclick="printCalendar('needs')">Print 12-Month Calendar</button>
+  </div>
+ </section>
 
 <section id="reports" class="view">
   <div class="card">
@@ -619,7 +622,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.28</b><span class="small">Calmer gray unchanged totals · July 25, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.29</b><span class="small">Clearer Need review colors and top entry form · July 25, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.29</h4><p>Moved Add Quilts Needed to the top of the Needs tab, colored changed request totals green or red, and changed the separate distribution reminder to purple.</p></div>
+    <div class="change-log-entry"><h4>7.8.28</h4><p>Changed unchanged verification bubbles to a calm gray so they do not appear to signal a problem.</p></div>
     <div class="change-log-entry"><h4>7.8.27</h4><p>Separated Add Quilts Needed from distribution and moved familiar Home-style Before/After bubbles to the top of verification.</p></div>
     <div class="change-log-entry"><h4>7.8.26</h4><p>Moved Quilts Needed to the top, returned to Home after new additions, and added exact Before/After Home totals to verification.</p></div>
     <div class="change-log-entry"><h4>7.8.25</h4><p>Fixed a green status appearing before the server copy was confirmed. Sync Now now sends the correct over-distribution repair from the device that has it, while a second device safely receives the latest shared copy instead of uploading stale data.</p></div>
@@ -640,11 +645,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.28 · July 25, 2026</span>
+      <b>Version</b><span>Update 7.8.29 · July 25, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.28 uses calm gray styling for unchanged verification totals, while increases remain green and decreases remain red. The separated need/distribution flow and verified two-device sync safeguards are preserved.</p>
+    <p class="small">Update 7.8.29 places Add Quilts Needed at the top of the Needs tab. Changed request-total rows now use green for increases and red for decreases, while the separate distribution reminder uses a calm purple treatment.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -702,7 +707,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.28"></script>
-<script src="app.js?v=7.8.28"></script>
+<script type="module" src="firebase-sync.js?v=7.8.29"></script>
+<script src="app.js?v=7.8.29"></script>
 </body>
 </html>

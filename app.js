@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.28';
+const VERSION='7.8.29';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -400,7 +400,7 @@ function confirmEntryReview(){
   if(action)action();
 }
 function reviewLine(label,value){return`<div class="entry-review-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`}
-function reviewTotals(label,current,next){return`<div class="entry-review-total"><span>${esc(label)}</span><b>${esc(current)} → ${esc(next)}</b></div>`}
+function reviewTotals(label,current,next){const difference=Number(next)-Number(current),state=difference>0?'increase':difference<0?'decrease':'unchanged';return`<div class="entry-review-total change-${state}"><span>${esc(label)}</span><b>${esc(current)} → ${esc(next)}</b></div>`}
 function reviewChangeText(label,current,next){
   const difference=Number(next)-Number(current),amount=Math.abs(difference);
   const wording=difference>0?`${amount} ${amount===1?'quilt':'quilts'} will be added to ${label}`:difference<0?`${amount} ${amount===1?'quilt':'quilts'} will be subtracted from ${label}`:`No change to ${label}`;
@@ -460,7 +460,7 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice',options={})
       reviewLine('Month needed',fmtMonth(month)),reviewLine('Charity',charity),reviewLine('Size',size),reviewLine('Quilts needed',String(needQty)),
       String(values.note||'').trim()?reviewLine('Note',String(values.note||'').trim()):'',
       reviewTotals(`Requests in ${fmtMonth(month)}`,monthCurrent,monthAfter),reviewTotals('Total active quilts requested',activeCurrent,activeAfter),
-      '<div class="entry-review-note">Distribution is not part of this entry. After saving, use Mark Distributed on the request when quilts are delivered.</div>'
+      '<div class="entry-review-note entry-review-distribution-note">Distribution is not part of this entry. After saving, use Mark Distributed on the request when quilts are delivered.</div>'
     ].join('');
     openEntryReview('Review New Charity Need',summary,'Save Charity Need',options.onConfirm||(()=>persistNeedRecord(values,null,messageTarget,{reviewed:true})));
     return false;
@@ -1341,7 +1341,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.28 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.29 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.28',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.29',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

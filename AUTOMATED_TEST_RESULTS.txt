@@ -1,36 +1,43 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.28 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.29 VALIDATION RESULTS
 July 25, 2026
 
 RESULT: PASSED
 
-20 checks passed:
-- PASS: Version constant updated
-- PASS: Splash updated
-- PASS: About updated
-- PASS: Change Log current updated
-- PASS: 7.8.27 retained in change history
-- PASS: Unchanged background is soft gray
-- PASS: Unchanged numbers are gray
-- PASS: Unchanged arrow is gray
-- PASS: Unchanged wording is gray
-- PASS: Increase remains green
-- PASS: Decrease remains red
-- PASS: Distribution status still separated
-- PASS: Service worker cache updated
-- PASS: Service worker assets updated
-- PASS: manifest.json updated
-- PASS: manifest-v7.json updated
-- PASS: VERSION.txt updated
-- PASS: No stale 7.8.27 active cache/version query
+28 checks passed:
+- PASS: VERSION.txt updated to 7.8.29.
+- PASS: App version constant updated.
+- PASS: Splash, Change Log, and About version updated.
+- PASS: Add Quilts Needed is the first card on the Needs tab.
+- PASS: Add Quilts Needed appears before the saved-needs list.
+- PASS: Add Quilts Needed appears before the Needs Calendar.
+- PASS: Only one Add Need form remains in the page.
+- PASS: Only one saved-needs list remains in the page.
+- PASS: Changed request-total rows receive an increase, decrease, or unchanged state.
+- PASS: Increasing request-total rows use a green background and wording.
+- PASS: Decreasing request-total rows use a red background and wording.
+- PASS: Unchanged request-total rows use a calm gray background and wording.
+- PASS: The distribution reminder uses its own dedicated style class.
+- PASS: The distribution reminder uses a calm purple background and plum wording.
+- PASS: Home-style Before/After bubbles remain at the top of Need verification.
+- PASS: Exact added, subtracted, or no-change wording remains under each Home bubble.
+- PASS: Service worker cache updated to 7.8.29.
+- PASS: Service worker asset URLs updated to 7.8.29.
+- PASS: manifest.json start URL updated.
+- PASS: manifest-v7.json start URL updated.
+- PASS: No duplicate HTML IDs detected.
+- PASS: index.html present.
+- PASS: app.js present.
+- PASS: firebase-sync.js present.
+- PASS: sw.js present.
+- PASS: VERSION.txt present.
 - PASS: app.js JavaScript syntax check.
 - PASS: firebase-sync.js JavaScript syntax check.
 
 PACKAGE SCOPE
-- Unchanged verification bubbles now use a calm soft-gray treatment rather than plum or warning colors.
-- Green remains reserved for increasing totals.
-- Red remains reserved for decreasing totals.
-- Exact add/subtract/no-change wording remains visible under every bubble.
-- The separated Add Need and Distribution flow, return-to-Home behavior, and two-device sync safeguards are unchanged.
+- Add Quilts Needed now appears at the true top of the Needs tab.
+- The changed request totals below Need details are green for increases, red for decreases, and gray when unchanged.
+- The separate distribution reminder is purple so it reads as informational and does not look like part of the request calculation.
+- Home-style verification bubbles, return-to-Home behavior, separated distribution workflow, and two-device sync safeguards are preserved.
 
 LIVE TEST NOTE
-- The package passed static and syntax checks. Complete the normal device test after GitHub Pages publishes Update 7.8.28.
+- The package passed static, structure, version, and JavaScript syntax checks. Complete the normal device test after GitHub Pages publishes Update 7.8.29.

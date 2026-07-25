@@ -1,15 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.28
+LOVE QUILTS MANAGER — UPDATE 7.8.29
 
 1. Do not clear data or recreate the shared inventory.
 2. Keep a backup copy of the current repository and app data.
-3. Unzip the 7.8.28 download on the laptop.
+3. Unzip the 7.8.29 download on the laptop.
 4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
 5. Commit the changes and allow GitHub Pages to publish.
-6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.28.
-7. Open either Add Quilts or Add Quilts Needed and continue to the verification screen.
-8. Verify unchanged bubbles use a soft gray background, gray border, gray numbers, and gray arrow.
-9. Verify increases remain green and decreases remain red.
-10. Confirm the exact add/subtract/no-change wording remains beneath every bubble.
+6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.29.
+7. Open the Needs tab and verify Add Quilts Needed is the first card at the top.
+8. Start a new need and continue to verification.
+9. Verify the changed request-total rows are green for increases, red for decreases, and gray when unchanged.
+10. Verify the distribution reminder below the details is purple.
 11. Save and confirm the app returns to Home.
 12. Confirm both devices still show “Shared data verified · All changes synced.”
 
