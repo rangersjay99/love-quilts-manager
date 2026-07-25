@@ -1,24 +1,27 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.32 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.33 VALIDATION RESULTS
 
 VALIDATED JULY 25, 2026
 
-ACTUAL ACTIVITY DATE FIXES
-- PASS: Existing linked distribution inventory records normalize to the charity request's selected Date Distributed.
-- PASS: Changing a distribution date updates linked inventory-out and correction records to the selected effective date.
-- PASS: Reducing or clearing a backdated distribution creates the restoring correction on the effective distribution date instead of today's entry date.
-- PASS: Reports label distribution and adjustment dates clearly as Date Distributed or Change Date.
-- PASS: Inventory history labels the selected transaction date as Activity date and keeps the separate entered/edited audit timestamp.
-- PASS: CSV export labels the selected date as Activity Date while retaining Entered At and Last Edited At columns.
-- PASS: Yearly statistics calculate from transaction activity dates, so repaired linked records fall in the correct year.
-- PASS: Distribution correction records reduce yearly and lifetime distributed totals to the corrected net quantity.
+EDITABLE DATE DISTRIBUTED
+- PASS: Reports render an Edit Date action beside each distributed charity request.
+- PASS: The Reports editor opens in date-only mode with quantity and inventory controls hidden.
+- PASS: Saving a revised Date Distributed preserves the distributed quantity and total inventory.
+- PASS: Linked NEED_DISTRIBUTION and NEED_DISTRIBUTION_CORRECTION activity moves to the revised effective date.
+- PASS: Yearly distributed totals move from the old year to the newly selected year.
+- PASS: The date change still uses the detailed Current / Proposed verification screen.
+- PASS: Existing distributions recorded separately as Quilts Out no longer default to a second inventory deduction when reopened.
+
+APP CHECK AND FEEDBACK
+- PASS: App Check reports clean sample data as having no common data problems.
+- PASS: App Check detects invalid dates/quantities, negative inventory, orphaned links, linked-date mismatches, and duplicate IDs without modifying data.
+- PASS: Bug Report and Change Request labels change appropriately.
+- PASS: Generated feedback includes summary, screen, priority, Update 7.8.33, date/time, signed-in user, current view, device/browser, details, expected result/benefit, and reproduction steps/workflow.
+- PASS: Copy, download, and native-share fallback functions are present and error-handled.
 
 REGRESSION CHECKS
-- PASS: app.js and firebase-sync.js pass JavaScript syntax checks.
-- PASS: Compact and full PDF generators produced valid nonblank byte output after the activity-date changes.
-- PASS: Version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings identify Update 7.8.32.
-- PASS: The service-worker cache name changed to love-quilts-v7-8-32 so installed devices request the corrected files.
-
-DEVICE CHECKS AFTER GITHUB PAGES PUBLISHES
-- Enter one test transaction with a past date and confirm Reports/history show that selected date.
-- Edit a linked distribution date and confirm both devices show the same report year and date after sync verification.
-- Recheck Print Compact Report and Download Compact One-Page PDF.
+- PASS: app.js and sw.js pass JavaScript syntax checks.
+- PASS: Compact and full PDF generators produce nonblank PDF byte output.
+- PASS: Report Edit controls use no-print styling and do not appear in printed or PDF output.
+- PASS: Version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings identify Update 7.8.33.
+- PASS: The service-worker cache name changed to love-quilts-v7-8-33 so installed devices request the corrected files.
+- PASS: No Firebase schema, Firestore Rules, login, collection, or database changes are required.

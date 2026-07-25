@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.32';
+const VERSION='7.8.33';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -24,7 +24,7 @@ const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
 const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
 const DEFAULT_SIZES=["Children's Large",'Adult Large','Medium'];
-let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarModalNeedId=null,calendarActionNeedId=null,calendarDistributionNeedId=null,entryReviewAction=null,externalTimer=null,externalReason='Automatic save';
+let mode='IN',qty=0,editTxId=null,editNeedId=null,editNeedMode='details',calendarModalNeedId=null,calendarActionNeedId=null,calendarDistributionNeedId=null,calendarDistributionMode='full',entryReviewAction=null,externalTimer=null,externalReason='Automatic save';
 
 const el=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
@@ -836,20 +836,30 @@ function calendarActionViewDetails(){
   const id=calendarActionNeedId;if(!id)return;closeCalendarActionModal();showView('needs');renderNeeds();
   requestAnimationFrame(()=>document.querySelector(`[data-need-id="${CSS.escape(id)}"], [data-need-edit-id="${CSS.escape(id)}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}));
 }
-function openCalendarDistributionModal(id){
-  const n=data.needs.find(item=>item.id===id);if(!n)return;calendarDistributionNeedId=id;
-  const sent=fulfilledQty(n),remaining=remainingNeed(n),info=allocationForNeed(n);
+function openCalendarDistributionModal(id,source='calendar'){
+  const n=data.needs.find(item=>item.id===id);if(!n)return;calendarDistributionNeedId=id;calendarDistributionMode=source==='report-date'?'date-only':'full';
+  const sent=fulfilledQty(n),remaining=remainingNeed(n),info=allocationForNeed(n),dateOnly=calendarDistributionMode==='date-only';
+  el('calendarDistributionTitle').textContent=dateOnly?'Edit Date Distributed':'Distribute Quilts';
   el('calendarDistributionIdentity').textContent=`${fmtMonth(n.month)} · ${n.charity} · ${n.size}`;
-  el('calendarDistributionSummary').innerHTML=`<b>${n.qty} requested · ${sent} already distributed</b><span>${remaining} still needed · ${info.available} available for this request · ${info.shortage} short</span>`;
+  el('calendarDistributionSummary').innerHTML=dateOnly
+    ?`<b>${sent} distributed${n.fulfilledDate?' on '+fmtDate(n.fulfilledDate):''}</b><span>Changing this date also updates the linked inventory activity and yearly statistics. Quantity and inventory will not change.</span>`
+    :`<b>${n.qty} requested · ${sent} already distributed</b><span>${remaining} still needed · ${info.available} available for this request · ${info.shortage} short</span>`;
   el('calendarDistributionQty').value=String(sent||n.qty);el('calendarDistributionQty').removeAttribute('max');
-  el('calendarDistributionDate').value=n.fulfilledDate||today();el('calendarDistributionRecordOut').checked=true;
+  el('calendarDistributionDate').value=n.fulfilledDate||today();
+  // When a distribution was entered separately as Quilts Out, do not silently deduct it again while editing.
+  el('calendarDistributionRecordOut').checked=sent===0||Math.max(0,Number(n.autoOutQty||0))>0;
+  if(el('calendarDistributionQtyWrap'))el('calendarDistributionQtyWrap').style.display=dateOnly?'none':'block';
+  if(el('calendarDistributionRecordOutWrap'))el('calendarDistributionRecordOutWrap').style.display=dateOnly?'none':'flex';
+  if(el('calendarDistributionSaveBtn'))el('calendarDistributionSaveBtn').textContent=dateOnly?'Save Date':'Save Distribution';
   const nb=el('calendarDistributionNotice');if(nb){nb.textContent='';nb.className='notice'}
-  modalOpen('calendarDistributionModal');requestAnimationFrame(()=>el('calendarDistributionQty')?.focus());
+  modalOpen('calendarDistributionModal');requestAnimationFrame(()=>(dateOnly?el('calendarDistributionDate'):el('calendarDistributionQty'))?.focus());
 }
-function closeCalendarDistributionModal(){modalClose('calendarDistributionModal');calendarDistributionNeedId=null}
+function openReportDistributionEditor(id){openCalendarDistributionModal(id,'report-date')}
+function closeCalendarDistributionModal(){modalClose('calendarDistributionModal');calendarDistributionNeedId=null;calendarDistributionMode='full'}
 function saveCalendarDistribution(reviewed=false){
   const id=calendarDistributionNeedId,n=id?data.needs.find(item=>item.id===id):null;if(!n)return;
-  const values={month:n.month,charity:n.charity,size:n.size,qty:n.qty,note:n.note,fulfilledQty:el('calendarDistributionQty').value,fulfilledDate:el('calendarDistributionDate').value,recordOut:el('calendarDistributionRecordOut').checked};
+  const dateOnly=calendarDistributionMode==='date-only';
+  const values={month:n.month,charity:n.charity,size:n.size,qty:n.qty,note:n.note,fulfilledQty:dateOnly?fulfilledQty(n):el('calendarDistributionQty').value,fulfilledDate:el('calendarDistributionDate').value,recordOut:dateOnly?false:el('calendarDistributionRecordOut').checked};
   const ok=persistNeedRecord(values,id,'calendarDistributionNotice',{reviewed,onConfirm:()=>saveCalendarDistribution(true)});if(ok)closeCalendarDistributionModal();return ok;
 }
 
@@ -991,7 +1001,7 @@ function holdDistributionsForReport(){return data.transactions.filter(t=>t.sourc
 function reportDistributedHTML(){
   const list=distributedNeedsForReport();
   if(!list.length)return'<div class="empty">No distributed charity requests recorded yet.</div>';
-  const needsTable=list.length?`<table><thead><tr><th>Date Distributed</th><th>Month Needed</th><th>Charity / Size</th><th>Original Request</th><th>Sent / ${esc(data.homeNeededLabel)}</th><th>Status</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} ${esc(data.homeNeededLabel.toLocaleLowerCase())}</span></td><td><b>${distributionReportStatus(n)}</b></td></tr>`).join('')}</tbody></table>`:'';
+  const needsTable=list.length?`<table><thead><tr><th>Date Distributed</th><th>Month Needed</th><th>Charity / Size</th><th>Original Request</th><th>Sent / ${esc(data.homeNeededLabel)}</th><th>Status</th><th class="no-print report-edit-column">Edit</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.fulfilledDate?fmtDate(n.fulfilledDate):'<span class="small">Not entered</span>'}</td><td>${fmtMonth(n.month)}</td><td>${esc(n.charity)}<br><span class="small">${esc(n.size)}</span></td><td>${n.qty}</td><td>${fulfilledQty(n)} sent<br><span class="small">${remainingNeed(n)} ${esc(data.homeNeededLabel.toLocaleLowerCase())}</span></td><td><b>${distributionReportStatus(n)}</b></td><td class="no-print report-edit-column"><button type="button" class="report-edit-date-button" onclick="openReportDistributionEditor('${esc(n.id)}')">Edit Date</button></td></tr>`).join('')}</tbody></table>`:'';
   return needsTable;
 }
 function compactDistributedHTML(limit=6){
@@ -1019,6 +1029,97 @@ function renderReports(){
   el('reportAdjustments').innerHTML=a.length?a.map(x=>`<div class="item report-shaded-item"><div class="head"><div><div class="title">${value(x)>0?'+':''}${value(x)} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · Change date ${fmtDate(x.date)}${x.note?' · '+esc(x.note):''}</div></div><span class="flag">Adjusted</span></div></div>`).join(''):'<div class="empty">No adjusted transactions.</div>';
   renderMeetingReport();
 }
+function feedbackTypeChanged(){
+  const type=el('feedbackType')?.value||'Bug Report',bug=type==='Bug Report';
+  if(el('feedbackDetailsLabel'))el('feedbackDetailsLabel').textContent=bug?'What happened?':'What should change?';
+  if(el('feedbackExpectedLabel'))el('feedbackExpectedLabel').textContent=bug?'What did you expect?':'Why would this help?';
+  if(el('feedbackStepsLabel'))el('feedbackStepsLabel').textContent=bug?'Steps to reproduce':'Suggested workflow';
+}
+function feedbackFormValues(){
+  return{
+    type:String(el('feedbackType')?.value||'Bug Report'),screen:String(el('feedbackScreen')?.value||'Other'),priority:String(el('feedbackPriority')?.value||'Normal'),
+    summary:String(el('feedbackSummary')?.value||'').trim(),details:String(el('feedbackDetails')?.value||'').trim(),expected:String(el('feedbackExpected')?.value||'').trim(),steps:String(el('feedbackSteps')?.value||'').trim()
+  };
+}
+function currentViewName(){const id=document.querySelector('.view.active')?.id||'unknown';return({home:'Home',inventory:'Inventory',needs:'Quilts Needed / Calendar',reports:'Reports',settings:'Settings'})[id]||id}
+function buildFeedbackRequest(){
+  const f=feedbackFormValues();
+  if(!f.summary||!f.details){notice('feedbackNotice','Please enter a short summary and the main details.');return''}
+  const created=new Date().toLocaleString(),user=currentUserEmail(),device=String(navigator.userAgent||navigator.platform||'Unknown device');
+  return[
+    'LOVE QUILTS MANAGER — '+f.type.toUpperCase(),
+    '',
+    `Summary: ${f.summary}`,
+    `Screen: ${f.screen}`,
+    `Priority: ${f.priority}`,
+    `App version: ${VERSION}`,
+    `Created: ${created}`,
+    `Signed in as: ${user}`,
+    `Current app view: ${currentViewName()}`,
+    `Device / browser: ${device}`,
+    '',
+    f.type==='Bug Report'?'WHAT HAPPENED':'REQUESTED CHANGE',
+    f.details,
+    '',
+    f.type==='Bug Report'?'EXPECTED RESULT':'WHY THIS WOULD HELP',
+    f.expected||'Not entered',
+    '',
+    f.type==='Bug Report'?'STEPS TO REPRODUCE':'SUGGESTED WORKFLOW',
+    f.steps||'Not entered'
+  ].join('\n');
+}
+async function copyFeedbackRequest(){
+  const text=buildFeedbackRequest();if(!text)return;
+  try{
+    if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);
+    else{const area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove()}
+    notice('feedbackNotice','Bug report or change request copied.',true);
+  }catch(error){console.error('Feedback copy failed',error);notice('feedbackNotice','Could not copy the request. Use Download Request instead.')}
+}
+function downloadFeedbackRequest(){
+  const text=buildFeedbackRequest();if(!text)return;
+  const f=feedbackFormValues(),name=`Love_Quilts_${filePart(f.type)}_${today()}.txt`;
+  downloadBlob(name,new Blob([text],{type:'text/plain;charset=utf-8'}));notice('feedbackNotice','Request file downloaded.',true);
+}
+async function shareFeedbackRequest(){
+  const text=buildFeedbackRequest();if(!text)return;
+  const f=feedbackFormValues(),title=`Love Quilts Manager ${f.type}: ${f.summary}`;
+  try{
+    if(navigator.share){await navigator.share({title,text});notice('feedbackNotice','Share sheet opened.',true)}
+    else await copyFeedbackRequest();
+  }catch(error){if(error?.name!=='AbortError'){console.error('Feedback share failed',error);notice('feedbackNotice','Could not open sharing. The request can still be copied or downloaded.')}}
+}
+function clearFeedbackForm(){
+  if(el('feedbackType'))el('feedbackType').value='Bug Report';if(el('feedbackScreen'))el('feedbackScreen').value=currentViewName()==='Settings'?'Settings':'Other';if(el('feedbackPriority'))el('feedbackPriority').value='Normal';
+  ['feedbackSummary','feedbackDetails','feedbackExpected','feedbackSteps'].forEach(id=>{if(el(id))el(id).value=''});feedbackTypeChanged();notice('feedbackNotice','Form cleared.',true);
+}
+function collectAppCheckIssues(){
+  const issues=[];
+  [['inventory activity',data.transactions],['charity request',data.needs],['deferred record',data.holds||[]]].forEach(([label,records])=>{
+    const seen=new Set();records.forEach(record=>{const id=String(record.id||'');if(!id)issues.push(`A saved ${label} is missing its identification number.`);else if(seen.has(id))issues.push(`Duplicate ${label} identification found: ${id}.`);else seen.add(id)});
+  });
+  data.transactions.forEach(t=>{
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(t.date||'')))issues.push(`Inventory activity for ${t.charity} — ${t.size} has an invalid activity date.`);
+    if(!Number.isFinite(Number(t.qty))||Number(t.qty)<=0)issues.push(`Inventory activity for ${t.charity} — ${t.size} has an invalid quantity.`);
+    if(t.sourceNeedId&&!data.needs.some(n=>n.id===t.sourceNeedId))issues.push(`A linked inventory activity for ${t.charity} — ${t.size} no longer has its charity request.`);
+  });
+  data.needs.forEach(n=>{
+    const sent=fulfilledQty(n),linked=data.transactions.filter(t=>t.sourceNeedId===n.id&&isLinkedNeedDistributionTransaction(t));
+    if(!/^\d{4}-\d{2}$/.test(String(n.month||'')))issues.push(`The charity request for ${n.charity} — ${n.size} has an invalid month.`);
+    if(!Number.isFinite(Number(n.qty))||Number(n.qty)<1)issues.push(`The charity request for ${n.charity} — ${n.size} has an invalid requested quantity.`);
+    if(sent>0&&!/^\d{4}-\d{2}-\d{2}$/.test(String(n.fulfilledDate||'')))issues.push(`The distribution for ${n.charity} — ${n.size} is missing a valid Date Distributed.`);
+    if(Math.max(0,Number(n.autoOutQty||0))>sent)issues.push(`The linked inventory quantity is greater than the distributed quantity for ${n.charity} — ${n.size}.`);
+    linked.forEach(t=>{if(n.fulfilledDate&&t.date!==n.fulfilledDate)issues.push(`A linked inventory date does not match Date Distributed for ${n.charity} — ${n.size}.`)})
+  });
+  Object.entries(invMap()).forEach(([key,count])=>{if(Number(count)<0)issues.push(`Negative inventory found for ${key.replace('|',' — ')} (${count}).`)});
+  return unique(issues);
+}
+function runAppCheck(){
+  const issues=collectAppCheckIssues(),box=el('appCheckResults');if(!box)return;
+  if(!issues.length){box.innerHTML='<div class="app-check-good"><b>✓ No common data problems found.</b><span>Inventory links, quantities, and activity dates passed the check.</span></div>';return}
+  box.innerHTML=`<div class="app-check-warning"><b>${issues.length} possible ${issues.length===1?'problem':'problems'} found</b><span>This check does not change any records.</span></div><ol>${issues.map(issue=>`<li>${esc(issue)}</li>`).join('')}</ol>`;
+}
+
 function sameName(a,b){return String(a||'').trim().toLocaleLowerCase()===String(b||'').trim().toLocaleLowerCase()}
 function renameImpactSummary(kind,name){
   if(kind==='charity'){
@@ -1505,7 +1606,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.32 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.33 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.32',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.33',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

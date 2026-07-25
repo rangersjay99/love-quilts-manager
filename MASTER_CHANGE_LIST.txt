@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.32
+IMPLEMENTED THROUGH UPDATE 7.8.33
+- Update 7.8.33 adds a safe Edit Date action beside distributed records in Reports. Date-only edits keep quantity and inventory unchanged while moving linked distribution activity and yearly statistics to the revised date. Settings now includes Run App Check plus a structured Bug Report / Change Request tool that can share, copy, or download a complete feedback report.
 - Update 7.8.32 makes Reports, transaction history, CSV exports, and yearly statistics use the selected date of the actual inventory change or distribution. Backdated distribution edits and corrections keep their linked inventory activity on that effective date, and yearly distributed totals use the corrected net quantity, while entry timestamps remain available for audit history.
 - Update 7.8.31 fixes blank Compact Report printing and restores Compact One-Page PDF downloads.
 - Update 7.8.30 adds safe charity and quilt-size renaming while preserving all current records and numbers. It also applies the detailed Home-style Before/After verification screen to inventory additions, edits, adjustments, Set Current Count, transaction deletions, charity-need edits, distributions, corrections, and charity-need deletions.
@@ -32,6 +33,7 @@ CALENDAR
 - The 12-month printout uses portrait orientation in a 3 × 4 layout.
 
 REPORTS AND STATISTICS
+- Distributed records in Reports include a no-print Edit Date action for correcting the actual distribution date.
 - Activity dates use the selected date of the actual change or distribution, not the timestamp when information was entered.
 - Backdated linked distributions and corrections are assigned to the correct reporting year.
 - Report wording matches Home wording.
@@ -56,6 +58,8 @@ INVENTORY, DISTRIBUTION, AND SYNC
 - Firebase shared-device paths and existing data remain compatible.
 
 SETTINGS AND LIST MANAGEMENT
+- App Check scans for common data consistency problems without changing records.
+- Bug reports and change requests can be built in Settings with automatic version, date, user, screen, and device/browser details, then shared, copied, or downloaded.
 - Charity names can be safely renamed without changing current quantities, dates, needs, distributions, or reports.
 - Quilt-size names can be safely renamed with the same preservation behavior.
 - Existing list values are treated as authoritative so renamed default names do not reappear after reload or sync normalization.

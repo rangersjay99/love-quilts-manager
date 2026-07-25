@@ -1,25 +1,33 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.32 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.33 TEST CHECKLIST
 
 [ ] Export a backup before testing.
-[ ] Confirm Update 7.8.32 appears on the splash, Change Log, or About screen.
+[ ] Confirm Update 7.8.33 appears on the splash, Change Log, or About screen.
 [ ] Reports: Print Compact Report opens a populated one-page print preview.
 [ ] Reports: Download Compact One-Page PDF creates a nonblank PDF file.
-[ ] Add inventory and verify Home-style Before/After bubbles appear before saving.
-[ ] Edit an inventory transaction and verify both Current Transaction and Proposed Transaction are shown.
-[ ] Start deleting an inventory transaction and verify the exact record and expected Home changes are shown. Cancel unless the deletion is intentional.
-[ ] Choose Adjust and verify Add to inventory / Subtract from inventory is selected on the form rather than through an old OK/Cancel pop-up.
-[ ] Test Set Current Count and verify the exact recorded adjustment is stated.
-[ ] Edit a charity need and verify current and proposed request details are shown.
-[ ] Mark quilts distributed and verify inventory and requested totals show the correct Before/After effects.
-[ ] Start deleting an unlinked charity need and verify the detailed review appears. Cancel unless intentional.
-[ ] In Settings, review a charity rename and verify all three Home totals are unchanged.
-[ ] Complete a desired charity rename and confirm all Inventory, Needs, Calendar, Reports, and history records use the new name with unchanged numbers.
-[ ] Review or complete a desired quilt-size rename and verify the same preservation behavior.
-[ ] Confirm both approved devices receive the changes and show “Shared data verified · All changes synced.”
 
-ACTUAL ACTIVITY DATE CHECKS
-[ ] Add or edit an inventory transaction with a past selected date; Reports/history show that selected activity date.
-[ ] Mark a charity request distributed using a past date; Reports show that Date Distributed.
-[ ] Change the date on an existing linked distribution; linked inventory activity and yearly statistics move to the newly selected date/year.
-[ ] Reduce a past linked distribution; the correction uses the distribution's effective date rather than today's entry date.
-[ ] Audit history still shows who entered/edited the record and the actual entry timestamp separately.
+EDITABLE DATE DISTRIBUTED
+[ ] Open Reports and locate a distributed charity request.
+[ ] Tap Edit Date and confirm the window says Edit Date Distributed.
+[ ] Confirm quantity and inventory controls are hidden so only the date can change.
+[ ] Change Date Distributed and review the Current and Proposed distribution details.
+[ ] Save and confirm Reports immediately shows the revised date.
+[ ] Open Inventory history and confirm the linked distribution activity uses the same revised date.
+[ ] Confirm the distribution moves to the correct year in Yearly Statistics.
+[ ] Confirm the distributed quantity and current inventory total did not change.
+[ ] On the second approved device, confirm the revised date arrives after shared-data verification.
+
+APP CHECK AND FEEDBACK
+[ ] Open Settings > App Check and Feedback.
+[ ] Tap Run App Check and confirm it reports either no common data problems or a clear list without changing records.
+[ ] Choose Bug Report and confirm the labels ask What happened, What did you expect, and Steps to reproduce.
+[ ] Choose Change Request and confirm the labels change to What should change, Why would this help, and Suggested workflow.
+[ ] Enter a test summary and details, then use Copy Request. Paste it and confirm version, date/time, user, current screen, and device/browser are included.
+[ ] Use Download Request and open the downloaded text file.
+[ ] On an iPhone or iPad, test Share / Email Request and confirm the normal share sheet opens.
+
+REGRESSION CHECKS
+[ ] Add inventory and verify Home-style Before/After bubbles appear before saving.
+[ ] Mark quilts distributed and verify inventory and requested totals change correctly.
+[ ] Open an existing distribution that was recorded separately as Quilts Out and confirm opening/editing it does not deduct inventory again.
+[ ] Confirm charity/size renaming, Calendar actions, full PDF, compact PDF, print, CSV, backup, and sync still work.
+[ ] Confirm both approved devices show “Shared data verified · All changes synced.”

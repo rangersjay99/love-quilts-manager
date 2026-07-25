@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.32">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.32">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.32">
+<link rel="manifest" href="manifest-v7.json?v=7.8.33">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.33">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.33">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -238,6 +238,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .continue-btn:active{transform:translateY(1px)}
 .splash-version{margin-top:12px;font-size:11px;color:var(--muted)}
 @media(max-width:520px){.metric strong{font-size:26px}.row{grid-template-columns:1fr}}
+
+.report-edit-column{width:92px;text-align:center!important}.report-edit-date-button{min-height:34px;padding:6px 10px;border:1px solid rgba(37,99,166,.35);border-radius:9px;background:rgba(37,99,166,.10);color:#24578d;font-size:11px;font-weight:850;white-space:nowrap;cursor:pointer}.report-edit-date-button:hover,.report-edit-date-button:focus{background:rgba(37,99,166,.18);outline:2px solid rgba(37,99,166,.12)}
+.feedback-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.feedback-grid label{margin:0}.feedback-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.feedback-actions button{margin:0}.app-check-panel{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fbfafb;margin-bottom:16px}.app-check-panel button{margin:8px 0 0}.app-check-results{margin-top:10px}.app-check-results ol{margin:8px 0 0;padding-left:22px}.app-check-results li{margin:6px 0}.app-check-good,.app-check-warning{display:flex;flex-direction:column;gap:2px;padding:10px;border-radius:10px}.app-check-good{background:#edf8f0;color:#24653b}.app-check-warning{background:#fff1f0;color:#8d2f38}.feedback-note{padding:9px 10px;border-radius:10px;background:#f4eef5;color:var(--plum-dark)}
+@media(max-width:620px){.feedback-grid,.feedback-actions{grid-template-columns:1fr}.report-edit-column{width:auto}}
+
 @media print{
   @page{size:letter portrait;margin:.45in}
   .splash,header,.bottom-nav,.no-print,.actions{display:none!important}
@@ -361,14 +366,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.32" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.33" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.32</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.33</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -632,9 +637,36 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div id="dangerNotice" class="notice"></div>
   </div>
 
+
+  <div class="card" id="feedbackCard">
+    <h2>App Check and Feedback</h2>
+    <p class="small">Run a basic check for common data problems, or create a complete bug report or change request to share with the app developer. The app check cannot detect every possible screen or browser problem.</p>
+    <div class="app-check-panel">
+      <b>Data and Link Check</b>
+      <div class="small">Checks quantities, dates, duplicate records, negative inventory, and linked distribution activity. It does not change your information.</div>
+      <button type="button" class="ghost" onclick="runAppCheck()">Run App Check</button>
+      <div id="appCheckResults" class="app-check-results" aria-live="polite"></div>
+    </div>
+    <h3>Report a Bug or Request a Change</h3>
+    <p class="feedback-note small">The request automatically includes Update 7.8.33, the date and time, signed-in user, current screen, and device/browser information.</p>
+    <div class="feedback-grid">
+      <label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
+      <label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected>Other</option></select></label>
+      <label>Priority<select id="feedbackPriority"><option>Normal</option><option>Important</option><option>Urgent — blocks use</option></select></label>
+    </div>
+    <label>Short Summary</label><input id="feedbackSummary" maxlength="120" placeholder="Example: Compact report opens blank">
+    <label id="feedbackDetailsLabel">What happened?</label><textarea id="feedbackDetails" maxlength="1200" placeholder="Describe what you saw or what you want changed."></textarea>
+    <label id="feedbackExpectedLabel">What did you expect?</label><textarea id="feedbackExpected" maxlength="800" placeholder="Describe the expected result or benefit."></textarea>
+    <label id="feedbackStepsLabel">Steps to reproduce</label><textarea id="feedbackSteps" maxlength="800" placeholder="List the buttons or screens used before the problem appeared."></textarea>
+    <div class="feedback-actions"><button type="button" class="primary" onclick="shareFeedbackRequest()">Share / Email Request</button><button type="button" class="ghost" onclick="downloadFeedbackRequest()">Download Request</button><button type="button" class="ghost" onclick="copyFeedbackRequest()">Copy Request</button></div>
+    <button type="button" class="ghost" onclick="clearFeedbackForm()">Clear Form</button>
+    <div id="feedbackNotice" class="notice"></div>
+  </div>
+
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.32</b><span class="small">Actual activity dates in reports and yearly statistics · July 25, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.33</b><span class="small">Editable distribution dates and App Check / Feedback · July 25, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.33</h4><p>Added Edit Date beside distributed records in Reports, with linked inventory and yearly statistics following the revised date. Added a Settings tool that checks common data problems and creates structured bug reports or change requests for sharing, copying, or downloading.</p></div>
     <div class="change-log-entry"><h4>7.8.32</h4><p>Reports now use the selected date when inventory changed or quilts were distributed, including backdated distribution edits and corrections. Entry timestamps remain available for audit history.</p></div>
     <div class="change-log-entry"><h4>7.8.31</h4><p>Fixed the blank Compact Report print preview and restored Compact One-Page PDF downloads.</p></div>
     <div class="change-log-entry"><h4>7.8.30</h4><p>Added safe charity and quilt-size renaming that preserves all existing records and numbers. Replaced old inventory edit/delete and charity-need edit/distribution/delete pop-ups with the detailed Home-style Before/After verification screen.</p></div>
@@ -660,11 +692,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.32 · July 25, 2026</span>
+      <b>Version</b><span>Update 7.8.33 · July 25, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.32 makes report activity and yearly totals use the selected date of the actual inventory change or distribution. Update 7.8.31 fixed Compact Report printing and PDF downloads.</p>
+    <p class="small">Update 7.8.33 adds editable Date Distributed controls in Reports and an App Check / Feedback tool in Settings. Update 7.8.32 made reports and yearly totals use the actual selected activity date.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -697,12 +729,12 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="calendar-modal-card" role="dialog" aria-modal="true" aria-labelledby="calendarDistributionTitle">
     <div class="calendar-modal-header"><div><h2 id="calendarDistributionTitle">Distribute Quilts</h2><div id="calendarDistributionIdentity" class="small"></div></div><button type="button" class="calendar-modal-close" aria-label="Close" onclick="closeCalendarDistributionModal()">×</button></div>
     <div id="calendarDistributionSummary" class="calendar-action-summary"></div>
-    <label>Total Quantity Distributed</label><input id="calendarDistributionQty" type="number" inputmode="numeric" min="0" step="1">
-    <p class="small">Enter the full total sent for this request. This may be higher than the original request.</p>
+    <div id="calendarDistributionQtyWrap"><label>Total Quantity Distributed</label><input id="calendarDistributionQty" type="number" inputmode="numeric" min="0" step="1">
+    <p class="small">Enter the full total sent for this request. This may be higher than the original request.</p></div>
     <label>Date Distributed</label><input id="calendarDistributionDate" type="date">
-    <label class="check-row"><input id="calendarDistributionRecordOut" type="checkbox" checked><span>Remove the newly distributed quantity from active inventory</span></label>
+    <label id="calendarDistributionRecordOutWrap" class="check-row"><input id="calendarDistributionRecordOut" type="checkbox" checked><span>Remove the newly distributed quantity from active inventory</span></label>
     <div id="calendarDistributionNotice" class="notice"></div>
-    <div class="calendar-modal-actions"><button type="button" class="primary" onclick="saveCalendarDistribution()">Save Distribution</button><button type="button" class="ghost" onclick="closeCalendarDistributionModal()">Cancel</button></div>
+    <div class="calendar-modal-actions"><button id="calendarDistributionSaveBtn" type="button" class="primary" onclick="saveCalendarDistribution()">Save Distribution</button><button type="button" class="ghost" onclick="closeCalendarDistributionModal()">Cancel</button></div>
   </div>
 </div>
 
@@ -722,7 +754,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.32"></script>
-<script src="app.js?v=7.8.32"></script>
+<script type="module" src="firebase-sync.js?v=7.8.33"></script>
+<script src="app.js?v=7.8.33"></script>
 </body>
 </html>

@@ -1,36 +1,29 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.32 — Actual Activity Dates — July 25, 2026**
+Current release: **Update 7.8.33 — Editable Distribution Dates and App Feedback — July 25, 2026**
+
+## Update 7.8.33
+
+- Adds an **Edit Date** button beside every distributed charity request in Reports.
+- The date-only editor keeps the distributed quantity and inventory unchanged.
+- Changing Date Distributed also changes the date of linked inventory activity so Reports and Yearly Statistics stay together.
+- Prevents a previously separate Quilts Out entry from being deducted again merely because its distribution is opened for editing.
+- Adds **App Check and Feedback** in Settings.
+- **Run App Check** looks for common data consistency problems such as invalid dates or quantities, negative inventory, orphaned distribution links, mismatched linked dates, and duplicate record IDs. It never changes data.
+- The feedback form creates a structured **Bug Report**, **Change Request**, or **Question / Other** report.
+- Feedback automatically includes the app version, date and time, signed-in user, current screen, and device/browser information.
+- Requests can be shared/emailed, copied, or downloaded as a text file.
 
 ## Update 7.8.32
 
-- Reports now show the selected activity date—the date inventory actually changed or quilts were distributed—rather than using the date the information was entered.
-- Backdated distribution edits and quantity corrections now keep all linked inventory transactions on the selected distribution date.
-- Existing linked distribution records are repaired automatically when their stored inventory date differs from the request's distribution date.
-- Yearly statistics now place those distributions and corrections in the year of the actual selected date and use the corrected net quantity.
+- Reports show the selected activity date—the date inventory actually changed or quilts were distributed—rather than using the date the information was entered.
+- Backdated distribution edits and quantity corrections keep all linked inventory transactions on the selected distribution date.
+- Yearly statistics place those distributions and corrections in the year of the actual selected date.
 - Audit information still preserves who entered or edited a record and when.
 
 ## Update 7.8.31
 
 - Fixed blank Compact Report print previews.
 - Fixed Compact One-Page PDF downloads that stopped before creating a file.
-- Retains all Update 7.8.30 safe-renaming and detailed-verification improvements.
-
-## Update 7.8.30
-
-- Adds **Rename Charity** and **Rename Size** controls in Settings.
-- Renaming changes the displayed name everywhere while preserving every existing inventory transaction, charity need, distribution, date, quantity, and total.
-- Uses the familiar Home-style **Before → After** verification screen for:
-  - New inventory entries.
-  - Inventory edits and adjustments.
-  - Set Current Count.
-  - Inventory transaction deletion.
-  - New charity needs.
-  - Charity-need edits.
-  - Distribution entries and corrections.
-  - Charity-need deletion.
-- Replaces the old adjustment-direction pop-up with a clear **Add to inventory / Subtract from inventory** selection before review.
-- Keeps green for increases, red for decreases, gray for unchanged totals, and exact plain-language change wording.
-- Retains the 7.8.25 two-device sync safeguards and all 7.8.29 layout improvements.
 
 Upload all files inside this folder to the root of the GitHub Pages repository, replacing matching files. Do not upload the outer folder as a subfolder.
