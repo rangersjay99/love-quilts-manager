@@ -1,12 +1,22 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.29 — Clearer Need Review and Top Entry Form — July 25, 2026**
+Current release: **Update 7.8.30 — Safe Renaming and Detailed Transaction Verification — July 25, 2026**
 
-## Update 7.8.29
+## Update 7.8.30
 
-- Moves **Add Quilts Needed** to the top of the Needs tab.
-- Changes request-total rows on the verification screen to green when increasing, red when decreasing, and gray when unchanged.
-- Changes the separate distribution reminder on Add Need verification to a calm purple so it is clearly informational rather than part of the request change.
-- Retains the Home-style Before/After bubbles, exact change wording, return-to-Home behavior, separated distribution flow, and verified two-device sync safeguards.
+- Adds **Rename Charity** and **Rename Size** controls in Settings.
+- Renaming changes the displayed name everywhere while preserving every existing inventory transaction, charity need, distribution, date, quantity, and total.
+- Uses the familiar Home-style **Before → After** verification screen for:
+  - New inventory entries.
+  - Inventory edits and adjustments.
+  - Set Current Count.
+  - Inventory transaction deletion.
+  - New charity needs.
+  - Charity-need edits.
+  - Distribution entries and corrections.
+  - Charity-need deletion.
+- Replaces the old adjustment-direction pop-up with a clear **Add to inventory / Subtract from inventory** selection before review.
+- Keeps green for increases, red for decreases, gray for unchanged totals, and exact plain-language change wording.
+- Retains the 7.8.25 two-device sync safeguards and all 7.8.29 layout improvements.
 
 Upload all files inside this folder to the root of the GitHub Pages repository, replacing matching files. Do not upload the outer folder as a subfolder.

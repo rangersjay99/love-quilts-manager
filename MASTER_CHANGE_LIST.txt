@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.29
+IMPLEMENTED THROUGH UPDATE 7.8.30
+- Update 7.8.30 adds safe charity and quilt-size renaming while preserving all current records and numbers. It also applies the detailed Home-style Before/After verification screen to inventory additions, edits, adjustments, Set Current Count, transaction deletions, charity-need edits, distributions, corrections, and charity-need deletions.
 - Update 7.8.29 moves Add Quilts Needed to the top of the Needs tab, color-codes changed request totals, and gives the separate distribution reminder a purple informational style.
 - Update 7.8.28 changes unchanged verification bubbles to a calm gray so they do not appear to signal a problem.
 - Update 7.8.27 separates Add Quilts Needed from distribution and moves color-coded Home-style Before/After bubbles to the top of verification.
@@ -36,8 +37,8 @@ REPORTS AND STATISTICS
 - Full, compact, Summary, Calendar, CSV, backup, print, and email/share tools remain.
 
 INVENTORY, DISTRIBUTION, AND SYNC
-- Every new inventory entry requires a review screen showing the entered details and resulting inventory totals before saving.
-- Every new charity need/request requires a review screen with Home-style Before/After bubbles at the top, followed by entered details and resulting request totals.
+- Every inventory addition, edit, adjustment, Set Current Count action, and transaction deletion requires a detailed Home-style Before/After review before saving.
+- Every new charity need, charity-need edit, distribution entry/correction, and charity-need deletion requires a Home-style Before/After review at the top, followed by exact record details.
 - Adding a charity need is separate from distribution; distributions are entered later through Mark Distributed or the Calendar action.
 - Quantity Distributed may exceed the original request; the full quantity is recorded and reported while Quilts Still Needed remains zero.
 - Set Current Count accepts exact counts, including zero.
@@ -49,6 +50,11 @@ INVENTORY, DISTRIBUTION, AND SYNC
 - Update 7.8.24 removed the Firebase quantity cap and repaired affected 7.8.23 synchronized quantities.
 - Update 7.8.25 makes Sync Now direction-safe across two devices and requires server confirmation before showing green.
 - Firebase shared-device paths and existing data remain compatible.
+
+SETTINGS AND LIST MANAGEMENT
+- Charity names can be safely renamed without changing current quantities, dates, needs, distributions, or reports.
+- Quilt-size names can be safely renamed with the same preservation behavior.
+- Existing list values are treated as authoritative so renamed default names do not reappear after reload or sync normalization.
 
 DEFERRED / FUTURE ROADMAP
 - On Hold / Storage workflow is removed from the active app for now; preserve the idea for a later optional workflow.

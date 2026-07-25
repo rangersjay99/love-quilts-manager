@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.29';
+const VERSION='7.8.30';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -110,8 +110,9 @@ function normalizeData(d={}){
     homeNeededLabel:upgradedSummaryLabel(d.homeNeededLabel,['Quilts Still Needed','Quilts Needed','Charity Requests'],DEFAULT_HOME_NEEDED_LABEL),
     homeDifferenceLabel:upgradedSummaryLabel(d.homeDifferenceLabel,['Difference','More to Make'],DEFAULT_HOME_DIFFERENCE_LABEL),
     homeCalendarHeading:String(d.homeCalendarHeading||DEFAULT_HOME_CALENDAR_HEADING),homeActionsHeading:String(d.homeActionsHeading||DEFAULT_HOME_ACTIONS_HEADING),
-    charities:unique([...(Array.isArray(d.charities)?d.charities:[]),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...holds.map(h=>h.charity),...DEFAULT_CHARITIES]),
-    sizes:unique([...(Array.isArray(d.sizes)?d.sizes:[]),...tx.map(t=>t.size),...needs.map(n=>n.size),...holds.map(h=>h.size),...DEFAULT_SIZES]),
+    // Once a list exists, keep it authoritative so renamed default choices do not reappear on the next load.
+    charities:unique([...(Array.isArray(d.charities)&&d.charities.length?d.charities:DEFAULT_CHARITIES),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...holds.map(h=>h.charity)]),
+    sizes:unique([...(Array.isArray(d.sizes)&&d.sizes.length?d.sizes:DEFAULT_SIZES),...tx.map(t=>t.size),...needs.map(n=>n.size),...holds.map(h=>h.size)]),
     transactions:tx,needs,holds
   };
 }
@@ -220,9 +221,11 @@ function refreshSelects(){
   fill('txCharity',data.charities,'<option value="">Select charity</option>');
   fill('needCharity',data.charities,'<option value="">Select charity</option>');
   fill('deleteCharity',data.charities);
+  fill('renameCharitySelect',data.charities);
   fill('txSize',data.sizes,'<option value="">Select size</option>');
   fill('needSize',data.sizes,'<option value="">Select size</option>');
   fill('deleteSize',data.sizes);
+  fill('renameSizeSelect',data.sizes);
   fill('historyCharity',data.charities,'<option value="">All charities</option>');
   fill('calendarCharity',data.charities,'<option value="">All charities</option>');
   fill('homeCalendarCharity',data.charities,'<option value="">All charities</option>');
@@ -272,7 +275,8 @@ function setMode(m){
   mode=m;el('modeIn').className=m==='IN'?'active-in':'';el('modeOut').className=m==='OUT'?'active-out':'';el('modeAdjust').className=m==='ADJUST'?'active-adjust':'';if(el('modeSet'))el('modeSet').className=m==='SET'?'active-set':'';
   el('dateLabel').textContent=m==='IN'?'Date In':m==='OUT'?'Date Out':m==='SET'?'Count Date':'Adjustment Date';
   const input=el('qtyInput');if(input){input.min=m==='SET'?'0':'1';input.placeholder=m==='SET'?'Enter current count':'Enter quantity'}
-  el('saveTxBtn').textContent=editTxId?'Save Changes':m==='IN'?'Add to Inventory':m==='OUT'?'Remove from Inventory':m==='SET'?'Set Current Count':'Save Adjustment';
+  if(el('adjustDirectionWrap'))el('adjustDirectionWrap').style.display=m==='ADJUST'?'block':'none';
+  el('saveTxBtn').textContent=editTxId?'Save Changes':m==='IN'?'Add to Inventory':m==='OUT'?'Remove from Inventory':m==='SET'?'Set Current Count':'Review Adjustment';
 }
 function setQty(value){
   const parsed=Math.floor(Number(value)),minimum=mode==='SET'?0:1;
@@ -294,15 +298,6 @@ function transactionLabel(t){if(t.sourceType==='HOLD_TRANSFER_OUT')return'DEFERR
 function invMap(exclude=null){const m={};data.transactions.filter(t=>t.id!==exclude).forEach(t=>{const k=t.charity+'|'+t.size;m[k]=(m[k]||0)+value(t)});return m}
 function onHand(c,s,exclude=null){return invMap(exclude)[c+'|'+s]||0}
 function totalOnHand(exclude=null){return Object.values(invMap(exclude)).reduce((a,b)=>a+b,0)}
-function confirmInventoryChange(type,c,s,change,exclude=null){
-  const current=onHand(c,s,exclude),next=current+change,totalCurrent=totalOnHand(exclude),totalNext=totalCurrent+change,amount=Math.abs(change);
-  const action=type==='OUT'?`Record ${amount} out from ${data.itemName}`:`Save inventory adjustment of ${change>0?'+':''}${change}`;
-  return confirm(`Are you sure?\n\n${action}\n${c} — ${s}\n\nCurrent inventory: ${current}\nNew inventory: ${next}\n\nTotal ${lowerName()} in storage: ${totalCurrent} → ${totalNext}`);
-}
-function confirmSetCurrentCount(c,s,current,target,exclude=null){
-  const change=target-current,totalCurrent=totalOnHand(exclude),totalNext=totalCurrent+change;
-  return confirm(`SET CURRENT COUNT\n\n${c} — ${s}\n\nCurrent count: ${current}\nNew exact count: ${target}\nAdjustment recorded: ${change>0?'+':''}${change}\n\nTotal ${lowerName()} in storage: ${totalCurrent} → ${totalNext}\n\nContinue only after physically counting the quilts in storage.`);
-}
 function saveTransaction(reviewed=false,reviewedAdjustment=null){
   const rawQuantity=String(el('qtyInput')?.value??'').trim();
   syncQtyInput();
@@ -310,57 +305,71 @@ function saveTransaction(reviewed=false,reviewedAdjustment=null){
   if(mode==='SET'?qty<0:qty<1)return notice('txNotice',mode==='SET'?'Current count must be zero or more.':'Please enter a quantity of 1 or more.');
   const c=el('txCharity').value,s=el('txSize').value,d=el('txDate').value||today(),noteText=el('txNote').value.trim();
   if(!c||!s)return notice('txNotice','Please select a charity and size.');
+  const previous=editTxId?data.transactions.find(t=>t.id===editTxId):null;
+  if(editTxId&&!previous)return notice('txNotice','This transaction could not be found. It may have changed on another device.');
   const current=onHand(c,s,editTxId);let adj=0,storedMode=mode,storedNote=noteText;
-  if(mode==='OUT'&&qty>current)return notice('txNotice',`Only ${current} are in storage for ${c} — ${s}.`);
   if(mode==='SET'){
     adj=qty-current;
     if(adj===0)return notice('txNotice',`The current count is already ${qty} for ${c} — ${s}. No change was needed.`,true);
-    if(editTxId&&!confirmSetCurrentCount(c,s,current,qty,editTxId))return notice('txNotice','Set Current Count canceled. No changes were saved.');
     storedMode='ADJUST';storedNote=`Set current count to ${qty}${noteText?' — '+noteText:''}`;
   }else if(mode==='ADJUST'){
-    adj=reviewed&&Number.isFinite(reviewedAdjustment)?reviewedAdjustment:(confirm(`Choose the adjustment direction:\n\nPress OK to ADD ${qty}.\nPress Cancel to SUBTRACT ${qty}.`)?qty:-qty);
-    if(current+adj<0)return notice('txNotice','That adjustment would make inventory negative.');
-    if(editTxId&&!confirmInventoryChange('ADJUST',c,s,adj,editTxId))return notice('txNotice','Adjustment canceled. No changes were saved.');
+    const direction=el('txAdjustmentDirection')?.value==='subtract'?-1:1;
+    adj=reviewed&&Number.isFinite(reviewedAdjustment)?reviewedAdjustment:direction*qty;
   }
-  if(mode==='OUT'&&editTxId&&!confirmInventoryChange('OUT',c,s,-qty,editTxId))return notice('txNotice',`${data.itemName} Out canceled. No changes were saved.`);
-
-  const editing=!!editTxId;
   const inventoryChange=storedMode==='IN'?qty:storedMode==='OUT'?-qty:adj;
-  const next=current+inventoryChange,totalCurrent=totalOnHand(editTxId),totalNext=totalCurrent+inventoryChange;
-  if(!editing&&!reviewed){
-    const typeLabel=mode==='IN'?`${data.itemName} In`:mode==='OUT'?`${data.itemName} Out`:mode==='SET'?'Set Current Count':'Inventory Adjustment';
-    const quantityLabel=mode==='SET'?`Exact count: ${qty}`:mode==='ADJUST'?`Change: ${adj>0?'+':''}${adj}`:`Quantity: ${qty}`;
-    const homeMetrics=homePreviewMetrics(c,s,inventoryChange,0);
-    const summary=[
-      homeReviewBubbles(homeMetrics),
-      '<div class="entry-review-details-heading">Inventory entry details</div>',
-      reviewLine('Entry type',typeLabel),reviewLine('Charity',c),reviewLine('Size',s),reviewLine(mode==='SET'?'New count':'Quantity',mode==='SET'?String(qty):mode==='ADJUST'?`${adj>0?'+':''}${adj}`:String(qty)),reviewLine('Date',fmtDate(d)),
-      noteText?reviewLine('Note',noteText):'',reviewTotals(`Inventory for ${c} — ${s}`,current,next),reviewTotals(`Total ${lowerName()} in storage`,totalCurrent,totalNext),
-      mode==='SET'?`<div class="entry-review-note">This saves an adjustment of ${adj>0?'+':''}${adj} so the exact count becomes ${qty}.</div>`:''
-    ].join('');
-    openEntryReview(`Review ${typeLabel}`,summary,'Save Inventory Entry',()=>saveTransaction(true,adj));
+  if(current+inventoryChange<0)return notice('txNotice',`This change would leave negative inventory for ${c} — ${s}. Current available after removing the old transaction is ${current}.`);
+  const stamp=nowIso(),email=currentUserEmail();
+  const draft={id:editTxId||uid(),date:d,type:storedMode,charity:c,size:s,qty:storedMode==='ADJUST'?Math.max(1,Math.abs(adj)):qty,adjustment:adj,note:storedNote,
+    sourceNeedId:String(previous?.sourceNeedId||''),sourceHoldId:String(previous?.sourceHoldId||''),sourceType:String(previous?.sourceType||''),
+    createdBy:previous?.createdBy||email,createdAt:previous?.createdAt||stamp,updatedBy:email,updatedAt:stamp};
+  if(!reviewed){
+    const editing=!!previous,typeLabel=mode==='IN'?`${data.itemName} In`:mode==='OUT'?`${data.itemName} Out`:mode==='SET'?'Set Current Count':'Inventory Adjustment';
+    const metrics=transactionPreviewMetrics(previous,draft),beforeCategory=onHand(c,s),afterCategory=beforeCategory+(previous&&previous.charity===c&&previous.size===s?-value(previous):0)+value(draft);
+    const sections=[homeReviewBubbles(metrics)];
+    if(editing){
+      sections.push('<div class="entry-review-details-heading">Current transaction</div>',transactionRecordSummary(previous));
+      sections.push('<div class="entry-review-details-heading">Proposed transaction</div>',transactionRecordSummary(draft));
+      if(previous.charity!==c||previous.size!==s){
+        const oldBefore=onHand(previous.charity,previous.size),oldAfter=oldBefore-value(previous);
+        sections.push(reviewTotals(`Inventory for ${previous.charity} — ${previous.size}`,oldBefore,oldAfter));
+      }
+    }else{
+      sections.push('<div class="entry-review-details-heading">Inventory entry details</div>',transactionRecordSummary(draft));
+    }
+    sections.push(reviewTotals(`Inventory for ${c} — ${s}`,beforeCategory,afterCategory),reviewTotals(`Total ${lowerName()} in storage`,metrics.before.storage,metrics.after.storage));
+    if(mode==='SET')sections.push(`<div class="entry-review-note">This records an adjustment of ${adj>0?'+':''}${adj} so the exact count becomes ${qty}.</div>`);
+    openEntryReview(editing?'Review Inventory Changes':`Review ${typeLabel}`,sections.join(''),editing?'Save Inventory Changes':'Save Inventory Entry',()=>saveTransaction(true,adj));
     return;
   }
-
-  const previous=editTxId?data.transactions.find(t=>t.id===editTxId):null,stamp=nowIso(),email=currentUserEmail();
-  const r={id:editTxId||uid(),date:d,type:storedMode,charity:c,size:s,qty:storedMode==='ADJUST'?Math.max(1,Math.abs(adj)):qty,adjustment:adj,note:storedNote,
-    sourceNeedId:String(previous?.sourceNeedId||''),sourceType:String(previous?.sourceType||''),
-    createdBy:previous?.createdBy||email,createdAt:previous?.createdAt||stamp,updatedBy:email,updatedAt:stamp};
-  if(editTxId){const i=data.transactions.findIndex(t=>t.id===editTxId);if(i>=0)data.transactions[i]=r}else data.transactions.push(r);
-  save(editing?'Inventory transaction edited':mode==='SET'?'Current inventory count set':'Inventory transaction added');cancelTxEdit();renderAll();notice('txNotice',mode==='SET'?`Current count set to ${qty}. An adjustment of ${adj>0?'+':''}${adj} was recorded.`:'Saved successfully.',true);if(!editing)showView('home');
+  if(editTxId){const i=data.transactions.findIndex(t=>t.id===editTxId);if(i<0)return notice('txNotice','This transaction no longer exists. Nothing was saved.');data.transactions[i]=draft}else data.transactions.push(draft);
+  const editing=!!editTxId;
+  save(editing?'Inventory transaction edited':mode==='SET'?'Current inventory count set':'Inventory transaction added');cancelTxEdit();renderAll();
+  notice('txNotice',mode==='SET'?`Current count set to ${qty}. An adjustment of ${adj>0?'+':''}${adj} was recorded.`:editing?'Inventory changes saved.':'Saved successfully.',true);
+  if(!editing)showView('home');
 }
 function editTx(id){
   const t=data.transactions.find(x=>x.id===id);if(!t)return;if(t.sourceNeedId){alert('This inventory transaction is linked to a charity distribution. Update it from Quilts Needed using Mark Distributed so the distribution and inventory stay matched.');prepareNeedDistribution(t.sourceNeedId);return}if(t.sourceHoldId){alert('This protected transaction belongs to an earlier deferred storage record, so it cannot be edited here.');return}editTxId=id;mode=t.type;qty=Math.abs(value(t))||1;refreshSelects();
   el('txCharity').value=t.charity;el('txSize').value=t.size;el('txDate').value=t.date;el('txNote').value=t.note||'';setQty(qty);
+  if(el('txAdjustmentDirection'))el('txAdjustmentDirection').value=value(t)<0?'subtract':'add';
   el('cancelTxBtn').style.display='block';setMode(mode);showView('inventory');
 }
-function cancelTxEdit(){editTxId=null;clearQty();el('txCharity').value='';el('txSize').value='';el('txNote').value='';el('txDate').value=today();el('cancelTxBtn').style.display='none';setMode(mode)}
+function cancelTxEdit(){editTxId=null;clearQty();el('txCharity').value='';el('txSize').value='';el('txNote').value='';el('txDate').value=today();if(el('txAdjustmentDirection'))el('txAdjustmentDirection').value='add';el('cancelTxBtn').style.display='none';setMode(mode)}
 function deleteTx(id){
-  const t=data.transactions.find(x=>x.id===id);if(!t)return;if(t.sourceNeedId){alert('This inventory transaction is protected because it is linked to a charity distribution. Update the request with Mark Distributed instead.');prepareNeedDistribution(t.sourceNeedId);return}if(t.sourceHoldId){alert('This protected transaction belongs to an earlier deferred storage record, so it cannot be deleted here.');return}
-  const n=value(t),description=`${fmtDate(t.date)} — ${t.charity} — ${t.size} — ${n>0?'+':''}${n}`;
-  if(confirm(`Delete this transaction?\n\n${description}\n\nThis changes the inventory total. A recovery copy will be kept.`)){
-    createRecoverySnapshot('Before deleting an inventory transaction');data.transactions=data.transactions.filter(x=>x.id!==id);save('Inventory transaction deleted');renderAll();
-  }
+  const t=data.transactions.find(x=>x.id===id);if(!t)return;
+  if(t.sourceNeedId){alert('This inventory transaction is protected because it is linked to a charity distribution. Update the request with Mark Distributed instead.');prepareNeedDistribution(t.sourceNeedId);return}
+  if(t.sourceHoldId){alert('This protected transaction belongs to an earlier deferred storage record, so it cannot be deleted here.');return}
+  const metrics=transactionPreviewMetrics(t,null),beforeCategory=onHand(t.charity,t.size),afterCategory=beforeCategory-value(t);
+  const summary=[
+    homeReviewBubbles(metrics),
+    '<div class="entry-review-details-heading">Transaction being deleted</div>',transactionRecordSummary(t),
+    reviewTotals(`Inventory for ${t.charity} — ${t.size}`,beforeCategory,afterCategory),
+    reviewTotals(`Total ${lowerName()} in storage`,metrics.before.storage,metrics.after.storage),
+    '<div class="entry-review-warning">Deleting this transaction changes the calculated inventory. A recovery copy will be created before deletion.</div>'
+  ].join('');
+  openEntryReview('Review Inventory Deletion',summary,'Delete Inventory Transaction',()=>{
+    const current=data.transactions.find(x=>x.id===id);if(!current){notice('txNotice','This transaction was already removed on another device.');return}
+    createRecoverySnapshot('Before deleting an inventory transaction');data.transactions=data.transactions.filter(x=>x.id!==id);save('Inventory transaction deleted');renderAll();notice('txNotice','Inventory transaction deleted.',true);
+  },'danger');
 }
 function renderInventory(){
   const groups={};Object.entries(invMap()).forEach(([k,n])=>{const split=k.lastIndexOf('|'),c=k.slice(0,split),s=k.slice(split+1);if(n!==0)(groups[c]??=[]).push({s,n})});
@@ -386,13 +395,15 @@ function showNeedSaveMessage(target,msg,good=false){
   target.textContent=msg;target.className='notice show'+(good?' good':'');
   clearTimeout(target.t);target.t=setTimeout(()=>target.className='notice',5000);
 }
-function openEntryReview(title,summaryHtml,confirmLabel,action){
+function openEntryReview(title,summaryHtml,confirmLabel,action,tone='primary'){
   entryReviewAction=typeof action==='function'?action:null;
   el('entryReviewTitle').textContent=title;
   el('entryReviewSummary').innerHTML=summaryHtml;
-  el('entryReviewConfirm').textContent=confirmLabel||'Save Entry';
+  const confirmButton=el('entryReviewConfirm');
+  confirmButton.textContent=confirmLabel||'Save Entry';
+  confirmButton.className=tone==='danger'?'danger':'primary';
   modalOpen('entryReviewModal');
-  requestAnimationFrame(()=>el('entryReviewConfirm')?.focus());
+  requestAnimationFrame(()=>confirmButton?.focus());
 }
 function closeEntryReview(){modalClose('entryReviewModal');entryReviewAction=null}
 function confirmEntryReview(){
@@ -406,14 +417,19 @@ function reviewChangeText(label,current,next){
   const wording=difference>0?`${amount} ${amount===1?'quilt':'quilts'} will be added to ${label}`:difference<0?`${amount} ${amount===1?'quilt':'quilts'} will be subtracted from ${label}`:`No change to ${label}`;
   return`<div class="entry-review-change ${difference>0?'increase':difference<0?'decrease':'unchanged'}">${esc(wording)}.</div>`
 }
+function sumMapValues(map){return Object.values(map||{}).reduce((sum,value)=>sum+Number(value||0),0)}
+function homeMetricsFromMaps(afterInventory,afterRequested){
+  const beforeStorage=totalOnHand(),beforeNeeded=totalNeeded(),beforeDifference=quiltsToCompleteTotal();
+  const inventory=afterInventory||invMap(),requested=afterRequested||requestedNeedsMap();
+  const keys=unique([...Object.keys(inventory),...Object.keys(requested)]);
+  const afterDifference=keys.reduce((sum,key)=>sum+Math.max(0,Number(requested[key]||0)-Number(inventory[key]||0)),0);
+  return{before:{storage:beforeStorage,needed:beforeNeeded,difference:beforeDifference},after:{storage:sumMapValues(inventory),needed:sumMapValues(requested),difference:afterDifference}}
+}
 function homePreviewMetrics(charity,size,inventoryChange=0,neededChange=0){
   const inventory=invMap(),requested=requestedNeedsMap(),key=charity+'|'+size;
-  const beforeStorage=totalOnHand(),beforeNeeded=totalNeeded(),beforeDifference=quiltsToCompleteTotal();
   inventory[key]=(Number(inventory[key])||0)+Number(inventoryChange||0);
   requested[key]=(Number(requested[key])||0)+Number(neededChange||0);
-  const keys=unique([...Object.keys(inventory),...Object.keys(requested)]);
-  const afterDifference=keys.reduce((sum,k)=>sum+Math.max(0,Number(requested[k]||0)-Number(inventory[k]||0)),0);
-  return{before:{storage:beforeStorage,needed:beforeNeeded,difference:beforeDifference},after:{storage:beforeStorage+Number(inventoryChange||0),needed:beforeNeeded+Number(neededChange||0),difference:afterDifference}}
+  return homeMetricsFromMaps(inventory,requested)
 }
 function homeReviewBubbles(metrics){
   const cards=[
@@ -422,6 +438,50 @@ function homeReviewBubbles(metrics){
     {key:'difference',label:data.homeDifferenceLabel||DEFAULT_HOME_DIFFERENCE_LABEL}
   ];
   return`<div class="entry-review-home-wrap"><div class="entry-review-home-heading">Home screen preview</div><div class="entry-review-home-grid">${cards.map(card=>{const before=metrics.before[card.key],after=metrics.after[card.key],state=after>before?'increase':after<before?'decrease':'unchanged';return`<div class="entry-review-home-card change-${state}"><span>${esc(card.label)}</span><div class="entry-review-before-after"><div><small>Before</small><b>${before}</b></div><div class="entry-review-arrow">→</div><div><small>After</small><b>${after}</b></div></div>${reviewChangeText(card.label,before,after)}</div>`}).join('')}</div></div>`
+}
+function signedQuantity(number){const value=Number(number||0);return`${value>0?'+':''}${value}`}
+function transactionPreviewMetrics(previous,draft){
+  const inventory=invMap(),requested=requestedNeedsMap();
+  const apply=(record,multiplier)=>{
+    if(!record)return;
+    const key=record.charity+'|'+record.size;
+    inventory[key]=(Number(inventory[key])||0)+multiplier*value(record);
+  };
+  apply(previous,-1);apply(draft,1);
+  return homeMetricsFromMaps(inventory,requested)
+}
+function needPreviewMetrics(previous,draft,inventoryChange=0){
+  const inventory=invMap(),requested=requestedNeedsMap();
+  if(inventoryChange){
+    const key=draft.charity+'|'+draft.size;
+    inventory[key]=(Number(inventory[key])||0)+Number(inventoryChange||0);
+  }
+  const applyNeed=(record,multiplier)=>{
+    if(!record||String(record.month||'')<monthNow())return;
+    const remaining=Math.max(0,Math.floor(Number(record.qty||0))-Math.floor(Number(record.fulfilledQty||0)));
+    const key=record.charity+'|'+record.size;
+    requested[key]=(Number(requested[key])||0)+multiplier*remaining;
+  };
+  applyNeed(previous,-1);applyNeed(draft,1);
+  return homeMetricsFromMaps(inventory,requested)
+}
+function transactionRecordSummary(record,prefix=''){
+  if(!record)return'';
+  const label=transactionLabel(record),effect=value(record);
+  return[
+    reviewLine(`${prefix}Type`,label),reviewLine(`${prefix}Charity`,record.charity),reviewLine(`${prefix}Size`,record.size),
+    reviewLine(`${prefix}Inventory effect`,signedQuantity(effect)),reviewLine(`${prefix}Date`,fmtDate(record.date)),
+    record.note?reviewLine(`${prefix}Note`,record.note):''
+  ].join('')
+}
+function needRecordSummary(record,prefix=''){
+  if(!record)return'';
+  const sent=Math.max(0,Math.floor(Number(record.fulfilledQty||0))),remaining=Math.max(0,Math.floor(Number(record.qty||0))-sent);
+  return[
+    reviewLine(`${prefix}Month needed`,fmtMonth(record.month)),reviewLine(`${prefix}Charity`,record.charity),reviewLine(`${prefix}Size`,record.size),
+    reviewLine(`${prefix}Quilts needed`,String(record.qty)),reviewLine(`${prefix}Distributed`,String(sent)),reviewLine(`${prefix}Still needed`,String(remaining)),
+    sent?reviewLine(`${prefix}Distribution date`,record.fulfilledDate?fmtDate(record.fulfilledDate):'Not entered'):'',record.note?reviewLine(`${prefix}Note`,record.note):''
+  ].join('')
 }
 function needValuesFromMainForm(){
   return{
@@ -476,20 +536,24 @@ function persistNeedRecord(values,id=null,messageTarget='needNotice',options={})
   if(autoOutNeeded>0){
     const current=onHand(charity,size);
     if(autoOutNeeded>current){showNeedSaveMessage(messageTarget,`Only ${current} are in storage for ${charity} — ${size}. Leave the Inventory Out box unchecked only if this distribution was already recorded separately.`);return false}
-    const next=current-autoOutNeeded;
-    if((id||!options.reviewed)&&!confirm(`DISTRIBUTION INVENTORY SAFEGUARD\n\nThis will mark ${sentRaw} distributed and remove ${autoOutNeeded} from inventory now.\n\n${charity} — ${size}\nCurrent inventory: ${current}\nInventory after distribution: ${next}\nPreviously removed automatically: ${priorAutoOut}\n\nContinue only if these ${autoOutNeeded} quilts have NOT already been entered as Quilts Out.`)){
-      showNeedSaveMessage(messageTarget,'Distribution save canceled. No changes were saved.');return false
-    }
-  }else if(sentRaw>previousSent&&!recordOut){
-    if((id||!options.reviewed)&&!confirm(`INVENTORY WILL NOT CHANGE\n\nQuantity Distributed is increasing from ${previousSent} to ${sentRaw}, but the inventory-removal box is unchecked.\n\nContinue only if the matching ${sentRaw-previousSent} quilts were already entered separately as Quilts Out.`)){
-      showNeedSaveMessage(messageTarget,'Distribution save canceled. No changes were saved.');return false
-    }
   }
-  if(autoRestoreNeeded>0){
-    const current=onHand(charity,size),next=current+autoRestoreNeeded;
-    if(!confirm(`CORRECT DISTRIBUTION AND RESTORE INVENTORY\n\nQuantity Distributed is being reduced below the amount previously removed automatically.\n\n${autoRestoreNeeded} will be added back to inventory.\n${charity} — ${size}\nCurrent inventory: ${current}\nInventory after correction: ${next}\n\nContinue?`)){
-      showNeedSaveMessage(messageTarget,'Distribution correction canceled. No changes were saved.');return false
-    }
+  const previewRecord={id:recordId,month:String(values.month||monthNow()),charity,size,qty:needQty,note:String(values.note||'').trim(),fulfilledQty:sentRaw,fulfilledDate:sentRaw?sentDate:'',autoOutQty:Math.max(0,priorAutoOut-autoRestoreNeeded)+autoOutNeeded};
+  if(id&&!options.reviewed){
+    const inventoryChange=autoRestoreNeeded-autoOutNeeded,metrics=needPreviewMetrics(previous,previewRecord,inventoryChange);
+    const oldRemaining=Math.max(0,Math.floor(Number(previous.qty||0))-previousSent),newRemaining=Math.max(0,needQty-sentRaw);
+    const summary=[
+      homeReviewBubbles(metrics),
+      '<div class="entry-review-details-heading">Current charity need</div>',needRecordSummary(previous),
+      '<div class="entry-review-details-heading">Proposed charity need</div>',needRecordSummary(previewRecord),
+      reviewTotals('Still needed for this request',oldRemaining,newRemaining)
+    ];
+    if(autoOutNeeded>0)summary.push(`<div class="entry-review-note">${autoOutNeeded} ${autoOutNeeded===1?'quilt':'quilts'} will be subtracted from inventory for ${esc(charity)} — ${esc(size)}.</div>`);
+    else if(autoRestoreNeeded>0)summary.push(`<div class="entry-review-note">${autoRestoreNeeded} ${autoRestoreNeeded===1?'quilt':'quilts'} will be added back to inventory for ${esc(charity)} — ${esc(size)}.</div>`);
+    else if(sentRaw>previousSent&&!recordOut)summary.push(`<div class="entry-review-note entry-review-distribution-note">Distribution increases by ${sentRaw-previousSent}, but inventory will not change. Continue only when those quilts were already recorded separately as Quilts Out.</div>`);
+    else summary.push('<div class="entry-review-note entry-review-distribution-note">Inventory will not change as part of this edit.</div>');
+    const distributionChange=sentRaw!==previousSent||sentDate!==String(previous.fulfilledDate||'');
+    openEntryReview(distributionChange?'Review Distribution Changes':'Review Charity Need Changes',summary.join(''),distributionChange?'Save Distribution Changes':'Save Charity Need Changes',options.onConfirm||(()=>persistNeedRecord(values,id,messageTarget,{...options,reviewed:true})));
+    return false;
   }
   const r={id:recordId,month:String(values.month||monthNow()),charity,size,qty:needQty,note:String(values.note||'').trim(),
     fulfilledQty:sentRaw,fulfilledDate:sentRaw?sentDate:'',fulfilledBy:fulfillmentChanged?(sentRaw?email:''):String(previous?.fulfilledBy||''),fulfilledAt:fulfillmentChanged?(sentRaw?stamp:''):String(previous?.fulfilledAt||''),
@@ -553,21 +617,20 @@ function deleteNeed(id){
   const linkedTransactions=data.transactions.filter(t=>t.sourceNeedId===id),linkedOut=Math.max(0,Math.floor(Number(n.autoOutQty||0)));
   if(linkedTransactions.length){
     const guidance=linkedOut>0?`Open Mark Distributed and correct the quantity there. The app will safely restore any inventory that should remain.`:`The linked inventory entries balance to zero, but the request is retained as the audit record for those corrections.`;
-    alert(`This charity request cannot be deleted because ${linkedTransactions.length} protected inventory transaction${linkedTransactions.length===1?' is':'s are'} linked to it.
-
-${guidance}`);prepareNeedDistribution(id);return
+    alert(`This charity request cannot be deleted because ${linkedTransactions.length} protected inventory transaction${linkedTransactions.length===1?' is':'s are'} linked to it.\n\n${guidance}`);prepareNeedDistribution(id);return
   }
-  const sent=fulfilledQty(n),extra=sent?`
-Distributed: ${sent}${n.fulfilledDate?' on '+fmtDate(n.fulfilledDate):''}
-
-Deleting the charity request does not delete any Inventory Out transaction.`:'';
-  if(confirm(`Delete this charity request?
-
-${fmtMonth(n.month)} — ${n.charity} — ${n.size} — Quilts Needed ${n.qty}${extra}
-
-A recovery copy will be kept.`)){
-    createRecoverySnapshot('Before deleting a charity request');data.needs=data.needs.filter(x=>x.id!==id);if(editNeedId===id){editNeedId=null;editNeedMode='details'}save('Charity request deleted');renderAll();
-  }
+  const metrics=needPreviewMetrics(n,null,0),remaining=Math.max(0,Math.floor(Number(n.qty||0))-fulfilledQty(n));
+  const summary=[
+    homeReviewBubbles(metrics),
+    '<div class="entry-review-details-heading">Charity need being deleted</div>',needRecordSummary(n),
+    reviewTotals('Still needed for this request',remaining,0),
+    '<div class="entry-review-warning">This removes the charity need. Inventory transactions are not deleted or changed. A recovery copy will be created first.</div>'
+  ].join('');
+  openEntryReview('Review Charity Need Deletion',summary,'Delete Charity Need',()=>{
+    const current=data.needs.find(x=>x.id===id);if(!current){notice('needNotice','This charity need was already removed on another device.');return}
+    if(data.transactions.some(t=>t.sourceNeedId===id)){notice('needNotice','This charity need now has protected inventory transactions and cannot be deleted.');prepareNeedDistribution(id);return}
+    createRecoverySnapshot('Before deleting a charity request');data.needs=data.needs.filter(x=>x.id!==id);if(editNeedId===id){editNeedId=null;editNeedMode='details'}save('Charity request deleted');renderAll();if(calendarModalNeedId===id)closeCalendarNeedModal();notice('needNotice','Charity need deleted.',true);
+  },'danger');
 }
 function upcoming(){return data.needs.filter(n=>n.month>=monthNow()&&remainingNeed(n)>0)}
 function totalNeeded(){return upcoming().reduce((a,n)=>a+remainingNeed(n),0)}
@@ -753,10 +816,10 @@ function openCalendarDistributionModal(id){
   modalOpen('calendarDistributionModal');requestAnimationFrame(()=>el('calendarDistributionQty')?.focus());
 }
 function closeCalendarDistributionModal(){modalClose('calendarDistributionModal');calendarDistributionNeedId=null}
-function saveCalendarDistribution(){
+function saveCalendarDistribution(reviewed=false){
   const id=calendarDistributionNeedId,n=id?data.needs.find(item=>item.id===id):null;if(!n)return;
   const values={month:n.month,charity:n.charity,size:n.size,qty:n.qty,note:n.note,fulfilledQty:el('calendarDistributionQty').value,fulfilledDate:el('calendarDistributionDate').value,recordOut:el('calendarDistributionRecordOut').checked};
-  const ok=persistNeedRecord(values,id,'calendarDistributionNotice');if(ok)closeCalendarDistributionModal();return ok;
+  const ok=persistNeedRecord(values,id,'calendarDistributionNotice',{reviewed,onConfirm:()=>saveCalendarDistribution(true)});if(ok)closeCalendarDistributionModal();return ok;
 }
 
 function openCalendarNeedEditor(id='',month=''){
@@ -922,6 +985,71 @@ function renderReports(){
   const a=data.transactions.filter(t=>t.type==='ADJUST').sort((x,y)=>y.date.localeCompare(x.date));
   el('reportAdjustments').innerHTML=a.length?a.map(x=>`<div class="item report-shaded-item"><div class="head"><div><div class="title">${value(x)>0?'+':''}${value(x)} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · ${fmtDate(x.date)}${x.note?' · '+esc(x.note):''}</div></div><span class="flag">Adjusted</span></div></div>`).join(''):'<div class="empty">No adjusted transactions.</div>';
   renderMeetingReport();
+}
+function sameName(a,b){return String(a||'').trim().toLocaleLowerCase()===String(b||'').trim().toLocaleLowerCase()}
+function renameImpactSummary(kind,name){
+  if(kind==='charity'){
+    const tx=data.transactions.filter(t=>t.charity===name),needs=data.needs.filter(n=>n.charity===name),holds=(data.holds||[]).filter(h=>h.charity===name);
+    const inventory=Object.entries(invMap()).filter(([key])=>key.startsWith(name+'|')).reduce((sum,[,amount])=>sum+Number(amount||0),0);
+    return{transactions:tx.length,needs:needs.length,holds:holds.length,inventory};
+  }
+  const tx=data.transactions.filter(t=>t.size===name),needs=data.needs.filter(n=>n.size===name),holds=(data.holds||[]).filter(h=>h.size===name);
+  const inventory=Object.entries(invMap()).filter(([key])=>key.endsWith('|'+name)).reduce((sum,[,amount])=>sum+Number(amount||0),0);
+  return{transactions:tx.length,needs:needs.length,holds:holds.length,inventory};
+}
+function renameCharity(){
+  const oldName=String(el('renameCharitySelect')?.value||'').trim(),newName=String(el('renameCharityName')?.value||'').trim();
+  if(!oldName)return notice('listNotice','Select the charity to rename.');
+  if(!newName)return notice('listNotice','Enter the new charity name.');
+  if(oldName===newName)return notice('listNotice','The charity name is already exactly the same. No change is needed.',true);
+  const duplicate=data.charities.find(name=>name!==oldName&&sameName(name,newName));
+  if(duplicate)return notice('listNotice',`A charity named “${duplicate}” already exists.`);
+  const impact=renameImpactSummary('charity',oldName),metrics=homeMetricsFromMaps(invMap(),requestedNeedsMap());
+  const summary=[
+    homeReviewBubbles(metrics),
+    '<div class="entry-review-details-heading">Charity name change</div>',
+    reviewLine('Current name',oldName),reviewLine('New name',newName),
+    reviewLine('Inventory transactions kept',String(impact.transactions)),reviewLine('Charity needs kept',String(impact.needs)),
+    reviewLine('Current quilts in storage kept',String(impact.inventory)),impact.holds?reviewLine('Preserved deferred records kept',String(impact.holds)):'',
+    '<div class="entry-review-note">Only the displayed charity name will change. All quantities, dates, needs, distributions, and totals will stay connected and unchanged.</div>'
+  ].join('');
+  openEntryReview('Review Charity Rename',summary,'Rename Charity',()=>{
+    if(!data.charities.includes(oldName)){notice('listNotice','That charity is no longer available. It may have changed on another device.');return}
+    const conflict=data.charities.find(name=>name!==oldName&&sameName(name,newName));if(conflict){notice('listNotice',`A charity named “${conflict}” now exists. Nothing was renamed.`);return}
+    createRecoverySnapshot('Before renaming a charity');
+    data.charities=unique(data.charities.map(name=>name===oldName?newName:name));
+    data.transactions.forEach(t=>{if(t.charity===oldName)t.charity=newName});
+    data.needs.forEach(n=>{if(n.charity===oldName)n.charity=newName});
+    (data.holds||[]).forEach(h=>{if(h.charity===oldName)h.charity=newName});
+    save(`Charity renamed from ${oldName} to ${newName}`);if(el('renameCharityName'))el('renameCharityName').value='';renderAll();notice('listNotice',`Charity renamed to “${newName}.” All existing numbers were kept.`,true);
+  });
+}
+function renameSize(){
+  const oldName=String(el('renameSizeSelect')?.value||'').trim(),newName=String(el('renameSizeName')?.value||'').trim();
+  if(!oldName)return notice('listNotice','Select the quilt size to rename.');
+  if(!newName)return notice('listNotice','Enter the new quilt size name.');
+  if(oldName===newName)return notice('listNotice','The quilt size name is already exactly the same. No change is needed.',true);
+  const duplicate=data.sizes.find(name=>name!==oldName&&sameName(name,newName));
+  if(duplicate)return notice('listNotice',`A quilt size named “${duplicate}” already exists.`);
+  const impact=renameImpactSummary('size',oldName),metrics=homeMetricsFromMaps(invMap(),requestedNeedsMap());
+  const summary=[
+    homeReviewBubbles(metrics),
+    '<div class="entry-review-details-heading">Quilt size name change</div>',
+    reviewLine('Current size name',oldName),reviewLine('New size name',newName),
+    reviewLine('Inventory transactions kept',String(impact.transactions)),reviewLine('Charity needs kept',String(impact.needs)),
+    reviewLine('Current quilts in storage kept',String(impact.inventory)),impact.holds?reviewLine('Preserved deferred records kept',String(impact.holds)):'',
+    '<div class="entry-review-note">Only the displayed quilt-size name will change. All quantities, dates, needs, distributions, and totals will stay connected and unchanged.</div>'
+  ].join('');
+  openEntryReview('Review Quilt Size Rename',summary,'Rename Quilt Size',()=>{
+    if(!data.sizes.includes(oldName)){notice('listNotice','That quilt size is no longer available. It may have changed on another device.');return}
+    const conflict=data.sizes.find(name=>name!==oldName&&sameName(name,newName));if(conflict){notice('listNotice',`A quilt size named “${conflict}” now exists. Nothing was renamed.`);return}
+    createRecoverySnapshot('Before renaming a quilt size');
+    data.sizes=unique(data.sizes.map(name=>name===oldName?newName:name));
+    data.transactions.forEach(t=>{if(t.size===oldName)t.size=newName});
+    data.needs.forEach(n=>{if(n.size===oldName)n.size=newName});
+    (data.holds||[]).forEach(h=>{if(h.size===oldName)h.size=newName});
+    save(`Quilt size renamed from ${oldName} to ${newName}`);if(el('renameSizeName'))el('renameSizeName').value='';renderAll();notice('listNotice',`Quilt size renamed to “${newName}.” All existing numbers were kept.`,true);
+  });
 }
 function addCharity(){const n=el('newCharity').value.trim();if(!n)return;if(data.charities.some(x=>x.toLocaleLowerCase()===n.toLocaleLowerCase()))return alert('That charity is already in the list.');data.charities.push(n);el('newCharity').value='';save('Charity added');renderAll()}
 function removeCharity(){
@@ -1341,7 +1469,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.29 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.30 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.29',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.30',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

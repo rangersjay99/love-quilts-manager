@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.29">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.29">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.29">
+<link rel="manifest" href="manifest-v7.json?v=7.8.30">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.30">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.30">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -77,6 +77,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .calendar-action-buttons{display:grid;gap:8px}.calendar-action-buttons button{margin:0}.calendar-action-buttons .primary{background:var(--teal)}
 .calendar-print-button{margin-top:10px;border-color:rgba(37,99,166,.35)!important;background:rgba(37,99,166,.10)!important;color:#24578d!important}
 .calendar-print-button:hover,.calendar-print-button:focus{background:rgba(37,99,166,.17)!important}
+.list-management-divider{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
 .change-log-current{padding:12px;border-radius:12px;background:#edf8f0;border:1px solid #b9ddc2;margin-bottom:10px}.change-log-current b{display:block;color:var(--green)}.change-log-entry{padding:11px 0;border-top:1px solid var(--line)}.change-log-entry:first-of-type{border-top:0}.change-log-entry h4{margin:0 0 4px;color:var(--plum-dark)}.change-log-entry p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
 #calendarPrintReport{display:none}.calendar-print-header{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:8px}.calendar-print-header h1{margin:0;font-size:20px}.calendar-print-meta{font-size:9px;color:#555;text-align:right}
 @media(max-width:620px){.calendar-action-buttons{grid-template-columns:1fr}}
@@ -360,14 +361,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.29" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.30" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.29</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.30</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -436,6 +437,10 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <button id="modeOut" onclick="setMode('OUT')">Love Quilts Out</button>
       <button id="modeAdjust" onclick="setMode('ADJUST')">Adjust</button>
       <button id="modeSet" onclick="setMode('SET')">Set Current Count</button>
+    </div>
+    <div id="adjustDirectionWrap" class="adjust-direction" style="display:none">
+      <label for="txAdjustmentDirection">Adjustment Direction</label>
+      <select id="txAdjustmentDirection"><option value="add">Add to inventory</option><option value="subtract">Subtract from inventory</option></select>
     </div>
     <label id="dateLabel">Date In</label><input id="txDate" type="date">
     <label>Charity</label><select id="txCharity" required></select>
@@ -570,11 +575,18 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   </div>
 
   <div class="card">
-    <h2>Manage Lists</h2><p class="small">Add or remove charity and quilt-size choices. Items already used in records cannot be deleted.</p>
+    <h2>Manage Lists</h2><p class="small">Add, rename, or remove charity and quilt-size choices. Renaming keeps every present quantity, date, need, and distribution connected to the new name. Items already used in records cannot be deleted.</p>
+    <h3>Charities</h3>
     <label>Add Charity</label><div class="row"><input id="newCharity" placeholder="New charity name"><button class="ghost" onclick="addCharity()">Add Charity</button></div>
-    <label>Delete Charity</label><div class="row"><select id="deleteCharity"></select><button class="danger" onclick="removeCharity()">Delete</button></div>
+    <label>Rename Charity</label><div class="row"><select id="renameCharitySelect"></select><input id="renameCharityName" placeholder="Enter the new charity name"></div>
+    <button class="ghost" onclick="renameCharity()">Review Charity Rename</button>
+    <label>Delete Unused Charity</label><div class="row"><select id="deleteCharity"></select><button class="danger" onclick="removeCharity()">Delete</button></div>
+    <h3 class="list-management-divider">Quilt Sizes</h3>
     <label>Add Size</label><div class="row"><input id="newSize" placeholder="New quilt size"><button class="ghost" onclick="addSize()">Add Size</button></div>
-    <label>Delete Size</label><div class="row"><select id="deleteSize"></select><button class="danger" onclick="removeSize()">Delete</button></div>
+    <label>Rename Size</label><div class="row"><select id="renameSizeSelect"></select><input id="renameSizeName" placeholder="Enter the new quilt size name"></div>
+    <button class="ghost" onclick="renameSize()">Review Size Rename</button>
+    <label>Delete Unused Size</label><div class="row"><select id="deleteSize"></select><button class="danger" onclick="removeSize()">Delete</button></div>
+    <div id="listNotice" class="notice"></div>
   </div>
 
   <div class="card">
@@ -622,7 +634,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.29</b><span class="small">Clearer Need review colors and top entry form · July 25, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.30</b><span class="small">Safe renaming and detailed verification for every transaction · July 25, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.30</h4><p>Added safe charity and quilt-size renaming that preserves all existing records and numbers. Replaced old inventory edit/delete and charity-need edit/distribution/delete pop-ups with the detailed Home-style Before/After verification screen.</p></div>
     <div class="change-log-entry"><h4>7.8.29</h4><p>Moved Add Quilts Needed to the top of the Needs tab, colored changed request totals green or red, and changed the separate distribution reminder to purple.</p></div>
     <div class="change-log-entry"><h4>7.8.28</h4><p>Changed unchanged verification bubbles to a calm gray so they do not appear to signal a problem.</p></div>
     <div class="change-log-entry"><h4>7.8.27</h4><p>Separated Add Quilts Needed from distribution and moved familiar Home-style Before/After bubbles to the top of verification.</p></div>
@@ -645,11 +658,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.29 · July 25, 2026</span>
+      <b>Version</b><span>Update 7.8.30 · July 25, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.29 places Add Quilts Needed at the top of the Needs tab. Changed request-total rows now use green for increases and red for decreases, while the separate distribution reminder uses a calm purple treatment.</p>
+    <p class="small">Update 7.8.30 adds safe charity and quilt-size renaming while keeping every existing number, and uses the detailed Home-style verification screen for inventory entries, edits, adjustments, deletions, charity-need edits, distributions, and deletions.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -693,7 +706,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
 <div id="entryReviewModal" class="calendar-modal-backdrop" aria-hidden="true" onclick="if(event.target===this)closeEntryReview()">
   <div class="calendar-modal-card" role="dialog" aria-modal="true" aria-labelledby="entryReviewTitle">
-    <div class="calendar-modal-header"><div><h2 id="entryReviewTitle">Review Entry</h2><div class="small">Check these details before anything is saved.</div></div><button type="button" class="calendar-modal-close" aria-label="Go back" onclick="closeEntryReview()">×</button></div>
+    <div class="calendar-modal-header"><div><h2 id="entryReviewTitle">Review Entry</h2><div class="small">Check the details and expected Home-screen numbers before continuing.</div></div><button type="button" class="calendar-modal-close" aria-label="Go back" onclick="closeEntryReview()">×</button></div>
     <div id="entryReviewSummary" class="entry-review-summary"></div>
     <div class="calendar-modal-actions"><button id="entryReviewConfirm" type="button" class="primary" onclick="confirmEntryReview()">Save Entry</button><button type="button" class="ghost" onclick="closeEntryReview()">Go Back</button></div>
   </div>
@@ -707,7 +720,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.29"></script>
-<script src="app.js?v=7.8.29"></script>
+<script type="module" src="firebase-sync.js?v=7.8.30"></script>
+<script src="app.js?v=7.8.30"></script>
 </body>
 </html>

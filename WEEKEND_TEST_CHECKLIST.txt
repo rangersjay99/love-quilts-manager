@@ -1,13 +1,16 @@
-LOVE QUILTS MANAGER — 7.8.26 TWO-DEVICE SYNC CHECK
+LOVE QUILTS MANAGER — UPDATE 7.8.30 TEST CHECKLIST
 
-[ ] Do not clear data or recreate shared inventory.
-[ ] Confirm Update 7.8.26 on the device with the correct numbers.
-[ ] Confirm the full Quantity Distributed and inventory balance are correct there.
-[ ] Press Sync Now on the correct device.
-[ ] Confirm it stays non-green while waiting for Firebase confirmation.
-[ ] Confirm it turns green only with “Shared data verified · All changes synced.”
-[ ] Open the second device and confirm Update 7.8.26.
-[ ] Press Sync Now once on the second device.
-[ ] Confirm the second device receives the shared numbers rather than sending its older numbers.
-[ ] Confirm both devices show identical inventory, requests, distributed totals, Home, Calendar, and Reports.
-[ ] Confirm new inventory and charity-need entries still require the Review screen.
+[ ] Export a backup before testing.
+[ ] Confirm Update 7.8.30 appears on the splash, Change Log, or About screen.
+[ ] Add inventory and verify Home-style Before/After bubbles appear before saving.
+[ ] Edit an inventory transaction and verify both Current Transaction and Proposed Transaction are shown.
+[ ] Start deleting an inventory transaction and verify the exact record and expected Home changes are shown. Cancel unless the deletion is intentional.
+[ ] Choose Adjust and verify Add to inventory / Subtract from inventory is selected on the form rather than through an old OK/Cancel pop-up.
+[ ] Test Set Current Count and verify the exact recorded adjustment is stated.
+[ ] Edit a charity need and verify current and proposed request details are shown.
+[ ] Mark quilts distributed and verify inventory and requested totals show the correct Before/After effects.
+[ ] Start deleting an unlinked charity need and verify the detailed review appears. Cancel unless intentional.
+[ ] In Settings, review a charity rename and verify all three Home totals are unchanged.
+[ ] Complete a desired charity rename and confirm all Inventory, Needs, Calendar, Reports, and history records use the new name with unchanged numbers.
+[ ] Review or complete a desired quilt-size rename and verify the same preservation behavior.
+[ ] Confirm both approved devices receive the changes and show “Shared data verified · All changes synced.”

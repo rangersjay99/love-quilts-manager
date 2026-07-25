@@ -1,16 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.29
+LOVE QUILTS MANAGER — UPDATE 7.8.30
 
 1. Do not clear data or recreate the shared inventory.
-2. Keep a backup copy of the current repository and app data.
-3. Unzip the 7.8.29 download on the laptop.
+2. Export a current app backup and keep a copy of the present GitHub repository.
+3. Unzip the 7.8.30 download on the laptop.
 4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
 5. Commit the changes and allow GitHub Pages to publish.
-6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.29.
-7. Open the Needs tab and verify Add Quilts Needed is the first card at the top.
-8. Start a new need and continue to verification.
-9. Verify the changed request-total rows are green for increases, red for decreases, and gray when unchanged.
-10. Verify the distribution reminder below the details is purple.
-11. Save and confirm the app returns to Home.
-12. Confirm both devices still show “Shared data verified · All changes synced.”
+6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.30.
+7. Open Inventory and verify Adjust now provides an explicit Add/Subtract direction choice.
+8. Review a new inventory entry, edit an existing transaction, and start deleting a transaction. Confirm each uses the detailed Home-style Before/After screen. Cancel any test deletion that should not be completed.
+9. Open a saved charity need and verify Edit, Mark Distributed, and Delete all use the detailed verification screen.
+10. In Settings > Manage Lists, rename a charity or size only when you intend to keep the new name. Verify the review shows unchanged Home totals and states that all existing records will be kept.
+11. After renaming, confirm Inventory, Needs, Calendar, Reports, and history show the new name with exactly the same numbers.
+12. Confirm both devices show “Shared data verified · All changes synced” and display the same renamed choices and totals.
 
 No Firebase, Firestore Rules, login, collection, or database changes are needed.
