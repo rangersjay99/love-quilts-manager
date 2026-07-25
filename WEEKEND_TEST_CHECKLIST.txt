@@ -1,39 +1,13 @@
-LOVE QUILTS MANAGER — 7.8.23 LIVE-DEVICE CHECK
+LOVE QUILTS MANAGER — 7.8.24 SYNC HOTFIX CHECK
 
-VERSION AND SYNC
-[ ] Confirm Update 7.8.23 on the laptop and iPhone/iPad.
-[ ] Press Sync Now and confirm the status completes successfully.
-[ ] Confirm both devices show the same inventory, requests, and distributions.
-
-NEW INVENTORY REVIEW
-[ ] Start a Love Quilts In entry and tap Add to Inventory.
-[ ] Confirm nothing saves yet and the Review screen appears.
-[ ] Confirm it shows entry type, charity, size, quantity, date, selected inventory before/after, and total inventory before/after.
-[ ] Tap Go Back and confirm the form remains available and no entry was saved.
-[ ] Open Review again, tap Save Inventory Entry, and confirm the entry appears once and syncs.
-[ ] Repeat with Love Quilts Out and Set Current Count as practical.
-
-NEW CHARITY NEED REVIEW
-[ ] Start a new need from the regular Quilts Needed form.
-[ ] Confirm the Review screen shows month, charity, size, quantity, month request total before/after, and total active request total before/after.
-[ ] Tap Go Back and confirm nothing was saved.
-[ ] Save from Review and confirm the request appears once and syncs.
-[ ] Add a second temporary request from the Calendar and confirm the same Review screen is required.
-
-DISTRIBUTION ABOVE REQUEST
-[ ] Create a temporary request for 10 quilts with at least 12 matching quilts in storage.
-[ ] Enter Quantity Distributed = 12 and save with inventory removal checked.
-[ ] Confirm the app accepts 12, records Sent 12, and shows Quilts Still Needed 0.
-[ ] Confirm active inventory decreases by the full 12.
-[ ] Confirm Calendar, Needs, Reports, yearly statistics, and the other device show the full 12 distributed.
-[ ] Edit the distribution down from 12 to 11 and confirm exactly 1 returns to inventory.
-[ ] Edit it back to 12 and confirm exactly 1 is removed again.
-
-REGRESSION
-[ ] Confirm Calendar colors, Tap charity to edit, bottom key, portrait 12-month printing, Summary printing, and report shading remain correct.
-[ ] Confirm 26 available and 26 distributed leaves 0 remaining.
-[ ] Confirm saving an unchanged distribution does not deduct inventory twice.
-
-CLEANUP
-[ ] Delete or correct temporary test records.
-[ ] Press Sync Now on both devices and confirm final live numbers match.
+[ ] Do not clear data or recreate shared inventory.
+[ ] Confirm Update 7.8.24 on the device with the correct numbers.
+[ ] Confirm a request may show Quantity Distributed above Quilts Needed.
+[ ] Press Sync Now and confirm the red banner changes to green.
+[ ] Confirm the full Quantity Distributed remains unchanged after syncing.
+[ ] Confirm Quilts Still Needed remains 0.
+[ ] Confirm inventory still reflects the full number physically distributed.
+[ ] Open the second device and confirm Update 7.8.24.
+[ ] Press Sync Now and confirm it turns green.
+[ ] Confirm both devices show identical inventory, requests, and distributed totals.
+[ ] Confirm new inventory and charity-need entries still require the 7.8.23 Review screen.

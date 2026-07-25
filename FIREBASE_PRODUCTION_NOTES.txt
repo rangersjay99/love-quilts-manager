@@ -1,9 +1,9 @@
-LOVE QUILTS MANAGER UPDATE 7.8.23 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.24 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules or collection-path changes are required.
 
-The update continues using the existing shared settings, transactions, needs, distribution fields, and audit data. Quantity Distributed is no longer capped at the original request during normalization or display, so synchronized records retain the complete distributed amount.
+This hotfix removes the remaining Firebase-side cap that could reduce Quantity Distributed to Quilts Needed during synchronization. It also repairs the common 7.8.23 clipped state when autoOutQty proves that a larger amount was already removed from inventory.
 
-The new entry-review screens are interface safeguards only and do not change the Firebase schema.
+A pending 7.8.23 save is refreshed from the current local app copy before upload. Manual Sync Now rewrites need records so corrected quantities are stored in Firestore.
 
-Upload the app update normally, sign in, and use Sync Now. Do not clear or recreate the shared inventory.
+Upload the update normally. Do not clear or recreate shared inventory. After both devices show 7.8.24, press Sync Now first on the device with the correct numbers, then open the second device and press Sync Now there.

@@ -1,12 +1,11 @@
-Love Quilts Manager Update 7.8.23
-Entry Review and Full Distribution Totals
+Love Quilts Manager Update 7.8.24
+Sync Over-Distribution Hotfix
 July 24, 2026
 
 Included:
-- Adds a review screen before every new inventory entry is saved.
-- Shows charity, size, quantity, date, and resulting selected and total inventory balances.
-- Adds a review screen before every new charity need/request is saved, including Calendar add actions.
-- Shows month, charity, size, requested quantity, and resulting request totals.
-- Allows Quantity Distributed to exceed Quilts Needed.
-- Keeps Quilts Still Needed at zero after the request is met while retaining and reporting the complete distributed quantity.
-- Retains protected linked inventory transactions, difference-only distribution deductions/restorations, Firebase sync, Calendar actions, portrait printing, reports, and yearly statistics.
+- Fixes Sync Now remaining red after a distributed quantity exceeded the original request.
+- Removes the remaining Firebase-side cap on Quantity Distributed.
+- Repairs a 7.8.23 synchronized record when linked inventory proves the full amount distributed.
+- Refreshes any older pending Firebase save from the current local app data before upload.
+- Makes Sync Now rewrite need records so the corrected full quantity is stored in Firestore.
+- Retains the 7.8.23 entry-review screens and all prior inventory, Calendar, reporting, and synchronization safeguards.

@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.23">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.23">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.23">
+<link rel="manifest" href="manifest-v7.json?v=7.8.24">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.24">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.24">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -352,14 +352,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.23" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.24" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.23</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.24</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -621,7 +621,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
   <div class="card" id="changeLogCard">
     <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.23</b><span class="small">Entry review and over-distribution update · July 24, 2026</span></div>
+    <div class="change-log-current"><b>Current version: Update 7.8.24</b><span class="small">Sync over-distribution hotfix · July 24, 2026</span></div>
+    <div class="change-log-entry"><h4>7.8.24</h4><p>Fixed Sync Now remaining red after an over-distribution, repaired clipped 7.8.23 quantities when linked inventory confirms the full amount, and made manual sync rewrite corrected need records.</p></div>
     <div class="change-log-entry"><h4>7.8.23</h4><p>Added a clear review screen before saving every new inventory entry or charity need, and now records the full quantity distributed even when it is above the original request.</p></div>
     <div class="change-log-entry"><h4>7.8.22</h4><p>Simplified Calendar month cards, added a small Tap charity to edit note inside populated months, removed On Hold / Storage from the active app, and changed 12-month Calendar printing to portrait.</p></div>
     <div class="change-log-entry"><h4>7.8.21</h4><p>Calendar entry actions, bottom Calendar key, direct Calendar distribution, On Hold / Storage workflow, 12-month Calendar printing, iPhone summary-print improvements, and weekend verification checklist.</p></div>
@@ -638,11 +639,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
       <b>Program</b><span id="aboutItemName">Love Quilts</span>
       <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.23 · July 24, 2026</span>
+      <b>Version</b><span>Update 7.8.24 · July 24, 2026</span>
       <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
       <b>Use</b><span>Personal and authorized guild use only.</span>
     </div>
-    <p class="small">Update 7.8.23 adds a clear review step before every new inventory or charity-need entry is saved. Distribution totals may now exceed the original request; the full amount remains recorded and reported while Quilts Still Needed stays at zero.</p>
+    <p class="small">Update 7.8.24 fixes the Firebase sync mismatch that could leave Sync Now red after distributing more than the original request. It retains the full distributed amount and repairs affected 7.8.23 synchronized records without changing Firestore Rules.</p>
     <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
   </div>
 </section>
@@ -700,7 +701,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.23"></script>
-<script src="app.js?v=7.8.23"></script>
+<script type="module" src="firebase-sync.js?v=7.8.24"></script>
+<script src="app.js?v=7.8.24"></script>
 </body>
 </html>

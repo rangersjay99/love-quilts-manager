@@ -1,7 +1,7 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 24, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.23
+IMPLEMENTED THROUGH UPDATE 7.8.24
 
 HOME
 - At a Glance provides Add Quilts, Add Need, and Distribute Quilts actions.
@@ -41,6 +41,7 @@ INVENTORY, DISTRIBUTION, AND SYNC
 - Corrected distribution quantities safely restore or deduct only the difference.
 - Linked distribution transactions remain protected.
 - Sync Now is available in the status banner and Settings.
+- Update 7.8.24 fixes the red Sync Now state after over-distribution and repairs affected 7.8.23 synchronized quantities.
 - Firebase shared-device paths and existing data remain compatible.
 
 DEFERRED / FUTURE ROADMAP

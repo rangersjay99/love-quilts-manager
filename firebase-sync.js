@@ -207,7 +207,11 @@ function normalizeTransaction(source = {}) {
 
 function normalizeNeed(source = {}) {
   const qty = Math.max(1, Math.floor(Number(source.qty || 1)));
-  const fulfilledQty = Math.max(0, Math.min(qty, Math.floor(Number(source.fulfilledQty || 0))));
+  const recordedFulfilled = Math.max(0, Math.floor(Number(source.fulfilledQty || 0)));
+  const autoOutQty = Math.max(0, Math.floor(Number(source.autoOutQty || 0)));
+  // Keep the complete distributed quantity. If 7.8.23 clipped fulfilledQty,
+  // autoOutQty safely recovers the amount already removed from inventory.
+  const fulfilledQty = Math.max(recordedFulfilled, autoOutQty);
   return {
     id: cleanString(source.id),
     month: cleanString(source.month),
@@ -220,7 +224,7 @@ function normalizeNeed(source = {}) {
     fulfilledBy: cleanString(source.fulfilledBy || ''),
     fulfilledAt: cleanString(source.fulfilledAt || ''),
     fulfilledHighWater: Math.max(fulfilledQty, Math.floor(Number(source.fulfilledHighWater ?? fulfilledQty) || 0)),
-    autoOutQty: Math.max(0, Math.floor(Number(source.autoOutQty || 0))),
+    autoOutQty,
     createdBy: cleanString(source.createdBy || ''),
     createdAt: cleanString(source.createdAt || ''),
     updatedBy: cleanString(source.updatedBy || ''),
@@ -352,7 +356,8 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
       applyingRemote = true;
       window.lqApplyRemoteData(cloudData, reason);
       applyingRemote = false;
-      setState('Shared inventory loaded');
+      // The remote copy has now been applied locally, so both sides are verified equal.
+      setState('All changes synced');
     } else {
       setState('All changes synced');
     }
@@ -428,13 +433,13 @@ function mapById(items = []) {
   return new Map(items.map(item => [item.id, item]));
 }
 
-function addDiffOperations(operations, collectionName, localItems, remoteItems) {
+function addDiffOperations(operations, collectionName, localItems, remoteItems, forceSet = false) {
   const localMap = mapById(localItems);
   const remoteMap = mapById(remoteItems);
 
   for (const [id, item] of localMap) {
     const previous = remoteMap.get(id);
-    if (!previous || stable(item) !== stable(previous)) {
+    if (forceSet || !previous || stable(item) !== stable(previous)) {
       operations.push({ type: 'set', ref: doc(db, 'organizations', ORG_ID, collectionName, id), data: item });
     }
   }
@@ -488,7 +493,8 @@ async function flushSave() {
     }
 
     addDiffOperations(operations, 'transactions', localData.transactions, baseline.transactions);
-    addDiffOperations(operations, 'needs', localData.needs, baseline.needs);
+    // Manual Sync Now rewrites need records so a quantity clipped by 7.8.23 is repaired in Firestore.
+    addDiffOperations(operations, 'needs', localData.needs, baseline.needs, task.force);
 
     operations.push({
       type: 'set',
@@ -677,5 +683,11 @@ onAuthStateChanged(auth, async user => {
   showGate('loading', 'Loading shared inventory…');
   setState('Signed in — loading shared inventory');
   await waitForBridge();
+  // Refresh an older pending save from the app's current local copy before it can upload.
+  // This prevents a 7.8.23 pending sync from re-sending a clipped distributed quantity.
+  if (pendingSave && typeof window.lqGetData === 'function') {
+    pendingSave = { ...pendingSave, data: normalizeAppData(window.lqGetData()) };
+    persistPendingSave();
+  }
   startRealtime();
 });

@@ -1,12 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.23
+LOVE QUILTS MANAGER — UPDATE 7.8.24
 
-1. Keep a backup copy of the current repository and app data.
-2. Unzip the 7.8.23 download on the laptop.
-3. Open the unzipped folder and select every file and folder inside it.
-4. Upload those contents to the ROOT of the GitHub repository, replacing matching files.
-5. Do not upload the outer 7.8.23 folder itself.
-6. Commit the changes and allow GitHub Pages a few minutes to publish.
-7. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.23.
-8. If an installed phone copy still shows an older version, fully close it, reopen it while online, and use Sync Now.
+1. Do not clear data or recreate the shared inventory.
+2. Keep a backup copy of the current repository and app data.
+3. Unzip the 7.8.24 download on the laptop.
+4. Open the unzipped folder and select every file and folder inside it.
+5. Upload those contents to the ROOT of the GitHub repository, replacing matching files.
+6. Do not upload the outer 7.8.24 folder itself.
+7. Commit the changes and allow GitHub Pages to publish.
+8. Open the device that currently shows the correct distribution and inventory numbers.
+9. Confirm the splash, Change Log, or About screen says Update 7.8.24.
+10. Press Sync Now on that correct device and confirm the banner turns green.
+11. Open the second device, confirm 7.8.24, and press Sync Now.
+12. Verify both devices show the same full distributed quantity and inventory balance.
 
-Existing inventory, requests, distribution history, settings, Firebase paths, and Firestore Rules are retained. Do not clear or recreate the shared inventory.
+No Firebase, Firestore Rules, login, or collection changes are needed.

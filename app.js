@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.23';
+const VERSION='7.8.24';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -74,14 +74,18 @@ function normalizeData(d={}){
   const needs=Array.isArray(d.needs)?d.needs.map(n=>{
     const needQty=Math.max(1,Math.floor(Number(n.qty||1)));
     const legacyComplete=n.completed===true||String(n.status||'').toLocaleLowerCase()==='completed';
-    const fulfilled=Math.max(0,Math.floor(Number(n.fulfilledQty??(legacyComplete?needQty:0))||0));
+    const recordedFulfilled=Math.max(0,Math.floor(Number(n.fulfilledQty??(legacyComplete?needQty:0))||0));
+    const autoOutQty=Math.max(0,Math.floor(Number(n.autoOutQty||0)));
+    // 7.8.23 could clip fulfilledQty to the request during Firebase normalization.
+    // autoOutQty can never legitimately exceed the current distributed amount, so use it to repair that copy.
+    const fulfilled=Math.max(recordedFulfilled,autoOutQty);
     return{
       id:n.id||uid(),month:n.month||monthNow(),charity:String(n.charity||DEFAULT_CHARITIES[0]),
       size:String(n.size||DEFAULT_SIZES[0]),qty:needQty,note:String(n.note||''),
       fulfilledQty:fulfilled,fulfilledDate:String(n.fulfilledDate||n.completedDate||''),
       fulfilledBy:String(n.fulfilledBy||''),fulfilledAt:String(n.fulfilledAt||''),
       fulfilledHighWater:Math.max(fulfilled,Math.floor(Number(n.fulfilledHighWater??fulfilled)||0)),
-      autoOutQty:Math.max(0,Math.floor(Number(n.autoOutQty||0))),
+      autoOutQty,
       createdBy:String(n.createdBy||''),createdAt:String(n.createdAt||''),updatedBy:String(n.updatedBy||''),updatedAt:String(n.updatedAt||'')
     };
   }):[];
@@ -1314,7 +1318,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.23 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.24 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.23',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.24',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

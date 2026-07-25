@@ -1,34 +1,34 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.23 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.24 VALIDATION RESULTS
 July 24, 2026
 
 RESULT: PASSED
 
-91 automated checks passed:
-- 34 static package, version, manifest, syntax, documentation, and feature checks.
-- 38 core mobile-browser behavior checks for review screens, save/cancel behavior, Calendar add flow, over-distribution, reporting, normalization, and correction safeguards.
-- 10 mobile-browser checks covering new Quilts Out, Set Current Count, and Adjustment review screens and resulting balances.
-- 9 mobile-browser checks for creating a new request with 12 distributed against 10 requested, including full inventory removal without a second confirmation.
+57 checks passed:
+- 55 source, JavaScript syntax, manifest, required-file, version, recovery, and synchronization-logic checks.
+- 1 final ZIP integrity test.
+- 1 clean-extraction verification of the packaged hotfix files.
 
-VERIFIED CHANGES
-- Splash, About, Change Log, app constant, service-worker cache, manifests, README, Version, and update instructions use 7.8.23.
-- New Love Quilts In entries do not save until Save Inventory Entry is selected on the Review screen.
-- Go Back closes Review without saving and leaves the entered form values in place.
-- Inventory Review shows entry type, charity, size, quantity/date, optional note, selected inventory before/after, and total inventory before/after.
-- New Quilts Out, Set Current Count, and Adjustment entries also require Review and apply the displayed result exactly once.
-- New charity needs do not save until Save Charity Need is selected on the Review screen.
-- Need Review shows month, charity, size, quantity, optional note, month request totals, and active request totals.
-- New needs opened from the Calendar use the same Review screen; Escape closes Review without closing the Calendar form underneath it.
-- Quantity Distributed is no longer capped by Quilts Needed in normalization, inline editing, Calendar distribution, or reports.
-- A request for 10 accepted and retained 12 distributed, showed Quilts Still Needed 0, and removed the full 12 from inventory.
-- Reducing that distribution from 12 to 11 restored exactly 1 quilt to inventory.
-- Reports display the full sent quantity and identify amounts above the request.
-- Existing data, Firebase schema, protected linked transactions, duplicate-deduction safeguards, Calendar colors/actions, portrait Calendar printing, yearly statistics, and report features remain.
+ROOT CAUSE VERIFIED
+- Update 7.8.23 correctly allowed Quantity Distributed above Quilts Needed in the main app.
+- Firebase normalization still reduced fulfilledQty to the original request quantity.
+- That mismatch could cause Sync Now to remain red and could send a clipped need record to Firestore.
 
-VISUAL CHECK
-- The Review screen was rendered at a 390 × 844 mobile viewport.
-- All rows, before/after totals, close control, Save Inventory Entry, and Go Back were visible without clipping or overlap.
+HOTFIX VERIFIED
+- Firebase no longer caps Quantity Distributed at Quilts Needed.
+- A 7.8.23 record with autoOutQty above fulfilledQty safely recovers the full amount already removed from inventory.
+- The app also repairs that clipped local state during normalization.
+- A pending 7.8.23 Firebase save is refreshed from the current local app copy before upload.
+- Manual Sync Now rewrites need records so the corrected quantity is stored in Firestore.
+- After remote data is applied locally, the status is marked All changes synced so the banner turns green.
+- The Firebase organization path, pending-save key, authentication setup, and Firestore schema remain unchanged.
 
-PACKAGE VALIDATION
-- app.js, firebase-sync.js, and sw.js pass JavaScript syntax validation.
-- manifest.json and manifest-v7.json parse as valid JSON and use the 7.8.23 start URL.
-- Required app, icon, license, backup, documentation, and checklist files are present.
+DYNAMIC QUANTITY TESTS
+- Request 10 / Distributed 12 / Auto inventory out 12 => retains 12.
+- Clipped request 10 / Fulfilled 10 / Auto inventory out 12 => repairs to 12.
+- Corrected current amount 11 / prior high-water 12 / no auto out => remains 11.
+- Partial amount 8 => remains 8.
+- Zero distributed => remains 0.
+- Request 10 / Distributed 26 => retains 26.
+
+LIMITATION
+- These checks validate the packaged code and repair logic. They do not connect to the user's live Firebase account from the test container. Complete the included two-device live check after GitHub Pages publishes the update.

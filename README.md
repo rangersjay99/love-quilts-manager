@@ -1,16 +1,15 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.23 — Entry Review and Full Distribution Totals — July 24, 2026**
+Current release: **Update 7.8.24 — Sync Over-Distribution Hotfix — July 24, 2026**
 
-## Update 7.8.23
+## Update 7.8.24
 
-- Every new inventory entry now opens a clear review screen before saving.
-- The review shows entry type, charity, size, quantity or exact count, date, optional note, selected inventory before/after, and total inventory before/after.
-- Every new charity need/request now opens a clear review screen before saving, including entries started from the Calendar.
-- The need review shows month, charity, size, requested quantity, optional note, month request totals, and resulting active request totals.
-- Distribution quantities may be greater than the original Quilts Needed amount.
-- Quilts Still Needed remains zero after the request is met, while the full distributed quantity—including any amount above the request—is retained in Calendar, Needs, Reports, backups, and synchronized data.
-- Existing distribution inventory safeguards remain in place and deduct or restore only the required difference.
-- Update 7.8.22 Calendar simplification, portrait printing, bottom key, direct actions, and subtle Tap charity to edit instruction remain.
+- Fixes the red Sync Now status that could remain after Quantity Distributed was greater than Quilts Needed.
+- Firebase normalization now retains the complete distributed quantity rather than reducing it to the original request.
+- If 7.8.23 already clipped a synchronized record, the linked automatic inventory-out amount is used to safely recover the full distributed quantity.
+- Any pending save left by 7.8.23 is refreshed from the current local app data before it uploads.
+- Pressing Sync Now rewrites charity-need records so the repaired full quantity is stored in Firestore and shared with the other device.
+- No Firestore Rules, Firebase paths, sign-ins, or database recreation are required.
+- All 7.8.23 entry-review screens and earlier Calendar, reporting, inventory, and distribution safeguards remain.
 
 Upload all files inside this folder to the root of the GitHub Pages repository, replacing matching files. Do not upload the outer folder as a subfolder.
