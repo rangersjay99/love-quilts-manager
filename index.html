@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.38">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.38">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.38">
+<link rel="manifest" href="manifest-v7.json?v=7.8.39">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.39">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.39">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -99,8 +99,7 @@ tfoot td{font-weight:900;background:#eaddea;border-top:3px solid var(--plum);col
 .home-year-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.home-year-stat{padding:14px 10px;border:1px solid var(--line);border-radius:13px;background:var(--soft);text-align:center}.home-year-stat b{display:block;font-size:29px;line-height:1;color:var(--plum)}.home-year-stat span{display:block;margin-top:6px;font-size:12px;font-weight:800;color:var(--muted)}
 .home-year-link{margin-top:10px}.yearly-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.yearly-stat{min-width:0;padding:12px 8px;border:1px solid var(--line);border-radius:12px;background:var(--soft);text-align:center}.yearly-stat b{display:block;font-size:24px;color:var(--plum);line-height:1.05}.yearly-stat span{display:block;margin-top:6px;font-size:11px;font-weight:800;line-height:1.25;color:var(--muted)}.yearly-stat .positive{color:var(--green)}.yearly-stat .negative{color:var(--red)}
 .yearly-report-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:10px}.yearly-report-heading h3{margin:0}.yearly-report-heading label{width:min(170px,45%);margin:0;font-size:12px;color:var(--muted)}.yearly-report-heading select{min-height:42px;margin-top:4px;padding:8px 10px}
-.report-metrics .metric{min-height:194px;height:auto}.report-metrics .metric-title{height:auto;white-space:normal;overflow:visible;overflow-wrap:break-word;word-break:normal}.report-difference-metric .metric-title{min-height:62px;line-height:1.18}
-@media(max-width:620px){.yearly-stat-grid{grid-template-columns:repeat(2,1fr)}.report-metrics{grid-template-columns:repeat(2,1fr)}.report-metrics .metric{min-height:178px;padding-left:8px;padding-right:8px}.report-difference-metric{grid-column:1/-1;min-height:152px!important}.report-difference-metric .metric-title{min-height:auto;font-size:11px;line-height:1.25}.home-year-grid{gap:7px}.home-year-stat{padding:13px 6px}.home-year-stat b{font-size:26px}}
+@media(max-width:620px){.yearly-stat-grid{grid-template-columns:repeat(2,1fr)}.home-year-grid{gap:7px}.home-year-stat{padding:13px 6px}.home-year-stat b{font-size:26px}}
 .btn-plum{background:var(--plum)}.btn-teal{background:var(--teal)}.btn-blue{background:var(--blue)}.btn-gold{background:var(--gold)}
 label{display:block;margin-top:12px;font-weight:750}
 input,select,textarea{width:100%;max-width:100%;min-width:0;min-height:48px;margin-top:7px;padding:13px;border:1px solid #cfc4ce;border-radius:12px;background:#fff;color:var(--ink)}
@@ -246,7 +245,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 
 @media print{
   @page{size:letter portrait;margin:.45in}
-  .splash,header,.bottom-nav,.no-print,.actions{display:none!important}
+  .splash,header,.bottom-nav,.no-print,.actions,.metric-add-button{display:none!important}
   html,body{height:auto;min-height:0;background:#fff;padding:0;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   main{max-width:none;padding:0;margin:0}.view{display:none!important}#reports.view{display:block!important}
   #meetingReport{display:none!important}
@@ -401,7 +400,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.38" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.39" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
@@ -409,7 +408,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button type="button" class="splash-growth-button" onclick="openFutureModulesFromSplash()">Designed to grow with your quilting needs.</button>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.38</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.39</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -541,9 +540,24 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <div class="card">
     <h2 id="reportHeading">Love Quilts Inventory and Quilts Needed Report</h2><p id="reportDate" class="small"></p>
     <div class="grid3 report-metrics">
-      <div class="metric"><span id="reportStorageLabel" class="metric-title">Available in Storage</span><strong id="reportOnHand">0</strong><span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span></div>
-      <div class="metric"><span id="reportNeededLabel" class="metric-title">Quilts Requested</span><strong id="reportNeeded">0</strong><span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span></div>
-      <div class="metric report-difference-metric"><span id="reportDifferenceLabel" class="metric-title">Quilts Needed to be Completed</span><strong id="reportShortage">0</strong><span id="reportDifferenceStatus" class="metric-status-line difference-status positive">All Requests Covered</span></div>
+      <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts in storage" onclick="openInventoryDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openInventoryDetails()}">
+        <span id="reportStorageLabel" class="metric-title">Available in Storage</span>
+        <strong id="reportOnHand">0</strong>
+        <span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span>
+        <button type="button" class="metric-add-button" onclick="event.stopPropagation();openAddQuilts()">＋ Add Quilts</button>
+      </div>
+      <div class="metric metric-action" role="button" tabindex="0" aria-label="View quilts requested" onclick="openNeedsDetails()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNeedsDetails()}">
+        <span id="reportNeededLabel" class="metric-title">Quilts Requested</span>
+        <strong id="reportNeeded">0</strong>
+        <span class="metric-status-line metric-status-placeholder" aria-hidden="true">Status</span>
+        <button type="button" class="metric-add-button need-button" onclick="event.stopPropagation();openAddNeed()">＋ Add Need</button>
+      </div>
+      <div class="metric metric-action report-difference-metric" role="button" tabindex="0" aria-label="View quilts needed to be completed" onclick="openDistributeQuilts()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDistributeQuilts()}">
+        <span id="reportDifferenceLabel" class="metric-title">Quilts Needed to be Completed</span>
+        <strong id="reportShortage">0</strong>
+        <span id="reportDifferenceStatus" class="metric-status-line difference-status positive">All Requests Covered</span>
+        <button type="button" class="metric-add-button distribute-button" onclick="event.stopPropagation();openDistributeQuilts()">Distribute Quilts</button>
+      </div>
     </div>
   </div>
   <details id="reportsYearlySection" class="report-group">
@@ -692,7 +706,7 @@ one quilt at a time."></textarea>
 <div aria-live="polite" class="app-check-results" id="appCheckResults"></div>
 </div>
 <h3>Report a Bug or Request a Change</h3>
-<p class="feedback-note small">The request automatically includes Update 7.8.38, the date and time, signed-in user, current screen, and device/browser information.</p>
+<p class="feedback-note small">The request automatically includes Update 7.8.39, the date and time, signed-in user, current screen, and device/browser information.</p>
 <div class="feedback-grid">
 <label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
 <label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected="">Other</option></select></label>
@@ -748,7 +762,8 @@ one quilt at a time."></textarea>
     <summary><b>Change Log & About</b><span>See the newest updates, full history, app version, and license.</span></summary>
     <div class="settings-group-body"><div class="card" id="changeLogCard">
 <h2>Change Log</h2>
-<div class="change-log-current"><b>Current version: Update 7.8.38</b><span class="small">Compact Reports navigation · July 26, 2026</span></div><div class="change-log-entry"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div><div class="change-log-entry"><h4>7.8.37</h4><p>Inventory and Quilts Needed now start with both record sections collapsed for a cleaner, less cluttered screen. Tapping a section opens it, and Home shortcuts or edit actions still open the needed section automatically.</p></div>
+<div class="change-log-current"><b>Current version: Update 7.8.39</b><span class="small">Home-matched Reports summary cards · July 26, 2026</span></div><div class="change-log-entry"><h4>7.8.39</h4><p>The Reports headline summary cards now match the Home screen cards in size, spacing, three-card layout, buttons, and tap behavior.</p></div><div class="change-log-entry"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.37</h4><p>Inventory and Quilts Needed now start with both record sections collapsed for a cleaner, less cluttered screen. Tapping a section opens it, and Home shortcuts or edit actions still open the needed section automatically.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.36</h4><p>Added tap-to-open sections to Inventory and Quilts Needed. Inventory separates Current Inventory from Inventory History, while Quilts Needed separates active requests from completed Needs History. Only one section stays open at a time.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.35</h4><p>Made the splash growth message open Future Modules, grouped Settings into short tap-to-open sections, limited Change Log to the newest two entries until Show All is selected, and removed the duplicate Calendar from Quilts Needed. The Home Calendar remains the single calendar view.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.34</h4><p>Added a display-only Future Modules section in Settings with five possible expansion areas. Added the subtle splash-screen line “Designed to grow with your quilting needs.” No module functions, data fields, or Firebase changes were added.</p></div>
@@ -776,11 +791,11 @@ one quilt at a time."></textarea>
 <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
 <b>Program</b><span id="aboutItemName">Love Quilts</span>
 <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-<b>Version</b><span>Update 7.8.38 · July 26, 2026</span>
+<b>Version</b><span>Update 7.8.39 · July 26, 2026</span>
 <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
 <b>Use</b><span>Personal and authorized guild use only.</span>
 </div>
-<p class="small">Update 7.8.38 adds compact tap-to-open navigation to Reports while keeping the headline totals visible. Update 7.8.37 starts Inventory and Quilts Needed record sections collapsed for a cleaner screen.</p>
+<p class="small">Update 7.8.39 makes the Reports headline summary cards match the Home screen cards in size and layout. Update 7.8.38 added compact tap-to-open Reports navigation.</p>
 <a class="inline-link" href="LICENSE.txt" rel="noopener" target="_blank">Open license and permitted-use notice</a>
 </div></div>
   </details>
@@ -850,7 +865,7 @@ one quilt at a time."></textarea>
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.38"></script>
-<script src="app.js?v=7.8.38"></script>
+<script type="module" src="firebase-sync.js?v=7.8.39"></script>
+<script src="app.js?v=7.8.39"></script>
 </body>
 </html>

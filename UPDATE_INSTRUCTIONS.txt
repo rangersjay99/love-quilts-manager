@@ -1,8 +1,9 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.38
+LOVE QUILTS MANAGER — UPDATE 7.8.39
 
 1. Back up the current GitHub repository or download the existing release ZIP.
 2. Upload all files from this update and replace the older versions.
 3. Keep the included icons folder and files.
 4. Wait for GitHub Pages deployment to complete, then refresh the installed app.
-5. Confirm the splash or About section says Update 7.8.38.
-6. Open Reports and confirm the headline totals remain visible while all four detail sections start collapsed.
+5. Confirm the splash or About section says Update 7.8.39.
+6. Open Reports and confirm the three headline cards match the Home screen cards in size, layout, buttons, and tap behavior.
+7. Print or download a report and confirm the output remains populated and the on-screen action buttons are not printed.
