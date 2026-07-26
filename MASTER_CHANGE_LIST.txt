@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.36
+IMPLEMENTED THROUGH UPDATE 7.8.37
+- Update 7.8.37 starts both Inventory sections and both Quilts Needed sections collapsed for a cleaner mobile layout while direct actions still open the appropriate section.
 - Update 7.8.36 adds compact tap-to-open sections for Current Inventory, Inventory History, active Quilts Needed, and completed Needs History.
 - Update 7.8.35 makes the splash growth message open Future Modules, groups Settings into collapsible sections, collapses older Change Log entries behind Show All, and removes the duplicate Calendar from Quilts Needed. Home remains the single Calendar view.
 - Update 7.8.34 adds a display-only Future Modules section in Settings with Quilt Show Manager, Personal Quilt Collection, Fabric & Supply Inventory, Guild Member Manager, and Analytics & Statistics concepts. It also adds the splash message “Designed to grow with your quilting needs.” No module functions or data changes are included.
@@ -46,6 +47,7 @@ REPORTS AND STATISTICS
 - Full, compact, Summary, Calendar, CSV, backup, print, and email/share tools remain.
 
 INVENTORY, DISTRIBUTION, AND SYNC
+- Inventory and Quilts Needed record sections start collapsed for a cleaner mobile layout; direct Home and edit actions open the appropriate section when needed.
 - Every inventory addition, edit, adjustment, Set Current Count action, and transaction deletion requires a detailed Home-style Before/After review before saving.
 - Every new charity need, charity-need edit, distribution entry/correction, and charity-need deletion requires a Home-style Before/After review at the top, followed by exact record details.
 - Adding a charity need is separate from distribution; distributions are entered later through Mark Distributed or the Calendar action.

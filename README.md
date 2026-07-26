@@ -1,17 +1,16 @@
 # Love Quilts Manager
 
-Current release: **Update 7.8.36 — Compact Inventory and Needs Navigation — July 26, 2026**
+Current release: **Update 7.8.37 — Collapsed Inventory and Needs Sections — July 26, 2026**
 
-## Update 7.8.36
+## Update 7.8.37
 
-- Adds tap-to-open sections to the Inventory tab.
-- Separates **Current Inventory** from **Inventory History**.
-- Adds tap-to-open sections to Quilts Needed.
-- Separates requests that still need attention from completed **Needs History**.
-- Keeps past-due, unfinished requests in Current Quilts Needed.
-- Only one section remains open at a time within Inventory or Quilts Needed.
+- Starts both Inventory record sections collapsed.
+- Starts both Quilts Needed record sections collapsed.
+- Keeps the screen shorter and less cluttered until a section is tapped.
+- Continues allowing only one section to stay open at a time within each tab.
+- Keeps Home shortcuts, distribution actions, and edit actions opening the appropriate section automatically when needed.
 - Keeps all inventory, request, report, App Check, Firebase, and synchronization calculations unchanged.
 
 ## Install
 
-Upload all included files to the existing GitHub repository, replacing the older files. Keep the `icons` folder. After deployment, open the app and confirm Update 7.8.36 appears on the splash screen or About section.
+Upload all included files to the existing GitHub repository, replacing the older files. Keep the `icons` folder. After deployment, open the app and confirm Update 7.8.37 appears on the splash screen or About section.

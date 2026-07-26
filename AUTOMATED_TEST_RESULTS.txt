@@ -1,24 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.36 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.37 VALIDATION RESULTS
 
 PASS: app.js JavaScript syntax validation completed successfully.
-PASS: index.html contains no duplicate element IDs and all new Inventory/Needs navigation IDs are present.
-PASS: Update 7.8.36 is shown on the splash screen and About section.
-PASS: Current Inventory opens by default and Inventory History starts collapsed.
-PASS: Current Quilts Needed opens by default and Needs History starts collapsed.
-PASS: Opening one Inventory section closes the other Inventory section.
-PASS: Opening one Needs section closes the other Needs section.
-PASS: Active future requests remain in Current Quilts Needed.
-PASS: Unfinished past-due requests remain in Current Quilts Needed.
-PASS: Fully distributed requests appear in Needs History.
-PASS: Completed distributions can still be edited from Needs History.
-PASS: Inventory History filters still render matching activity records.
-PASS: Editing an Inventory History record opens the existing inventory editor safely.
-PASS: Current Inventory and both request sections show live record-count summaries.
-PASS: App Check still runs and reports clean sample data correctly.
-PASS: Compact one-page PDF generation still returns populated PDF content.
-PASS: Full PDF generation still returns populated PDF content.
-PASS: Mobile-width visual checks completed for Inventory and Quilts Needed.
-PASS: Firebase synchronization code is byte-for-byte unchanged from Update 7.8.35.
-PASS: Version, manifests, service-worker cache, and asset query references are consistently updated to 7.8.36.
+PASS: firebase-sync.js JavaScript syntax validation completed successfully.
+PASS: index.html contains no duplicate element IDs.
+PASS: Update 7.8.37 is shown on the splash screen, Change Log, and About section.
+PASS: Current Inventory and Inventory History contain no default open attribute and therefore start collapsed.
+PASS: Current Quilts Needed and Needs History contain no default open attribute and therefore start collapsed.
+PASS: The existing one-open-at-a-time accordion behavior passed an isolated Chromium interaction test at iPhone width.
+PASS: The existing openRecordGroup helper still opens a requested section for direct Home and edit actions.
+PASS: The only functional app.js changes from Update 7.8.36 are version/cache references; inventory and request calculations are unchanged.
+PASS: Firebase synchronization code is byte-for-byte unchanged from Update 7.8.36.
+PASS: Version, manifests, service-worker cache, and asset query references are consistently updated to 7.8.37.
 
 No Firebase schema or database migration is required.

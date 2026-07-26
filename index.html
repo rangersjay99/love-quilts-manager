@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.36">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.36">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.36">
+<link rel="manifest" href="manifest-v7.json?v=7.8.37">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.37">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.37">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -390,7 +390,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.36" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.37" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
@@ -398,7 +398,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button type="button" class="splash-growth-button" onclick="openFutureModulesFromSplash()">Designed to grow with your quilting needs.</button>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.36</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.37</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -483,7 +483,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <button id="saveTxBtn" class="primary" onclick="saveTransaction()">Add to Inventory</button>
     <button id="cancelTxBtn" class="ghost" style="display:none" onclick="cancelTxEdit()">Cancel Editing</button>
   </div>
-  <details id="inventoryCurrentSection" class="record-group" open>
+  <details id="inventoryCurrentSection" class="record-group">
     <summary><b>Current Inventory</b><span id="inventoryCurrentSummary">View quilts currently in storage.</span></summary>
     <div class="record-group-body"><div id="inventoryList"></div></div>
   </details>
@@ -516,7 +516,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <button id="saveNeedBtn" class="primary" onclick="saveNeed()">Add to Quilts Needed</button>
     <button id="cancelNeedBtn" class="ghost" style="display:none" onclick="cancelNeedEdit()">Cancel Editing</button>
   </div>
-  <details id="needsCurrentSection" class="record-group" open>
+  <details id="needsCurrentSection" class="record-group">
     <summary><b>Current Quilts Needed</b><span id="needsCurrentSummary">View requests that still need attention.</span></summary>
     <div class="record-group-body"><div id="needsList"></div></div>
   </details>
@@ -665,7 +665,7 @@ one quilt at a time."></textarea>
 <div aria-live="polite" class="app-check-results" id="appCheckResults"></div>
 </div>
 <h3>Report a Bug or Request a Change</h3>
-<p class="feedback-note small">The request automatically includes Update 7.8.36, the date and time, signed-in user, current screen, and device/browser information.</p>
+<p class="feedback-note small">The request automatically includes Update 7.8.37, the date and time, signed-in user, current screen, and device/browser information.</p>
 <div class="feedback-grid">
 <label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
 <label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected="">Other</option></select></label>
@@ -721,8 +721,9 @@ one quilt at a time."></textarea>
     <summary><b>Change Log & About</b><span>See the newest updates, full history, app version, and license.</span></summary>
     <div class="settings-group-body"><div class="card" id="changeLogCard">
 <h2>Change Log</h2>
-<div class="change-log-current"><b>Current version: Update 7.8.36</b><span class="small">Compact Inventory and Needs navigation · July 26, 2026</span></div><div class="change-log-entry"><h4>7.8.36</h4><p>Added tap-to-open sections to Inventory and Quilts Needed. Inventory separates Current Inventory from Inventory History, while Quilts Needed separates active requests from completed Needs History. Only one section stays open at a time.</p></div>
-<div class="change-log-entry"><h4>7.8.35</h4><p>Made the splash growth message open Future Modules, grouped Settings into short tap-to-open sections, limited Change Log to the newest two entries until Show All is selected, and removed the duplicate Calendar from Quilts Needed. The Home Calendar remains the single calendar view.</p></div>
+<div class="change-log-current"><b>Current version: Update 7.8.37</b><span class="small">Collapsed Inventory and Needs sections · July 26, 2026</span></div><div class="change-log-entry"><h4>7.8.37</h4><p>Inventory and Quilts Needed now start with both record sections collapsed for a cleaner, less cluttered screen. Tapping a section opens it, and Home shortcuts or edit actions still open the needed section automatically.</p></div>
+<div class="change-log-entry"><h4>7.8.36</h4><p>Added tap-to-open sections to Inventory and Quilts Needed. Inventory separates Current Inventory from Inventory History, while Quilts Needed separates active requests from completed Needs History. Only one section stays open at a time.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.35</h4><p>Made the splash growth message open Future Modules, grouped Settings into short tap-to-open sections, limited Change Log to the newest two entries until Show All is selected, and removed the duplicate Calendar from Quilts Needed. The Home Calendar remains the single calendar view.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.34</h4><p>Added a display-only Future Modules section in Settings with five possible expansion areas. Added the subtle splash-screen line “Designed to grow with your quilting needs.” No module functions, data fields, or Firebase changes were added.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.33</h4><p>Added Edit Date beside distributed records in Reports, with linked inventory and yearly statistics following the revised date. Added a Settings tool that checks common data problems and creates structured bug reports or change requests for sharing, copying, or downloading.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.32</h4><p>Reports now use the selected date when inventory changed or quilts were distributed, including backdated distribution edits and corrections. Entry timestamps remain available for audit history.</p></div>
@@ -748,11 +749,11 @@ one quilt at a time."></textarea>
 <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
 <b>Program</b><span id="aboutItemName">Love Quilts</span>
 <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-<b>Version</b><span>Update 7.8.36 · July 26, 2026</span>
+<b>Version</b><span>Update 7.8.37 · July 26, 2026</span>
 <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
 <b>Use</b><span>Personal and authorized guild use only.</span>
 </div>
-<p class="small">Update 7.8.36 adds compact tap-to-open sections for Current Inventory, Inventory History, current Quilts Needed, and completed Needs History. Update 7.8.35 cleaned up Settings and removed the duplicate Quilts Needed Calendar.</p>
+<p class="small">Update 7.8.37 starts all Inventory and Quilts Needed record sections collapsed for a cleaner screen. Update 7.8.36 added the compact tap-to-open navigation and kept active and completed records separated.</p>
 <a class="inline-link" href="LICENSE.txt" rel="noopener" target="_blank">Open license and permitted-use notice</a>
 </div></div>
   </details>
@@ -822,7 +823,7 @@ one quilt at a time."></textarea>
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.36"></script>
-<script src="app.js?v=7.8.36"></script>
+<script type="module" src="firebase-sync.js?v=7.8.37"></script>
+<script src="app.js?v=7.8.37"></script>
 </body>
 </html>

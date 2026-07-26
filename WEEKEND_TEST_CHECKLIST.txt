@@ -1,13 +1,14 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.36 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.37 TEST CHECKLIST
 
-[ ] Confirm Update 7.8.36 appears on the splash and About screen.
-[ ] Open Inventory and confirm Current Inventory is open by default.
+[ ] Confirm Update 7.8.37 appears on the splash and About screen.
+[ ] Open Inventory and confirm Current Inventory and Inventory History both start collapsed.
+[ ] Tap Current Inventory and confirm it opens.
 [ ] Tap Inventory History and confirm Current Inventory closes.
 [ ] Use the Inventory History filters and confirm records still display.
-[ ] Edit an inventory record and confirm the form opens without changing totals until saved.
-[ ] Open Quilts Needed and confirm Current Quilts Needed is open by default.
-[ ] Confirm unfinished and past-due requests appear under Current Quilts Needed.
-[ ] Tap Needs History and confirm completed requests appear there.
-[ ] Edit or update a completed distribution from Needs History.
-[ ] Confirm only one section stays open at a time in each tab.
+[ ] Edit an inventory record and confirm Inventory History opens automatically without changing totals until saved.
+[ ] Open Quilts Needed and confirm Current Quilts Needed and Needs History both start collapsed.
+[ ] Tap Current Quilts Needed and confirm unfinished and past-due requests appear there.
+[ ] Tap Needs History and confirm Current Quilts Needed closes and completed requests appear.
+[ ] Edit or update a completed distribution and confirm Needs History opens automatically.
+[ ] Confirm Home shortcuts still open the correct Current Inventory or Current Quilts Needed section.
 [ ] Confirm Home Calendar, reports, compact PDF, App Check, and syncing still work.
