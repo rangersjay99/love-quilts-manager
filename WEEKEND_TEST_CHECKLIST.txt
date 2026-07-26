@@ -1,14 +1,13 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.39 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.40 TEST CHECKLIST
 
-[ ] Confirm Update 7.8.39 appears on the splash and About screen.
-[ ] Open Home and note the size and layout of the three At a Glance cards.
-[ ] Open Reports and confirm the three headline cards match Home in width, height, spacing, and three-card arrangement.
-[ ] Confirm Reports shows the same Add Quilts, Add Need, and Distribute Quilts buttons.
-[ ] Tap the Reports Available in Storage card and confirm Current Inventory opens.
-[ ] Tap Add Quilts from Reports and confirm the inventory-entry form opens.
-[ ] Tap the Reports Quilts Requested card and confirm Current Quilts Needed opens.
-[ ] Tap Add Need from Reports and confirm the need-entry form opens.
-[ ] Confirm the four report detail sections still start collapsed and only one remains open at a time.
-[ ] Print the full report and confirm the on-screen action buttons do not appear on paper.
-[ ] Download the full and compact PDFs and confirm both contain report data.
-[ ] Confirm Edit Date, App Check, Firebase sync, Inventory, Quilts Needed, and Home continue to work normally.
+[ ] Confirm Update 7.8.40 appears on the splash and About screen.
+[ ] Confirm the Future Modules message appears on both splash and Home.
+[ ] Change the Future Modules message in Settings and save it.
+[ ] Confirm the same wording appears on splash and Home.
+[ ] Tap the message from Home and confirm Future Modules opens.
+[ ] Rename each bottom tab and confirm all five labels update.
+[ ] Confirm tab icons, colors, order, and destinations remain unchanged.
+[ ] Refresh or reopen the app and confirm custom wording remains saved.
+[ ] Confirm a second approved device receives the custom wording after sync.
+[ ] Confirm Home, Inventory, Quilts Needed, Reports, Settings, and App Check still work.
+[ ] Confirm full and compact reports remain populated.

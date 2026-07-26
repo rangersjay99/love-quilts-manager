@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
-Updated July 25, 2026
+Updated July 26, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.39
+IMPLEMENTED THROUGH UPDATE 7.8.40
+- Update 7.8.40 adds a customizable Future Modules message to the splash and Home screens and customizable labels for all five bottom navigation tabs. Icons, colors, order, and destinations stay fixed. Names and Wording now appears before Manage Lists.
 - Update 7.8.39 makes the three Reports headline summary cards match the Home screen cards in size, spacing, layout, action buttons, and tap behavior.
 - Update 7.8.38 keeps the Reports headline totals visible while grouping Yearly Statistics, Inventory & Quilts Requested, Distributed & Adjustments, and Report Downloads into collapsed tap-to-open sections.
 - Update 7.8.37 starts both Inventory sections and both Quilts Needed sections collapsed for a cleaner mobile layout while direct actions still open the appropriate section.

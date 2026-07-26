@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.39';
+const VERSION='7.8.40';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -20,6 +20,12 @@ const DEFAULT_HOME_NEEDED_LABEL='Quilts Requested';
 const DEFAULT_HOME_DIFFERENCE_LABEL='Quilts Needed to be Completed';
 const DEFAULT_HOME_CALENDAR_HEADING='All Quilts Calendar';
 const DEFAULT_HOME_ACTIONS_HEADING='Choose an Action';
+const DEFAULT_FUTURE_MESSAGE='Designed to grow with your quilting needs.';
+const DEFAULT_NAV_HOME_LABEL='Home';
+const DEFAULT_NAV_INVENTORY_LABEL='Inventory';
+const DEFAULT_NAV_NEEDS_LABEL='Quilts Needed';
+const DEFAULT_NAV_REPORTS_LABEL='Reports';
+const DEFAULT_NAV_SETTINGS_LABEL='Settings';
 const COPYRIGHT_TEXT='© 2026 Jay. Love Quilts Manager. All rights reserved.';
 const COPYRIGHT_PDF='Copyright (c) 2026 Jay. Love Quilts Manager. All rights reserved.';
 const DEFAULT_CHARITIES=['Grassroots','SHP','St. Agnes','Bridges','Project Holiday'];
@@ -127,6 +133,10 @@ function normalizeData(d={}){
   return{
     orgName:String(d.orgName||DEFAULT_ORG),appName:String(d.appName||DEFAULT_APP),itemName:String(d.itemName||DEFAULT_ITEM),
     reportTitle:String(d.reportTitle||''),splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
+    futureMessage:String(d.futureMessage||DEFAULT_FUTURE_MESSAGE),
+    navHomeLabel:String(d.navHomeLabel||DEFAULT_NAV_HOME_LABEL),navInventoryLabel:String(d.navInventoryLabel||DEFAULT_NAV_INVENTORY_LABEL),
+    navNeedsLabel:String(d.navNeedsLabel||DEFAULT_NAV_NEEDS_LABEL),navReportsLabel:String(d.navReportsLabel||DEFAULT_NAV_REPORTS_LABEL),
+    navSettingsLabel:String(d.navSettingsLabel||DEFAULT_NAV_SETTINGS_LABEL),
     homeAtAGlance:String(d.homeAtAGlance||DEFAULT_HOME_AT_A_GLANCE),
     homeStorageLabel:upgradedSummaryLabel(d.homeStorageLabel,['Total Quilts in Storage','Quilts in Storage'],DEFAULT_HOME_STORAGE_LABEL),
     homeNeededLabel:upgradedSummaryLabel(d.homeNeededLabel,['Quilts Still Needed','Quilts Needed','Charity Requests'],DEFAULT_HOME_NEEDED_LABEL),
@@ -188,6 +198,12 @@ function applyNames(){
   data.itemName=(data.itemName||DEFAULT_ITEM).trim()||DEFAULT_ITEM;
   data.splashTag=String(data.splashTag||'').trim();
   data.splashMessage=String(data.splashMessage||'').trim();
+  data.futureMessage=String(data.futureMessage||DEFAULT_FUTURE_MESSAGE).trim()||DEFAULT_FUTURE_MESSAGE;
+  data.navHomeLabel=String(data.navHomeLabel||DEFAULT_NAV_HOME_LABEL).trim()||DEFAULT_NAV_HOME_LABEL;
+  data.navInventoryLabel=String(data.navInventoryLabel||DEFAULT_NAV_INVENTORY_LABEL).trim()||DEFAULT_NAV_INVENTORY_LABEL;
+  data.navNeedsLabel=String(data.navNeedsLabel||DEFAULT_NAV_NEEDS_LABEL).trim()||DEFAULT_NAV_NEEDS_LABEL;
+  data.navReportsLabel=String(data.navReportsLabel||DEFAULT_NAV_REPORTS_LABEL).trim()||DEFAULT_NAV_REPORTS_LABEL;
+  data.navSettingsLabel=String(data.navSettingsLabel||DEFAULT_NAV_SETTINGS_LABEL).trim()||DEFAULT_NAV_SETTINGS_LABEL;
   data.homeAtAGlance=String(data.homeAtAGlance||DEFAULT_HOME_AT_A_GLANCE).trim()||DEFAULT_HOME_AT_A_GLANCE;
   data.homeStorageLabel=String(data.homeStorageLabel||DEFAULT_HOME_STORAGE_LABEL).trim()||DEFAULT_HOME_STORAGE_LABEL;
   data.homeNeededLabel=String(data.homeNeededLabel||DEFAULT_HOME_NEEDED_LABEL).trim()||DEFAULT_HOME_NEEDED_LABEL;
@@ -200,6 +216,7 @@ function applyNames(){
   el('splashOrg').textContent=data.orgName;el('splashItemName').textContent=data.itemName;el('splashManager').textContent=splashSecondLine();
   el('splashTag').textContent=data.splashTag||DEFAULT_SPLASH_TAG;
   el('splashMessage').innerHTML=esc(shownSplashMessage).replace(/\n/g,'<br>');
+  el('splashGrowthMessage').textContent=data.futureMessage;el('homeGrowthMessage').textContent=data.futureMessage;
   el('splashVersion').textContent=`${data.appName} · Update ${VERSION}`;
   el('orgNameInput').value=data.orgName;el('appNameInput').value=data.appName;el('itemNameInput').value=data.itemName;
   el('homeAtAGlanceHeading').textContent=data.homeAtAGlance;el('homeStorageLabel').textContent=data.homeStorageLabel;
@@ -208,6 +225,10 @@ function applyNames(){
   el('homeAtAGlanceInput').value=data.homeAtAGlance;el('homeStorageLabelInput').value=data.homeStorageLabel;
   el('homeNeededLabelInput').value=data.homeNeededLabel;el('homeDifferenceLabelInput').value=data.homeDifferenceLabel;
   el('homeCalendarHeadingInput').value=data.homeCalendarHeading;if(el('homeActionsHeadingInput'))el('homeActionsHeadingInput').value=data.homeActionsHeading;
+  el('futureMessageInput').value=data.futureMessage;
+  const navLabels={home:data.navHomeLabel,inventory:data.navInventoryLabel,needs:data.navNeedsLabel,reports:data.navReportsLabel,settings:data.navSettingsLabel};
+  Object.entries(navLabels).forEach(([view,label])=>{const span=el(`nav${view.charAt(0).toUpperCase()+view.slice(1)}Label`),button=document.querySelector(`.bottom-nav button[data-view="${view}"]`);if(span)span.textContent=label;if(button)button.setAttribute('aria-label',`Open ${label}`)});
+  el('navHomeLabelInput').value=data.navHomeLabel;el('navInventoryLabelInput').value=data.navInventoryLabel;el('navNeedsLabelInput').value=data.navNeedsLabel;el('navReportsLabelInput').value=data.navReportsLabel;el('navSettingsLabelInput').value=data.navSettingsLabel;
   if(el('reportTitleInput')){el('reportTitleInput').value=data.reportTitle||'';el('reportTitleInput').placeholder=`${data.itemName} Inventory and Quilts Needed Report`}
   el('splashTagInput').value=data.splashTag;el('splashTagInput').placeholder=DEFAULT_SPLASH_TAG;
   el('splashMessageInput').value=data.splashMessage;el('splashMessageInput').placeholder=automaticSplashMessage;
@@ -228,7 +249,10 @@ function saveNames(){
   data.homeNeededLabel=el('homeNeededLabelInput').value.trim()||DEFAULT_HOME_NEEDED_LABEL;data.homeDifferenceLabel=el('homeDifferenceLabelInput').value.trim()||DEFAULT_HOME_DIFFERENCE_LABEL;
   data.homeCalendarHeading=el('homeCalendarHeadingInput').value.trim()||DEFAULT_HOME_CALENDAR_HEADING;if(el('homeActionsHeadingInput'))data.homeActionsHeading=el('homeActionsHeadingInput').value.trim()||DEFAULT_HOME_ACTIONS_HEADING;
   data.reportTitle=el('reportTitleInput')?.value.trim()||'';data.splashTag=el('splashTagInput').value.trim();data.splashMessage=el('splashMessageInput').value.trim();
-  save('Names and Home wording changed');applyNames();renderAll();notice('nameNotice','Names and Home-screen wording saved.',true);
+  data.futureMessage=el('futureMessageInput').value.trim()||DEFAULT_FUTURE_MESSAGE;
+  data.navHomeLabel=el('navHomeLabelInput').value.trim()||DEFAULT_NAV_HOME_LABEL;data.navInventoryLabel=el('navInventoryLabelInput').value.trim()||DEFAULT_NAV_INVENTORY_LABEL;
+  data.navNeedsLabel=el('navNeedsLabelInput').value.trim()||DEFAULT_NAV_NEEDS_LABEL;data.navReportsLabel=el('navReportsLabelInput').value.trim()||DEFAULT_NAV_REPORTS_LABEL;data.navSettingsLabel=el('navSettingsLabelInput').value.trim()||DEFAULT_NAV_SETTINGS_LABEL;
+  save('Names, Home wording, growth message, and tab labels changed');applyNames();renderAll();notice('nameNotice','Names, wording, growth message, and tab labels saved.',true);
 }
 function closeSplash(){el('splash').classList.add('hidden');document.body.style.overflow=''}
 function setupSingleOpenGroups(selector){
@@ -1074,7 +1098,7 @@ function feedbackFormValues(){
     summary:String(el('feedbackSummary')?.value||'').trim(),details:String(el('feedbackDetails')?.value||'').trim(),expected:String(el('feedbackExpected')?.value||'').trim(),steps:String(el('feedbackSteps')?.value||'').trim()
   };
 }
-function currentViewName(){const id=document.querySelector('.view.active')?.id||'unknown';return({home:'Home',inventory:'Inventory',needs:'Quilts Needed / Calendar',reports:'Reports',settings:'Settings'})[id]||id}
+function currentViewName(){const id=document.querySelector('.view.active')?.id||'unknown';return({home:data.navHomeLabel,inventory:data.navInventoryLabel,needs:data.navNeedsLabel,reports:data.navReportsLabel,settings:data.navSettingsLabel})[id]||id}
 function buildFeedbackRequest(){
   const f=feedbackFormValues();
   if(!f.summary||!f.details){notice('feedbackNotice','Please enter a short summary and the main details.');return''}
@@ -1639,7 +1663,7 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.39 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.40 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.39',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.40',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

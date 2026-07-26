@@ -1,10 +1,14 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.39 AUTOMATED CHECKS
+LOVE QUILTS MANAGER — UPDATE 7.8.40 AUTOMATED CHECKS
 
-PASS — JavaScript syntax checks for app.js, firebase-sync.js, and sw.js.
-PASS — Manifest JSON files parse successfully.
-PASS — Firebase sync file is unchanged from Update 7.8.38.
-PASS — Report summary uses the same grid3 and metric styles as Home.
-PASS — At 390 px mobile width, all three Reports summary cards match the corresponding Home card widths and heights.
-PASS — Reports contains Add Quilts, Add Need, and Distribute Quilts buttons with the same classes and actions as Home.
-PASS — Print CSS hides the on-screen action buttons.
-PASS — Inventory, request, distribution, and report-calculation JavaScript is unchanged except for the release version/cache references.
+PASS — JavaScript syntax check for app.js.
+PASS — JavaScript syntax check for firebase-sync.js.
+PASS — Default Future Modules wording appears on splash and Home.
+PASS — Custom Future Modules wording updates both locations.
+PASS — Home growth message opens Settings directly to Future Modules.
+PASS — All five bottom navigation labels can be changed independently.
+PASS — Custom wording is written into the saved app data and survives normalization.
+PASS — Firebase settings normalization includes the new message and tab labels.
+PASS — Bottom navigation retains exactly five fixed destinations in the original order.
+PASS — All five bottom buttons remain equal width at iPhone viewport size.
+PASS — Longer labels remain constrained within the existing bottom navigation layout.
+PASS — No browser page errors during the customization interaction test.
