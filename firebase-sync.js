@@ -337,8 +337,11 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
     await waitForBridge();
     const localBeforeRemote = normalizeAppData(window.lqGetData());
     const cloudData = normalizeAppData(composeRemoteData());
-    const sharedHomeWordingMissing = !!remote.settings && [
+    const sharedHomeWordingMissing = !remote.settings || [
       'homeAtAGlance','homeStorageLabel','homeNeededLabel','homeDifferenceLabel','homeCalendarHeading','homeActionsHeading'
+    ].some(key => !Object.prototype.hasOwnProperty.call(remote.settings, key));
+    const sharedGrowthAndTabsMissing = !remote.settings || [
+      'futureMessage','navHomeLabel','navInventoryLabel','navNeedsLabel','navReportsLabel','navSettingsLabel'
     ].some(key => !Object.prototype.hasOwnProperty.call(remote.settings, key));
     const localHasCustomHomeWording =
       localBeforeRemote.homeAtAGlance !== 'At a Glance' ||
@@ -347,6 +350,13 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
       !['Difference','More to Make','Quilts Needed to be Completed'].includes(localBeforeRemote.homeDifferenceLabel) ||
       localBeforeRemote.homeCalendarHeading !== 'All Quilts Calendar' ||
       localBeforeRemote.homeActionsHeading !== 'Choose an Action';
+    const localHasCustomGrowthOrTabs =
+      localBeforeRemote.futureMessage !== 'Designed to grow with your quilting needs.' ||
+      localBeforeRemote.navHomeLabel !== 'Home' ||
+      localBeforeRemote.navInventoryLabel !== 'Inventory' ||
+      localBeforeRemote.navNeedsLabel !== 'Quilts Needed' ||
+      localBeforeRemote.navReportsLabel !== 'Reports' ||
+      localBeforeRemote.navSettingsLabel !== 'Settings';
     const cloudHasData = !!remote.settings || cloudData.transactions.length > 0 || cloudData.needs.length > 0;
     const waitingForServer = !cloudHasData && !remote.org?.initialized && (
       remote.orgFromCache || remote.settingsFromCache || remote.transactionsFromCache || remote.needsFromCache
@@ -375,17 +385,21 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
       return;
     }
 
-    // One-time migration for 7.8.8: if this device has customized Home wording
-    // and the shared settings document does not yet have those fields, publish it.
-    if (sharedHomeWordingMissing && localHasCustomHomeWording) {
+    // If an older shared settings document is missing newer customizable wording,
+    // publish the customized value from this device instead of treating its local
+    // fallback as though it were already stored in Firebase.
+    if ((sharedHomeWordingMissing && localHasCustomHomeWording) ||
+        (sharedGrowthAndTabsMissing && localHasCustomGrowthOrTabs)) {
       pendingSave = {
         data: clone(cloudData),
-        reason: 'Added Home wording to shared settings',
+        reason: sharedGrowthAndTabsMissing && localHasCustomGrowthOrTabs
+          ? 'Added growth message and tab labels to shared settings'
+          : 'Added Home wording to shared settings',
         force: true,
         initialize: false
       };
       persistPendingSave();
-      setState('Sharing Home wording with all devices…');
+      setState('Sharing customized wording with all devices…');
       releaseGate();
       flushSave();
       return;
@@ -544,7 +558,10 @@ async function flushSave() {
     const baseline = task.initialize ? normalizeAppData({}) : (allRemoteReady() ? normalizeAppData(composeRemoteData()) : (lastRemoteData || normalizeAppData({})));
     const operations = [];
     const localSettings = normalizeSettings(localData);
-    const oldSettings = normalizeSettings(baseline);
+    // Compare against the actual shared settings document. composeRemoteData() fills
+    // missing fields from this device so older documents remain usable, but using that
+    // merged copy here can hide a newly edited field and prevent it from being uploaded.
+    const oldSettings = normalizeSettings(remote.settings || {});
 
     if (task.force || stable(localSettings) !== stable(oldSettings)) {
       operations.push({

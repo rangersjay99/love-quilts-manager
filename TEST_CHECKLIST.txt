@@ -1,6 +1,9 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.40 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.41 TEST CHECKLIST
 
-[ ] Confirm Update 7.8.40 appears on the splash and About screen.
+[ ] Confirm Update 7.8.41 appears on the splash and About screen.
+[ ] On Device A, change the Future Modules Message and save.
+[ ] Wait for “All changes synced,” then confirm the same message appears on Device B.
+[ ] Change one bottom navigation label and confirm it also updates on Device B.
 [ ] Confirm the Future Modules message appears on both splash and Home.
 [ ] Change the Future Modules message in Settings and save it.
 [ ] Confirm the same wording appears on splash and Home.

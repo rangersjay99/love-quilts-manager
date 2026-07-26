@@ -1,14 +1,8 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.40 AUTOMATED CHECKS
+LOVE QUILTS MANAGER — UPDATE 7.8.41 AUTOMATED CHECKS
 
-PASS — JavaScript syntax check for app.js.
-PASS — JavaScript syntax check for firebase-sync.js.
-PASS — Default Future Modules wording appears on splash and Home.
-PASS — Custom Future Modules wording updates both locations.
-PASS — Home growth message opens Settings directly to Future Modules.
-PASS — All five bottom navigation labels can be changed independently.
-PASS — Custom wording is written into the saved app data and survives normalization.
-PASS — Firebase settings normalization includes the new message and tab labels.
-PASS — Bottom navigation retains exactly five fixed destinations in the original order.
-PASS — All five bottom buttons remain equal width at iPhone viewport size.
-PASS — Longer labels remain constrained within the existing bottom navigation layout.
-PASS — No browser page errors during the customization interaction test.
+PASS — JavaScript syntax checks for app.js, firebase-sync.js, and sw.js.
+PASS — Settings save comparison uses the actual remote settings document.
+PASS — Older shared settings missing futureMessage or bottom-tab labels are detected.
+PASS — Existing customized message/tab wording is queued for a forced one-time migration.
+PASS — Version, service-worker cache, manifests, About, and script query strings are 7.8.41.
+PASS — No inventory, needs, distribution, or report calculation code was changed.
