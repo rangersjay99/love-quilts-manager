@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.37
+IMPLEMENTED THROUGH UPDATE 7.8.38
+- Update 7.8.38 keeps the Reports headline totals visible while grouping Yearly Statistics, Inventory & Quilts Requested, Distributed & Adjustments, and Report Downloads into collapsed tap-to-open sections.
 - Update 7.8.37 starts both Inventory sections and both Quilts Needed sections collapsed for a cleaner mobile layout while direct actions still open the appropriate section.
 - Update 7.8.36 adds compact tap-to-open sections for Current Inventory, Inventory History, active Quilts Needed, and completed Needs History.
 - Update 7.8.35 makes the splash growth message open Future Modules, groups Settings into collapsible sections, collapses older Change Log entries behind Show All, and removes the duplicate Calendar from Quilts Needed. Home remains the single Calendar view.

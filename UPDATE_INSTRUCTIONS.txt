@@ -1,10 +1,8 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.37
+LOVE QUILTS MANAGER — UPDATE 7.8.38
 
-1. Back up the current app folder or GitHub repository.
-2. Upload all files and folders from this update, replacing the older versions.
-3. Keep the included icons folder and service worker file.
-4. Allow GitHub Pages to finish deployment.
-5. Open the app and confirm the splash or About section says Update 7.8.37.
-6. On iPhone or iPad, fully close and reopen the installed app if the older version remains cached.
-
-No Firebase schema or database migration is required.
+1. Back up the current GitHub repository or download the existing release ZIP.
+2. Upload all files from this update and replace the older versions.
+3. Keep the included icons folder and files.
+4. Wait for GitHub Pages deployment to complete, then refresh the installed app.
+5. Confirm the splash or About section says Update 7.8.38.
+6. Open Reports and confirm the headline totals remain visible while all four detail sections start collapsed.
