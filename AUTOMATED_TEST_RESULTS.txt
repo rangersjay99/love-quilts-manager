@@ -1,21 +1,25 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.34 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.35 VALIDATION RESULTS
 
-VALIDATED JULY 25, 2026
+Automated browser validation: PASS
+Viewport tested: iPhone-size 390 × 844
 
-FUTURE MODULES PREVIEW
-- PASS: Settings includes Future Modules between Change Log and About.
-- PASS: Five display-only cards appear for Quilt Show Manager, Personal Quilt Collection, Fabric & Supply Inventory, Guild Member Manager, and Analytics & Statistics.
-- PASS: Every card is marked Future Concept and contains no activation link, form control, or data-changing action.
-- PASS: The section clearly states that it does not affect inventory, reports, accounts, syncing, or stored data.
-- PASS: Mobile styling changes the module card layout from two columns to one column on narrow screens.
+PASS: Update 7.8.35 is shown on the splash screen and About section.
+PASS: “Designed to grow with your quilting needs.” closes the splash, opens Settings, expands Future Modules, and scrolls to the preview.
+PASS: Settings contains six compact tap-to-open sections.
+PASS: Opening one Settings section closes the previously open section.
+PASS: Change Log initially shows only 7.8.35 and 7.8.34.
+PASS: Show All Updates reveals the full 20-entry history.
+PASS: Show Fewer Updates returns the Change Log to two entries.
+PASS: The duplicate needsCalendar element is removed from Quilts Needed.
+PASS: The Quilts Needed entry form and saved-request list remain available.
+PASS: The Home Calendar remains present and renders all 12 month cards.
+PASS: App Check runs and returns results with no JavaScript errors.
+PASS: Reports view initializes successfully.
+PASS: Compact PDF downloads with report content.
+PASS: Full PDF downloads with report content.
+PASS: No page errors or console errors occurred during the automated browser test.
+PASS: All original Settings control IDs remain present.
+PASS: firebase-sync.js is byte-for-byte unchanged from Update 7.8.34.
+PASS: Version, manifests, service-worker cache, and asset query references are consistently updated to 7.8.35.
 
-SPLASH SCREEN
-- PASS: The splash screen displays “Designed to grow with your quilting needs.” beneath the existing welcome message.
-- PASS: Existing organization, app, program, custom tagline, custom splash message, Continue button, and copyright elements remain.
-
-REGRESSION CHECKS
-- PASS: app.js and sw.js pass JavaScript syntax checks.
-- PASS: Update 7.8.34 is identified by the version constant, splash, Change Log, About, manifests, service-worker cache, and asset query strings.
-- PASS: The service-worker cache name changed to love-quilts-v7-8-34 so installed devices request the new files.
-- PASS: No Firebase schema, Firestore Rules, login, collection, permission, or database changes are required.
-- PASS: Existing App Check, Bug Reporting, editable distribution dates, reporting, printing, and PDF functions remain unchanged.
+No Firebase schema or stored-data migration is required.

@@ -1,7 +1,8 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 25, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.34
+IMPLEMENTED THROUGH UPDATE 7.8.35
+- Update 7.8.35 makes the splash growth message open Future Modules, groups Settings into collapsible sections, collapses older Change Log entries behind Show All, and removes the duplicate Calendar from Quilts Needed. Home remains the single Calendar view.
 - Update 7.8.34 adds a display-only Future Modules section in Settings with Quilt Show Manager, Personal Quilt Collection, Fabric & Supply Inventory, Guild Member Manager, and Analytics & Statistics concepts. It also adds the splash message “Designed to grow with your quilting needs.” No module functions or data changes are included.
 - Update 7.8.33 adds a safe Edit Date action beside distributed records in Reports. Date-only edits keep quantity and inventory unchanged while moving linked distribution activity and yearly statistics to the revised date. Settings now includes Run App Check plus a structured Bug Report / Change Request tool that can share, copy, or download a complete feedback report.
 - Update 7.8.32 makes Reports, transaction history, CSV exports, and yearly statistics use the selected date of the actual inventory change or distribution. Backdated distribution edits and corrections keep their linked inventory activity on that effective date, and yearly distributed totals use the corrected net quantity, while entry timestamps remain available for audit history.

@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.34';
+const VERSION='7.8.35';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -231,6 +231,24 @@ function saveNames(){
   save('Names and Home wording changed');applyNames();renderAll();notice('nameNotice','Names and Home-screen wording saved.',true);
 }
 function closeSplash(){el('splash').classList.add('hidden');document.body.style.overflow=''}
+function setupSettingsGroups(){
+  const groups=[...document.querySelectorAll('#settings .settings-group')];
+  groups.forEach(group=>group.addEventListener('toggle',()=>{
+    if(!group.open)return;
+    groups.forEach(other=>{if(other!==group)other.open=false});
+  }));
+}
+function openFutureModulesFromSplash(){
+  closeSplash();showView('settings');
+  const group=el('settingsFutureSection');if(group)group.open=true;
+  window.setTimeout(()=>el('futureModulesCard')?.scrollIntoView({behavior:'smooth',block:'start'}),180);
+}
+function toggleChangeLog(){
+  const card=el('changeLogCard'),button=el('changeLogToggle');if(!card||!button)return;
+  const expanded=card.classList.toggle('change-log-show-all');
+  button.textContent=expanded?'Show Fewer Updates':'Show All Updates';
+  button.setAttribute('aria-expanded',String(expanded));
+}
 function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
@@ -1605,8 +1623,8 @@ window.lqApplyRemoteData=(remoteData,reason='shared-device update')=>{
 window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
-  document.body.style.overflow='hidden';el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.34 opened',data);
+  document.body.style.overflow='hidden';setupSettingsGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.35 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.34',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.35',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });

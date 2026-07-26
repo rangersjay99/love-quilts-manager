@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.34">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.34">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.34">
+<link rel="manifest" href="manifest-v7.json?v=7.8.35">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.35">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.35">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -343,6 +343,20 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .save-status.verified{margin-top:11px;padding:10px;border:1px solid #b9ddc2;border-radius:11px;background:#e6f5ea;color:#245f38;font-weight:850}
 @media print{.firebase-banner,.firebase-gate,.calendar-modal-backdrop,.splash{display:none!important}}
 
+
+.splash-growth-button{display:block;margin:4px auto 11px;padding:2px 7px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-family:Georgia,"Times New Roman",serif;font-size:12px;font-style:italic;line-height:1.35;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;cursor:pointer}
+.splash-growth-button:hover,.splash-growth-button:focus{background:rgba(109,58,120,.08);color:var(--plum-dark);outline:none}
+.settings-overview{margin-bottom:12px;padding:14px 15px;border:1px solid #d8c7dc;border-radius:14px;background:#f8f3f9}.settings-overview h2{margin:0 0 4px}.settings-overview p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+.settings-group{margin:0 0 11px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 3px 12px rgba(61,39,63,.06);overflow:hidden}
+.settings-group>summary{position:relative;display:block;padding:15px 46px 15px 16px;cursor:pointer;list-style:none;background:#fff;color:var(--plum-dark);user-select:none}
+.settings-group>summary::-webkit-details-marker{display:none}.settings-group>summary::after{content:'＋';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:24px;font-weight:700;color:var(--plum)}.settings-group[open]>summary::after{content:'−'}
+.settings-group>summary b{display:block;font-size:16px}.settings-group>summary span{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.35}
+.settings-group[open]>summary{border-bottom:1px solid var(--line);background:var(--soft)}
+.settings-group-body{padding:12px}.settings-group-body>.card{margin:0 0 12px;box-shadow:none}.settings-group-body>.card:last-child{margin-bottom:0}
+.settings-group.danger-settings>summary{color:#8c2531}.settings-group.danger-settings>summary::after{color:#a42b3a}
+.change-log-extra{display:none}.change-log-show-all .change-log-extra{display:block}.change-log-toggle{margin-top:10px}
+@media(max-width:560px){.settings-overview{padding:12px}.settings-group>summary{padding:14px 42px 14px 14px}.settings-group-body{padding:9px}.settings-group-body>.card{padding:14px}}
+
 </style>
 </head>
 <body>
@@ -367,15 +381,15 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.34" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.35" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
     <div class="divider"><span>♥</span></div>
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
-    <div class="splash-growth">Designed to grow with your quilting needs.</div>
+    <button type="button" class="splash-growth-button" onclick="openFutureModulesFromSplash()">Designed to grow with your quilting needs.</button>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.34</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.35</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -489,18 +503,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     <button id="cancelNeedBtn" class="ghost" style="display:none" onclick="cancelNeedEdit()">Cancel Editing</button>
   </div>
   <div class="card"><h3>Quilts Needed</h3><div id="needsList"></div></div>
-  <div class="card">
-    <h2>All Quilts Calendar</h2>
-    <p class="small">View all 12 months. Past months are light green when demand was met and light red when it was not met. A future month turns light green only when it is fully covered early. Other future months are light yellow. The current month has a bold border. Charity sections are light green when that charity is met and light red when it is still short.</p>
-    <div class="calendar-toolbar">
-      <label>Year<select id="calendarYear" onchange="renderNeedsCalendar()"></select></label>
-      <label>Charity<select id="calendarCharity" onchange="renderNeedsCalendar()"></select></label>
-      <label>Size<select id="calendarSize" onchange="renderNeedsCalendar()"></select></label>
-    </div>
-    <div id="needsCalendar" class="needs-calendar"></div>
-    <div class="calendar-legend" aria-label="Calendar color key"><span><i class="calendar-swatch met"></i>Demand met / covered early</span><span><i class="calendar-swatch unmet"></i>Past demand not met</span><span><i class="calendar-swatch future"></i>Future month</span><span><i class="calendar-swatch current"></i>Current month</span><span><i class="calendar-swatch charity-met"></i>Charity met</span><span><i class="calendar-swatch charity-short"></i>Charity short</span></div>
-    <button type="button" class="ghost calendar-print-button" onclick="printCalendar('needs')">Print 12-Month Calendar</button>
-  </div>
  </section>
 
 <section id="reports" class="view">
@@ -536,207 +538,213 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 </section>
 
 <section id="settings" class="view">
-  <div class="card">
-    <h2>Backup and Recovery</h2>
-    <p id="backupHelp" class="small">Every change is saved automatically on this device. Recovery copies help undo mistakes; exported backups protect against a lost phone or cleared Safari data.</p>
-    <div class="status-grid">
-      <div class="status-box"><b>Local Save</b><span id="localSaveStatus">Saved automatically</span></div>
-      <div class="status-box"><b>External Backup</b><span id="externalSaveStatus">Not connected</span></div>
-      <div class="status-box"><b>Shared Device Sync</b><span id="firebaseSaveStatus">Checking sign-in</span></div>
-    </div>
-    <div class="row"><button class="ghost" onclick="exportBackup()">Export Backup</button><button class="ghost" onclick="document.getElementById('importFile').click()">Restore Shared Backup</button></div>
-    <div class="restore-warning"><b>Use with caution:</b> restoring a backup replaces the shared inventory and needs on every synced device. The app automatically saves the current data as a recovery copy before restoring.</div>
-    <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)">
-    <h3 style="margin-top:18px">Restore a Recent Version</h3>
-    <p class="small">The app keeps recent recovery copies on this device after changes.</p>
-    <div id="recoveryList"></div>
-    <button class="ghost" onclick="clearRecoveryHistory()">Clear Recovery History</button>
-    <div id="settingsNotice" class="notice"></div>
-  </div>
-
-  <div class="card">
-    <h2>Shared Device Sync</h2>
-    <p class="small">Inventory, needs, names, Home wording, charities, and sizes are securely synchronized between approved signed-in devices. The app also keeps a local copy and recovery history on each device.</p>
-    <div class="status-box"><b>Signed-in account</b><span id="firebaseAccountStatus">Not signed in</span></div>
-    <div class="firebase-inline-actions"><button class="ghost" type="button" data-sync-now onclick="syncNow()">Sync Now</button><button class="ghost" type="button" onclick="window.lqFirebaseSignOut?.()">Sign Out</button></div>
-    <div id="firebaseSettingsNotice" class="notice"></div>
-    <div id="firebaseInitializePanel" style="display:none;margin-top:14px;padding:14px;border:1px solid #d7b85a;border-radius:12px;background:#fff7dc">
-      <h3 style="margin:0 0 8px">Create Real Shared Inventory</h3>
-      <p class="small" style="margin:0 0 10px">Use this once on the chosen primary device, after its local inventory and needs are ready. The other device will then receive this shared data.</p>
-      <button id="firebaseInitializeButton" class="primary" type="button">Create Real Shared Inventory</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Automatic Google Drive Backup</h2>
-    <p class="small">Paste the Google Apps Script web-app address after completing the included setup instructions. No Google Cloud billing project is required.</p>
-    <label>Apps Script Web App Address</label>
-    <input id="externalBackupUrl" inputmode="url" placeholder="https://script.google.com/macros/s/.../exec">
-    <label>Backup Code</label>
-    <input id="externalBackupCode" type="password" maxlength="80" placeholder="The same code used in the Google script">
-    <label class="switch-line"><input id="externalBackupEnabled" type="checkbox"> Automatically send a backup after changes</label>
-    <button class="primary" onclick="saveExternalBackupSettings()">Save Backup Settings</button>
-    <button class="ghost" onclick="sendExternalBackupNow()">Send Backup Now</button>
-    <a class="inline-link" href="GOOGLE_BACKUP_SETUP.txt" target="_blank" rel="noopener">Open Google backup setup instructions</a>
-    <div id="externalBackupNotice" class="notice"></div>
-  </div>
-
-  <div class="card">
-    <h2>Manage Lists</h2><p class="small">Add, rename, or remove charity and quilt-size choices. Renaming keeps every present quantity, date, need, and distribution connected to the new name. Items already used in records cannot be deleted.</p>
-    <h3>Charities</h3>
-    <label>Add Charity</label><div class="row"><input id="newCharity" placeholder="New charity name"><button class="ghost" onclick="addCharity()">Add Charity</button></div>
-    <label>Rename Charity</label><div class="row"><select id="renameCharitySelect"></select><input id="renameCharityName" placeholder="Enter the new charity name"></div>
-    <button class="ghost" onclick="renameCharity()">Review Charity Rename</button>
-    <label>Delete Unused Charity</label><div class="row"><select id="deleteCharity"></select><button class="danger" onclick="removeCharity()">Delete</button></div>
-    <h3 class="list-management-divider">Quilt Sizes</h3>
-    <label>Add Size</label><div class="row"><input id="newSize" placeholder="New quilt size"><button class="ghost" onclick="addSize()">Add Size</button></div>
-    <label>Rename Size</label><div class="row"><select id="renameSizeSelect"></select><input id="renameSizeName" placeholder="Enter the new quilt size name"></div>
-    <button class="ghost" onclick="renameSize()">Review Size Rename</button>
-    <label>Delete Unused Size</label><div class="row"><select id="deleteSize"></select><button class="danger" onclick="removeSize()">Delete</button></div>
-    <div id="listNotice" class="notice"></div>
-  </div>
-
-  <div class="card">
-    <h2>Names and Wording</h2>
-    <p class="small">This is normally a one-time setup. Existing records are not changed.</p>
-    <label>Organization Name</label>
-    <input id="orgNameInput" maxlength="80" placeholder="Faithful Circle Quilters">
-    <label>App Title</label>
-    <input id="appNameInput" maxlength="80" placeholder="Love Quilts Manager">
-    <label>Program / Quilt Name</label>
-    <input id="itemNameInput" maxlength="60" placeholder="Love Quilts">
-    <h3 style="margin-top:18px">Home Screen Headers</h3>
-    <p class="small">Change the wording shown on the Home screen. Numbers and calculations are not affected.</p>
-    <label>Summary Heading</label>
-    <input id="homeAtAGlanceInput" maxlength="60" placeholder="At a Glance">
-    <label>Storage Total Label</label>
-    <input id="homeStorageLabelInput" maxlength="60" placeholder="Available in Storage">
-    <label>Needed Total Label</label>
-    <input id="homeNeededLabelInput" maxlength="60" placeholder="Quilts Requested">
-    <label>Quilts to Complete Label</label>
-    <input id="homeDifferenceLabelInput" maxlength="60" placeholder="Quilts Needed to be Completed">
-    <label>Calendar Heading</label>
-    <input id="homeCalendarHeadingInput" maxlength="60" placeholder="All Quilts Calendar">
-    <h3 style="margin-top:18px">Report and Splash Wording</h3>
-    <label>Report Title <span class="small">(optional)</span></label>
-    <input id="reportTitleInput" maxlength="120" placeholder="Love Quilts Inventory and Quilts Needed Report">
-    <p class="small">Leave blank to create the report title automatically from the program name.</p>
-    <label>Splash Tagline <span class="small">(optional)</span></label>
-    <input id="splashTagInput" maxlength="100" placeholder="MADE WITH LOVE, SHARED WITH CARE">
-    <label>Splash Message <span class="small">(optional)</span></label>
-    <textarea id="splashMessageInput" maxlength="180" placeholder="Keeping track of love quilts…&#10;one quilt at a time."></textarea>
-    <p class="small">Leave either splash field blank to use the automatic wording. Press Enter in the message box to create a second line.</p>
-    <button class="primary" onclick="saveNames()">Save Names and Home Wording</button>
-    <div id="nameNotice" class="notice"></div>
-  </div>
-
-  <div class="card danger-zone">
-    <h3>Start Fresh and Reset</h3>
-    <p class="small">A recovery copy is created before each reset. Organization names, charities, and sizes are kept unless the entire app is reset.</p>
-    <button class="danger" onclick="clearInventoryCounts()">Clear Inventory Counts Only</button>
-    <button class="danger" onclick="startFreshForRealUse()">Start Fresh for Real Use</button>
-    <button class="danger" onclick="resetEntireApp()">Reset Entire App to Defaults</button>
-    <div id="dangerNotice" class="notice"></div>
-  </div>
-
-
-  <div class="card" id="feedbackCard">
-    <h2>App Check and Feedback</h2>
-    <p class="small">Run a basic check for common data problems, or create a complete bug report or change request to share with the app developer. The app check cannot detect every possible screen or browser problem.</p>
-    <div class="app-check-panel">
-      <b>Data and Link Check</b>
-      <div class="small">Checks quantities, dates, duplicate records, negative inventory, and linked distribution activity. It does not change your information.</div>
-      <button type="button" class="ghost" onclick="runAppCheck()">Run App Check</button>
-      <div id="appCheckResults" class="app-check-results" aria-live="polite"></div>
-    </div>
-    <h3>Report a Bug or Request a Change</h3>
-    <p class="feedback-note small">The request automatically includes Update 7.8.34, the date and time, signed-in user, current screen, and device/browser information.</p>
-    <div class="feedback-grid">
-      <label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
-      <label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected>Other</option></select></label>
-      <label>Priority<select id="feedbackPriority"><option>Normal</option><option>Important</option><option>Urgent — blocks use</option></select></label>
-    </div>
-    <label>Short Summary</label><input id="feedbackSummary" maxlength="120" placeholder="Example: Compact report opens blank">
-    <label id="feedbackDetailsLabel">What happened?</label><textarea id="feedbackDetails" maxlength="1200" placeholder="Describe what you saw or what you want changed."></textarea>
-    <label id="feedbackExpectedLabel">What did you expect?</label><textarea id="feedbackExpected" maxlength="800" placeholder="Describe the expected result or benefit."></textarea>
-    <label id="feedbackStepsLabel">Steps to reproduce</label><textarea id="feedbackSteps" maxlength="800" placeholder="List the buttons or screens used before the problem appeared."></textarea>
-    <div class="feedback-actions"><button type="button" class="primary" onclick="shareFeedbackRequest()">Share / Email Request</button><button type="button" class="ghost" onclick="downloadFeedbackRequest()">Download Request</button><button type="button" class="ghost" onclick="copyFeedbackRequest()">Copy Request</button></div>
-    <button type="button" class="ghost" onclick="clearFeedbackForm()">Clear Form</button>
-    <div id="feedbackNotice" class="notice"></div>
-  </div>
-
-  <div class="card" id="changeLogCard">
-    <h2>Change Log</h2>
-    <div class="change-log-current"><b>Current version: Update 7.8.34</b><span class="small">Future Modules preview and splash growth message · July 25, 2026</span></div>
-    <div class="change-log-entry"><h4>7.8.34</h4><p>Added a display-only Future Modules section in Settings with five possible expansion areas. Added the subtle splash-screen line “Designed to grow with your quilting needs.” No module functions, data fields, or Firebase changes were added.</p></div>
-    <div class="change-log-entry"><h4>7.8.33</h4><p>Added Edit Date beside distributed records in Reports, with linked inventory and yearly statistics following the revised date. Added a Settings tool that checks common data problems and creates structured bug reports or change requests for sharing, copying, or downloading.</p></div>
-    <div class="change-log-entry"><h4>7.8.32</h4><p>Reports now use the selected date when inventory changed or quilts were distributed, including backdated distribution edits and corrections. Entry timestamps remain available for audit history.</p></div>
-    <div class="change-log-entry"><h4>7.8.31</h4><p>Fixed the blank Compact Report print preview and restored Compact One-Page PDF downloads.</p></div>
-    <div class="change-log-entry"><h4>7.8.30</h4><p>Added safe charity and quilt-size renaming that preserves all existing records and numbers. Replaced old inventory edit/delete and charity-need edit/distribution/delete pop-ups with the detailed Home-style Before/After verification screen.</p></div>
-    <div class="change-log-entry"><h4>7.8.29</h4><p>Moved Add Quilts Needed to the top of the Needs tab, colored changed request totals green or red, and changed the separate distribution reminder to purple.</p></div>
-    <div class="change-log-entry"><h4>7.8.28</h4><p>Changed unchanged verification bubbles to a calm gray so they do not appear to signal a problem.</p></div>
-    <div class="change-log-entry"><h4>7.8.27</h4><p>Separated Add Quilts Needed from distribution and moved familiar Home-style Before/After bubbles to the top of verification.</p></div>
-    <div class="change-log-entry"><h4>7.8.26</h4><p>Moved Quilts Needed to the top, returned to Home after new additions, and added exact Before/After Home totals to verification.</p></div>
-    <div class="change-log-entry"><h4>7.8.25</h4><p>Fixed a green status appearing before the server copy was confirmed. Sync Now now sends the correct over-distribution repair from the device that has it, while a second device safely receives the latest shared copy instead of uploading stale data.</p></div>
-    <div class="change-log-entry"><h4>7.8.24</h4><p>Removed the remaining Firebase cap on distributed quantities, repaired clipped 7.8.23 quantities when linked inventory confirmed the full amount, and rewrote corrected need records.</p></div>
-    <div class="change-log-entry"><h4>7.8.23</h4><p>Added a clear review screen before saving every new inventory entry or charity need, and now records the full quantity distributed even when it is above the original request.</p></div>
-    <div class="change-log-entry"><h4>7.8.22</h4><p>Simplified Calendar month cards, added a small Tap charity to edit note inside populated months, removed On Hold / Storage from the active app, and changed 12-month Calendar printing to portrait.</p></div>
-    <div class="change-log-entry"><h4>7.8.21</h4><p>Calendar entry actions, bottom Calendar key, direct Calendar distribution, On Hold / Storage workflow, 12-month Calendar printing, iPhone summary-print improvements, and weekend verification checklist.</p></div>
-    <div class="change-log-entry"><h4>7.8.20</h4><p>Future months light yellow, covered future months green, and charity-level Met / Short coloring.</p></div>
-    <div class="change-log-entry"><h4>7.8.19</h4><p>Corrected month-level Calendar color rules.</p></div>
-    <div class="change-log-entry"><h4>7.8.18</h4><p>Calendar moved directly below At a Glance, report wording correction, and charity/size shortage calculation.</p></div>
-    <div class="change-log-entry"><h4>7.8.17</h4><p>This Year and Yearly Statistics added to Home and Reports.</p></div>
-    <div class="change-log-entry"><h4>7.8.16</h4><p>Sync Now, Set Current Count, alternating report shading, and distribution safeguards.</p></div>
-  </div>
-
-  <div class="card" id="futureModulesCard">
-    <div class="future-modules-header">
-      <div><h2>Future Modules</h2><div class="small">Ideas for expanding Love Quilts Manager without making the core charity-quilt workflow more complicated.</div></div>
-      <span class="future-modules-badge">Preview Only</span>
-    </div>
-    <div class="future-modules-note"><b>Nothing here is active yet.</b> These cards are informational only and do not change inventory, reports, accounts, syncing, or stored data.</div>
-    <div class="future-module-grid">
-      <div class="future-module-card show">
-        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">🏆</span>Quilt Show Manager</h3>
-        <p>Register show quilts, assign entry numbers, organize categories, manage check-in and check-out, and track judging or ribbons.</p>
-        <span class="future-module-status">Future Concept</span>
-      </div>
-      <div class="future-module-card collection">
-        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">🖼️</span>Personal Quilt Collection</h3>
-        <p>Catalog personal quilts with photos, maker, pattern, dates, size, ownership, notes, and storage location.</p>
-        <span class="future-module-status">Future Concept</span>
-      </div>
-      <div class="future-module-card supplies">
-        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">🧵</span>Fabric &amp; Supply Inventory</h3>
-        <p>Track fabric, batting, thread, notions, quantities, colors, and where supplies are stored.</p>
-        <span class="future-module-status">Future Concept</span>
-      </div>
-      <div class="future-module-card members">
-        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">👥</span>Guild Member Manager</h3>
-        <p>Organize a member directory, roles, committees, volunteer assignments, and other guild information.</p>
-        <span class="future-module-status">Future Concept</span>
-      </div>
-      <div class="future-module-card analytics">
-        <h3 class="future-module-title"><span class="future-module-icon" aria-hidden="true">📊</span>Analytics &amp; Statistics</h3>
-        <p>Explore longer-term trends, yearly comparisons, charity totals, production, distribution, and planning patterns.</p>
-        <span class="future-module-status">Future Concept</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>About</h3>
-    <div class="about-grid">
-      <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
-      <b>Program</b><span id="aboutItemName">Love Quilts</span>
-      <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-      <b>Version</b><span>Update 7.8.34 · July 25, 2026</span>
-      <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
-      <b>Use</b><span>Personal and authorized guild use only.</span>
-    </div>
-    <p class="small">Update 7.8.34 adds a display-only Future Modules preview in Settings and the splash-screen growth message. Update 7.8.33 added editable Date Distributed controls and App Check / Feedback.</p>
-    <a class="inline-link" href="LICENSE.txt" target="_blank" rel="noopener">Open license and permitted-use notice</a>
-  </div>
+  <div class="settings-overview"><h2>Settings</h2><p>Tap a section to open it. Only one section stays open at a time, keeping this page shorter and easier to use.</p></div>
+  <details id="settingsBackupSection" class="settings-group">
+    <summary><b>Backup & Sync</b><span>Backups, recovery, shared-device sync, and Google Drive.</span></summary>
+    <div class="settings-group-body"><div class="card">
+<h2>Backup and Recovery</h2>
+<p class="small" id="backupHelp">Every change is saved automatically on this device. Recovery copies help undo mistakes; exported backups protect against a lost phone or cleared Safari data.</p>
+<div class="status-grid">
+<div class="status-box"><b>Local Save</b><span id="localSaveStatus">Saved automatically</span></div>
+<div class="status-box"><b>External Backup</b><span id="externalSaveStatus">Not connected</span></div>
+<div class="status-box"><b>Shared Device Sync</b><span id="firebaseSaveStatus">Checking sign-in</span></div>
+</div>
+<div class="row"><button class="ghost" onclick="exportBackup()">Export Backup</button><button class="ghost" onclick="document.getElementById('importFile').click()">Restore Shared Backup</button></div>
+<div class="restore-warning"><b>Use with caution:</b> restoring a backup replaces the shared inventory and needs on every synced device. The app automatically saves the current data as a recovery copy before restoring.</div>
+<input accept=".json,application/json" hidden="" id="importFile" onchange="importBackup(event)" type="file"/>
+<h3 style="margin-top:18px">Restore a Recent Version</h3>
+<p class="small">The app keeps recent recovery copies on this device after changes.</p>
+<div id="recoveryList"></div>
+<button class="ghost" onclick="clearRecoveryHistory()">Clear Recovery History</button>
+<div class="notice" id="settingsNotice"></div>
+</div><div class="card">
+<h2>Shared Device Sync</h2>
+<p class="small">Inventory, needs, names, Home wording, charities, and sizes are securely synchronized between approved signed-in devices. The app also keeps a local copy and recovery history on each device.</p>
+<div class="status-box"><b>Signed-in account</b><span id="firebaseAccountStatus">Not signed in</span></div>
+<div class="firebase-inline-actions"><button class="ghost" data-sync-now="" onclick="syncNow()" type="button">Sync Now</button><button class="ghost" onclick="window.lqFirebaseSignOut?.()" type="button">Sign Out</button></div>
+<div class="notice" id="firebaseSettingsNotice"></div>
+<div id="firebaseInitializePanel" style="display:none;margin-top:14px;padding:14px;border:1px solid #d7b85a;border-radius:12px;background:#fff7dc">
+<h3 style="margin:0 0 8px">Create Real Shared Inventory</h3>
+<p class="small" style="margin:0 0 10px">Use this once on the chosen primary device, after its local inventory and needs are ready. The other device will then receive this shared data.</p>
+<button class="primary" id="firebaseInitializeButton" type="button">Create Real Shared Inventory</button>
+</div>
+</div><div class="card">
+<h2>Automatic Google Drive Backup</h2>
+<p class="small">Paste the Google Apps Script web-app address after completing the included setup instructions. No Google Cloud billing project is required.</p>
+<label>Apps Script Web App Address</label>
+<input id="externalBackupUrl" inputmode="url" placeholder="https://script.google.com/macros/s/.../exec"/>
+<label>Backup Code</label>
+<input id="externalBackupCode" maxlength="80" placeholder="The same code used in the Google script" type="password"/>
+<label class="switch-line"><input id="externalBackupEnabled" type="checkbox"/> Automatically send a backup after changes</label>
+<button class="primary" onclick="saveExternalBackupSettings()">Save Backup Settings</button>
+<button class="ghost" onclick="sendExternalBackupNow()">Send Backup Now</button>
+<a class="inline-link" href="GOOGLE_BACKUP_SETUP.txt" rel="noopener" target="_blank">Open Google backup setup instructions</a>
+<div class="notice" id="externalBackupNotice"></div>
+</div></div>
+  </details>
+  <details id="settingsCustomizeSection" class="settings-group">
+    <summary><b>Lists & Wording</b><span>Manage charities, sizes, names, Home labels, reports, and splash wording.</span></summary>
+    <div class="settings-group-body"><div class="card">
+<h2>Manage Lists</h2><p class="small">Add, rename, or remove charity and quilt-size choices. Renaming keeps every present quantity, date, need, and distribution connected to the new name. Items already used in records cannot be deleted.</p>
+<h3>Charities</h3>
+<label>Add Charity</label><div class="row"><input id="newCharity" placeholder="New charity name"/><button class="ghost" onclick="addCharity()">Add Charity</button></div>
+<label>Rename Charity</label><div class="row"><select id="renameCharitySelect"></select><input id="renameCharityName" placeholder="Enter the new charity name"/></div>
+<button class="ghost" onclick="renameCharity()">Review Charity Rename</button>
+<label>Delete Unused Charity</label><div class="row"><select id="deleteCharity"></select><button class="danger" onclick="removeCharity()">Delete</button></div>
+<h3 class="list-management-divider">Quilt Sizes</h3>
+<label>Add Size</label><div class="row"><input id="newSize" placeholder="New quilt size"/><button class="ghost" onclick="addSize()">Add Size</button></div>
+<label>Rename Size</label><div class="row"><select id="renameSizeSelect"></select><input id="renameSizeName" placeholder="Enter the new quilt size name"/></div>
+<button class="ghost" onclick="renameSize()">Review Size Rename</button>
+<label>Delete Unused Size</label><div class="row"><select id="deleteSize"></select><button class="danger" onclick="removeSize()">Delete</button></div>
+<div class="notice" id="listNotice"></div>
+</div><div class="card">
+<h2>Names and Wording</h2>
+<p class="small">This is normally a one-time setup. Existing records are not changed.</p>
+<label>Organization Name</label>
+<input id="orgNameInput" maxlength="80" placeholder="Faithful Circle Quilters"/>
+<label>App Title</label>
+<input id="appNameInput" maxlength="80" placeholder="Love Quilts Manager"/>
+<label>Program / Quilt Name</label>
+<input id="itemNameInput" maxlength="60" placeholder="Love Quilts"/>
+<h3 style="margin-top:18px">Home Screen Headers</h3>
+<p class="small">Change the wording shown on the Home screen. Numbers and calculations are not affected.</p>
+<label>Summary Heading</label>
+<input id="homeAtAGlanceInput" maxlength="60" placeholder="At a Glance"/>
+<label>Storage Total Label</label>
+<input id="homeStorageLabelInput" maxlength="60" placeholder="Available in Storage"/>
+<label>Needed Total Label</label>
+<input id="homeNeededLabelInput" maxlength="60" placeholder="Quilts Requested"/>
+<label>Quilts to Complete Label</label>
+<input id="homeDifferenceLabelInput" maxlength="60" placeholder="Quilts Needed to be Completed"/>
+<label>Calendar Heading</label>
+<input id="homeCalendarHeadingInput" maxlength="60" placeholder="All Quilts Calendar"/>
+<h3 style="margin-top:18px">Report and Splash Wording</h3>
+<label>Report Title <span class="small">(optional)</span></label>
+<input id="reportTitleInput" maxlength="120" placeholder="Love Quilts Inventory and Quilts Needed Report"/>
+<p class="small">Leave blank to create the report title automatically from the program name.</p>
+<label>Splash Tagline <span class="small">(optional)</span></label>
+<input id="splashTagInput" maxlength="100" placeholder="MADE WITH LOVE, SHARED WITH CARE"/>
+<label>Splash Message <span class="small">(optional)</span></label>
+<textarea id="splashMessageInput" maxlength="180" placeholder="Keeping track of love quilts…
+one quilt at a time."></textarea>
+<p class="small">Leave either splash field blank to use the automatic wording. Press Enter in the message box to create a second line.</p>
+<button class="primary" onclick="saveNames()">Save Names and Home Wording</button>
+<div class="notice" id="nameNotice"></div>
+</div></div>
+  </details>
+  <details id="settingsFeedbackSection" class="settings-group">
+    <summary><b>App Check & Feedback</b><span>Run App Check or create a bug report and change request.</span></summary>
+    <div class="settings-group-body"><div class="card" id="feedbackCard">
+<h2>App Check and Feedback</h2>
+<p class="small">Run a basic check for common data problems, or create a complete bug report or change request to share with the app developer. The app check cannot detect every possible screen or browser problem.</p>
+<div class="app-check-panel">
+<b>Data and Link Check</b>
+<div class="small">Checks quantities, dates, duplicate records, negative inventory, and linked distribution activity. It does not change your information.</div>
+<button class="ghost" onclick="runAppCheck()" type="button">Run App Check</button>
+<div aria-live="polite" class="app-check-results" id="appCheckResults"></div>
+</div>
+<h3>Report a Bug or Request a Change</h3>
+<p class="feedback-note small">The request automatically includes Update 7.8.35, the date and time, signed-in user, current screen, and device/browser information.</p>
+<div class="feedback-grid">
+<label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
+<label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected="">Other</option></select></label>
+<label>Priority<select id="feedbackPriority"><option>Normal</option><option>Important</option><option>Urgent — blocks use</option></select></label>
+</div>
+<label>Short Summary</label><input id="feedbackSummary" maxlength="120" placeholder="Example: Compact report opens blank"/>
+<label id="feedbackDetailsLabel">What happened?</label><textarea id="feedbackDetails" maxlength="1200" placeholder="Describe what you saw or what you want changed."></textarea>
+<label id="feedbackExpectedLabel">What did you expect?</label><textarea id="feedbackExpected" maxlength="800" placeholder="Describe the expected result or benefit."></textarea>
+<label id="feedbackStepsLabel">Steps to reproduce</label><textarea id="feedbackSteps" maxlength="800" placeholder="List the buttons or screens used before the problem appeared."></textarea>
+<div class="feedback-actions"><button class="primary" onclick="shareFeedbackRequest()" type="button">Share / Email Request</button><button class="ghost" onclick="downloadFeedbackRequest()" type="button">Download Request</button><button class="ghost" onclick="copyFeedbackRequest()" type="button">Copy Request</button></div>
+<button class="ghost" onclick="clearFeedbackForm()" type="button">Clear Form</button>
+<div class="notice" id="feedbackNotice"></div>
+</div></div>
+  </details>
+  <details id="settingsFutureSection" class="settings-group">
+    <summary><b>Future Modules</b><span>Preview possible modules without activating anything.</span></summary>
+    <div class="settings-group-body"><div class="card" id="futureModulesCard">
+<div class="future-modules-header">
+<div><h2>Future Modules</h2><div class="small">Ideas for expanding Love Quilts Manager without making the core charity-quilt workflow more complicated.</div></div>
+<span class="future-modules-badge">Preview Only</span>
+</div>
+<div class="future-modules-note"><b>Nothing here is active yet.</b> These cards are informational only and do not change inventory, reports, accounts, syncing, or stored data.</div>
+<div class="future-module-grid">
+<div class="future-module-card show">
+<h3 class="future-module-title"><span aria-hidden="true" class="future-module-icon">🏆</span>Quilt Show Manager</h3>
+<p>Register show quilts, assign entry numbers, organize categories, manage check-in and check-out, and track judging or ribbons.</p>
+<span class="future-module-status">Future Concept</span>
+</div>
+<div class="future-module-card collection">
+<h3 class="future-module-title"><span aria-hidden="true" class="future-module-icon">🖼️</span>Personal Quilt Collection</h3>
+<p>Catalog personal quilts with photos, maker, pattern, dates, size, ownership, notes, and storage location.</p>
+<span class="future-module-status">Future Concept</span>
+</div>
+<div class="future-module-card supplies">
+<h3 class="future-module-title"><span aria-hidden="true" class="future-module-icon">🧵</span>Fabric &amp; Supply Inventory</h3>
+<p>Track fabric, batting, thread, notions, quantities, colors, and where supplies are stored.</p>
+<span class="future-module-status">Future Concept</span>
+</div>
+<div class="future-module-card members">
+<h3 class="future-module-title"><span aria-hidden="true" class="future-module-icon">👥</span>Guild Member Manager</h3>
+<p>Organize a member directory, roles, committees, volunteer assignments, and other guild information.</p>
+<span class="future-module-status">Future Concept</span>
+</div>
+<div class="future-module-card analytics">
+<h3 class="future-module-title"><span aria-hidden="true" class="future-module-icon">📊</span>Analytics &amp; Statistics</h3>
+<p>Explore longer-term trends, yearly comparisons, charity totals, production, distribution, and planning patterns.</p>
+<span class="future-module-status">Future Concept</span>
+</div>
+</div>
+</div></div>
+  </details>
+  <details id="settingsInfoSection" class="settings-group">
+    <summary><b>Change Log & About</b><span>See the newest updates, full history, app version, and license.</span></summary>
+    <div class="settings-group-body"><div class="card" id="changeLogCard">
+<h2>Change Log</h2>
+<div class="change-log-current"><b>Current version: Update 7.8.35</b><span class="small">Settings cleanup, splash shortcut, and duplicate Calendar removal · July 26, 2026</span></div><div class="change-log-entry"><h4>7.8.35</h4><p>Made the splash growth message open Future Modules, grouped Settings into short tap-to-open sections, limited Change Log to the newest two entries until Show All is selected, and removed the duplicate Calendar from Quilts Needed. The Home Calendar remains the single calendar view.</p></div>
+<div class="change-log-entry"><h4>7.8.34</h4><p>Added a display-only Future Modules section in Settings with five possible expansion areas. Added the subtle splash-screen line “Designed to grow with your quilting needs.” No module functions, data fields, or Firebase changes were added.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.33</h4><p>Added Edit Date beside distributed records in Reports, with linked inventory and yearly statistics following the revised date. Added a Settings tool that checks common data problems and creates structured bug reports or change requests for sharing, copying, or downloading.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.32</h4><p>Reports now use the selected date when inventory changed or quilts were distributed, including backdated distribution edits and corrections. Entry timestamps remain available for audit history.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.31</h4><p>Fixed the blank Compact Report print preview and restored Compact One-Page PDF downloads.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.30</h4><p>Added safe charity and quilt-size renaming that preserves all existing records and numbers. Replaced old inventory edit/delete and charity-need edit/distribution/delete pop-ups with the detailed Home-style Before/After verification screen.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.29</h4><p>Moved Add Quilts Needed to the top of the Needs tab, colored changed request totals green or red, and changed the separate distribution reminder to purple.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.28</h4><p>Changed unchanged verification bubbles to a calm gray so they do not appear to signal a problem.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.27</h4><p>Separated Add Quilts Needed from distribution and moved familiar Home-style Before/After bubbles to the top of verification.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.26</h4><p>Moved Quilts Needed to the top, returned to Home after new additions, and added exact Before/After Home totals to verification.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.25</h4><p>Fixed a green status appearing before the server copy was confirmed. Sync Now now sends the correct over-distribution repair from the device that has it, while a second device safely receives the latest shared copy instead of uploading stale data.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.24</h4><p>Removed the remaining Firebase cap on distributed quantities, repaired clipped 7.8.23 quantities when linked inventory confirmed the full amount, and rewrote corrected need records.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.23</h4><p>Added a clear review screen before saving every new inventory entry or charity need, and now records the full quantity distributed even when it is above the original request.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.22</h4><p>Simplified Calendar month cards, added a small Tap charity to edit note inside populated months, removed On Hold / Storage from the active app, and changed 12-month Calendar printing to portrait.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.21</h4><p>Calendar entry actions, bottom Calendar key, direct Calendar distribution, On Hold / Storage workflow, 12-month Calendar printing, iPhone summary-print improvements, and weekend verification checklist.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.20</h4><p>Future months light yellow, covered future months green, and charity-level Met / Short coloring.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.19</h4><p>Corrected month-level Calendar color rules.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.18</h4><p>Calendar moved directly below At a Glance, report wording correction, and charity/size shortage calculation.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.17</h4><p>This Year and Yearly Statistics added to Home and Reports.</p></div>
+<div class="change-log-entry change-log-extra"><h4>7.8.16</h4><p>Sync Now, Set Current Count, alternating report shading, and distribution safeguards.</p></div>
+<button aria-expanded="false" class="ghost change-log-toggle" id="changeLogToggle" onclick="toggleChangeLog()" type="button">Show All Updates</button></div><div class="card">
+<h3>About</h3>
+<div class="about-grid">
+<b>App</b><span id="aboutAppName">Love Quilts Manager</span>
+<b>Program</b><span id="aboutItemName">Love Quilts</span>
+<b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
+<b>Version</b><span>Update 7.8.35 · July 26, 2026</span>
+<b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
+<b>Use</b><span>Personal and authorized guild use only.</span>
+</div>
+<p class="small">Update 7.8.35 cleans up Settings, links the splash growth message to Future Modules, collapses older Change Log entries, and removes the duplicate Quilts Needed Calendar. Update 7.8.34 added the Future Modules preview.</p>
+<a class="inline-link" href="LICENSE.txt" rel="noopener" target="_blank">Open license and permitted-use notice</a>
+</div></div>
+  </details>
+  <details id="settingsDangerSection" class="settings-group danger-settings">
+    <summary><b>Reset Options</b><span>Clear counts, start fresh, or reset the entire app.</span></summary>
+    <div class="settings-group-body"><div class="card danger-zone">
+<h3>Start Fresh and Reset</h3>
+<p class="small">A recovery copy is created before each reset. Organization names, charities, and sizes are kept unless the entire app is reset.</p>
+<button class="danger" onclick="clearInventoryCounts()">Clear Inventory Counts Only</button>
+<button class="danger" onclick="startFreshForRealUse()">Start Fresh for Real Use</button>
+<button class="danger" onclick="resetEntireApp()">Reset Entire App to Defaults</button>
+<div class="notice" id="dangerNotice"></div>
+</div></div>
+  </details>
 </section>
 <div id="calendarPrintReport" class="print-only" aria-hidden="true"></div>
 </main>
@@ -792,7 +800,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b>Settings</button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.34"></script>
-<script src="app.js?v=7.8.34"></script>
+<script type="module" src="firebase-sync.js?v=7.8.35"></script>
+<script src="app.js?v=7.8.35"></script>
 </body>
 </html>

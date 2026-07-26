@@ -1,19 +1,10 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.34
+LOVE QUILTS MANAGER — UPDATE 7.8.35
 
-1. Do not clear data or recreate the shared inventory.
-2. Export a current app backup and keep a copy of the present GitHub repository.
-3. Unzip the 7.8.34 download on the laptop.
-4. Upload every file and folder inside it to the ROOT of the GitHub repository, replacing matching files.
-5. Commit the changes and allow GitHub Pages to publish.
-6. Open the app and confirm the splash, Change Log, or About screen says Update 7.8.34.
-7. Open Reports, find a distributed charity request, and tap Edit Date.
-8. Confirm only Date Distributed is editable; quantity and inventory controls should not appear.
-9. Change the date, review the Current and Proposed details, and save.
-10. Confirm Reports and linked Inventory history show the revised date while quantity and inventory totals stay unchanged.
-11. Confirm Yearly Statistics place the distribution in the year of the revised date.
-12. Open Settings > App Check and Feedback and tap Run App Check.
-13. Create one test Change Request, then test Copy Request or Download Request. On iPhone/iPad, also test Share / Email Request.
-14. Recheck Print Compact Report and Download Compact One-Page PDF.
-15. Confirm both devices show “Shared data verified · All changes synced” and display the same distribution date.
+1. Download and unzip the update on the laptop.
+2. Open the existing Love Quilts Manager GitHub repository.
+3. Replace the existing app files with all files from this update, including the icons folder.
+4. Commit the changes and allow GitHub Pages to deploy.
+5. Open the app and confirm the splash or About section says Update 7.8.35.
+6. On an installed iPhone/iPad app, fully close and reopen it if the old version remains cached.
 
-No Firebase, Firestore Rules, login, collection, or database changes are needed.
+No Firebase or database setup changes are required.
