@@ -1,12 +1,13 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.35 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.36 TEST CHECKLIST
 
-[ ] Confirm Update 7.8.35 appears on the splash and About screen.
-[ ] Tap “Designed to grow with your quilting needs.” and confirm Settings opens directly to Future Modules.
-[ ] Open Settings and confirm only one section remains open at a time.
-[ ] Open Change Log & About and confirm only 7.8.35 and 7.8.34 initially appear.
-[ ] Tap Show All Updates and confirm the complete history appears; tap Show Fewer Updates to collapse it.
-[ ] Open Quilts Needed and confirm the request form and request list remain, with no duplicate Calendar below them.
-[ ] Confirm the Home screen Calendar still displays, filters by charity, opens charity actions, and prints.
-[ ] Run App Check and confirm it still completes.
-[ ] Confirm Compact and Full report downloads and printing still work.
-[ ] Confirm sync status and existing inventory/needs totals remain unchanged.
+[ ] Confirm Update 7.8.36 appears on the splash and About screen.
+[ ] Open Inventory and confirm Current Inventory is open by default.
+[ ] Tap Inventory History and confirm Current Inventory closes.
+[ ] Use the Inventory History filters and confirm records still display.
+[ ] Edit an inventory record and confirm the form opens without changing totals until saved.
+[ ] Open Quilts Needed and confirm Current Quilts Needed is open by default.
+[ ] Confirm unfinished and past-due requests appear under Current Quilts Needed.
+[ ] Tap Needs History and confirm completed requests appear there.
+[ ] Edit or update a completed distribution from Needs History.
+[ ] Confirm only one section stays open at a time in each tab.
+[ ] Confirm Home Calendar, reports, compact PDF, App Check, and syncing still work.

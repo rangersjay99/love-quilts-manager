@@ -1,25 +1,24 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.35 VALIDATION RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.36 VALIDATION RESULTS
 
-Automated browser validation: PASS
-Viewport tested: iPhone-size 390 × 844
+PASS: app.js JavaScript syntax validation completed successfully.
+PASS: index.html contains no duplicate element IDs and all new Inventory/Needs navigation IDs are present.
+PASS: Update 7.8.36 is shown on the splash screen and About section.
+PASS: Current Inventory opens by default and Inventory History starts collapsed.
+PASS: Current Quilts Needed opens by default and Needs History starts collapsed.
+PASS: Opening one Inventory section closes the other Inventory section.
+PASS: Opening one Needs section closes the other Needs section.
+PASS: Active future requests remain in Current Quilts Needed.
+PASS: Unfinished past-due requests remain in Current Quilts Needed.
+PASS: Fully distributed requests appear in Needs History.
+PASS: Completed distributions can still be edited from Needs History.
+PASS: Inventory History filters still render matching activity records.
+PASS: Editing an Inventory History record opens the existing inventory editor safely.
+PASS: Current Inventory and both request sections show live record-count summaries.
+PASS: App Check still runs and reports clean sample data correctly.
+PASS: Compact one-page PDF generation still returns populated PDF content.
+PASS: Full PDF generation still returns populated PDF content.
+PASS: Mobile-width visual checks completed for Inventory and Quilts Needed.
+PASS: Firebase synchronization code is byte-for-byte unchanged from Update 7.8.35.
+PASS: Version, manifests, service-worker cache, and asset query references are consistently updated to 7.8.36.
 
-PASS: Update 7.8.35 is shown on the splash screen and About section.
-PASS: “Designed to grow with your quilting needs.” closes the splash, opens Settings, expands Future Modules, and scrolls to the preview.
-PASS: Settings contains six compact tap-to-open sections.
-PASS: Opening one Settings section closes the previously open section.
-PASS: Change Log initially shows only 7.8.35 and 7.8.34.
-PASS: Show All Updates reveals the full 20-entry history.
-PASS: Show Fewer Updates returns the Change Log to two entries.
-PASS: The duplicate needsCalendar element is removed from Quilts Needed.
-PASS: The Quilts Needed entry form and saved-request list remain available.
-PASS: The Home Calendar remains present and renders all 12 month cards.
-PASS: App Check runs and returns results with no JavaScript errors.
-PASS: Reports view initializes successfully.
-PASS: Compact PDF downloads with report content.
-PASS: Full PDF downloads with report content.
-PASS: No page errors or console errors occurred during the automated browser test.
-PASS: All original Settings control IDs remain present.
-PASS: firebase-sync.js is byte-for-byte unchanged from Update 7.8.34.
-PASS: Version, manifests, service-worker cache, and asset query references are consistently updated to 7.8.35.
-
-No Firebase schema or stored-data migration is required.
+No Firebase schema or database migration is required.

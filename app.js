@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.35';
+const VERSION='7.8.36';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -231,13 +231,19 @@ function saveNames(){
   save('Names and Home wording changed');applyNames();renderAll();notice('nameNotice','Names and Home-screen wording saved.',true);
 }
 function closeSplash(){el('splash').classList.add('hidden');document.body.style.overflow=''}
-function setupSettingsGroups(){
-  const groups=[...document.querySelectorAll('#settings .settings-group')];
+function setupSingleOpenGroups(selector){
+  const groups=[...document.querySelectorAll(selector)];
   groups.forEach(group=>group.addEventListener('toggle',()=>{
     if(!group.open)return;
     groups.forEach(other=>{if(other!==group)other.open=false});
   }));
 }
+function setupSettingsGroups(){setupSingleOpenGroups('#settings .settings-group')}
+function setupRecordGroups(){
+  setupSingleOpenGroups('#inventory .record-group');
+  setupSingleOpenGroups('#needs .record-group');
+}
+function openRecordGroup(id){const group=el(id);if(group&&!group.open)group.open=true}
 function openFutureModulesFromSplash(){
   closeSplash();showView('settings');
   const group=el('settingsFutureSection');if(group)group.open=true;
@@ -279,8 +285,8 @@ function openAddQuilts(){
   requestAnimationFrame(()=>{el('inventoryEntryCard')?.scrollIntoView({behavior:'smooth',block:'start'});el('txCharity')?.focus()});
 }
 function openInventoryDetails(){
-  showView('inventory');
-  requestAnimationFrame(()=>el('inventoryDetailsCard')?.scrollIntoView({behavior:'smooth',block:'start'}));
+  showView('inventory');openRecordGroup('inventoryCurrentSection');
+  requestAnimationFrame(()=>el('inventoryCurrentSection')?.scrollIntoView({behavior:'smooth',block:'start'}));
 }
 function resetNeedEntryForm(){
   editNeedId=null;editNeedMode='details';
@@ -300,11 +306,11 @@ function openAddNeed(){
   requestAnimationFrame(()=>{el('needsEntryCard')?.scrollIntoView({behavior:'smooth',block:'start'});el('needCharity')?.focus()});
 }
 function openNeedsDetails(){
-  showView('needs');renderNeeds();
-  requestAnimationFrame(()=>el('needsList')?.scrollIntoView({behavior:'smooth',block:'start'}));
+  showView('needs');renderNeeds();openRecordGroup('needsCurrentSection');
+  requestAnimationFrame(()=>el('needsCurrentSection')?.scrollIntoView({behavior:'smooth',block:'start'}));
 }
 function openDistributeQuilts(){
-  editNeedId=null;editNeedMode='details';showView('needs');renderNeeds();
+  editNeedId=null;editNeedMode='details';showView('needs');renderNeeds();openRecordGroup('needsCurrentSection');
   requestAnimationFrame(()=>{
     notice('needNotice','Choose a request below, then tap Mark Distributed.');
     const first=[...document.querySelectorAll('#needsList .need-card')].find(card=>!card.classList.contains('need-completed'));
@@ -391,7 +397,7 @@ function editTx(id){
   const t=data.transactions.find(x=>x.id===id);if(!t)return;if(t.sourceNeedId){alert('This inventory transaction is linked to a charity distribution. Update it from Quilts Needed using Mark Distributed so the distribution and inventory stay matched.');prepareNeedDistribution(t.sourceNeedId);return}if(t.sourceHoldId){alert('This protected transaction belongs to an earlier deferred storage record, so it cannot be edited here.');return}editTxId=id;mode=t.type;qty=Math.abs(value(t))||1;refreshSelects();
   el('txCharity').value=t.charity;el('txSize').value=t.size;el('txDate').value=t.date;el('txNote').value=t.note||'';setQty(qty);
   if(el('txAdjustmentDirection'))el('txAdjustmentDirection').value=value(t)<0?'subtract':'add';
-  el('cancelTxBtn').style.display='block';setMode(mode);showView('inventory');
+  el('cancelTxBtn').style.display='block';setMode(mode);showView('inventory');openRecordGroup('inventoryHistorySection');
 }
 function cancelTxEdit(){editTxId=null;clearQty();el('txCharity').value='';el('txSize').value='';el('txNote').value='';el('txDate').value=today();if(el('txAdjustmentDirection'))el('txAdjustmentDirection').value='add';el('cancelTxBtn').style.display='none';setMode(mode)}
 function deleteTx(id){
@@ -413,13 +419,15 @@ function deleteTx(id){
 }
 function renderInventory(){
   const groups={};Object.entries(invMap()).forEach(([k,n])=>{const split=k.lastIndexOf('|'),c=k.slice(0,split),s=k.slice(split+1);if(n!==0)(groups[c]??=[]).push({s,n})});
-  const names=Object.keys(groups).sort();
+  const names=Object.keys(groups).sort(),total=totalOnHand();
   el('inventoryList').innerHTML=names.length?names.map(c=>`<div class="group"><div class="head"><div class="title">${esc(c)}</div><div class="badge">${groups[c].reduce((a,x)=>a+x.n,0)}</div></div>${groups[c].sort((a,b)=>a.s.localeCompare(b.s)).map(x=>`<div class="head" style="margin-top:8px"><div class="meta">${esc(x.s)}</div><b class="${x.n<0?'negative':''}">${x.n}</b></div>`).join('')}</div>`).join(''):`<div class="empty">No ${esc(lowerName())} currently in storage.</div>`;
+  if(el('inventoryCurrentSummary'))el('inventoryCurrentSummary').textContent=`${total} ${lowerName()} currently in storage.`;
 }
 function renderHistory(){
   const c=el('historyCharity').value,t=el('historyType').value;
   const list=[...data.transactions].filter(x=>(!c||x.charity===c)&&(!t||x.type===t)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
   el('historyList').innerHTML=list.length?list.map(x=>{const n=activityValue(x),inventoryEffect=value(x);return`<div class="item"><div class="head"><div><div class="title ${n<0?'negative':'positive'}">${n>0?'+':''}${n} ${esc(x.size)}</div><div class="meta">${esc(x.charity)} · Activity date ${fmtDate(x.date)}</div>${x.note?`<div class="meta">${esc(x.note)}</div>`:''}${x.sourceType==='HOLD_DISTRIBUTION'?'<div class="meta">Earlier deferred distribution record.</div>':''}${auditText(x)?`<div class="audit-meta">${esc(auditText(x))}</div>`:''}${x.type==='ADJUST'?'<div class="meta"><span class="flag">Adjusted inventory</span></div>':''}${x.sourceNeedId?'<div class="meta"><span class="flag distribution-link-flag">Linked distribution</span></div>':''}${x.sourceHoldId?'<div class="meta"><span class="flag">Deferred record</span></div>':''}</div><b>${transactionLabel(x)}</b></div><div class="actions"><button onclick="editTx('${x.id}')">Edit</button><button onclick="deleteTx('${x.id}')">Delete</button></div></div>`}).join(''):'<div class="empty">No matching history.</div>';
+  if(el('inventoryHistorySummary'))el('inventoryHistorySummary').textContent=`${list.length} matching ${list.length===1?'activity record':'activity records'}.`;
 }
 function fulfilledQty(n){return Math.max(0,Math.floor(Number(n?.fulfilledQty||0)))}
 function remainingNeed(n){return Math.max(0,Math.max(1,Number(n?.qty||1))-fulfilledQty(n))}
@@ -908,7 +916,13 @@ function deleteCalendarNeed(){
 function renderNeeds(){
   if(editNeedId&&!data.needs.some(n=>n.id===editNeedId))editNeedId=null;
   renderNeedsCalendar();const allocations=allocateNeedsForPlanning();
-  el('needsList').innerHTML=allocations.length?allocations.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No quilts needed entered yet.</div>';
+  const current=allocations.filter(item=>remainingNeed(item.n)>0);
+  const history=allocations.filter(item=>remainingNeed(item.n)===0).sort((a,b)=>String(b.n.fulfilledDate||b.n.month).localeCompare(String(a.n.fulfilledDate||a.n.month))||String(b.n.id).localeCompare(String(a.n.id)));
+  el('needsList').innerHTML=current.length?current.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No current quilts needed. Completed requests are available in Needs History.</div>';
+  el('needsHistoryList').innerHTML=history.length?history.map(item=>needCard(item.n,true,item)).join(''):'<div class="empty">No completed requests yet.</div>';
+  if(el('needsCurrentSummary'))el('needsCurrentSummary').textContent=`${current.length} current ${current.length===1?'request':'requests'} needing attention.`;
+  if(el('needsHistorySummary'))el('needsHistorySummary').textContent=`${history.length} completed ${history.length===1?'request':'requests'}.`;
+  if(editNeedId){const edited=data.needs.find(n=>n.id===editNeedId);openRecordGroup(edited&&remainingNeed(edited)===0?'needsHistorySection':'needsCurrentSection')}
 }
 function homeCharitySummaries(){
   const inventory=invMap(),remaining=requestedNeedsMap();
@@ -1623,8 +1637,8 @@ window.lqApplyRemoteData=(remoteData,reason='shared-device update')=>{
 window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
-  document.body.style.overflow='hidden';setupSettingsGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.35 opened',data);
+  document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.36 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.35',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.36',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
