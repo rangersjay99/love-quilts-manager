@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.41">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.41">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.41">
+<link rel="manifest" href="manifest-v7.json?v=7.8.43">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.43">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.43">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -380,7 +380,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 @media(max-width:560px){.report-group>summary{padding:14px 42px 14px 14px}.report-group-body{padding:11px}}
 
 
-/* Update 7.8.42 — iPhone printing, Custom Reports, and Yearly Quilt Summary */
+/* Update 7.8.43 — iPhone printing, Custom Reports, and Yearly Quilt Summary */
 .yearly-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .yearly-stat.yearly-primary{border-color:#c6a5cc;background:#fbf7fc}
 .yearly-stat.annual-need{background:#f1e3f4;border-color:#a875b1}
@@ -459,7 +459,7 @@ button:disabled{opacity:.55;cursor:wait}
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.41" alt="Patchwork heart logo">
+    <img class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.43" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
@@ -467,7 +467,7 @@ button:disabled{opacity:.55;cursor:wait}
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="splashGrowthMessage" type="button" class="splash-growth-button" onclick="openFutureModulesFromSplash()">Designed to grow with your quilting needs.</button>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.41</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.43</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
@@ -621,10 +621,10 @@ button:disabled{opacity:.55;cursor:wait}
     </div>
   </div>
   <details id="reportsYearlySection" class="report-group">
-    <summary><b>Yearly Quilt Summary</b><span>View quilts made, distributed, still to be made, annual quilt need, and supporting annual statistics.</span></summary>
+    <summary><b>Yearly Quilt Summary</b><span>View quilts made, distributed, still to be made, the annual quilt need, and supporting statistics.</span></summary>
     <div class="report-group-body"><div id="yearlyStatsCard" class="card">
       <div class="yearly-report-heading"><h3>Yearly Quilt Summary</h3><label>Statistics Year<select id="reportStatsYear" onchange="renderReports()"></select></label></div>
-      <p class="small">Made and Distributed are separate activity totals. Still to Be Made uses the remaining shortage for the selected year. Annual Quilt Need is calculated separately so quilts made and distributed are not double-counted.</p><div id="reportYearlyStats" class="yearly-stat-grid"></div><p id="yearlyAnnualFormulaNote" class="yearly-formula-note"></p>
+      <p class="small">Made and Distributed are separate activity totals. Still to Be Made uses the remaining shortage for the selected year. Total Annual Quilt Need equals quilts distributed toward that year’s requests plus quilts still to be made.</p><div id="reportYearlyStats" class="yearly-stat-grid"></div><p id="yearlyAnnualFormulaNote" class="yearly-formula-note"></p>
     </div></div>
   </details>
   <details id="reportsInventorySection" class="report-group">
@@ -834,7 +834,7 @@ one quilt at a time."></textarea>
 <div aria-live="polite" class="app-check-results" id="appCheckResults"></div>
 </div>
 <h3>Report a Bug or Request a Change</h3>
-<p class="feedback-note small">The request automatically includes Update 7.8.41, the date and time, signed-in user, current screen, and device/browser information.</p>
+<p class="feedback-note small">The request automatically includes Update 7.8.43, the date and time, signed-in user, current screen, and device/browser information.</p>
 <div class="feedback-grid">
 <label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
 <label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected="">Other</option></select></label>
@@ -890,7 +890,7 @@ one quilt at a time."></textarea>
     <summary><b>Change Log & About</b><span>See the newest updates, full history, app version, and license.</span></summary>
     <div class="settings-group-body"><div class="card" id="changeLogCard">
 <h2>Change Log</h2>
-<div class="change-log-current"><b>Current version: Update 7.8.41</b><span class="small">Shared wording synchronization fix · July 26, 2026</span></div><div class="change-log-entry"><h4>7.8.41</h4><p>Fixed Firebase synchronization for the customizable Future Modules message and bottom navigation labels, including existing customized wording saved before this update.</p></div><div class="change-log-entry"><h4>7.8.40</h4><p>Added a customizable Future Modules message on the splash and Home screens, plus customizable wording for all five bottom navigation tabs. Icons, colors, order, and destinations remain fixed.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.39</h4><p>The Reports headline summary cards now match the Home screen cards in size, spacing, three-card layout, buttons, and tap behavior.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div>
+<div class="change-log-current"><b>Current version: Update 7.8.43</b><span class="small">Printing, Custom Reports, and Yearly Quilt Summary · July 29, 2026</span></div><div class="change-log-entry"><h4>7.8.43</h4><p>Improved iPhone and iPad printing with a single prepared print snapshot, added Custom Newsletter Reports with selectable content and saved presets, and expanded the Yearly Quilt Summary with Made, Distributed, Still to Be Made, and Total Annual Quilt Need.</p></div><div class="change-log-entry"><h4>7.8.41</h4><p>Fixed Firebase synchronization for the customizable Future Modules message and bottom navigation labels, including existing customized wording saved before this update.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.40</h4><p>Added a customizable Future Modules message on the splash and Home screens, plus customizable wording for all five bottom navigation tabs. Icons, colors, order, and destinations remain fixed.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.39</h4><p>The Reports headline summary cards now match the Home screen cards in size, spacing, three-card layout, buttons, and tap behavior.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.37</h4><p>Inventory and Quilts Needed now start with both record sections collapsed for a cleaner, less cluttered screen. Tapping a section opens it, and Home shortcuts or edit actions still open the needed section automatically.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.36</h4><p>Added tap-to-open sections to Inventory and Quilts Needed. Inventory separates Current Inventory from Inventory History, while Quilts Needed separates active requests from completed Needs History. Only one section stays open at a time.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.35</h4><p>Made the splash growth message open Future Modules, grouped Settings into short tap-to-open sections, limited Change Log to the newest two entries until Show All is selected, and removed the duplicate Calendar from Quilts Needed. The Home Calendar remains the single calendar view.</p></div>
@@ -919,11 +919,11 @@ one quilt at a time."></textarea>
 <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
 <b>Program</b><span id="aboutItemName">Love Quilts</span>
 <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-<b>Version</b><span>Update 7.8.41 · July 26, 2026</span>
+<b>Version</b><span>Update 7.8.43 · July 29, 2026</span>
 <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
 <b>Use</b><span>Personal and authorized guild use only.</span>
 </div>
-<p class="small">Update 7.8.41 fixes synchronization of the customizable Future Modules message and bottom navigation labels. Update 7.8.40 added those customization options.</p>
+<p class="small">Update 7.8.43 improves printing, adds Custom Newsletter Reports, and expands the Yearly Quilt Summary. Update 7.8.41 remains the trusted synchronization base for this release.</p>
 <a class="inline-link" href="LICENSE.txt" rel="noopener" target="_blank">Open license and permitted-use notice</a>
 </div></div>
   </details>
@@ -993,7 +993,7 @@ one quilt at a time."></textarea>
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b><span id="navSettingsLabel">Settings</span></button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.42"></script>
-<script src="app.js?v=7.8.42"></script>
+<script type="module" src="firebase-sync.js?v=7.8.43"></script>
+<script src="app.js?v=7.8.43"></script>
 </body>
 </html>

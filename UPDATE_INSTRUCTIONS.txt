@@ -1,25 +1,29 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.42
+LOVE QUILTS MANAGER — UPDATE 7.8.43
 Released: July 29, 2026
 
 BEFORE UPDATING
 1. In the app, export a current Backup from Settings.
-2. Confirm both approved devices show all changes synced.
+2. Confirm both approved devices show All changes synced.
 3. Download a ZIP backup of the current GitHub repository.
 
-BUILD THE UPDATE
-1. Place this Builder file in the root of the current Love Quilts Manager repository, or open it from the published app address.
-2. Open Love_Quilts_Update_7_8_42_BUILDER.html in a browser.
-3. Click Build Update 7.8.42 ZIP.
-4. The builder downloads the live app files, verifies the required report-code compatibility points, and creates Love_Quilts_Manager_Update_7_8_42.zip.
-
-UPLOAD
-1. Extract the generated ZIP.
+UPLOAD THIS UPDATE
+1. Extract Love_Quilts_Manager_Update_7_8_43.zip.
 2. In the GitHub repository main/root folder, upload every extracted file and replace files with the same names.
-3. Do not delete or replace the firebase-test folder.
+3. Keep the existing firebase-test folder in the repository.
 4. Wait for GitHub Pages to publish.
 5. Close and reopen the installed app on each device. Refresh once if an older version remains cached.
+6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.43.
+
+QUICK VERIFICATION
+1. Print Home Summary and Calendar once from an iPhone.
+2. Open Reports → Custom Reports, preview a report, and print it.
+3. Confirm Yearly Quilt Summary shows Made, Distributed, Still to Be Made, and Total Annual Quilt Need.
+4. Confirm Total Annual Quilt Need equals quilts distributed toward that year’s requests plus quilts still to be made.
+5. Confirm inventory, needs, distributions, Firebase sync, downloads, CSV exports, and backups still work.
 
 IMPORTANT
+- This update starts from the trusted Update 7.8.41 code base.
+- Update 7.8.42 was not released and is intentionally omitted.
 - This update does not clear, reinitialize, or migrate shared inventory.
 - Do not choose Create Real Shared Inventory again.
 - Firebase production paths and the saved-data format remain unchanged.

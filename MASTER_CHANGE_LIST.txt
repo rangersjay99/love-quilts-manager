@@ -1,9 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 26, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.42
+IMPLEMENTED THROUGH UPDATE 7.8.43
 
-- Update 7.8.42 fixes single-request iPhone printing, adds Custom Reports with newsletter preview and saved presets, and expands Yearly Reports with Made, Distributed, Still to Be Made, and Total Annual Quilt Need.
+- Update 7.8.43 fixes single-request iPhone printing, adds Custom Reports with newsletter preview and saved presets, and expands Yearly Reports with Made, Distributed, Still to Be Made, and Total Annual Quilt Need calculated as quilts distributed toward that year’s requests plus quilts still to be made, keeping Made and Distributed as separate activity totals.
 - Update 7.8.41 fixes Firebase synchronization for the customizable Future Modules message and bottom navigation labels, including migration of customized values from an older shared settings document.
 - Update 7.8.40 adds a customizable Future Modules message to the splash and Home screens and customizable labels for all five bottom navigation tabs. Icons, colors, order, and destinations stay fixed. Names and Wording now appears before Manage Lists.
 - Update 7.8.39 makes the three Reports headline summary cards match the Home screen cards in size, spacing, layout, action buttons, and tap behavior.

@@ -1,16 +1,32 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.41 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.43 TEST CHECKLIST
 
-[ ] Confirm Update 7.8.41 appears on the splash and About screen.
-[ ] On Device A, change the Future Modules Message and save.
-[ ] Wait for “All changes synced,” then confirm the same message appears on Device B.
-[ ] Change one bottom navigation label and confirm it also updates on Device B.
-[ ] Confirm the Future Modules message appears on both splash and Home.
-[ ] Change the Future Modules message in Settings and save it.
-[ ] Confirm the same wording appears on splash and Home.
-[ ] Tap the message from Home and confirm Future Modules opens.
-[ ] Rename each bottom tab and confirm all five labels update.
-[ ] Confirm tab icons, colors, order, and destinations remain unchanged.
-[ ] Refresh or reopen the app and confirm custom wording remains saved.
-[ ] Confirm a second approved device receives the custom wording after sync.
-[ ] Confirm Home, Inventory, Quilts Needed, Reports, Settings, and App Check still work.
-[ ] Confirm full and compact reports remain populated.
+GENERAL
+[ ] App opens and shows Update 7.8.43.
+[ ] Existing inventory, needs, distributions, settings, and navigation labels remain present.
+[ ] Both approved devices sign in and sync normally.
+
+IPHONE / IPAD PRINTING
+[ ] Home > Print Summary opens one print sheet.
+[ ] Home > Print 12-Month Calendar opens one print sheet.
+[ ] Reports > Print Full Report opens one print sheet.
+[ ] Reports > Print Compact Report opens one print sheet.
+[ ] Repeated tapping while print is opening does not create extra print sheets.
+[ ] Canceling or completing printing returns the app to its normal screen.
+[ ] Downloads, PDF exports, CSV, and backups still work.
+
+CUSTOM REPORTS
+[ ] Custom Reports opens from Reports.
+[ ] Title and date range can be changed.
+[ ] Sections and table fields can be selected or cleared.
+[ ] Preview shows the chosen sections and fields.
+[ ] Print / Save as PDF opens one print sheet.
+[ ] Download Report File creates a self-contained HTML report.
+[ ] A preset can be saved, loaded, and deleted on the same device.
+
+YEARLY QUILT SUMMARY
+[ ] Statistics Year includes years that have requests even if they have no distribution date yet.
+[ ] Total Quilts Made matches IN activity for the selected year.
+[ ] Total Quilts Distributed matches distribution activity for the selected year.
+[ ] Total Quilts Still to Be Made matches the selected year's current shortages.
+[ ] Total Annual Quilt Need equals quilts distributed toward the selected year’s requests plus quilts still to be made.
+[ ] Full PDF, Compact PDF, full print, compact print, and Custom Reports show the expanded yearly wording and the same annual-need formula.
