@@ -10,7 +10,7 @@ BUILD THE UPDATE
 1. Place this Builder file in the root of the current Love Quilts Manager repository, or open it from the published app address.
 2. Open Love_Quilts_Update_7_8_42_BUILDER.html in a browser.
 3. Click Build Update 7.8.42 ZIP.
-4. The builder downloads the live Update 7.8.41 files, verifies the base version, and creates Love_Quilts_Manager_Update_7_8_42.zip.
+4. The builder downloads the live app files, verifies the required report-code compatibility points, and creates Love_Quilts_Manager_Update_7_8_42.zip.
 
 UPLOAD
 1. Extract the generated ZIP.

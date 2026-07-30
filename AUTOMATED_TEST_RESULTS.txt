@@ -2,7 +2,7 @@ LOVE QUILTS MANAGER — UPDATE 7.8.42 AUTOMATED CHECKS
 Released: July 29, 2026
 
 The Builder verifies before creating the ZIP:
-- The live base app is exactly Update 7.8.41.
+- The live source contains the required 7.8.41 report-code patch points.
 - Custom Reports markup and code are installed.
 - Prepared-snapshot single-request printing code is installed.
 - Expanded yearly annual-need calculations are installed.
@@ -10,4 +10,4 @@ The Builder verifies before creating the ZIP:
 - The service-worker cache is updated to 7.8.42.
 - The Master Change List is updated through 7.8.42.
 
-A separate local builder self-test also verified the expected 7.8.41 patch points, generated-file validation, and JavaScript syntax. Device print behavior still requires the manual iPhone/iPad checklist because browser print sheets cannot be fully simulated by the builder.
+A separate local builder self-test verified flexible Compact and Full PDF patching, generated-file validation, and JavaScript syntax. Device print behavior still requires the manual iPhone/iPad checklist because browser print sheets cannot be fully simulated by the builder.
