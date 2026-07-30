@@ -1365,7 +1365,7 @@ function makeOnePagePDF(){
   });
 
   const stats=yearlyStatistics(selectedStatisticsYear());
-  text(36,668,pdfFit(`${stats.year}: Made ${stats.made} | Distributed ${stats.distributed} | Still to Make ${stats.stillToMake} | Total for Year ${stats.annualQuiltNeed}`,92),7.2,true);
+  text(36,668,pdfFit(`${stats.year}: Made ${stats.made} | Distributed ${stats.distributed} | Still to Make ${stats.stillToMake} | Made + Still Total ${stats.annualQuiltNeed}`,92),7.2,true);
   text(36,653,pdfFit(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`,74),10,true);line(36,647,576,647,.7);
   const xCharity=36,xSize=180,xOnHand=365,xRequested=455,xDifference=525;
   let y=633;
@@ -1515,9 +1515,10 @@ function makeFullPDF(){
 
   const stats=yearlyStatistics(selectedStatisticsYear());
   beginSection(`${stats.year} YEARLY QUILT SUMMARY`);
-  addParagraph(`Quilts Made: ${stats.made} | Quilts Distributed: ${stats.distributed} | Still to Be Made: ${stats.stillToMake} | Total Quilts for Year: ${stats.annualQuiltNeed}`,{size:8.5,bold:true,after:3});
+  addParagraph(`Quilts Made: ${stats.made} | Quilts Distributed: ${stats.distributed} | Still to Be Made: ${stats.stillToMake} | Made + Still to Be Made Total: ${stats.annualQuiltNeed}`,{size:8.5,bold:true,after:3});
   addParagraph(`Total for ${stats.year} = ${stats.made} made + ${stats.stillToMake} still to be made`,{size:8.2,after:3});
   addParagraph(`Net Inventory Change: ${signedDifference(stats.netChange)} | Current Inventory: ${stats.currentInventory} | Charities Served: ${stats.charitiesServed} | Lifetime Quilts Distributed: ${stats.lifetimeDistributed}`,{size:8.5,after:9});
+
 
 
   beginSection(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`);

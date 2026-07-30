@@ -28,5 +28,5 @@ YEARLY QUILT SUMMARY
 [ ] Total Quilts Made matches IN activity for the selected year.
 [ ] Total Quilts Distributed matches distribution activity for the selected year.
 [ ] Total Quilts Still to Be Made matches the selected year's current shortages.
-[ ] Total Quilts for the Year equals Total Quilts Made plus Total Quilts Still to Be Made.
+[ ] Made + Still to Be Made Total equals Total Quilts Made plus Total Quilts Still to Be Made.
 [ ] Full PDF, Compact PDF, full print, compact print, and Custom Reports show the expanded yearly wording.

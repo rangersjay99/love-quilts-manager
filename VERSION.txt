@@ -6,7 +6,7 @@ Printing, Custom Reports, and Yearly Quilt Summary update.
 Changes:
 - Single-request prepared-snapshot printing for iPhone, iPad, and desktop.
 - Custom newsletter-style report builder with date range, selectable sections and fields, preview, print, HTML export, and saved presets.
-- Expanded yearly totals for Made, Distributed, Still to Be Made, and Total Quilts for the Year, calculated as Made plus Still to Be Made.
+- Expanded yearly totals for Made, Distributed, Still to Be Made, and Made + Still to Be Made Total, calculated as Made plus Still to Be Made.
 - Full and Compact report wording updated to include the expanded yearly figures.
 
 Firebase production paths and the shared-data schema are unchanged.
