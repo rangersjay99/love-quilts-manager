@@ -379,6 +379,62 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
 .report-group-body{padding:14px}.report-group-body>.card{margin:0 0 12px;box-shadow:none}.report-group-body>.card:last-child{margin-bottom:0}
 @media(max-width:560px){.report-group>summary{padding:14px 42px 14px 14px}.report-group-body{padding:11px}}
 
+
+/* Update 7.8.42 — iPhone printing, Custom Reports, and Yearly Quilt Summary */
+.yearly-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.yearly-stat.yearly-primary{border-color:#c6a5cc;background:#fbf7fc}
+.yearly-stat.annual-need{background:#f1e3f4;border-color:#a875b1}
+.yearly-formula-note{margin:12px 0 0;padding:11px 12px;border-left:5px solid var(--plum);border-radius:8px;background:#f7eff8;color:#55485a;font-size:12px;line-height:1.5}
+.custom-report-builder h4{margin:0 0 8px}
+.custom-report-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:10px}
+.custom-report-panel{margin-top:13px;padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+.custom-report-checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.custom-report-checks label{display:flex;align-items:flex-start;gap:8px;margin:0;padding:8px;border:1px solid #e1d6e1;border-radius:10px;background:#fff;font-weight:750;font-size:13px}
+.custom-report-checks input{width:19px;height:19px;margin:0;flex:0 0 auto}
+.custom-preset-row{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:8px;margin-top:10px}
+.custom-report-preview{margin-top:14px;padding:0;overflow:hidden}
+.newsletter-report{background:#fff;padding:28px;color:#2b2530}
+.newsletter-header{border-bottom:5px solid var(--plum);padding-bottom:16px;margin-bottom:20px}
+.newsletter-kicker{font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--plum)}
+.newsletter-header h1{font-family:Georgia,"Times New Roman",serif;font-size:31px;line-height:1.08;margin:7px 0}
+.newsletter-range,.newsletter-small{color:var(--muted);font-size:12px;line-height:1.5}
+.newsletter-highlights,.newsletter-year-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:17px 0}
+.newsletter-highlights>div,.newsletter-year-grid>div{border:1px solid #d9cbd9;border-radius:12px;padding:12px;text-align:center;background:#faf7fb}
+.newsletter-highlights b,.newsletter-year-grid b{display:block;font-size:24px;color:var(--plum-dark)}
+.newsletter-highlights span,.newsletter-year-grid span{display:block;font-size:11px;font-weight:850;margin-top:4px}
+.newsletter-year-grid .annual{background:#f4e9f6;border-color:#b98cc1}
+.newsletter-section{margin:23px 0}
+.newsletter-section-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;border-bottom:2px solid var(--plum);margin-bottom:9px}
+.newsletter-section-heading h2{font-family:Georgia,"Times New Roman",serif;font-size:21px;margin:0 0 6px}
+.newsletter-section-heading span{font-size:11px;color:var(--muted);margin-bottom:7px}
+.newsletter-formula{background:#f5edf7;border-left:5px solid var(--plum);padding:10px 12px;font-size:12px;line-height:1.5}
+.newsletter-report table{font-size:12px}
+.newsletter-report th{background:#eee5f0;color:var(--plum-dark)}
+.newsletter-report th,.newsletter-report td{padding:7px 6px}
+.newsletter-report footer{margin-top:28px;border-top:1px solid #d9cbd9;padding-top:10px;font-size:9px;color:var(--muted)}
+.custom-empty{padding:18px;text-align:center;border:1px dashed #cab9ca;color:var(--muted)}
+button:disabled{opacity:.55;cursor:wait}
+@media(max-width:760px){
+  .custom-report-grid{grid-template-columns:1fr 1fr}
+  .custom-report-checks{grid-template-columns:1fr 1fr}
+  .custom-preset-row{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .yearly-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .custom-report-grid,.custom-report-checks{grid-template-columns:1fr}
+  .newsletter-highlights,.newsletter-year-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .newsletter-report{padding:18px}
+}
+@media print{
+  body.print-custom .newsletter-report{max-width:none;margin:0;padding:0;border:0}
+  body.print-custom .newsletter-header h1{font-size:28px}
+  body.print-custom .newsletter-highlights,body.print-custom .newsletter-year-grid{grid-template-columns:repeat(4,1fr)}
+  body.print-custom .newsletter-section-heading h2{font-size:17px}
+  body.print-custom table{font-size:9px}
+  body.print-custom th,body.print-custom td{padding:4px}
+  body.print-custom .newsletter-section{break-inside:auto}
+}
+
 </style>
 </head>
 <body>
@@ -565,11 +621,10 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
     </div>
   </div>
   <details id="reportsYearlySection" class="report-group">
-    <summary><b>Yearly Statistics</b><span>View annual totals, current inventory, charities served, and lifetime distributed.</span></summary>
+    <summary><b>Yearly Quilt Summary</b><span>View quilts made, distributed, still to be made, annual quilt need, and supporting annual statistics.</span></summary>
     <div class="report-group-body"><div id="yearlyStatsCard" class="card">
-      <div class="yearly-report-heading"><h3>Yearly Statistics</h3><label>Statistics Year<select id="reportStatsYear" onchange="renderReports()"></select></label></div>
-      <p class="small">Quilts Made uses Love Quilts In entries. Quilts Distributed uses Quilts Out entries, so corrected inventory restorations are not counted as newly made quilts.</p>
-      <div id="reportYearlyStats" class="yearly-stat-grid"></div>
+      <div class="yearly-report-heading"><h3>Yearly Quilt Summary</h3><label>Statistics Year<select id="reportStatsYear" onchange="renderReports()"></select></label></div>
+      <p class="small">Made and Distributed are separate activity totals. Still to Be Made uses the remaining shortage for the selected year. Annual Quilt Need is calculated separately so quilts made and distributed are not double-counted.</p><div id="reportYearlyStats" class="yearly-stat-grid"></div><p id="yearlyAnnualFormulaNote" class="yearly-formula-note"></p>
     </div></div>
   </details>
   <details id="reportsInventorySection" class="report-group">
@@ -586,6 +641,63 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 5px;b
       <div class="card"><h3>Adjusted Transactions</h3><div id="reportAdjustments"></div></div>
     </div>
   </details>
+  
+  <details id="reportsCustomSection" class="report-group no-print">
+    <summary><b>Custom Reports</b><span>Choose sections and fields, set a date range, preview a newsletter-style report, then print or export it.</span></summary>
+    <div class="report-group-body">
+      <div class="card custom-report-builder">
+        <h3>Custom Newsletter Report</h3>
+        <p class="small">Build a polished report for a guild meeting, newsletter, or email. Printing also allows Save as PDF on supported devices.</p>
+        <div class="custom-report-grid">
+          <label>Report Title<input id="customReportTitle" type="text" placeholder="Monthly Love Quilts Report"></label>
+          <label>Start Date<input id="customReportStart" type="date"></label>
+          <label>End Date<input id="customReportEnd" type="date"></label>
+          <label>Saved Preset<select id="customReportPreset" onchange="loadCustomReportPreset()"><option value="">Choose a saved preset</option></select></label>
+        </div>
+        <div class="custom-report-panel">
+          <h4>Report Sections</h4>
+          <div class="custom-report-checks">
+            <label><input class="custom-report-section" type="checkbox" value="highlights" checked>Highlight totals</label>
+            <label><input class="custom-report-section" type="checkbox" value="yearly" checked>Yearly quilt summary</label>
+            <label><input class="custom-report-section" type="checkbox" value="charity" checked>Charity overview</label>
+            <label><input class="custom-report-section" type="checkbox" value="inventory" checked>Current inventory</label>
+            <label><input class="custom-report-section" type="checkbox" value="needs" checked>Quilts requested</label>
+            <label><input class="custom-report-section" type="checkbox" value="distributed" checked>Distributed quilts</label>
+            <label><input class="custom-report-section" type="checkbox" value="adjustments">Inventory adjustments</label>
+          </div>
+        </div>
+        <div class="custom-report-panel">
+          <h4>Table Fields</h4>
+          <div class="custom-report-checks">
+            <label><input class="custom-report-field" type="checkbox" value="date" checked>Date / month</label>
+            <label><input class="custom-report-field" type="checkbox" value="charity" checked>Charity</label>
+            <label><input class="custom-report-field" type="checkbox" value="size" checked>Quilt size</label>
+            <label><input class="custom-report-field" type="checkbox" value="quantity" checked>Quantity</label>
+            <label><input class="custom-report-field" type="checkbox" value="status" checked>Status</label>
+            <label><input class="custom-report-field" type="checkbox" value="notes">Notes</label>
+          </div>
+        </div>
+        <div class="row">
+          <button type="button" class="primary" onclick="renderCustomReportPreview()">Preview Custom Report</button>
+          <button type="button" class="ghost" onclick="printCustomReport()">Print / Save as PDF</button>
+        </div>
+        <div class="row">
+          <button type="button" class="ghost" onclick="downloadCustomReport()">Download Report File</button>
+          <button type="button" class="ghost" onclick="saveCustomReportPreset()">Save Preset</button>
+        </div>
+        <div class="custom-preset-row">
+          <input id="customReportPresetName" type="text" placeholder="Preset name, such as Monthly Meeting">
+          <button type="button" class="ghost" onclick="loadCustomReportPreset()">Load Selected Preset</button>
+          <button type="button" class="danger" onclick="deleteCustomReportPreset()">Delete Selected Preset</button>
+        </div>
+        <div id="customReportNotice" class="notice"></div>
+      </div>
+      <div id="customReportPreview" class="card custom-report-preview" aria-hidden="true">
+        <div class="custom-empty">Choose your report options and tap Preview Custom Report.</div>
+      </div>
+    </div>
+  </details>
+
   <details id="reportsDownloadsSection" class="report-group no-print">
     <summary><b>Report Downloads</b><span>Download, email, print, or export reports and backups.</span></summary>
     <div class="report-group-body"><div class="card">
@@ -881,7 +993,7 @@ one quilt at a time."></textarea>
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b><span id="navSettingsLabel">Settings</span></button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.41"></script>
-<script src="app.js?v=7.8.41"></script>
+<script type="module" src="firebase-sync.js?v=7.8.42"></script>
+<script src="app.js?v=7.8.42"></script>
 </body>
 </html>
