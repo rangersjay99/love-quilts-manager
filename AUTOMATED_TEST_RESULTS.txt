@@ -1,13 +1,13 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.45 AUTOMATED CHECKS
+LOVE QUILTS MANAGER — UPDATE 7.8.46 AUTOMATED CHECKS
 
 PASS
-- JavaScript syntax check completed successfully.
-- ZIP archive integrity check completed successfully.
-- App, service-worker, manifest, splash, About, feedback, and Change Log references use Update 7.8.45.
-- Firebase paths and shared-data schema were not changed.
-- Pooled shortage formula is present: remaining calendar need minus current inventory pooled across sizes within each charity.
-- Unassigned/Storage testing detection is present and excluded from official reporting calculations.
-- Known July 29 backup independently reconciles to Made 282, Distributed 108, Storage 166, Remaining Need 347, Still to Make 181, Projected Made 463.
+- JavaScript syntax checks completed successfully for app.js, firebase-sync.js, and sw.js.
+- App, service-worker, manifest, splash, About, feedback, and Change Log references use Update 7.8.46.
+- Firebase synchronization code is byte-for-byte unchanged from Update 7.8.45.
+- Exact charity-and-size shortage logic is present for Home and yearly planning totals.
+- Current usable inventory, exact-match inventory, and unmatched inventory are reported separately.
+- Unassigned/Storage testing detection remains present and excluded from official reporting calculations.
+- The July 29 backup independently reconciles to Made 282, Distributed 108, Storage 166, Remaining Need 347, Exact-Match Inventory 155, Other Inventory 11, Still to Make 192, Projected Made 474.
 
 DEVICE TEST STILL REQUIRED
 - Confirm iPhone Safari/PWA printing on a physical device.

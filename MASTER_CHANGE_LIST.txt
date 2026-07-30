@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 29, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.45
+IMPLEMENTED THROUGH UPDATE 7.8.46
+
+- Update 7.8.46 uses exact charity-and-size matching for planning totals. Inventory in another size remains in storage and is shown separately rather than automatically reducing demand. With the July 29 backup, the result is 192 still to make and 474 projected quilts made by year end. Unassigned/Storage test activity remains excluded from official totals.
 
 - Update 7.8.45 counts current usable inventory pooled across sizes within each charity toward remaining calendar needs, regardless of size assignment within each charity, because the guild may swap quilts as needed. It excludes Unassigned/Storage test activity from official totals and keeps exact matching detail on individual calendar entries.
 

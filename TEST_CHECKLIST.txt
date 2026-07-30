@@ -1,24 +1,26 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.45 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.46 TEST CHECKLIST
 
-BASIC UPDATE
-[ ] App opens and shows Update 7.8.45.
-[ ] Existing Firebase data loads and syncs normally.
-[ ] No saved records are changed during the update.
+BASIC
+[ ] App opens and shows Update 7.8.46.
+[ ] Home, Inventory, Quilts Needed, Reports, and Settings open normally.
+[ ] Firebase sync status appears normally.
 
-PLANNING TOTALS
-[ ] Available in Storage excludes Unassigned/Storage testing activity.
-[ ] Total Quilts Still to Be Made equals total remaining calendar need minus current usable inventory pooled across sizes within each charity.
-[ ] Inventory counts when its size differs from an open request for the same charity.
-[ ] Individual calendar entries still show exact charity/size availability and shortages.
-[ ] Yearly Summary shows Remaining Calendar Need and Current Inventory Counted Toward Need.
+YEARLY TOTALS
+[ ] Total Quilts Still to Be Made uses exact charity-and-size matching.
+[ ] Inventory in a different size does not reduce an open request.
+[ ] Current Usable Inventory, Exact-Match Inventory, and Other Inventory are shown separately.
 [ ] Projected Total Quilts Made by Year End equals Made So Far plus Still to Be Made.
-[ ] Quilts Distributed remains separate from the projection.
-[ ] Deleted transactions do not appear in any active totals.
-
-KNOWN BACKUP CHECK
-[ ] With the July 29 backup: Made 282, Distributed 108, Storage 166, Remaining Calendar Need 347, Still to Make 181, Projected Year-End Made 463.
+[ ] With the July 29 backup: Made 282, Distributed 108, Storage 166, Remaining Need 347, Exact-Match Inventory 155, Other Inventory 11, Still to Make 192, Projected Made 474.
+[ ] Unassigned/Storage test activity is excluded from official totals.
+[ ] Deleted transactions do not appear in active calculations.
 
 REPORTS AND PRINTING
-[ ] Home, Reports, Full, Compact, meeting, and Custom Reports use the pooled planning total.
-[ ] iPhone/iPad printing still opens one prepared print request.
-[ ] Desktop printing and downloads still work.
+[ ] Full Report displays the exact-match formula.
+[ ] Compact/Meeting Report displays the exact-match formula.
+[ ] Custom Newsletter preview displays the exact-match formula.
+[ ] iPhone/iPad printing opens one print request.
+
+DATA SAFETY
+[ ] Existing records remain unchanged.
+[ ] Backup/export still works.
+[ ] Firebase sync works on both approved devices.

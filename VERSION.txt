@@ -1,14 +1,16 @@
-Love Quilts Manager Update 7.8.45
+Love Quilts Manager Update 7.8.46
 Released: July 29, 2026
 
-Pooled Inventory Planning Totals update.
+Exact Charity-and-Size Planning Totals update.
 
 Changes:
-- Counts current usable inventory pooled across sizes within each charity toward the remaining calendar need, regardless of the size currently assigned within that charity.
-- Calculates Still to Be Made as Remaining Calendar Need minus Current Usable Inventory.
-- Keeps exact charity/size detail on calendar rows so coordinators can still see where swaps may be needed.
-- Excludes Unassigned/Storage test activity from official Made, Distributed, Available in Storage, and yearly totals.
-- Keeps deleted records excluded because deleted transactions are not present in the active data arrays.
+- Calculates Quilts Still to Be Made using only current inventory that matches the exact charity and quilt size of an open calendar need.
+- Keeps quilts in other sizes in their recorded inventory category instead of automatically treating them as substitutes.
+- Shows current usable inventory, exact-match inventory, and other unmatched inventory separately so the totals are easy to explain.
+- With the July 29 backup: 347 remaining calendar need - 155 exact-match inventory = 192 still to make.
+- Projected Total Quilts Made by Year End is 282 made so far + 192 still to make = 474.
+- Continues excluding Unassigned/Storage test activity from official Made, Distributed, Available in Storage, yearly, and lifetime totals.
+- Deleted transactions remain excluded because they are removed from the active data arrays.
 - Retains the iPhone/iPad printing and Custom Reports improvements introduced in Update 7.8.43.
 
 Firebase production paths and the shared-data schema are unchanged.

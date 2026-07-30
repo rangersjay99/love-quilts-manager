@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.45
+LOVE QUILTS MANAGER — UPDATE 7.8.46
 
 DEPLOYMENT
 1. Back up the current app data.
@@ -6,14 +6,14 @@ DEPLOYMENT
 3. Commit and wait for GitHub Pages deployment to finish.
 4. Open the app once in a normal browser tab and refresh.
 5. On iPhone/iPad PWA, close and reopen the installed app after deployment.
-6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.45.
+6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.46.
 
 VERIFY THE NEW TOTALS
 1. Open Reports → Yearly Quilt Summary.
-2. Confirm Still to Be Made equals Remaining Calendar Need minus current usable inventory pooled by charity.
-3. Confirm quilts may count toward the total when their size differs from an open request for the same charity.
-4. Confirm individual calendar entries still retain exact charity/size detail.
+2. Confirm Still to Be Made uses exact charity-and-size matching.
+3. Confirm inventory in another size remains visible but does not automatically reduce the shortage.
+4. Confirm the report separately shows Current Usable Inventory, Inventory Matching Exact Charity and Size, and Other Inventory Not Matched to Current Need.
 5. Confirm Unassigned/Storage testing activity is excluded from official totals.
-6. With the July 29 backup, expected figures are: Made 282, Distributed 108, Storage 166, Remaining Calendar Need 347, Still to Make 181, Projected Year-End Made 463.
+6. With the July 29 backup, expected figures are: Made 282, Distributed 108, Storage 166, Remaining Calendar Need 347, Exact-Match Inventory 155, Other Inventory 11, Still to Make 192, Projected Year-End Made 474.
 
 No Firebase paths or saved-data fields changed in this update.
