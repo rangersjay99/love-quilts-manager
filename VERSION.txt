@@ -1,13 +1,14 @@
-Love Quilts Manager Update 7.8.44
+Love Quilts Manager Update 7.8.45
 Released: July 29, 2026
 
-Year-End Quilt Production Projection update.
+Pooled Inventory Planning Totals update.
 
 Changes:
-- Makes Projected Total Quilts Made by Year End the main Yearly Quilt Summary number.
-- Calculates the projection as Quilts Made So Far plus Quilts Still to Be Made.
-- Keeps Quilts Distributed separate so it is not added to the production projection.
-- Updates Full, Compact, meeting, and Custom Newsletter reports with the corrected wording and formula.
+- Counts current usable inventory pooled across sizes within each charity toward the remaining calendar need, regardless of the size currently assigned within that charity.
+- Calculates Still to Be Made as Remaining Calendar Need minus Current Usable Inventory.
+- Keeps exact charity/size detail on calendar rows so coordinators can still see where swaps may be needed.
+- Excludes Unassigned/Storage test activity from official Made, Distributed, Available in Storage, and yearly totals.
+- Keeps deleted records excluded because deleted transactions are not present in the active data arrays.
 - Retains the iPhone/iPad printing and Custom Reports improvements introduced in Update 7.8.43.
 
 Firebase production paths and the shared-data schema are unchanged.

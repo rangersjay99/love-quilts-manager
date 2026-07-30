@@ -1,32 +1,24 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.44 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.45 TEST CHECKLIST
 
-GENERAL
-[ ] App opens and shows Update 7.8.44.
-[ ] Existing inventory, needs, distributions, settings, and navigation labels remain present.
-[ ] Both approved devices sign in and sync normally.
+BASIC UPDATE
+[ ] App opens and shows Update 7.8.45.
+[ ] Existing Firebase data loads and syncs normally.
+[ ] No saved records are changed during the update.
 
-IPHONE / IPAD PRINTING
-[ ] Home > Print Summary opens one print sheet.
-[ ] Home > Print 12-Month Calendar opens one print sheet.
-[ ] Reports > Print Full Report opens one print sheet.
-[ ] Reports > Print Compact Report opens one print sheet.
-[ ] Repeated tapping while print is opening does not create extra print sheets.
-[ ] Canceling or completing printing returns the app to its normal screen.
-[ ] Downloads, PDF exports, CSV, and backups still work.
+PLANNING TOTALS
+[ ] Available in Storage excludes Unassigned/Storage testing activity.
+[ ] Total Quilts Still to Be Made equals total remaining calendar need minus current usable inventory pooled across sizes within each charity.
+[ ] Inventory counts when its size differs from an open request for the same charity.
+[ ] Individual calendar entries still show exact charity/size availability and shortages.
+[ ] Yearly Summary shows Remaining Calendar Need and Current Inventory Counted Toward Need.
+[ ] Projected Total Quilts Made by Year End equals Made So Far plus Still to Be Made.
+[ ] Quilts Distributed remains separate from the projection.
+[ ] Deleted transactions do not appear in any active totals.
 
-CUSTOM REPORTS
-[ ] Custom Reports opens from Reports.
-[ ] Title and date range can be changed.
-[ ] Sections and table fields can be selected or cleared.
-[ ] Preview shows the chosen sections and fields.
-[ ] Print / Save as PDF opens one print sheet.
-[ ] Download Report File creates a self-contained HTML report.
-[ ] A preset can be saved, loaded, and deleted on the same device.
+KNOWN BACKUP CHECK
+[ ] With the July 29 backup: Made 282, Distributed 108, Storage 166, Remaining Calendar Need 347, Still to Make 181, Projected Year-End Made 463.
 
-YEARLY QUILT SUMMARY
-[ ] Statistics Year includes years that have requests even if they have no distribution date yet.
-[ ] Total Quilts Made matches IN activity for the selected year.
-[ ] Total Quilts Distributed matches distribution activity for the selected year.
-[ ] Total Quilts Still to Be Made matches the selected year's current shortages.
-[ ] Projected Total Quilts Made by Year End equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains separate.
-[ ] Full PDF, Compact PDF, full print, compact print, and Custom Reports show the expanded yearly wording and the same year-end projection formula.
+REPORTS AND PRINTING
+[ ] Home, Reports, Full, Compact, meeting, and Custom Reports use the pooled planning total.
+[ ] iPhone/iPad printing still opens one prepared print request.
+[ ] Desktop printing and downloads still work.

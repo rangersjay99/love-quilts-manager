@@ -1,30 +1,19 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.44
-Released: July 29, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.45
 
-BEFORE UPDATING
-1. In the app, export a current Backup from Settings.
-2. Confirm both approved devices show All changes synced.
-3. Download a ZIP backup of the current GitHub repository.
+DEPLOYMENT
+1. Back up the current app data.
+2. Replace the deployed files with every file from this package.
+3. Commit and wait for GitHub Pages deployment to finish.
+4. Open the app once in a normal browser tab and refresh.
+5. On iPhone/iPad PWA, close and reopen the installed app after deployment.
+6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.45.
 
-UPLOAD THIS UPDATE
-1. Extract Love_Quilts_Manager_Update_7_8_44.zip.
-2. In the GitHub repository main/root folder, upload every extracted file and replace files with the same names.
-3. Keep the existing firebase-test folder in the repository.
-4. Wait for GitHub Pages to publish.
-5. Close and reopen the installed app on each device. Refresh once if an older version remains cached.
-6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.44.
+VERIFY THE NEW TOTALS
+1. Open Reports → Yearly Quilt Summary.
+2. Confirm Still to Be Made equals Remaining Calendar Need minus current usable inventory pooled by charity.
+3. Confirm quilts may count toward the total when their size differs from an open request for the same charity.
+4. Confirm individual calendar entries still retain exact charity/size detail.
+5. Confirm Unassigned/Storage testing activity is excluded from official totals.
+6. With the July 29 backup, expected figures are: Made 282, Distributed 108, Storage 166, Remaining Calendar Need 347, Still to Make 181, Projected Year-End Made 463.
 
-QUICK VERIFICATION
-1. Print Home Summary and Calendar once from an iPhone.
-2. Open Reports → Custom Reports, preview a report, and print it.
-3. Confirm Yearly Quilt Summary shows Projected Total Quilts Made by Year End, Made So Far, Still to Be Made, and Distributed.
-4. Confirm Projected Total Quilts Made by Year End equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains separate.
-5. Confirm inventory, needs, distributions, Firebase sync, downloads, CSV exports, and backups still work.
-
-IMPORTANT
-- This update starts from the trusted Update 7.8.41 code base.
-- Update 7.8.42 was not released and is intentionally omitted.
-- This update does not clear, reinitialize, or migrate shared inventory.
-- Do not choose Create Real Shared Inventory again.
-- Firebase production paths and the saved-data format remain unchanged.
-- Custom Report presets are stored locally on the device where they are created.
+No Firebase paths or saved-data fields changed in this update.
