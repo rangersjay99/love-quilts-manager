@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.43';
+const VERSION='7.8.44';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1365,7 +1365,7 @@ function makeOnePagePDF(){
   });
 
   const stats=yearlyStatistics(selectedStatisticsYear());
-  text(36,668,pdfFit(`${stats.year}: Made ${stats.made} | Distributed ${stats.distributed} | Still to Make ${stats.stillToMake} | Annual Need ${stats.annualQuiltNeed}`,92),7.2,true);
+  text(36,668,pdfFit(`${stats.year}: Projected Year-End Made ${stats.projectedYearEndMade} | Made So Far ${stats.made} | Still to Make ${stats.stillToMake} | Distributed ${stats.distributed}`,92),7.2,true);
   text(36,653,pdfFit(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`,74),10,true);line(36,647,576,647,.7);
   const xCharity=36,xSize=180,xOnHand=365,xRequested=455,xDifference=525;
   let y=633;
@@ -1515,8 +1515,8 @@ function makeFullPDF(){
 
   const stats=yearlyStatistics(selectedStatisticsYear());
   beginSection(`${stats.year} YEARLY QUILT SUMMARY`);
-  addParagraph(`Quilts Made: ${stats.made} | Quilts Distributed: ${stats.distributed} | Still to Be Made: ${stats.stillToMake} | Total Annual Quilt Need: ${stats.annualQuiltNeed}`,{size:8.5,bold:true,after:3});
-  addParagraph(`Annual need for ${stats.year} = ${stats.distributedTowardYearNeeds} distributed toward ${stats.year} needs + ${stats.stillToMake} still to be made`,{size:8.2,after:3});
+  addParagraph(`Projected Total Quilts Made by Year End: ${stats.projectedYearEndMade} | Made So Far: ${stats.made} | Still to Be Made: ${stats.stillToMake} | Distributed: ${stats.distributed}`,{size:8.5,bold:true,after:3});
+  addParagraph(`Projected year-end total for ${stats.year} = ${stats.made} made so far + ${stats.stillToMake} still to be made = ${stats.projectedYearEndMade}`,{size:8.2,after:3});
   addParagraph(`Net Inventory Change: ${signedDifference(stats.netChange)} | Current Inventory: ${stats.currentInventory} | Charities Served: ${stats.charitiesServed} | Lifetime Quilts Distributed: ${stats.lifetimeDistributed}`,{size:8.5,after:9});
 
   beginSection(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`);
@@ -1664,30 +1664,28 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.43 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.44 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.43',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.44',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
-// ===== Love Quilts Manager Update 7.8.43 =====
+// ===== Love Quilts Manager Update 7.8.44 =====
 const LQM_CUSTOM_PRESET_KEY='love_quilts_custom_report_presets_v1';
 const lqm7843BaseYearlyStatistics=yearlyStatistics;
 const lqm7843BaseRenderMeetingReport=renderMeetingReport;
 const lqm7843BaseRenderReports=renderReports;
 const lqm7843BaseClearPrintMode=clearPrintMode;
 
-function lqmAnnualNeedSummary(year){
+function lqmYearEndProjectionSummary(year){
   const selectedYear=Number(year)||Number(monthNow().slice(0,4));
   const yearNeeds=sortedNeedsForPlanning(data.needs.filter(n=>yearOf(n.month)===selectedYear));
-  const distributedTowardYearNeeds=yearNeeds.reduce((sum,n)=>sum+Math.min(Math.max(0,Number(n.qty)||0),fulfilledQty(n)),0);
   const allocations=allocateNeedsForPlanning();
   const stillToMake=allocations.filter(item=>yearOf(item.n.month)===selectedYear).reduce((sum,item)=>sum+Math.max(0,Number(item.shortage)||0),0);
   const requested=yearNeeds.reduce((sum,n)=>sum+Math.max(0,Number(n.qty)||0),0);
   return{
     year:selectedYear,
     requested,
-    distributedTowardYearNeeds,
     stillToMake
   };
 }
@@ -1704,16 +1702,16 @@ statisticsYears=function(){
 
 yearlyStatistics=function(year=Number(monthNow().slice(0,4))){
   const base=lqm7843BaseYearlyStatistics(year);
-  const summary=lqmAnnualNeedSummary(year);
-  return Object.assign({},base,summary,{annualQuiltNeed:summary.distributedTowardYearNeeds+summary.stillToMake});
+  const summary=lqmYearEndProjectionSummary(year);
+  return Object.assign({},base,summary,{projectedYearEndMade:base.made+summary.stillToMake});
 };
 
 yearlyStatisticsHTML=function(stats){
   return`
-    <div class="yearly-stat yearly-primary"><b>${stats.made}</b><span>Total Quilts Made in ${stats.year}</span></div>
-    <div class="yearly-stat yearly-primary"><b>${stats.distributed}</b><span>Total Quilts Distributed in ${stats.year}</span></div>
-    <div class="yearly-stat yearly-primary"><b class="${stats.stillToMake?'negative':'positive'}">${stats.stillToMake}</b><span>Total Quilts Still to Be Made for ${stats.year}</span></div>
-    <div class="yearly-stat yearly-primary annual-need"><b>${stats.annualQuiltNeed}</b><span>Total Annual Quilt Need for ${stats.year}</span></div>
+    <div class="yearly-stat yearly-primary year-end-projection"><b>${stats.projectedYearEndMade}</b><span>Projected Total Quilts Made by Year End</span></div>
+    <div class="yearly-stat yearly-primary"><b>${stats.made}</b><span>Quilts Made So Far in ${stats.year}</span></div>
+    <div class="yearly-stat yearly-primary"><b class="${stats.stillToMake?'negative':'positive'}">${stats.stillToMake}</b><span>Quilts Still to Be Made for ${stats.year}</span></div>
+    <div class="yearly-stat yearly-primary"><b>${stats.distributed}</b><span>Quilts Distributed in ${stats.year}</span></div>
     <div class="yearly-stat"><b class="${differenceClass(stats.netChange)}">${signedDifference(stats.netChange)}</b><span>Net Inventory Change</span></div>
     <div class="yearly-stat"><b>${stats.currentInventory}</b><span>Current Inventory</span></div>
     <div class="yearly-stat"><b>${stats.charitiesServed}</b><span>Charities Served</span></div>
@@ -1731,8 +1729,8 @@ renderMeetingReport=function(){
   if(oldNote&&oldNote.classList.contains('print-note'))oldNote.remove();
   heading.insertAdjacentHTML('afterend',`
     <div class="print-note yearly-print-summary">
-      Made ${stats.made} · Distributed ${stats.distributed} · Still to be made ${stats.stillToMake} · Annual need ${stats.annualQuiltNeed}<br>
-      Annual need for ${stats.year} = ${stats.distributedTowardYearNeeds} distributed toward ${stats.year} needs + ${stats.stillToMake} still to be made.
+      <b>Projected total made by year end: ${stats.projectedYearEndMade}</b> · Made so far ${stats.made} · Still to be made ${stats.stillToMake} · Distributed ${stats.distributed}<br>
+      Projection for ${stats.year} = ${stats.made} made so far + ${stats.stillToMake} still to be made.
       Net change ${signedDifference(stats.netChange)} · Current inventory ${stats.currentInventory} · Charities served ${stats.charitiesServed} · Lifetime distributed ${stats.lifetimeDistributed}
     </div>`);
 };
@@ -1740,8 +1738,8 @@ renderMeetingReport=function(){
 renderReports=function(){
   lqm7843BaseRenderReports();
   const stats=yearlyStatistics(selectedStatisticsYear());
-  const note=el('yearlyAnnualFormulaNote');
-  if(note)note.innerHTML=`<b>${stats.annualQuiltNeed} total annual quilt need for ${stats.year}</b> = ${stats.distributedTowardYearNeeds} quilt${stats.distributedTowardYearNeeds===1?'':'s'} distributed toward ${stats.year} needs + ${stats.stillToMake} quilt${stats.stillToMake===1?'':'s'} still to be made.`;
+  const note=el('yearlyProjectionFormulaNote');
+  if(note)note.innerHTML=`<b>${stats.projectedYearEndMade} projected quilts made by the end of ${stats.year}</b> = ${stats.made} quilt${stats.made===1?'':'s'} made so far + ${stats.stillToMake} quilt${stats.stillToMake===1?'':'s'} still to be made. Quilts distributed (${stats.distributed}) are shown separately and are not added to this projection.`;
   initializeCustomReportBuilder();
   if(el('customReportPreview')?.dataset.rendered==='true')renderCustomReportPreview(false);
 };
@@ -1870,13 +1868,13 @@ function buildCustomReportHTML(options){
   if(sections.has('yearly')){
     parts.push(lqmCustomSection(`${selectedYear} Yearly Quilt Summary`,`
       <div class="newsletter-year-grid">
-        <div><b>${stats.made}</b><span>Total Quilts Made</span></div>
-        <div><b>${stats.distributed}</b><span>Total Quilts Distributed</span></div>
-        <div><b class="${stats.stillToMake?'negative':'positive'}">${stats.stillToMake}</b><span>Total Still to Be Made</span></div>
-        <div class="annual"><b>${stats.annualQuiltNeed}</b><span>Total Annual Quilt Need for ${selectedYear}</span></div>
+        <div class="projection"><b>${stats.projectedYearEndMade}</b><span>Projected Total Made by Year End</span></div>
+        <div><b>${stats.made}</b><span>Quilts Made So Far</span></div>
+        <div><b class="${stats.stillToMake?'negative':'positive'}">${stats.stillToMake}</b><span>Still to Be Made</span></div>
+        <div><b>${stats.distributed}</b><span>Quilts Distributed</span></div>
       </div>
-      <p class="newsletter-formula">Annual need for ${selectedYear} = ${stats.distributedTowardYearNeeds} distributed toward ${selectedYear} needs + ${stats.stillToMake} still to be made.</p>
-      <p class="newsletter-small">Made and distributed remain separate activity totals so a quilt made and distributed during the same year is not counted twice as one combined total. Net inventory change for the selected date range: ${signedDifference(netChange)}.</p>`));
+      <p class="newsletter-formula"><b>Projected total quilts made by year end: ${stats.projectedYearEndMade}</b> = ${stats.made} made so far + ${stats.stillToMake} still to be made.</p>
+      <p class="newsletter-small">Quilts distributed remain a separate activity total and are not added to the year-end production projection. Net inventory change for the selected date range: ${signedDifference(netChange)}.</p>`));
   }
   if(sections.has('charity')){
     const rows=homeCharitySummaries().map(row=>({charity:row.charity,size:'All sizes',quantity:`${row.onHand} in storage`,status:`${row.requested} requested · ${row.toComplete} still to make`,notes:''}));
@@ -2023,4 +2021,4 @@ document.addEventListener('DOMContentLoaded',()=>{
   const section=el('reportsCustomSection');
   if(section)section.addEventListener('toggle',()=>{if(section.open&&el('customReportPreview')?.dataset.rendered!=='true')renderCustomReportPreview(false)});
 });
-// ===== End Update 7.8.43 =====
+// ===== End Update 7.8.44 =====

@@ -1,12 +1,13 @@
-Love Quilts Manager Update 7.8.43
+Love Quilts Manager Update 7.8.44
 Released: July 29, 2026
 
-Printing, Custom Reports, and Yearly Quilt Summary update.
+Year-End Quilt Production Projection update.
 
 Changes:
-- Single-request prepared-snapshot printing for iPhone, iPad, and desktop.
-- Custom newsletter-style report builder with date range, selectable sections and fields, preview, print, HTML export, and saved presets.
-- Expanded yearly totals for Made, Distributed, Still to Be Made, and Total Annual Quilt Need, calculated as quilts distributed toward that year’s requests plus quilts still to be made.
-- Full and Compact report wording updated to include the expanded yearly figures.
+- Makes Projected Total Quilts Made by Year End the main Yearly Quilt Summary number.
+- Calculates the projection as Quilts Made So Far plus Quilts Still to Be Made.
+- Keeps Quilts Distributed separate so it is not added to the production projection.
+- Updates Full, Compact, meeting, and Custom Newsletter reports with the corrected wording and formula.
+- Retains the iPhone/iPad printing and Custom Reports improvements introduced in Update 7.8.43.
 
 Firebase production paths and the shared-data schema are unchanged.

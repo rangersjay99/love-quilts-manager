@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.43
+LOVE QUILTS MANAGER — UPDATE 7.8.44
 Released: July 29, 2026
 
 BEFORE UPDATING
@@ -7,18 +7,18 @@ BEFORE UPDATING
 3. Download a ZIP backup of the current GitHub repository.
 
 UPLOAD THIS UPDATE
-1. Extract Love_Quilts_Manager_Update_7_8_43.zip.
+1. Extract Love_Quilts_Manager_Update_7_8_44.zip.
 2. In the GitHub repository main/root folder, upload every extracted file and replace files with the same names.
 3. Keep the existing firebase-test folder in the repository.
 4. Wait for GitHub Pages to publish.
 5. Close and reopen the installed app on each device. Refresh once if an older version remains cached.
-6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.43.
+6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.44.
 
 QUICK VERIFICATION
 1. Print Home Summary and Calendar once from an iPhone.
 2. Open Reports → Custom Reports, preview a report, and print it.
-3. Confirm Yearly Quilt Summary shows Made, Distributed, Still to Be Made, and Total Annual Quilt Need.
-4. Confirm Total Annual Quilt Need equals quilts distributed toward that year’s requests plus quilts still to be made.
+3. Confirm Yearly Quilt Summary shows Projected Total Quilts Made by Year End, Made So Far, Still to Be Made, and Distributed.
+4. Confirm Projected Total Quilts Made by Year End equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains separate.
 5. Confirm inventory, needs, distributions, Firebase sync, downloads, CSV exports, and backups still work.
 
 IMPORTANT

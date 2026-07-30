@@ -1,15 +1,15 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.43 AUTOMATED CHECKS
+LOVE QUILTS MANAGER — UPDATE 7.8.44 AUTOMATED CHECKS
 Released: July 29, 2026
 
 Verified before packaging:
 - The trusted source is Update 7.8.41.
-- App, service-worker, manifest, splash, About, feedback, and Change Log version references are Update 7.8.43.
+- App, service-worker, manifest, splash, About, feedback, and Change Log version references are Update 7.8.44.
 - Update 7.8.42 is omitted from the release package and Change Log.
 - Custom Reports markup, preview, print, HTML download, and local preset code are installed.
 - Prepared-snapshot single-request printing code is installed.
-- Yearly totals include Made, Distributed, Still to Be Made, and Total Annual Quilt Need.
-- Total Annual Quilt Need uses distributed-toward-year-needs plus still-to-be-made.
-- Full PDF, Compact PDF, print reports, and Custom Reports use the same annual-need wording.
+- Yearly totals include Projected Total Quilts Made by Year End, Made So Far, Still to Be Made, and Distributed.
+- Projected Total Quilts Made by Year End uses made-so-far plus still-to-be-made, with distributed shown separately.
+- Full PDF, Compact PDF, print reports, and Custom Reports use the same year-end projection wording and formula.
 - The Firebase production organization remains faithful-circle-love-quilts.
 - JavaScript syntax checks passed for app.js, firebase-sync.js, and sw.js.
 - ZIP integrity verification passed.

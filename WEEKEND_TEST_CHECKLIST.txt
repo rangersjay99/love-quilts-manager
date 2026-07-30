@@ -1,7 +1,7 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.43 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.44 TEST CHECKLIST
 
 GENERAL
-[ ] App opens and shows Update 7.8.43.
+[ ] App opens and shows Update 7.8.44.
 [ ] Existing inventory, needs, distributions, settings, and navigation labels remain present.
 [ ] Both approved devices sign in and sync normally.
 
@@ -28,5 +28,5 @@ YEARLY QUILT SUMMARY
 [ ] Total Quilts Made matches IN activity for the selected year.
 [ ] Total Quilts Distributed matches distribution activity for the selected year.
 [ ] Total Quilts Still to Be Made matches the selected year's current shortages.
-[ ] Total Annual Quilt Need equals quilts distributed toward the selected year’s requests plus quilts still to be made.
+[ ] Projected Total Quilts Made by Year End equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains separate.
 [ ] Full PDF, Compact PDF, full print, compact print, and Custom Reports show the expanded yearly wording and the same annual-need formula.
