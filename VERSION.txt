@@ -1,16 +1,14 @@
-Love Quilts Manager Update 7.8.46
-Released: July 29, 2026
+Love Quilts Manager Update 7.8.47
+Released: July 31, 2026
 
-Exact Charity-and-Size Planning Totals update.
+Printing, Active Totals, Audit History, Blank Worksheet, and Custom Logo update.
 
 Changes:
-- Calculates Quilts Still to Be Made using only current inventory that matches the exact charity and quilt size of an open calendar need.
-- Keeps quilts in other sizes in their recorded inventory category instead of automatically treating them as substitutes.
-- Shows current usable inventory, exact-match inventory, and other unmatched inventory separately so the totals are easy to explain.
-- With the July 29 backup: 347 remaining calendar need - 155 exact-match inventory = 192 still to make.
-- Projected Total Quilts Made by Year End is 282 made so far + 192 still to make = 474.
-- Continues excluding Unassigned/Storage test activity from official Made, Distributed, Available in Storage, yearly, and lifetime totals.
-- Deleted transactions remain excluded because they are removed from the active data arrays.
-- Retains the iPhone/iPad printing and Custom Reports improvements introduced in Update 7.8.43.
+- Removes the remaining asynchronous font/timer wait before iPhone and iPad printing. On iOS, the print request is launched directly from the original button tap.
+- Counts active Unassigned/Storage inventory and activity in appropriate storage, made, distributed, yearly, and lifetime totals. With the July 29 backup, this changes Made to 285, Distributed to 111, and Projected Year-End Made to 477; Storage remains 166 and Still to Make remains 192.
+- Preserves exact charity-and-size matching when inventory is applied against an open calendar shortage.
+- Keeps deleted records out of all active calculations while retaining a synchronized Audit History of creates, edits, deletions, list changes, restores, and resets.
+- Adds a printable blank inventory-and-needs worksheet using the current charity and quilt-size lists.
+- Adds custom logo upload, resizing, synchronization, backup/restore, original-logo reset, and use on the splash, app header, and printable HTML reports.
 
-Firebase production paths and the shared-data schema are unchanged.
+Firebase production organization and collection paths remain unchanged. The shared settings document now also carries the compressed custom logo and the newest 200 audit entries.

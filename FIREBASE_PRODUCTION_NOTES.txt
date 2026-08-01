@@ -1,15 +1,23 @@
-LOVE QUILTS MANAGER UPDATE 7.8.26 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.47 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules or collection-path changes are required.
 
-ROOT CAUSE
-Update 7.8.24 could mark the local save green immediately after the write completed, before the realtime listeners returned a server-confirmed matching copy. Its Sync Now action also always uploaded the current device, so pressing it on a stale second device could resend older numbers.
+UNCHANGED PATHS
+- organizations/faithful-circle-love-quilts
+- organizations/faithful-circle-love-quilts/settings/main
+- organizations/faithful-circle-love-quilts/transactions
+- organizations/faithful-circle-love-quilts/needs
 
-CORRECTION
-- Green requires all Firebase listeners to be server-confirmed, have no pending writes, and match the device data.
-- The correct device can repair the full distribution and linked inventory transaction.
-- A stale second device receives the latest shared copy instead of blindly uploading its local copy.
-- Manual repair rewrites both transactions and needs.
-- Array order is normalized only for comparison, preventing harmless Firestore ordering differences from causing a false mismatch.
+NEW SHARED SETTINGS FIELDS
+- customLogo: a safely resized image data URL, limited by the app before saving.
+- auditLog: the newest 200 normalized audit entries.
 
-Upload normally. Do not clear or recreate shared inventory. Use Sync Now first on the device with the correct numbers, then once on the second device after both show 7.8.26.
+AUDIT MERGING
+The sync layer merges audit entries by audit ID when composing the shared settings copy. This reduces the chance that a recently created audit entry on one approved device is lost when the other device synchronizes.
+
+DATA SAFETY
+- Transactions and needs remain in their existing collections.
+- Deleted active records continue to be removed from those collections, so they cannot affect operational totals.
+- The deleted record's final values are retained only in auditLog inside shared settings.
+- Do not clear or recreate the shared inventory.
+- After upload, let one device reach green synchronization before testing changes on the second device.

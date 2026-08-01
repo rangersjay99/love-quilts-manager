@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.46';
+const VERSION='7.8.47';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -61,6 +61,17 @@ function auditText(record){
   if(updatedBy&&updatedAt&&(updatedBy!==createdBy||updatedAt!==createdAt))return`Entered by ${createdBy||'earlier user'} · Last edited by ${updatedBy} ${fmtDateTime(updatedAt)}`;
   if(createdBy)return`Entered by ${createdBy}${createdAt?' '+fmtDateTime(createdAt):''}`;
   return'';
+}
+function normalizeAuditEntry(source={}){
+  const safeObject=value=>{
+    if(!value||typeof value!=='object')return null;
+    try{return JSON.parse(JSON.stringify(value))}catch{return null}
+  };
+  return{
+    id:String(source.id||uid()),timestamp:String(source.timestamp||source.createdAt||nowIso()),user:String(source.user||source.createdBy||''),
+    action:String(source.action||'Changed'),recordType:String(source.recordType||'Record'),recordId:String(source.recordId||''),
+    summary:String(source.summary||''),before:safeObject(source.before),after:safeObject(source.after)
+  };
 }
 function isLinkedNeedDistributionTransaction(record){
   return !!record?.sourceNeedId&&['NEED_DISTRIBUTION','NEED_DISTRIBUTION_CORRECTION'].includes(String(record.sourceType||''));
@@ -145,6 +156,8 @@ function normalizeData(d={}){
     // Once a list exists, keep it authoritative so renamed default choices do not reappear on the next load.
     charities:unique([...(Array.isArray(d.charities)&&d.charities.length?d.charities:DEFAULT_CHARITIES),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...holds.map(h=>h.charity)]),
     sizes:unique([...(Array.isArray(d.sizes)&&d.sizes.length?d.sizes:DEFAULT_SIZES),...tx.map(t=>t.size),...needs.map(n=>n.size),...holds.map(h=>h.size)]),
+    customLogo:String(d.customLogo||''),
+    auditLog:(Array.isArray(d.auditLog)?d.auditLog.map(normalizeAuditEntry):[]).sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp))).slice(0,200),
     transactions:tx,needs,holds
   };
 }
@@ -1664,9 +1677,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.46 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.47 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.46',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.47',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2308,3 +2321,217 @@ renderReports=function(){
   if(el('customReportPreview')?.dataset.rendered==='true')renderCustomReportPreview(false);
 };
 // ===== End Update 7.8.46 =====
+
+// ===== Love Quilts Manager Update 7.8.47 =====
+// iPhone direct printing, active-record totals, shared audit history,
+// printable blank inventory sheet, and a customizable organization logo.
+
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.47';
+const LQM_AUDIT_LIMIT=200;
+
+// Unassigned/Storage is now a valid active inventory category. It counts in
+// inventory and yearly activity, but exact-match planning still requires the
+// same charity and quilt size before inventory reduces a calendar shortage.
+lqmIsTestingStorageCharity=function(){return false};
+
+function lqmStable(value){try{return JSON.stringify(value)}catch{return''}}
+function lqmAuditRecordSnapshot(record,type){
+  if(!record)return null;
+  if(type==='Inventory')return{
+    id:record.id,date:record.date,type:record.type,charity:record.charity,size:record.size,qty:Number(record.qty||0),
+    adjustment:Number(record.adjustment||0),note:record.note||'',sourceNeedId:record.sourceNeedId||'',sourceType:record.sourceType||'',
+    createdBy:record.createdBy||'',createdAt:record.createdAt||'',updatedBy:record.updatedBy||'',updatedAt:record.updatedAt||''
+  };
+  if(type==='Charity Need')return{
+    id:record.id,month:record.month,charity:record.charity,size:record.size,qty:Number(record.qty||0),note:record.note||'',
+    fulfilledQty:Number(record.fulfilledQty||0),fulfilledDate:record.fulfilledDate||'',autoOutQty:Number(record.autoOutQty||0),
+    createdBy:record.createdBy||'',createdAt:record.createdAt||'',updatedBy:record.updatedBy||'',updatedAt:record.updatedAt||''
+  };
+  return clone(record);
+}
+function lqmAuditSnapshot(source=data){
+  return{
+    transactions:(source.transactions||[]).map(record=>lqmAuditRecordSnapshot(record,'Inventory')),
+    needs:(source.needs||[]).map(record=>lqmAuditRecordSnapshot(record,'Charity Need')),
+    charities:[...(source.charities||[])],sizes:[...(source.sizes||[])],
+    settings:{
+      orgName:source.orgName||'',appName:source.appName||'',itemName:source.itemName||'',reportTitle:source.reportTitle||'',
+      splashTag:source.splashTag||'',splashMessage:source.splashMessage||'',futureMessage:source.futureMessage||'',
+      navHomeLabel:source.navHomeLabel||'',navInventoryLabel:source.navInventoryLabel||'',navNeedsLabel:source.navNeedsLabel||'',
+      navReportsLabel:source.navReportsLabel||'',navSettingsLabel:source.navSettingsLabel||'',homeAtAGlance:source.homeAtAGlance||'',
+      homeStorageLabel:source.homeStorageLabel||'',homeNeededLabel:source.homeNeededLabel||'',homeDifferenceLabel:source.homeDifferenceLabel||'',
+      homeCalendarHeading:source.homeCalendarHeading||'',homeActionsHeading:source.homeActionsHeading||'',customLogo:!!source.customLogo
+    }
+  };
+}
+function lqmAuditSummary(record,type){
+  if(type==='Inventory'){
+    const amount=record.type==='ADJUST'?(Number(record.adjustment)||Number(record.qty)||0):Number(record.qty||0);
+    return`${record.type==='ADJUST'?'Adjustment':record.type} ${amount} · ${record.charity} · ${record.size} · ${fmtDate(record.date)}`;
+  }
+  if(type==='Charity Need')return`${record.charity} · ${record.size} · ${record.qty} requested for ${fmtMonth(record.month)} · ${record.fulfilledQty||0} distributed`;
+  return'';
+}
+function lqmAppendAudit(action,recordType,recordId,summary,before=null,after=null){
+  if(!Array.isArray(data.auditLog))data.auditLog=[];
+  data.auditLog.unshift(normalizeAuditEntry({id:uid(),timestamp:nowIso(),user:currentUserEmail(),action,recordType,recordId,summary,before,after}));
+  data.auditLog=data.auditLog.slice(0,LQM_AUDIT_LIMIT);
+}
+function lqmAuditMap(list){const map=new Map();(list||[]).forEach(item=>map.set(String(item.id||''),item));return map}
+function lqmAuditRecordChanges(beforeList,afterList,type,reason){
+  const before=lqmAuditMap(beforeList),after=lqmAuditMap(afterList),ids=unique([...before.keys(),...after.keys()]);
+  ids.forEach(id=>{
+    const oldRecord=before.get(id),newRecord=after.get(id);
+    if(!oldRecord&&newRecord)lqmAppendAudit('Created',type,id,lqmAuditSummary(newRecord,type),null,newRecord);
+    else if(oldRecord&&!newRecord)lqmAppendAudit('Deleted',type,id,lqmAuditSummary(oldRecord,type),oldRecord,null);
+    else if(oldRecord&&newRecord&&lqmStable(oldRecord)!==lqmStable(newRecord))lqmAppendAudit('Edited',type,id,`${lqmAuditSummary(newRecord,type)} · ${reason}`,oldRecord,newRecord);
+  });
+}
+function lqmRecordAuditDiff(before,after,reason='Saved automatically'){
+  const lower=String(reason||'').toLowerCase();
+  const bulk=['restored','reset','cleared','started fresh','renamed from'].some(term=>lower.includes(term));
+  if(bulk){
+    lqmAppendAudit('Bulk Change','System','',String(reason),
+      {inventoryRecords:before.transactions.length,needRecords:before.needs.length,charities:before.charities.length,sizes:before.sizes.length},
+      {inventoryRecords:after.transactions.length,needRecords:after.needs.length,charities:after.charities.length,sizes:after.sizes.length});
+    return;
+  }
+  lqmAuditRecordChanges(before.transactions,after.transactions,'Inventory',reason);
+  lqmAuditRecordChanges(before.needs,after.needs,'Charity Need',reason);
+  if(lqmStable(before.charities)!==lqmStable(after.charities)||lqmStable(before.sizes)!==lqmStable(after.sizes)){
+    lqmAppendAudit('List Changed','Settings','',String(reason),{charities:before.charities,sizes:before.sizes},{charities:after.charities,sizes:after.sizes});
+  }
+  if(lqmStable(before.settings)!==lqmStable(after.settings)){
+    const logoChanged=before.settings.customLogo!==after.settings.customLogo;
+    lqmAppendAudit('Settings Changed','Settings','',logoChanged?(after.settings.customLogo?'Custom logo added or replaced':'Custom logo reset to the original'):String(reason),before.settings,after.settings);
+  }
+}
+
+let lqm7847AuditBaseline=lqmAuditSnapshot();
+let lqm7847AuditHistoryBaseline=clone(data.auditLog||[]);
+const lqm7847BaseSave=save;
+save=function(reason='Saved automatically',options={}){
+  const lower=String(reason||'').toLowerCase();
+  if(['restored','reset'].some(term=>lower.includes(term))&&lqm7847AuditHistoryBaseline.length){
+    const merged=new Map();[...(data.auditLog||[]),...lqm7847AuditHistoryBaseline].forEach(entry=>{if(entry?.id&&!merged.has(entry.id))merged.set(entry.id,normalizeAuditEntry(entry))});
+    data.auditLog=[...merged.values()].sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp))).slice(0,LQM_AUDIT_LIMIT);
+  }
+  const next=lqmAuditSnapshot();
+  if(lqm7847AuditBaseline)lqmRecordAuditDiff(lqm7847AuditBaseline,next,reason);
+  const result=lqm7847BaseSave(reason,options);
+  lqm7847AuditBaseline=lqmAuditSnapshot();lqm7847AuditHistoryBaseline=clone(data.auditLog||[]);
+  renderAuditHistory();
+  return result;
+};
+const lqm7847BaseApplyRemoteData=window.lqApplyRemoteData;
+window.lqApplyRemoteData=(remoteData,reason='shared-device update')=>{
+  const changed=lqm7847BaseApplyRemoteData(remoteData,reason);
+  lqm7847AuditBaseline=lqmAuditSnapshot();lqm7847AuditHistoryBaseline=clone(data.auditLog||[]);
+  applyCustomLogo();renderAuditHistory();
+  return changed;
+};
+
+function lqmAuditDetail(value){return value?`<pre>${esc(JSON.stringify(value,null,2))}</pre>`:''}
+function renderAuditHistory(){
+  const target=el('auditHistoryList'),count=el('auditHistoryCount');if(!target)return;
+  const list=[...(data.auditLog||[])].sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp)));
+  if(count)count.textContent=`${list.length} ${list.length===1?'audit entry':'audit entries'} retained and synchronized.`;
+  target.innerHTML=list.length?list.map(entry=>`<details class="audit-history-entry"><summary><span><b>${esc(entry.action)} · ${esc(entry.recordType)}</b><small>${esc(entry.summary||'Recorded change')}</small></span><time>${esc(fmtDateTime(entry.timestamp))}</time></summary><div class="audit-history-body"><div><b>User</b><span>${esc(entry.user||'This device')}</span></div>${entry.recordId?`<div><b>Record ID</b><span>${esc(entry.recordId)}</span></div>`:''}${entry.before?`<h4>Before</h4>${lqmAuditDetail(entry.before)}`:''}${entry.after?`<h4>After</h4>${lqmAuditDetail(entry.after)}`:''}</div></details>`).join(''):'<div class="empty">No audited changes have been recorded yet.</div>';
+}
+function lqmAuditHistoryMarkup(){
+  const list=[...(data.auditLog||[])].sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp)));
+  return`<section class="audit-print-sheet">${lqmReportBrandHTML('Audit History')}<h1>Audit History</h1><div class="small">Generated ${esc(new Date().toLocaleString())} · ${list.length} entries</div><table><thead><tr><th>Date</th><th>User</th><th>Action</th><th>Record</th><th>Summary</th></tr></thead><tbody>${list.map(entry=>`<tr><td>${esc(fmtDateTime(entry.timestamp))}</td><td>${esc(entry.user||'')}</td><td>${esc(entry.action)}</td><td>${esc(entry.recordType)}${entry.recordId?`<br><small>${esc(entry.recordId)}</small>`:''}</td><td>${esc(entry.summary||'')}</td></tr>`).join('')||'<tr><td colspan="5">No audit entries.</td></tr>'}</tbody></table></section>`;
+}
+function printAuditHistory(){lqmPrintSnapshot(lqmAuditHistoryMarkup(),'print-audit','letter portrait','.4in','auditNotice')}
+function downloadAuditHistory(){
+  const rows=[['Date and Time','User','Action','Record Type','Record ID','Summary','Before','After']];
+  [...(data.auditLog||[])].sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp))).forEach(entry=>rows.push([entry.timestamp,entry.user,entry.action,entry.recordType,entry.recordId,entry.summary,entry.before?JSON.stringify(entry.before):'',entry.after?JSON.stringify(entry.after):'']));
+  const csv=rows.map(row=>row.map(value=>`"${String(value??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  download(`${filePart(data.itemName)}_Audit_History_${today()}.csv`,csv,'text/csv');notice('auditNotice','Audit History downloaded.',true);
+}
+
+function lqmEffectiveLogo(){const custom=String(data.customLogo||'').trim();if(custom)return custom;const builtIn=el('splashAppLogo');return String(builtIn?.currentSrc||builtIn?.src||LQM_DEFAULT_LOGO)}
+function applyCustomLogo(){
+  const source=lqmEffectiveLogo();
+  ['splashAppLogo','headerAppLogo','customLogoPreview'].forEach(id=>{const image=el(id);if(image&&image.getAttribute('src')!==source)image.setAttribute('src',source)});
+  const status=el('customLogoStatus');if(status)status.textContent=data.customLogo?'Custom logo is active and shared with approved devices.':'The original Love Quilts logo is active.';
+}
+function lqmLoadImage(source){return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('The image could not be opened.'));image.src=source})}
+function lqmReadFile(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||''));reader.onerror=()=>reject(new Error('The image could not be read.'));reader.readAsDataURL(file)})}
+async function lqmResizeLogo(file){
+  if(!file||!String(file.type||'').startsWith('image/'))throw new Error('Choose a PNG, JPG, or WebP image.');
+  if(file.size>8*1024*1024)throw new Error('The selected image is too large. Choose an image under 8 MB.');
+  const source=await lqmReadFile(file),image=await lqmLoadImage(source);
+  const attempts=[[512,.86],[420,.78],[340,.70],[280,.62]];
+  for(const [limit,quality] of attempts){
+    const scale=Math.min(1,limit/Math.max(image.naturalWidth||image.width,image.naturalHeight||image.height));
+    const width=Math.max(1,Math.round((image.naturalWidth||image.width)*scale)),height=Math.max(1,Math.round((image.naturalHeight||image.height)*scale));
+    const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+    const context=canvas.getContext('2d');context.fillStyle='#ffffff';context.fillRect(0,0,width,height);context.drawImage(image,0,0,width,height);
+    const result=canvas.toDataURL('image/jpeg',quality);if(result.length<=350000)return result;
+  }
+  throw new Error('The logo could not be reduced enough for safe synchronization. Try a smaller image.');
+}
+async function handleCustomLogoUpload(event){
+  const input=event?.target,file=input?.files?.[0];if(!file)return;
+  try{
+    notice('customLogoNotice','Preparing the logo…');
+    data.customLogo=await lqmResizeLogo(file);save('Custom logo changed');applyCustomLogo();renderAll();notice('customLogoNotice','Custom logo saved and queued for synchronization.',true);
+  }catch(error){console.error(error);notice('customLogoNotice',error.message||'The logo could not be saved.')}finally{if(input)input.value=''}
+}
+function resetCustomLogo(){
+  if(!data.customLogo)return notice('customLogoNotice','The original logo is already active.',true);
+  data.customLogo='';save('Custom logo reset');applyCustomLogo();renderAll();notice('customLogoNotice','Original Love Quilts logo restored.',true);
+}
+function lqmReportBrandHTML(title=''){
+  return`<div class="lqm-report-brand"><img src="${esc(lqmEffectiveLogo())}" alt="Organization logo"><div><b>${esc(data.orgName)}</b><span>${esc(title||data.appName)}</span></div></div>`;
+}
+
+const lqm7847BaseRenderCalendarPrintReport=renderCalendarPrintReport;
+renderCalendarPrintReport=function(source='needs'){
+  lqm7847BaseRenderCalendarPrintReport(source);const target=el('calendarPrintReport');
+  if(target&&!target.querySelector('.lqm-report-brand'))target.insertAdjacentHTML('afterbegin',lqmReportBrandHTML(`${data.homeCalendarHeading}`));
+};
+const lqm7847BaseRenderHomeSummaryReport=renderHomeSummaryReport;
+renderHomeSummaryReport=function(){lqm7847BaseRenderHomeSummaryReport();const target=el('homeSummaryReport');if(target&&!target.querySelector('.lqm-report-brand'))target.insertAdjacentHTML('afterbegin',lqmReportBrandHTML('Home Summary'))};
+const lqm7847BaseRenderMeetingReport=renderMeetingReport;
+renderMeetingReport=function(){lqm7847BaseRenderMeetingReport();const target=el('meetingReport');if(target&&!target.querySelector('.lqm-report-brand'))target.insertAdjacentHTML('afterbegin',lqmReportBrandHTML('Compact Meeting Report'))};
+const lqm7847BaseFullReportMarkup=lqmFullReportMarkup;
+lqmFullReportMarkup=function(){return lqmReportBrandHTML('Full Report')+lqm7847BaseFullReportMarkup()};
+const lqm7847BaseBuildCustomReportHTML=buildCustomReportHTML;
+buildCustomReportHTML=function(options){
+  const html=lqm7847BaseBuildCustomReportHTML(options),logo=`<img class="newsletter-logo" src="${esc(lqmEffectiveLogo())}" alt="Organization logo">`;
+  return html.replace('<header class="newsletter-header">',`<header class="newsletter-header">${logo}`);
+};
+
+function lqmBlankInventoryMatrix(){
+  const sizes=[...(data.sizes||[])].sort((a,b)=>a.localeCompare(b)),charities=[...(data.charities||[])].sort((a,b)=>a.localeCompare(b));
+  return`<table class="blank-inventory-table"><thead><tr><th>Charity / Storage</th>${sizes.map(size=>`<th>${esc(size)}</th>`).join('')}<th>Total</th></tr></thead><tbody>${charities.map(charity=>`<tr><th>${esc(charity)}</th>${sizes.map(()=>'<td><span></span></td>').join('')}<td><span></span></td></tr>`).join('')}</tbody></table>`;
+}
+function blankInventorySheetHTML(){
+  return`<section class="blank-inventory-sheet">${lqmReportBrandHTML('Blank Inventory and Needs Worksheet')}<div class="blank-sheet-heading"><div><h1>Blank Inventory and Needs Worksheet</h1><p>Use this paper form to collect counts before entering them into the app.</p></div><div class="blank-sheet-fields"><span>Date: __________________</span><span>Completed by: __________________</span></div></div><h2>Current Inventory Count</h2>${lqmBlankInventoryMatrix()}<h2>Quilts Needed</h2><table class="blank-needs-table"><thead><tr><th>Month Needed</th><th>Charity</th><th>Quilt Size</th><th>Quantity</th><th>Notes</th></tr></thead><tbody>${Array.from({length:10},()=>'<tr><td></td><td></td><td></td><td></td><td></td></tr>').join('')}</tbody></table><div class="blank-notes"><b>Additional Notes</b><span></span><span></span><span></span></div><footer>${esc(COPYRIGHT_TEXT)} Personal and authorized guild use only.</footer></section>`;
+}
+function printBlankInventorySheet(){lqmPrintSnapshot(blankInventorySheetHTML(),'print-blank-sheet','letter portrait','.3in','reportNotice')}
+
+// On iPhone/iPad, call print directly from the original tap instead of waiting
+// for document.fonts.ready and a timer. The asynchronous wait was the remaining
+// source of the noticeable print-dialog delay.
+lqmPrintSnapshot=function(markup,className,pageSize='letter portrait',margin='.35in',noticeId='reportNotice'){
+  if(lqmPrintBusy){notice(noticeId,'The print window is already opening. Please wait for it to finish.');return}
+  clearPrintMode();lqmPrintBusy=true;lqmSetPrintButtons(true);
+  document.body.classList.add(className,'lqm-print-stage-active');
+  const stage=document.createElement('div');stage.id='lqmPrintStage';stage.innerHTML=markup;document.body.appendChild(stage);
+  const style=document.createElement('style');style.id='lqmPrintSnapshotStyle';
+  style.textContent=`@media screen{#lqmPrintStage{display:none}}@media print{@page{size:${pageSize};margin:${margin}}body.lqm-print-stage-active>*:not(#lqmPrintStage){display:none!important}body.lqm-print-stage-active #lqmPrintStage{display:block!important;width:100%!important;margin:0!important;padding:0!important}}`;
+  document.head.appendChild(style);
+  const ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const openPrint=()=>{try{stage.getBoundingClientRect();window.print()}catch(error){console.error(error);notice(noticeId,'Printing could not open on this device.');clearPrintMode()}};
+  if(ios)openPrint();else requestAnimationFrame(()=>setTimeout(openPrint,20));
+  lqmPrintTimer=setTimeout(clearPrintMode,60000);
+};
+
+const lqm7847BaseRenderAll=renderAll;
+renderAll=function(){lqm7847BaseRenderAll();applyCustomLogo();renderAuditHistory()};
+applyCustomLogo();renderAuditHistory();
+// ===== End Update 7.8.47 =====
+

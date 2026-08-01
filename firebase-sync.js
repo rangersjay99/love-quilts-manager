@@ -171,6 +171,25 @@ function waitForBridge() {
   });
 }
 
+function normalizeAuditValue(value) {
+  if (!value || typeof value !== 'object') return null;
+  try { return JSON.parse(JSON.stringify(value)); } catch { return null; }
+}
+
+function normalizeAuditEntry(source = {}) {
+  return {
+    id: cleanString(source.id),
+    timestamp: cleanString(source.timestamp || source.createdAt || ''),
+    user: cleanString(source.user || source.createdBy || ''),
+    action: cleanString(source.action || 'Changed'),
+    recordType: cleanString(source.recordType || 'Record'),
+    recordId: cleanString(source.recordId || ''),
+    summary: cleanString(source.summary || ''),
+    before: normalizeAuditValue(source.before),
+    after: normalizeAuditValue(source.after)
+  };
+}
+
 function normalizeSettings(source = {}) {
   return {
     orgName: cleanString(source.orgName || 'Faithful Circle Quilters'),
@@ -191,6 +210,8 @@ function normalizeSettings(source = {}) {
     homeDifferenceLabel: cleanString(source.homeDifferenceLabel || 'Quilts Needed to be Completed'),
     homeCalendarHeading: cleanString(source.homeCalendarHeading || 'All Quilts Calendar'),
     homeActionsHeading: cleanString(source.homeActionsHeading || 'Choose an Action'),
+    customLogo: cleanString(source.customLogo || ''),
+    auditLog: Array.isArray(source.auditLog) ? source.auditLog.map(normalizeAuditEntry).filter(x => x.id).sort((a, b) => cleanString(b.timestamp).localeCompare(cleanString(a.timestamp))).slice(0, 200) : [],
     charities: Array.isArray(source.charities) ? source.charities.map(cleanString) : [],
     sizes: Array.isArray(source.sizes) ? source.sizes.map(cleanString) : [],
     // Legacy deferred records are preserved for backward compatibility.
@@ -276,11 +297,24 @@ function normalizeAppData(source = {}) {
   };
 }
 
+function mergeAuditLogs(...lists) {
+  const merged = new Map();
+  lists.flat().map(normalizeAuditEntry).filter(x => x.id).forEach(entry => {
+    const existing = merged.get(entry.id);
+    if (!existing || cleanString(entry.timestamp) > cleanString(existing.timestamp)) merged.set(entry.id, entry);
+  });
+  return [...merged.values()].sort((a, b) => cleanString(b.timestamp).localeCompare(cleanString(a.timestamp))).slice(0, 200);
+}
+
 function composeRemoteData() {
   const fallback = typeof window.lqGetData === 'function' ? normalizeSettings(window.lqGetData()) : normalizeSettings();
   // Older shared settings do not contain the Home wording fields. Merge them over
   // this device's current wording so an update does not erase an existing choice.
-  const settings = remote.settings ? normalizeSettings({ ...fallback, ...remote.settings }) : fallback;
+  const settings = remote.settings ? normalizeSettings({
+    ...fallback,
+    ...remote.settings,
+    auditLog: mergeAuditLogs(fallback.auditLog || [], remote.settings.auditLog || [])
+  }) : fallback;
   return {
     ...settings,
     transactions: remote.transactions.map(normalizeTransaction).filter(x => x.id),

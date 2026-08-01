@@ -1,19 +1,22 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.46
+LOVE QUILTS MANAGER — UPDATE 7.8.47
+Released: July 31, 2026
 
-DEPLOYMENT
-1. Back up the current app data.
-2. Replace the deployed files with every file from this package.
-3. Commit and wait for GitHub Pages deployment to finish.
-4. Open the app once in a normal browser tab and refresh.
-5. On iPhone/iPad PWA, close and reopen the installed app after deployment.
-6. Confirm the splash screen and Settings → Change Log & About show Update 7.8.46.
+BEFORE UPDATING
+1. Export a current Backup from Settings.
+2. Confirm both approved devices show the latest synchronized records.
+3. Download a ZIP backup of the current GitHub repository.
 
-VERIFY THE NEW TOTALS
-1. Open Reports → Yearly Quilt Summary.
-2. Confirm Still to Be Made uses exact charity-and-size matching.
-3. Confirm inventory in another size remains visible but does not automatically reduce the shortage.
-4. Confirm the report separately shows Current Usable Inventory, Inventory Matching Exact Charity and Size, and Other Inventory Not Matched to Current Need.
-5. Confirm Unassigned/Storage testing activity is excluded from official totals.
-6. With the July 29 backup, expected figures are: Made 282, Distributed 108, Storage 166, Remaining Calendar Need 347, Exact-Match Inventory 155, Other Inventory 11, Still to Make 192, Projected Year-End Made 474.
+UPLOAD
+1. Extract Love_Quilts_Manager_Update_7_8_47.zip.
+2. Upload every extracted file to the repository main/root folder.
+3. Replace files with the same names.
+4. Keep the icons and firebase-test folders.
+5. Wait for GitHub Pages to publish.
+6. Close and reopen the installed app on each device. Refresh once if an older version remains cached.
 
-No Firebase paths or saved-data fields changed in this update.
+IMPORTANT
+- Do not create or initialize the shared inventory again.
+- Firebase production organization, transaction, and need paths are unchanged.
+- Update 7.8.47 adds customLogo and auditLog to the shared settings document.
+- The custom logo is resized before saving. The Audit History retains the newest 200 entries.
+- Deleted records remain physically absent from active transaction and need arrays and therefore do not affect totals; their last values are retained only inside Audit History.

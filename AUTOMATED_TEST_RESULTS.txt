@@ -1,14 +1,32 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.46 AUTOMATED CHECKS
+LOVE QUILTS MANAGER — UPDATE 7.8.47 AUTOMATED CHECKS
+Released: July 31, 2026
 
-PASS
-- JavaScript syntax checks completed successfully for app.js, firebase-sync.js, and sw.js.
-- App, service-worker, manifest, splash, About, feedback, and Change Log references use Update 7.8.46.
-- Firebase synchronization code is byte-for-byte unchanged from Update 7.8.45.
-- Exact charity-and-size shortage logic is present for Home and yearly planning totals.
-- Current usable inventory, exact-match inventory, and unmatched inventory are reported separately.
-- Unassigned/Storage testing detection remains present and excluded from official reporting calculations.
-- The July 29 backup independently reconciles to Made 282, Distributed 108, Storage 166, Remaining Need 347, Exact-Match Inventory 155, Other Inventory 11, Still to Make 192, Projected Made 474.
+STATIC CHECKS PASSED
+- app.js and firebase-sync.js passed Node JavaScript syntax checks.
+- Version, manifest, and service-worker cache references were updated to 7.8.47.
+- HTML contains no duplicate IDs; all details and section tags are balanced.
+- customLogo and auditLog are preserved by app normalization and Firebase settings normalization.
+- Audit History, printable blank worksheet, and custom-logo controls are present.
+- The final iOS print path directly calls print from the original tap and contains neither document.fonts.ready nor the former 420 ms iOS timer.
+- Unassigned/Storage exclusion is overridden while exact charity-and-size planning remains present.
 
-DEVICE TEST STILL REQUIRED
-- Confirm iPhone Safari/PWA printing on a physical device.
-- Confirm Firebase synchronization on the production devices.
+BACKUP LOGIC TEST PASSED
+Using Love_Quilts_Backup_2026-07-29.json:
+- Update version: 7.8.47.
+- Active storage total: 166.
+- Active Unassigned/Storage activity is included.
+- Made: 285; Distributed: 111; Remaining Calendar Need: 347.
+- Exact-Match Inventory: 155; Other Inventory: 11; Still to Make: 192.
+- Projected Total Quilts Made by Year End: 477.
+- Adding a 7-quilt Unassigned/Storage record increased storage from 166 to 173.
+- Deleting that record returned storage to 166 and created a Deleted audit entry.
+- Create, Edit, and Delete audit-entry tests passed.
+- Deleted records remained excluded from totals.
+- Blank worksheet included all current charities and quilt sizes.
+- Custom logo and Audit History survived data normalization.
+- Compact PDF generation returned 10,005 bytes.
+- Full PDF generation returned 12,387 bytes.
+
+PACKAGE CHECKS
+- Physical iPhone/iPad print-dialog timing still requires device testing.
+- Logo image selection and cross-device Firebase confirmation still require approved-device testing.
