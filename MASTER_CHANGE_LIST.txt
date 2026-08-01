@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 31, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.47
+IMPLEMENTED THROUGH UPDATE 7.8.48
+
+- Update 7.8.48 changes the blank inventory-and-needs worksheet to a reliable generated PDF and integrates the synchronized custom logo beside the app title in the shared header on every main tab.
 
 - Update 7.8.47 launches iPhone/iPad printing directly from the original tap, counts active Unassigned/Storage records, keeps deleted records out of all operational totals while retaining a synchronized Audit History, adds a printable blank inventory-and-needs worksheet, and adds a safely resized synchronized custom logo. Exact charity-and-size shortage matching remains unchanged.
 

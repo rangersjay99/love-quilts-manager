@@ -1,22 +1,20 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.47
+LOVE QUILTS MANAGER — UPDATE 7.8.48
 Released: July 31, 2026
 
 BEFORE UPDATING
-1. Export a current Backup from Settings.
-2. Confirm both approved devices show the latest synchronized records.
+1. Export a current app backup from Settings.
+2. Confirm approved devices show all changes synced.
 3. Download a ZIP backup of the current GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_47.zip.
+1. Extract Love_Quilts_Manager_Update_7_8_48.zip.
 2. Upload every extracted file to the repository main/root folder.
 3. Replace files with the same names.
 4. Keep the icons and firebase-test folders.
 5. Wait for GitHub Pages to publish.
-6. Close and reopen the installed app on each device. Refresh once if an older version remains cached.
+6. Close and reopen the app. Refresh once if Update 7.8.47 remains cached.
 
 IMPORTANT
-- Do not create or initialize the shared inventory again.
-- Firebase production organization, transaction, and need paths are unchanged.
-- Update 7.8.47 adds customLogo and auditLog to the shared settings document.
-- The custom logo is resized before saving. The Audit History retains the newest 200 entries.
-- Deleted records remain physically absent from active transaction and need arrays and therefore do not affect totals; their last values are retained only inside Audit History.
+- This is a correction update built on 7.8.47.
+- Firebase paths and saved-data fields are unchanged.
+- Do not initialize or recreate the shared inventory.

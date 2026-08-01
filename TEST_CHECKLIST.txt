@@ -1,55 +1,29 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.47 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.48 TEST CHECKLIST
 
-BASIC
-[ ] App opens and shows Update 7.8.47.
-[ ] Home, Inventory, Quilts Needed, Reports, Settings, and Audit History open normally.
-[ ] Both approved devices sign in and synchronize normally.
+GENERAL
+[ ] App opens and shows Update 7.8.48.
+[ ] Existing inventory, needs, Audit History, settings, custom logo, and totals remain present.
+[ ] Both approved devices sign in and sync normally.
 
-IPHONE PRINTING
-[ ] Home Summary opens the print request promptly from one tap.
-[ ] 12-Month Calendar opens the print request promptly from one tap.
-[ ] Full Report opens the print request promptly from one tap.
-[ ] Compact Report opens the print request promptly from one tap.
-[ ] Custom Report opens the print request promptly from one tap.
-[ ] Blank Inventory & Needs Sheet opens the print request promptly from one tap.
-[ ] Repeated tapping does not create duplicate print requests.
-[ ] Download Full PDF and Download Compact PDF still open immediately and remain unchanged.
+BLANK WORKSHEET PDF
+[ ] Reports > Report Downloads > Open Blank Inventory & Needs PDF creates a PDF immediately.
+[ ] PDF page 1 lists current charities/storage rows and current quilt-size columns.
+[ ] PDF page 2 contains blank Month Needed, Charity, Quilt Size, Quantity, and Notes rows.
+[ ] The PDF opens or downloads and can be printed normally.
 
-ACTIVE TOTALS
-[ ] Active Unassigned/Storage inventory appears in Available in Storage.
-[ ] Valid Unassigned/Storage IN activity counts in Quilts Made for its activity year.
-[ ] Unassigned/Storage does not reduce another charity-and-size shortage unless an active need uses that same charity and size.
-[ ] Exact charity-and-size planning remains in effect.
-[ ] With the July 29 backup after including Unassigned/Storage activity: Made 285, Distributed 111, Storage 166, Remaining Need 347, Exact-Match Inventory 155, Other Inventory 11, Still to Make 192, Projected Made 477.
-[ ] Deleting an inventory record removes it from Home, Inventory, Reports, yearly totals, lifetime totals, exports, and planning totals.
-[ ] Deleting a charity need removes it from Home Calendar, Home totals, Reports, yearly totals, and planning totals.
+CUSTOM LOGO ON MAIN TABS
+[ ] Custom logo appears beside the title instead of floating above it.
+[ ] Home header looks correct.
+[ ] Inventory header looks correct.
+[ ] Quilts Needed header looks correct.
+[ ] Reports header looks correct.
+[ ] Settings header looks correct.
+[ ] Splash-screen logo remains correct.
 
-AUDIT HISTORY
-[ ] Creating inventory adds an audit entry.
-[ ] Editing inventory adds an audit entry with Before and After values.
-[ ] Deleting inventory removes it from totals and leaves a Deleted audit entry.
-[ ] Creating, editing, distributing, and deleting a charity need produce audit entries.
-[ ] Charity/size list changes, restores, and resets produce audit entries.
-[ ] Audit entries do not affect any operational total.
-[ ] Audit History synchronizes to the second approved device.
-[ ] Audit CSV downloads and Audit History printing work.
-
-BLANK WORKSHEET
-[ ] Printable sheet lists every current charity, including Unassigned/Storage.
-[ ] Printable sheet lists every current quilt size.
-[ ] Inventory count boxes, date, completed-by, needs rows, and notes are visible.
-[ ] Printing the sheet does not create or change records.
-
-CUSTOM LOGO
-[ ] A PNG, JPG, or WebP logo can be selected.
-[ ] The logo is safely resized and saved.
-[ ] The custom logo appears on the splash screen and app header.
-[ ] The custom logo appears on printable Home, Calendar, Full, Compact, Custom, Audit, and blank worksheet output.
-[ ] The logo synchronizes to the second approved device.
-[ ] Export Backup and Restore preserve the custom logo and Audit History.
-[ ] Restore Original Logo returns to the built-in heart logo.
-
-DATA SAFETY
-[ ] Existing 7.8.46 records and exact-match calculations remain intact.
-[ ] CSV, PDF, Custom Report HTML, backup, and restore still work.
-[ ] App Check still completes normally.
+REGRESSION
+[ ] Available in Storage remains 166 with the July 29 backup.
+[ ] Quilts Still to Be Made remains 192.
+[ ] Deleted records remain excluded from all operational totals.
+[ ] Audit History remains synchronized.
+[ ] Existing Full and Compact PDF options still work.
+[ ] iPhone print timing is unchanged from 7.8.47.

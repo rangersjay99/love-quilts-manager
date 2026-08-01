@@ -1,14 +1,10 @@
-Love Quilts Manager Update 7.8.47
+Love Quilts Manager Update 7.8.48
 Released: July 31, 2026
 
-Printing, Active Totals, Audit History, Blank Worksheet, and Custom Logo update.
+Worksheet PDF and Header Logo correction.
 
 Changes:
-- Removes the remaining asynchronous font/timer wait before iPhone and iPad printing. On iOS, the print request is launched directly from the original button tap.
-- Counts active Unassigned/Storage inventory and activity in appropriate storage, made, distributed, yearly, and lifetime totals. With the July 29 backup, this changes Made to 285, Distributed to 111, and Projected Year-End Made to 477; Storage remains 166 and Still to Make remains 192.
-- Preserves exact charity-and-size matching when inventory is applied against an open calendar shortage.
-- Keeps deleted records out of all active calculations while retaining a synchronized Audit History of creates, edits, deletions, list changes, restores, and resets.
-- Adds a printable blank inventory-and-needs worksheet using the current charity and quilt-size lists.
-- Adds custom logo upload, resizing, synchronization, backup/restore, original-logo reset, and use on the splash, app header, and printable HTML reports.
-
-Firebase production organization and collection paths remain unchanged. The shared settings document now also carries the compressed custom logo and the newest 200 audit entries.
+- Replaces the blank worksheet direct-print action with a generated printable PDF.
+- Includes a current-inventory matrix and a separate blank quilts-needed page.
+- Integrates the custom logo beside the title in the shared header on every main tab.
+- Preserves all 7.8.47 totals, Audit History, Firebase data, and custom-logo synchronization.

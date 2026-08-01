@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.47">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.47">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.47">
+<link rel="manifest" href="manifest-v7.json?v=7.8.48">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.48">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.48">
 <title>Love Quilts Manager</title>
 <style>
 :root{
@@ -447,6 +447,35 @@ header{position:relative}.header-app-logo{width:58px;height:58px;object-fit:cont
 @media(max-width:520px){.custom-logo-panel{grid-template-columns:1fr}.custom-logo-preview{margin:auto}.blank-sheet-heading{display:block}.blank-sheet-fields{margin-top:10px}}
 @media print{body.print-blank-sheet .blank-inventory-sheet{display:block!important}.newsletter-logo{width:58px;height:58px}.audit-history-entry{break-inside:avoid}}
 
+
+/* Update 7.8.48 — integrated tab header logo */
+header{
+  position:sticky;
+  display:grid;
+  grid-template-columns:82px minmax(0,1fr);
+  grid-template-areas:"logo org" "logo title" "logo subtitle";
+  column-gap:15px;
+  align-items:center;
+}
+.header-app-logo{
+  grid-area:logo;
+  width:76px;
+  height:76px;
+  margin:0;
+  padding:3px;
+  border-radius:17px;
+  align-self:center;
+}
+header .org{grid-area:org;align-self:end}
+header h1{grid-area:title;align-self:center}
+header p{grid-area:subtitle;align-self:start}
+@media(max-width:520px){
+  header{grid-template-columns:61px minmax(0,1fr);column-gap:10px}
+  .header-app-logo{width:57px;height:57px;border-radius:13px;padding:2px}
+  header h1{font-size:22px}
+  header p{font-size:11px}
+}
+
 </style>
 </head>
 <body>
@@ -471,7 +500,7 @@ header{position:relative}.header-app-logo{width:58px;height:58px;object-fit:cont
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img id="splashAppLogo" class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.47" alt="Patchwork heart logo">
+    <img id="splashAppLogo" class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.48" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
@@ -479,13 +508,13 @@ header{position:relative}.header-app-logo{width:58px;height:58px;object-fit:cont
     <div id="splashMessage" class="splash-message">Keeping track of quilts…<br>spreading love.</div>
     <button id="splashGrowthMessage" type="button" class="splash-growth-button" onclick="openFutureModulesFromSplash()">Designed to grow with your quilting needs.</button>
     <button id="continueBtn" class="continue-btn">♡ &nbsp; CLICK TO CONTINUE</button>
-    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.47</div>
+    <div id="splashVersion" class="splash-version">Love Quilts Manager · Update 7.8.48</div>
     <div class="splash-credit">Designed by Jay<span>© 2026 Jay. All rights reserved.</span></div>
   </div>
 </div>
 
 <header>
-  <img id="headerAppLogo" class="header-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.47" alt="Organization logo">
+  <img id="headerAppLogo" class="header-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.48" alt="Organization logo">
   <div id="headerOrg" class="org">Faithful Circle Quilters</div>
   <h1 id="headerAppName">Love Quilts Manager</h1>
   <p id="headerSubtitle">Available quilts, requests, and quilts still to complete</p>
@@ -720,7 +749,7 @@ header{position:relative}.header-app-logo{width:58px;height:58px;object-fit:cont
       <button class="ghost" onclick="exportCompactPDF()">Download Compact One-Page PDF</button>
       <div class="row"><button class="ghost" onclick="shareFullReport()">Email Full Report</button><button class="ghost" onclick="shareCompactReport()">Email Compact Report</button></div>
       <div class="row"><button class="ghost" onclick="printFullReport()">Print Full Report</button><button class="ghost" onclick="printMeetingReport()">Print Compact Report</button></div>
-      <button class="ghost" onclick="printBlankInventorySheet()">Print Blank Inventory &amp; Needs Sheet</button>
+      <button class="ghost" onclick="exportBlankInventoryPDF()">Open Blank Inventory &amp; Needs PDF</button>
       <div class="row"><button class="ghost" onclick="exportCSV()">Export CSV</button><button class="ghost" onclick="exportBackup()">Export Backup</button></div>
       <div id="reportNotice" class="notice"></div>
     </div></div>
@@ -824,7 +853,7 @@ one quilt at a time."></textarea>
 </div><div class="card">
 <h2>Custom Logo</h2>
 <p class="small">Choose a logo for the splash screen, app header, and printable reports. The app safely resizes the image before saving and synchronizing it.</p>
-<div class="custom-logo-panel"><img id="customLogoPreview" class="custom-logo-preview" src="icons/love-quilts-manager-512-v7818.png?v=7.8.47" alt="Current logo preview"><div><div id="customLogoStatus" class="custom-logo-status">The original Love Quilts logo is active.</div><div class="custom-logo-actions"><button class="primary" type="button" onclick="document.getElementById('customLogoFile').click()">Choose Custom Logo</button><button class="ghost" type="button" onclick="resetCustomLogo()">Restore Original Logo</button></div><input id="customLogoFile" type="file" hidden accept="image/png,image/jpeg,image/webp" onchange="handleCustomLogoUpload(event)"><div id="customLogoNotice" class="notice"></div></div></div>
+<div class="custom-logo-panel"><img id="customLogoPreview" class="custom-logo-preview" src="icons/love-quilts-manager-512-v7818.png?v=7.8.48" alt="Current logo preview"><div><div id="customLogoStatus" class="custom-logo-status">The original Love Quilts logo is active.</div><div class="custom-logo-actions"><button class="primary" type="button" onclick="document.getElementById('customLogoFile').click()">Choose Custom Logo</button><button class="ghost" type="button" onclick="resetCustomLogo()">Restore Original Logo</button></div><input id="customLogoFile" type="file" hidden accept="image/png,image/jpeg,image/webp" onchange="handleCustomLogoUpload(event)"><div id="customLogoNotice" class="notice"></div></div></div>
 </div><div class="card">
 <h2>Manage Lists</h2><p class="small">Add, rename, or remove charity and quilt-size choices. Renaming keeps every present quantity, date, need, and distribution connected to the new name. Items already used in records cannot be deleted.</p>
 <h3>Charities</h3>
@@ -852,7 +881,7 @@ one quilt at a time."></textarea>
 <div aria-live="polite" class="app-check-results" id="appCheckResults"></div>
 </div>
 <h3>Report a Bug or Request a Change</h3>
-<p class="feedback-note small">The request automatically includes Update 7.8.47, the date and time, signed-in user, current screen, and device/browser information.</p>
+<p class="feedback-note small">The request automatically includes Update 7.8.48, the date and time, signed-in user, current screen, and device/browser information.</p>
 <div class="feedback-grid">
 <label>Request Type<select id="feedbackType" onchange="feedbackTypeChanged()"><option>Bug Report</option><option>Change Request</option><option>Question / Other</option></select></label>
 <label>Screen<select id="feedbackScreen"><option>Home</option><option>Inventory</option><option>Quilts Needed</option><option>Calendar</option><option>Reports</option><option>Settings</option><option>Sign In / Sync</option><option selected="">Other</option></select></label>
@@ -919,7 +948,7 @@ one quilt at a time."></textarea>
     <summary><b>Change Log & About</b><span>See the newest updates, full history, app version, and license.</span></summary>
     <div class="settings-group-body"><div class="card" id="changeLogCard">
 <h2>Change Log</h2>
-<div class="change-log-current"><b>Current version: Update 7.8.47</b><span class="small">Printing, Audit, Worksheet &amp; Logo · July 31, 2026</span></div><div class="change-log-entry"><h4>7.8.47</h4><p>Removes the remaining asynchronous iPhone print delay, counts active Unassigned/Storage records, keeps deleted records out of every operational total while retaining an Audit History, adds a printable blank inventory-and-needs worksheet, and adds a synchronized custom logo.</p></div><div class="change-log-entry"><h4>7.8.46</h4><p>Uses only inventory matching the exact charity and quilt size when calculating Quilts Still to Be Made. Other usable inventory remains in storage and is shown separately, but it does not automatically reduce demand for another size.</p></div><div class="change-log-entry"><h4>7.8.45</h4><p>Counts current usable inventory pooled across sizes within each charity toward the remaining calendar need because the guild may swap sizes within a charity. Unassigned/Storage test activity is excluded from official made, distributed, storage, and yearly totals.</p></div><div class="change-log-entry"><h4>7.8.44</h4><p>Updated the Yearly Quilt Summary to clearly show the guild’s projected total quilts made by year end. The projection equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains a separate activity total.</p></div><div class="change-log-entry"><h4>7.8.43</h4><p>Improved iPhone and iPad printing with a prepared print snapshot and added Custom Newsletter Reports with selectable content and saved presets.</p></div><div class="change-log-entry"><h4>7.8.41</h4><p>Fixed Firebase synchronization for the customizable Future Modules message and bottom navigation labels, including existing customized wording saved before this update.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.40</h4><p>Added a customizable Future Modules message on the splash and Home screens, plus customizable wording for all five bottom navigation tabs. Icons, colors, order, and destinations remain fixed.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.39</h4><p>The Reports headline summary cards now match the Home screen cards in size, spacing, three-card layout, buttons, and tap behavior.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div>
+<div class="change-log-current"><b>Current version: Update 7.8.48</b><span class="small">Worksheet PDF &amp; Header Logo · July 31, 2026</span></div><div class="change-log-entry"><h4>7.8.48</h4><p>Changes the blank inventory-and-needs worksheet to a reliable printable PDF and integrates the custom logo beside the title so it displays consistently on every main tab.</p></div><div class="change-log-entry"><h4>7.8.47</h4><p>Removes the remaining asynchronous iPhone print delay, counts active Unassigned/Storage records, keeps deleted records out of every operational total while retaining an Audit History, adds a printable blank inventory-and-needs worksheet, and adds a synchronized custom logo.</p></div><div class="change-log-entry"><h4>7.8.46</h4><p>Uses only inventory matching the exact charity and quilt size when calculating Quilts Still to Be Made. Other usable inventory remains in storage and is shown separately, but it does not automatically reduce demand for another size.</p></div><div class="change-log-entry"><h4>7.8.45</h4><p>Counts current usable inventory pooled across sizes within each charity toward the remaining calendar need because the guild may swap sizes within a charity. Unassigned/Storage test activity is excluded from official made, distributed, storage, and yearly totals.</p></div><div class="change-log-entry"><h4>7.8.44</h4><p>Updated the Yearly Quilt Summary to clearly show the guild’s projected total quilts made by year end. The projection equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains a separate activity total.</p></div><div class="change-log-entry"><h4>7.8.43</h4><p>Improved iPhone and iPad printing with a prepared print snapshot and added Custom Newsletter Reports with selectable content and saved presets.</p></div><div class="change-log-entry"><h4>7.8.41</h4><p>Fixed Firebase synchronization for the customizable Future Modules message and bottom navigation labels, including existing customized wording saved before this update.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.40</h4><p>Added a customizable Future Modules message on the splash and Home screens, plus customizable wording for all five bottom navigation tabs. Icons, colors, order, and destinations remain fixed.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.39</h4><p>The Reports headline summary cards now match the Home screen cards in size, spacing, three-card layout, buttons, and tap behavior.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.37</h4><p>Inventory and Quilts Needed now start with both record sections collapsed for a cleaner, less cluttered screen. Tapping a section opens it, and Home shortcuts or edit actions still open the needed section automatically.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.36</h4><p>Added tap-to-open sections to Inventory and Quilts Needed. Inventory separates Current Inventory from Inventory History, while Quilts Needed separates active requests from completed Needs History. Only one section stays open at a time.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.35</h4><p>Made the splash growth message open Future Modules, grouped Settings into short tap-to-open sections, limited Change Log to the newest two entries until Show All is selected, and removed the duplicate Calendar from Quilts Needed. The Home Calendar remains the single calendar view.</p></div>
@@ -948,11 +977,11 @@ one quilt at a time."></textarea>
 <b>App</b><span id="aboutAppName">Love Quilts Manager</span>
 <b>Program</b><span id="aboutItemName">Love Quilts</span>
 <b>Organization</b><span id="aboutOrgName">Faithful Circle Quilters</span>
-<b>Version</b><span>Update 7.8.47 · July 31, 2026</span>
+<b>Version</b><span>Update 7.8.48 · July 31, 2026</span>
 <b>Copyright</b><span>© 2026 Jay. All rights reserved.</span>
 <b>Use</b><span>Personal and authorized guild use only.</span>
 </div>
-<p class="small">Update 7.8.47 keeps exact charity-and-size shortage matching, counts active Unassigned/Storage inventory, excludes deleted records from all operational totals, records changes in Audit History, adds a printable blank inventory-and-needs worksheet, supports a synchronized custom logo, and removes the remaining asynchronous iPhone print wait.</p>
+<p class="small">Update 7.8.48 keeps the 7.8.47 data and audit rules, changes the blank inventory-and-needs worksheet to a reliable printable PDF, and improves the custom-logo layout in the shared header on every main tab.</p>
 <a class="inline-link" href="LICENSE.txt" rel="noopener" target="_blank">Open license and permitted-use notice</a>
 </div></div>
   </details>
@@ -1022,7 +1051,7 @@ one quilt at a time."></textarea>
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b><span id="navSettingsLabel">Settings</span></button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.47"></script>
-<script src="app.js?v=7.8.47"></script>
+<script type="module" src="firebase-sync.js?v=7.8.48"></script>
+<script src="app.js?v=7.8.48"></script>
 </body>
 </html>

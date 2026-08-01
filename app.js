@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.47';
+const VERSION='7.8.48';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1677,9 +1677,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.47 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.48 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.47',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.48',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2326,7 +2326,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.47';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.48';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -2533,5 +2533,107 @@ lqmPrintSnapshot=function(markup,className,pageSize='letter portrait',margin='.3
 const lqm7847BaseRenderAll=renderAll;
 renderAll=function(){lqm7847BaseRenderAll();applyCustomLogo();renderAuditHistory()};
 applyCustomLogo();renderAuditHistory();
-// ===== End Update 7.8.47 =====
+// ===== End Update 7.8.48 =====
 
+
+
+// ===== Love Quilts Manager Update 7.8.48 =====
+// Corrects the blank worksheet action by using the proven PDF path.
+// The custom logo remains synchronized and is displayed in the shared header
+// on every main tab with an improved integrated layout.
+
+function makeBlankInventoryPDF(){
+  const charities=[...(data.charities||[])].sort((a,b)=>a.localeCompare(b));
+  const sizes=[...(data.sizes||[])].sort((a,b)=>a.localeCompare(b));
+  const pages=[];
+  const addPage=()=>{const page={commands:[]};pages.push(page);return page};
+  const text=(page,x,y,value,size=9,bold=false)=>page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscape(value)}) Tj ET`);
+  const line=(page,x1,y1,x2,y2,w=.5)=>page.commands.push(`${w} w ${x1} ${y1} m ${x2} ${y2} l S`);
+  const rect=(page,x,y,w,h,weight=.6)=>page.commands.push(`${weight} w ${x} ${y} ${w} ${h} re S`);
+  const shade=(page,x,y,w,h)=>page.commands.push(`0.94 g ${x} ${y} ${w} ${h} re f 0 g`);
+  const header=(page,title,subtitle='')=>{
+    text(page,36,576,pdfFit(data.orgName,80),12,true);
+    text(page,36,559,pdfFit(title,90),20,true);
+    if(subtitle)text(page,36,544,pdfFit(subtitle,110),8,false);
+    text(page,575,576,'Date: ____________________',9,false);
+    text(page,575,560,'Completed by: ____________________',9,false);
+    line(page,36,535,756,535,.8);
+  };
+
+  // Inventory matrix pages. Repeat headers when the charity list needs more space.
+  const maxRowsPerPage=11;
+  const groups=[];
+  for(let i=0;i<Math.max(1,charities.length);i+=maxRowsPerPage)groups.push(charities.slice(i,i+maxRowsPerPage));
+  if(!charities.length)groups[0]=[];
+  groups.forEach((group,pageIndex)=>{
+    const page=addPage();
+    header(page,'Blank Inventory Count Worksheet',pageIndex?`Inventory page ${pageIndex+1}`:'Write the current quantity for each charity and quilt size.');
+    const left=36,right=756,top=512,rowH=34;
+    const charityW=180,totalW=66;
+    const sizeCount=Math.max(1,sizes.length);
+    const sizeW=(right-left-charityW-totalW)/sizeCount;
+    shade(page,left,top-rowH,right-left,rowH);
+    rect(page,left,top-rowH,right-left,rowH);
+    let x=left;
+    text(page,x+7,top-21,'CHARITY / STORAGE',8,true);x+=charityW;line(page,x,top,x,top-rowH,.5);
+    (sizes.length?sizes:['Quilt Size']).forEach(size=>{text(page,x+6,top-21,pdfFit(size,Math.max(10,Math.floor(sizeW/5.2))),7.5,true);x+=sizeW;line(page,x,top,x,top-rowH,.5)});
+    text(page,x+12,top-21,'TOTAL',8,true);
+    let y=top-rowH;
+    const rows=group.length?group:[''];
+    rows.forEach((charity,rowIndex)=>{
+      const next=y-rowH;if(rowIndex%2===1)shade(page,left,next,right-left,rowH);
+      rect(page,left,next,right-left,rowH);
+      let cx=left+charityW;line(page,cx,y,cx,next,.5);
+      text(page,left+7,next+12,pdfFit(charity,31),8.5,!!charity);
+      for(let i=0;i<sizeCount;i++){cx+=sizeW;line(page,cx,y,cx,next,.5)}
+      y=next;
+    });
+    text(page,36,67,'Inventory notes:',9,true);
+    [55,41,27].forEach(py=>line(page,36,py,756,py,.5));
+    text(page,36,18,pdfFit(COPYRIGHT_PDF,88),6.2,false);text(page,36,8,'Personal and authorized guild use only.',6.2,false);text(page,710,8,`v${VERSION}`,6.2,false);
+  });
+
+  // Needs worksheet page.
+  const needs=addPage();
+  header(needs,'Blank Quilts Needed Worksheet','Record requests before entering them into the app.');
+  const left=36,right=756,top=512,rowH=29;
+  const widths=[92,170,155,70,right-left-92-170-155-70];
+  const headings=['MONTH NEEDED','CHARITY','QUILT SIZE','QUANTITY','NOTES'];
+  shade(needs,left,top-rowH,right-left,rowH);rect(needs,left,top-rowH,right-left,rowH);
+  let x=left;
+  headings.forEach((heading,i)=>{text(needs,x+6,top-18,heading,7.5,true);x+=widths[i];if(i<headings.length-1)line(needs,x,top,x,top-rowH,.5)});
+  let y=top-rowH;
+  for(let row=0;row<13;row++){
+    const next=y-rowH;if(row%2===1)shade(needs,left,next,right-left,rowH);rect(needs,left,next,right-left,rowH);
+    let cx=left;for(let i=0;i<widths.length-1;i++){cx+=widths[i];line(needs,cx,y,cx,next,.5)}y=next;
+  }
+  text(needs,36,67,'Additional notes:',9,true);[55,41,27].forEach(py=>line(needs,36,py,756,py,.5));
+  text(needs,36,18,pdfFit(COPYRIGHT_PDF,88),6.2,false);text(needs,36,8,'Personal and authorized guild use only.',6.2,false);text(needs,710,8,`v${VERSION}`,6.2,false);
+
+  const pageIds=pages.map((_,i)=>5+i*2),objects=[];
+  objects[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objects[2]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(' ')}] /Count ${pages.length} >>`;
+  objects[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  objects[4]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+  pages.forEach((page,i)=>{
+    const pageId=5+i*2,contentId=pageId+1,content=page.commands.join('\n')+'\n';
+    objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId]=`<< /Length ${content.length} >>\nstream\n${content}endstream`;
+  });
+  let pdf='%PDF-1.4\n%1234\n';const offsets=[0];
+  for(let i=1;i<objects.length;i++){offsets[i]=pdf.length;pdf+=`${i} 0 obj\n${objects[i]}\nendobj\n`}
+  const xref=pdf.length;pdf+=`xref\n0 ${objects.length}\n0000000000 65535 f \n`;
+  for(let i=1;i<objects.length;i++)pdf+=`${String(offsets[i]).padStart(10,'0')} 00000 n \n`;
+  pdf+=`trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  const bytes=new Uint8Array(pdf.length);for(let i=0;i<pdf.length;i++)bytes[i]=pdf.charCodeAt(i)&255;return bytes;
+}
+function exportBlankInventoryPDF(){
+  try{
+    const bytes=makeBlankInventoryPDF();
+    downloadBlob(`${filePart(data.itemName)}_Blank_Inventory_and_Needs_${today()}.pdf`,new Blob([bytes],{type:'application/pdf'}));
+    notice('reportNotice','Blank inventory-and-needs PDF created. Open the PDF to print it.',true);
+  }catch(error){console.error('Blank worksheet PDF failed',error);notice('reportNotice','The blank worksheet PDF could not be created. Refresh the app and try again.')}
+}
+// Preserve compatibility with the 7.8.47 button and any cached screen markup.
+printBlankInventorySheet=function(){exportBlankInventoryPDF()};
+// ===== End Update 7.8.48 =====
