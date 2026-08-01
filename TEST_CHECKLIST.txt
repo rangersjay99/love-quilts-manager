@@ -1,34 +1,20 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.49 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.50 TEST CHECKLIST
 
-GENERAL
-[ ] App opens and shows Update 7.8.49.
-[ ] Existing inventory, needs, custom logo, settings, and Audit History remain present.
-[ ] Both approved devices sign in and reach green synchronization.
+VERSION AND DATA
+[ ] App shows Update 7.8.50.
+[ ] Existing inventory, needs, distributions, audit entries, logo, and settings remain present.
+[ ] Verified totals remain unchanged from stable Update 7.8.49.
 
-VERIFIED JULY 29 BACKUP TOTALS
-[ ] Quilts Made is 282.
-[ ] Quilts Distributed is 108.
-[ ] Available in Storage is 166.
-[ ] Remaining Calendar Need is 347.
-[ ] Exact charity-and-size inventory applied is 155.
-[ ] Other inventory not matched to current need is 11.
-[ ] Quilts Still to Be Made is 192.
-[ ] Projected Total Quilts Made by Year End is 474.
-[ ] Lifetime Quilts Distributed is 108.
+IPHONE PDF PRINTING
+[ ] Home > Open Summary PDF opens a PDF immediately.
+[ ] Home > Open 12-Month Calendar PDF opens a PDF immediately.
+[ ] Reports > Open Full PDF for Printing opens a PDF immediately.
+[ ] Reports > Open Compact PDF for Printing opens a PDF immediately.
+[ ] Custom Reports > Open / Save PDF opens a PDF after preview.
+[ ] Settings > Audit History > Open Audit PDF opens a PDF immediately.
+[ ] Blank Inventory & Needs PDF still opens immediately.
+[ ] Each PDF can be printed from the iPhone PDF share menu.
 
-DELETED STORAGE TEST RECORDS
-[ ] The four old Unassigned/Storage test transactions no longer appear in active Inventory History.
-[ ] The four records appear in Audit History as Archived from Totals.
-[ ] They do not affect Home, Reports, yearly statistics, Custom Reports, or exported PDFs.
-
-ACTIVE UNASSIGNED/STORAGE RULES
-[ ] A new active Unassigned/Storage IN record increases current storage and Quilts Made.
-[ ] Deleting that record removes it from every total and adds a deletion entry to Audit History.
-[ ] An unlinked Unassigned/Storage OUT record does not increase Quilts Distributed.
-[ ] Unassigned/Storage inventory does not reduce a charity-and-size calendar shortage.
-
-REGRESSION
-[ ] Blank Inventory & Needs PDF still opens correctly.
-[ ] Custom logo remains correct on splash and all main tabs.
-[ ] Full, Compact, and Custom Reports still open correctly.
-[ ] iPhone print behavior is unchanged from 7.8.48.
+OTHER DEVICES
+[ ] PDFs open on iPad and desktop/laptop.
+[ ] CSV, HTML, backup, restore, and Firebase sync still work.

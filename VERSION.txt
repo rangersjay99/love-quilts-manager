@@ -1,11 +1,10 @@
-Love Quilts Manager Update 7.8.49
-Released: July 31, 2026
+Love Quilts Manager Update 7.8.50
+Released: August 1, 2026
 
-Data Accuracy Correction.
+iPhone PDF Printing Correction.
 
 Changes:
-- Removes the four historical deleted Unassigned/Storage test transactions from active operational data.
-- Retains each removed record in synchronized Audit History.
-- Prevents unlinked Unassigned/Storage removals from increasing Quilts Distributed.
-- Keeps legitimate active Unassigned/Storage inventory in current storage totals.
-- Restores the verified July 29 totals: Made 282, Distributed 108, Storage 166, Still to Make 192, Projected 474.
+- Replaces native iPhone print-dialog calls with direct PDF output.
+- Adds dedicated Home Summary and 12-Month Calendar PDFs.
+- Routes Full, Compact, Custom, and Audit print actions through PDF output.
+- Leaves all Update 7.8.49 accuracy rules and verified totals unchanged.

@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.49';
+const VERSION='7.8.50';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1677,9 +1677,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.49 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.50 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.49',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.50',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2731,3 +2731,191 @@ function lqm7849QueueAccuracySync(){
 document.addEventListener('DOMContentLoaded',lqm7849QueueAccuracySync,{once:true});
 // ===== End Update 7.8.49 =====
 
+
+
+// ===== Love Quilts Manager Update 7.8.50 =====
+// iPhone PDF printing correction. Native window.print() does not reliably open
+// from the installed iPhone PWA. Every user-facing print action below now uses
+// the same direct PDF-download path already proven to open immediately on iPhone.
+// This update changes output only; inventory, needs, audit, and total calculations
+// remain exactly as verified in Update 7.8.49.
+
+function lqm7850PdfDocument(title,subtitle,items,{landscape=false,filename='Love_Quilts_Report.pdf'}={}){
+  const width=landscape?792:612,height=landscape?612:792,left=36,right=width-36,top=height-82,bottom=46;
+  const pages=[];let page=null,y=top;
+  const newPage=()=>{page={commands:[]};pages.push(page);y=top;return page};
+  const put=(x,py,value,size=8,bold=false)=>page.commands.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${py} Tm (${pdfEscape(value)}) Tj ET`);
+  const rule=(py,w=.55)=>page.commands.push(`${w} w ${left} ${py} m ${right} ${py} l S`);
+  const header=()=>{
+    put(left,height-38,pdfFit(data.appName,landscape?95:70),15,true);
+    put(left,height-54,pdfFit(`${data.orgName} - ${title}`,landscape?120:92),9,false);
+    if(subtitle)put(left,height-67,pdfFit(subtitle,landscape?130:100),7,false);
+    rule(height-74,.7);
+  };
+  const ensure=(needed=14)=>{if(!page)newPage();if(y-needed<bottom){newPage();header()}};
+  const addText=(value,{size=8,bold=false,indent=0,after=4,lineHeight=null}={})=>{
+    const lh=lineHeight||Math.max(10,size+3),usable=right-left-indent,maxChars=Math.max(14,Math.floor(usable/(size*.55)));
+    const lines=pdfWrap(String(value??''),maxChars);ensure(lines.length*lh+after);
+    lines.forEach((part,index)=>put(left+indent,y-index*lh,part,size,bold));y-=lines.length*lh+after;
+  };
+  const addSection=value=>{ensure(28);put(left,y,String(value||'').toUpperCase(),10.5,true);rule(y-6,.65);y-=22};
+  const addSpace=(amount=8)=>{ensure(amount);y-=amount};
+  newPage();header();
+  (items||[]).forEach(item=>{
+    if(!item)return;
+    if(item.type==='section')addSection(item.text);
+    else if(item.type==='space')addSpace(item.amount||8);
+    else addText(item.text,item);
+  });
+  pages.forEach((p,index)=>{
+    p.commands.push(`0.5 w ${left} 34 m ${right} 34 l S`);
+    p.commands.push(`BT /F1 6.2 Tf 1 0 0 1 ${left} 22 Tm (${pdfEscape(pdfFit(COPYRIGHT_PDF,landscape?105:82))}) Tj ET`);
+    p.commands.push(`BT /F1 6.2 Tf 1 0 0 1 ${left} 12 Tm (${pdfEscape('Personal and authorized guild use only.')}) Tj ET`);
+    p.commands.push(`BT /F1 6.2 Tf 1 0 0 1 ${right-96} 12 Tm (${pdfEscape(`Page ${index+1} of ${pages.length} - v${VERSION}`)}) Tj ET`);
+  });
+  const pageIds=pages.map((_,i)=>5+i*2),objects=[];
+  objects[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objects[2]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(' ')}] /Count ${pages.length} >>`;
+  objects[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  objects[4]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+  pages.forEach((p,i)=>{
+    const pageId=5+i*2,contentId=pageId+1,content=p.commands.join('\n')+'\n';
+    objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId]=`<< /Length ${content.length} >>\nstream\n${content}endstream`;
+  });
+  let pdf='%PDF-1.4\n%1234\n';const offsets=[0];
+  for(let i=1;i<objects.length;i++){offsets[i]=pdf.length;pdf+=`${i} 0 obj\n${objects[i]}\nendobj\n`}
+  const xref=pdf.length;pdf+=`xref\n0 ${objects.length}\n0000000000 65535 f \n`;
+  for(let i=1;i<objects.length;i++)pdf+=`${String(offsets[i]).padStart(10,'0')} 00000 n \n`;
+  pdf+=`trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  const bytes=new Uint8Array(pdf.length);for(let i=0;i<pdf.length;i++)bytes[i]=pdf.charCodeAt(i)&255;
+  downloadBlob(filename,new Blob([bytes],{type:'application/pdf'}));return bytes;
+}
+
+function lqm7850HomeSummaryItems(){
+  const stats=yearlyStatistics(Number(monthNow().slice(0,4))),items=[];
+  items.push({type:'section',text:'At a Glance'});
+  items.push({text:`${data.homeStorageLabel}: ${totalOnHand()} | ${data.homeNeededLabel}: ${totalNeeded()} | ${data.homeDifferenceLabel}: ${quiltsToCompleteTotal()}`,size:10,bold:true,after:8});
+  items.push({text:`${stats.year} made: ${stats.made} | Distributed: ${stats.distributed} | Still to make: ${stats.stillToMake} | Projected made by year end: ${stats.projectedYearEndMade}`,size:8.5,after:8});
+  items.push({type:'section',text:'Charity Summary'});
+  const rows=homeCharitySummaries();
+  if(!rows.length)items.push({text:'No active charity records.'});
+  rows.forEach(row=>items.push({text:`${row.charity}: ${row.onHand} in storage | ${row.requested} needed | ${row.toComplete} still to make`,bold:true,after:3}));
+  items.push({type:'section',text:'Upcoming Needs'});
+  const needs=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
+  if(!needs.length)items.push({text:'No upcoming quilts are currently needed.'});
+  needs.forEach(item=>items.push({text:`${fmtMonth(item.n.month)} - ${item.n.charity} - ${item.n.size}: ${item.n.qty} requested, ${item.fulfilled} sent, ${item.remaining} still needed, ${item.available} available, ${item.shortage} short`,after:3}));
+  return items;
+}
+
+function lqm7850CalendarItems(source='needs'){
+  const home=source==='home',year=home?Number(monthNow().slice(0,4)):(Number(el('calendarYear')?.value)||Number(monthNow().slice(0,4)));
+  const charity=home?(el('homeCalendarCharity')?.value||''):(el('calendarCharity')?.value||'');
+  const size=home?'':(el('calendarSize')?.value||'');
+  const allocations=allocateNeedsForPlanning(),byId=new Map(allocations.map(item=>[item.n.id,item]));
+  const records=sortedNeedsForPlanning(data.needs.filter(n=>yearOf(n.month)===year&&(!charity||n.charity===charity)&&(!size||n.size===size)));
+  const items=[];
+  for(let month=1;month<=12;month++){
+    const key=`${year}-${String(month).padStart(2,'0')}`,monthRows=records.filter(n=>n.month===key);
+    items.push({type:'section',text:fmtMonth(key)});
+    if(!monthRows.length){items.push({text:'No requests.',after:4});continue}
+    monthRows.forEach(n=>{
+      const info=byId.get(n.id)||allocationForNeed(n),sent=fulfilledQty(n),remaining=remainingNeed(n);
+      const status=remaining===0?'Completed':(needIsPastDue(n)?'Past due':(info.shortage>0?'Short':'Covered'));
+      items.push({text:`${n.charity} - ${n.size}: Need ${n.qty} | Sent ${sent} | Still ${remaining} | Available ${info.available} | Short ${info.shortage} | ${status}`,bold:true,after:n.note?1:4});
+      if(n.note)items.push({text:`Note: ${n.note}`,indent:14,size:7.5,after:4});
+    });
+  }
+  return{year,charity,size,items};
+}
+
+function lqm7850CustomRow(row,fields){
+  const parts=[];
+  if(fields.has('date')&&row.date)parts.push(row.date);
+  if(fields.has('charity')&&row.charity)parts.push(row.charity);
+  if(fields.has('size')&&row.size)parts.push(row.size);
+  if(fields.has('quantity')&&row.quantity)parts.push(`Quantity: ${row.quantity}`);
+  if(fields.has('status')&&row.status)parts.push(row.status);
+  if(fields.has('notes')&&row.notes)parts.push(`Notes: ${row.notes}`);
+  return parts.join(' | ');
+}
+function lqm7850CustomReportItems(options){
+  const sections=new Set(options.sections),fields=new Set(options.fields),items=[];
+  const selectedYear=lqmCustomReportYear(options),stats=yearlyStatistics(selectedYear);
+  const transactions=data.transactions.filter(t=>lqmInDateRange(t.date,options.start,options.end));
+  const made=transactions.filter(t=>t.type==='IN'&&!['NEED_DISTRIBUTION_CORRECTION','HOLD_RETURN'].includes(t.sourceType)).reduce((sum,t)=>sum+Math.max(0,Number(t.qty)||0),0);
+  const distributed=Math.max(0,transactions.reduce((sum,t)=>sum+distributionActivityValue(t),0));
+  if(sections.has('highlights')){
+    items.push({type:'section',text:'Highlights'});
+    items.push({text:`Made ${made} | Distributed ${distributed} | ${data.homeStorageLabel} ${totalOnHand()} | ${data.homeDifferenceLabel} ${quiltsToCompleteTotal()}`,size:9,bold:true});
+  }
+  if(sections.has('yearly')){
+    items.push({type:'section',text:`${selectedYear} Yearly Quilt Summary`});
+    items.push({text:`Projected made by year end ${stats.projectedYearEndMade} | Made so far ${stats.made} | Still to make ${stats.stillToMake} | Distributed ${stats.distributed}`,bold:true});
+    items.push({text:`Still to make ${stats.stillToMake} = ${stats.remainingCalendarNeed} remaining calendar need - ${stats.inventoryApplied} exact charity-and-size inventory. ${stats.unmatchedInventory||0} other current quilts remain in storage.`});
+  }
+  if(sections.has('charity')){
+    items.push({type:'section',text:'Charity Overview'});
+    const rows=homeCharitySummaries();if(!rows.length)items.push({text:'No charity totals are available.'});
+    rows.forEach(row=>items.push({text:lqm7850CustomRow({charity:row.charity,size:'All sizes',quantity:`${row.onHand} in storage`,status:`${row.requested} requested; ${row.toComplete} still to make`,notes:''},fields),after:3}));
+  }
+  if(sections.has('inventory')){
+    items.push({type:'section',text:data.homeStorageLabel});
+    const rows=[];Object.entries(invMap()).filter(([,amount])=>Number(amount)!==0).sort(([a],[b])=>a.localeCompare(b)).forEach(([key,amount])=>{const split=key.lastIndexOf('|');rows.push({date:'Current',charity:key.slice(0,split),size:key.slice(split+1),quantity:String(amount),status:'In storage',notes:''})});
+    if(!rows.length)items.push({text:'No quilts are currently in storage.'});else rows.forEach(row=>items.push({text:lqm7850CustomRow(row,fields),after:3}));
+  }
+  if(sections.has('needs')){
+    items.push({type:'section',text:data.homeNeededLabel});
+    const rows=allocateNeedsForPlanning().filter(item=>lqmInMonthRange(item.n.month,options.start,options.end));
+    if(!rows.length)items.push({text:'No requests fall within this date range.'});
+    rows.forEach(item=>items.push({text:lqm7850CustomRow({date:fmtMonth(item.n.month),charity:item.n.charity,size:item.n.size,quantity:`${item.n.qty} requested`,status:`${item.fulfilled} sent; ${item.remaining} still needed; ${item.shortage} short`,notes:item.n.note||''},fields),after:3}));
+  }
+  if(sections.has('distributed')){
+    items.push({type:'section',text:`${data.itemName} Distributed`});
+    const rows=distributedNeedsForReport().filter(n=>lqmInDateRange(n.fulfilledDate,options.start,options.end));
+    if(!rows.length)items.push({text:'No distributed quilts fall within this date range.'});
+    rows.forEach(n=>items.push({text:lqm7850CustomRow({date:n.fulfilledDate?fmtDate(n.fulfilledDate):'Date not entered',charity:n.charity,size:n.size,quantity:String(fulfilledQty(n)),status:`${remainingNeed(n)} still needed; ${distributionReportStatus(n)}`,notes:n.note||''},fields),after:3}));
+  }
+  if(sections.has('adjustments')){
+    items.push({type:'section',text:'Inventory Adjustments'});
+    const rows=transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>b.date.localeCompare(a.date));
+    if(!rows.length)items.push({text:'No adjustments fall within this date range.'});
+    rows.forEach(t=>items.push({text:lqm7850CustomRow({date:fmtDate(t.date),charity:t.charity,size:t.size,quantity:`${value(t)>0?'+':''}${value(t)}`,status:'Inventory adjustment',notes:t.note||''},fields),after:3}));
+  }
+  return items;
+}
+
+printHomeSummary=function(){
+  try{lqm7850PdfDocument('Home Summary',`Generated ${new Date().toLocaleString()}`,lqm7850HomeSummaryItems(),{filename:`${filePart(data.itemName)}_Home_Summary_${today()}.pdf`});notice('reportNotice','Home Summary PDF opened. Use the PDF share menu to print.',true)}
+  catch(error){console.error(error);notice('reportNotice','The Home Summary PDF could not be created. Refresh and try again.')}
+};
+printCalendar=function(source='needs'){
+  try{const report=lqm7850CalendarItems(source),filters=[report.charity?`Charity: ${report.charity}`:'All charities',report.size?`Size: ${report.size}`:'All sizes'].join(' - ');lqm7850PdfDocument(`${report.year} Calendar`,filters,report.items,{landscape:true,filename:`${filePart(data.itemName)}_${report.year}_Calendar_${today()}.pdf`});notice('reportNotice','Calendar PDF opened. Use the PDF share menu to print.',true)}
+  catch(error){console.error(error);notice('reportNotice','The Calendar PDF could not be created. Refresh and try again.')}
+};
+printFullReport=function(){
+  try{renderReports();downloadBlob(`${filePart(data.itemName)}_Full_Report_${today()}.pdf`,new Blob([makeFullPDF()],{type:'application/pdf'}));notice('reportNotice','Full Report PDF opened. Use the PDF share menu to print.',true)}
+  catch(error){console.error(error);notice('reportNotice','The Full Report PDF could not be created. Refresh and try again.')}
+};
+printMeetingReport=function(){
+  try{renderReports();downloadBlob(`${filePart(data.itemName)}_Compact_Report_${today()}.pdf`,new Blob([makeOnePagePDF()],{type:'application/pdf'}));notice('reportNotice','Compact Report PDF opened. Use the PDF share menu to print.',true)}
+  catch(error){console.error(error);notice('reportNotice','The Compact Report PDF could not be created. Refresh and try again.')}
+};
+printCustomReport=function(){
+  try{
+    if(!renderCustomReportPreview(false))return notice('customReportNotice','Preview the custom report before opening the PDF.');
+    const options=captureCustomReportOptions();
+    lqm7850PdfDocument(options.title,lqmCustomRangeLabel(options),lqm7850CustomReportItems(options),{filename:`${filePart(options.title)}_${today()}.pdf`});
+    notice('customReportNotice','Custom Report PDF opened. Use the PDF share menu to print.',true);
+  }catch(error){console.error(error);notice('customReportNotice','The Custom Report PDF could not be created. Refresh and try again.')}
+};
+printAuditHistory=function(){
+  try{
+    const list=[...(data.auditLog||[])].sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp))),items=[];
+    items.push({type:'section',text:'Audit Entries'});
+    if(!list.length)items.push({text:'No audit entries have been recorded.'});
+    list.forEach(entry=>items.push({text:`${fmtDateTime(entry.timestamp)} | ${entry.user||'This device'} | ${entry.action} ${entry.recordType}${entry.recordId?` (${entry.recordId})`:''} | ${entry.summary||'Recorded change'}`,after:4}));
+    lqm7850PdfDocument('Audit History',`${list.length} entries - Generated ${new Date().toLocaleString()}`,items,{filename:`${filePart(data.itemName)}_Audit_History_${today()}.pdf`});notice('auditNotice','Audit History PDF opened. Use the PDF share menu to print.',true);
+  }catch(error){console.error(error);notice('auditNotice','The Audit History PDF could not be created. Refresh and try again.')}
+};
+// ===== End Update 7.8.50 =====

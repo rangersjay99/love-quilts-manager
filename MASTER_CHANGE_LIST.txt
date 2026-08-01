@@ -1,7 +1,10 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 31, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.49
+IMPLEMENTED THROUGH UPDATE 7.8.50
+
+- Update 7.8.50 replaces unreliable native iPhone print-dialog calls with direct PDF output for Home Summary, Calendar, Full, Compact, Custom, and Audit reports while preserving all verified 7.8.49 totals and data rules.
+
 
 - Update 7.8.49 is a data-accuracy correction. It archives the four historical deleted Unassigned/Storage test transactions into synchronized Audit History, removes them from every operational total, keeps active Unassigned/Storage inventory countable, and prevents an unlinked storage removal from being counted as a charity distribution. The verified July 29 figures return to 282 made, 108 distributed, 166 stored, 192 still to make, and 474 projected by year end.
 

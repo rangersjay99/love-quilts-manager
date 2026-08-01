@@ -1,19 +1,12 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.49 AUTOMATED CHECKS
-Released: July 31, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.50 AUTOMATED CHECKS
+Released: August 1, 2026
 
-PASSED
-- JavaScript syntax check.
-- Version, manifest, and service-worker cache references updated to 7.8.49.
-- Legacy deleted Unassigned/Storage test IDs removed from normalized operational data.
-- Deterministic Audit History entries created for all four archived records.
-- July 29 backup totals verified: Made 282, Distributed 108, Storage 166, Remaining Need 347, Exact-Match Inventory 155, Other Inventory 11, Still to Make 192, Projected 474, Lifetime Distributed 108.
-- Active Unassigned/Storage inventory remains included in current storage.
-- Unlinked Unassigned/Storage OUT activity is excluded from distribution totals.
-- Custom Report date-range totals use the corrected distribution rule.
-- Firebase production organization path unchanged.
-- ZIP archive integrity verified.
+PASS — JavaScript syntax check.
+PASS — Version and service-worker cache references updated to 7.8.50.
+PASS — Native print actions overridden with PDF-output functions.
+PASS — Home Summary, Calendar, Custom Report, and Audit PDF builders present.
+PASS — Existing Full and Compact PDF builders retained.
+PASS — Update 7.8.49 data-accuracy correction code retained unchanged.
+PASS — ZIP archive integrity check.
 
-PHYSICAL DEVICE TESTING STILL REQUIRED
-- Production Firebase deletion of the four archived transaction documents after the first green sync.
-- Verification of the corrected totals on both approved devices.
-- Existing iPhone print-dialog timing.
+Physical iPhone testing is still required because the native print-dialog failure is device-specific.

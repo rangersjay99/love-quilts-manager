@@ -1,26 +1,19 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.49
-Released: July 31, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.50
+Released: August 1, 2026
 
 BEFORE UPDATING
-1. Export a current app backup from Settings.
-2. Confirm approved devices show all changes synced.
+1. Export a current app backup.
+2. Confirm Update 7.8.49 totals are still correct.
 3. Download a ZIP backup of the current GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_49.zip.
-2. Upload every extracted file to the repository main/root folder.
-3. Replace files with the same names.
-4. Keep the icons and firebase-test folders.
-5. Wait for GitHub Pages to publish.
-6. Close and reopen the app. Refresh once if Update 7.8.48 remains cached.
-
-FIRST SYNC
-1. Open one approved device first and allow it to reach green synchronization.
-2. Confirm the corrected totals before opening the second device.
-3. Open the second device and allow it to reach green synchronization.
-4. Confirm both devices show the same corrected figures.
+1. Extract this ZIP.
+2. Upload every extracted file to the repository root and replace matching files.
+3. Keep the icons and firebase-test folders.
+4. Wait for GitHub Pages to publish.
+5. Close and reopen the installed iPhone app. Refresh once if 7.8.49 remains cached.
 
 IMPORTANT
-- This is a data-accuracy correction built on 7.8.48.
-- The four historical deleted storage test records are moved to Audit History and removed from the active transactions collection.
-- Do not initialize or recreate the shared inventory.
+- This update changes report output only.
+- It does not migrate, clear, or recalculate stored data.
+- Do not create the shared inventory again.
