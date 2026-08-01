@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.48';
+const VERSION='7.8.49';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1677,9 +1677,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.48 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.49 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.48',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.49',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2326,7 +2326,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.48';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.49';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -2637,3 +2637,97 @@ function exportBlankInventoryPDF(){
 // Preserve compatibility with the 7.8.47 button and any cached screen markup.
 printBlankInventorySheet=function(){exportBlankInventoryPDF()};
 // ===== End Update 7.8.48 =====
+
+// ===== Love Quilts Manager Update 7.8.49 =====
+// Data-accuracy correction for historical Unassigned/Storage test records.
+// Active Unassigned/Storage inventory remains valid current inventory, but an
+// unlinked OUT from that holding category is not a charity distribution.
+
+const LQM_7849_ARCHIVED_STORAGE_TRANSACTION_IDS=new Set([
+  'ms09m2475yy1ui','ms09ogku6us9ix','ms0acgq68fcv48','ms0acxm7jj7rcz'
+]);
+const LQM_7849_SYNC_FLAG='love_quilts_7849_accuracy_sync_v1';
+
+function lqm7849IsUnassignedStorageCharity(name){
+  const normalized=String(name||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  return normalized.startsWith('unas')&&normalized.includes('storage');
+}
+
+function lqm7849ArchiveDeletedStorageTests(target){
+  if(!target||!Array.isArray(target.transactions))return false;
+  const removed=target.transactions.filter(record=>LQM_7849_ARCHIVED_STORAGE_TRANSACTION_IDS.has(String(record.id||'')));
+  if(!removed.length)return false;
+  target.transactions=target.transactions.filter(record=>!LQM_7849_ARCHIVED_STORAGE_TRANSACTION_IDS.has(String(record.id||'')));
+  if(!Array.isArray(target.auditLog))target.auditLog=[];
+  const existing=new Set(target.auditLog.map(entry=>String(entry.id||'')));
+  removed.forEach(record=>{
+    const auditId=`lqm7849-archive-${record.id}`;
+    if(existing.has(auditId))return;
+    target.auditLog.push(normalizeAuditEntry({
+      id:auditId,
+      timestamp:nowIso(),
+      user:record.updatedBy||record.createdBy||currentUserEmail(),
+      action:'Archived from Totals',
+      recordType:'Inventory',
+      recordId:String(record.id||''),
+      summary:`Historical Unassigned/Storage test record removed from operational totals: ${record.type} ${Number(record.qty||0)} · ${record.size||''} · ${fmtDate(record.date||'')}`,
+      before:clone(record),
+      after:null
+    }));
+    existing.add(auditId);
+  });
+  target.auditLog=target.auditLog.sort((a,b)=>String(b.timestamp||'').localeCompare(String(a.timestamp||''))).slice(0,LQM_AUDIT_LIMIT);
+  return true;
+}
+
+// Every remaining transaction is an active record and therefore counts in
+// current inventory. Unassigned/Storage is excluded only from charity-need
+// matching and from unlinked distribution activity.
+lqmIsTestingStorageCharity=lqm7849IsUnassignedStorageCharity;
+lqmOfficialTransaction=record=>!!record;
+lqmOfficialInventoryTotal=function(exclude=null){
+  return data.transactions.filter(record=>record.id!==exclude).reduce((sum,record)=>sum+value(record),0);
+};
+totalOnHand=function(exclude=null){return lqmOfficialInventoryTotal(exclude)};
+
+const lqm7848BaseDistributionActivityValue=distributionActivityValue;
+distributionActivityValue=function(record){
+  if(!record)return 0;
+  const amount=Math.max(0,Number(record.qty)||0);
+  if(record.type==='IN'&&record.sourceType==='NEED_DISTRIBUTION_CORRECTION')return-amount;
+  if(record.type!=='OUT'||record.sourceType==='HOLD_TRANSFER_OUT')return 0;
+  if(lqm7849IsUnassignedStorageCharity(record.charity)&&!record.sourceNeedId&&record.sourceType!=='HOLD_DISTRIBUTION')return 0;
+  return amount;
+};
+
+// Normalize imported, restored, and Firebase data through the same correction
+// so archived records cannot re-enter operational totals from another device.
+const lqm7848BaseNormalizeData=normalizeData;
+normalizeData=function(source={}){
+  const normalized=lqm7848BaseNormalizeData(source);
+  lqm7849ArchiveDeletedStorageTests(normalized);
+  return normalized;
+};
+
+const lqm7849CurrentDataChanged=lqm7849ArchiveDeletedStorageTests(data);
+if(lqm7849CurrentDataChanged){
+  lqm7847AuditBaseline=lqmAuditSnapshot();
+  lqm7847AuditHistoryBaseline=clone(data.auditLog||[]);
+}
+
+function lqm7849QueueAccuracySync(){
+  if(localStorage.getItem(LQM_7849_SYNC_FLAG)==='complete')return;
+  let attempts=0;
+  const queue=()=>{
+    if(typeof window.lqFirebaseQueueSave==='function'){
+      save('7.8.49 data accuracy correction: archived deleted Unassigned/Storage test records');
+      localStorage.setItem(LQM_7849_SYNC_FLAG,'complete');
+      return;
+    }
+    if(attempts++<120)setTimeout(queue,100);
+  };
+  setTimeout(queue,250);
+}
+document.addEventListener('DOMContentLoaded',lqm7849QueueAccuracySync,{once:true});
+// ===== End Update 7.8.49 =====
+

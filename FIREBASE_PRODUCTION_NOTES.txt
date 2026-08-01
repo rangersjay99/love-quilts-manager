@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER UPDATE 7.8.48 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.49 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules or collection-path changes are required.
 
@@ -8,16 +8,21 @@ UNCHANGED PATHS
 - organizations/faithful-circle-love-quilts/transactions
 - organizations/faithful-circle-love-quilts/needs
 
-NEW SHARED SETTINGS FIELDS
-- customLogo: a safely resized image data URL, limited by the app before saving.
-- auditLog: the newest 200 normalized audit entries.
+DATA-ACCURACY MIGRATION
+Update 7.8.49 removes four known historical Unassigned/Storage test transaction documents from the active transactions collection:
+- ms09m2475yy1ui
+- ms09ogku6us9ix
+- ms0acgq68fcv48
+- ms0acxm7jj7rcz
 
-AUDIT MERGING
-The sync layer merges audit entries by audit ID when composing the shared settings copy. This reduces the chance that a recently created audit entry on one approved device is lost when the other device synchronizes.
+Each removed record is retained as a deterministic Audit History entry in settings/main.auditLog. Normalization applies the correction to local, imported, restored, and remotely received data so another approved device cannot reintroduce the records into operational totals.
 
-DATA SAFETY
-- Transactions and needs remain in their existing collections.
-- Deleted active records continue to be removed from those collections, so they cannot affect operational totals.
-- The deleted record's final values are retained only in auditLog inside shared settings.
-- Do not clear or recreate the shared inventory.
-- After upload, let one device reach green synchronization before testing changes on the second device.
+COUNTING RULES
+- Every remaining active transaction contributes to current inventory.
+- Active Unassigned/Storage IN records can contribute to current inventory and Quilts Made.
+- An unlinked Unassigned/Storage OUT record is not a charity distribution and contributes zero to Quilts Distributed.
+- Unassigned/Storage inventory is not applied to a charity-and-size calendar shortage.
+- Deleted records are removed from active collections and retained only in Audit History.
+
+SYNC PROCEDURE
+After deployment, open one approved device and wait for green synchronization. The queued 7.8.49 correction save deletes the four stale Firestore transaction documents. Then open the second approved device and verify matching totals.

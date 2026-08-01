@@ -1,29 +1,34 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.48 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.49 TEST CHECKLIST
 
 GENERAL
-[ ] App opens and shows Update 7.8.48.
-[ ] Existing inventory, needs, Audit History, settings, custom logo, and totals remain present.
-[ ] Both approved devices sign in and sync normally.
+[ ] App opens and shows Update 7.8.49.
+[ ] Existing inventory, needs, custom logo, settings, and Audit History remain present.
+[ ] Both approved devices sign in and reach green synchronization.
 
-BLANK WORKSHEET PDF
-[ ] Reports > Report Downloads > Open Blank Inventory & Needs PDF creates a PDF immediately.
-[ ] PDF page 1 lists current charities/storage rows and current quilt-size columns.
-[ ] PDF page 2 contains blank Month Needed, Charity, Quilt Size, Quantity, and Notes rows.
-[ ] The PDF opens or downloads and can be printed normally.
+VERIFIED JULY 29 BACKUP TOTALS
+[ ] Quilts Made is 282.
+[ ] Quilts Distributed is 108.
+[ ] Available in Storage is 166.
+[ ] Remaining Calendar Need is 347.
+[ ] Exact charity-and-size inventory applied is 155.
+[ ] Other inventory not matched to current need is 11.
+[ ] Quilts Still to Be Made is 192.
+[ ] Projected Total Quilts Made by Year End is 474.
+[ ] Lifetime Quilts Distributed is 108.
 
-CUSTOM LOGO ON MAIN TABS
-[ ] Custom logo appears beside the title instead of floating above it.
-[ ] Home header looks correct.
-[ ] Inventory header looks correct.
-[ ] Quilts Needed header looks correct.
-[ ] Reports header looks correct.
-[ ] Settings header looks correct.
-[ ] Splash-screen logo remains correct.
+DELETED STORAGE TEST RECORDS
+[ ] The four old Unassigned/Storage test transactions no longer appear in active Inventory History.
+[ ] The four records appear in Audit History as Archived from Totals.
+[ ] They do not affect Home, Reports, yearly statistics, Custom Reports, or exported PDFs.
+
+ACTIVE UNASSIGNED/STORAGE RULES
+[ ] A new active Unassigned/Storage IN record increases current storage and Quilts Made.
+[ ] Deleting that record removes it from every total and adds a deletion entry to Audit History.
+[ ] An unlinked Unassigned/Storage OUT record does not increase Quilts Distributed.
+[ ] Unassigned/Storage inventory does not reduce a charity-and-size calendar shortage.
 
 REGRESSION
-[ ] Available in Storage remains 166 with the July 29 backup.
-[ ] Quilts Still to Be Made remains 192.
-[ ] Deleted records remain excluded from all operational totals.
-[ ] Audit History remains synchronized.
-[ ] Existing Full and Compact PDF options still work.
-[ ] iPhone print timing is unchanged from 7.8.47.
+[ ] Blank Inventory & Needs PDF still opens correctly.
+[ ] Custom logo remains correct on splash and all main tabs.
+[ ] Full, Compact, and Custom Reports still open correctly.
+[ ] iPhone print behavior is unchanged from 7.8.48.

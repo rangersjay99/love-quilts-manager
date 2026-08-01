@@ -1,10 +1,11 @@
-Love Quilts Manager Update 7.8.48
+Love Quilts Manager Update 7.8.49
 Released: July 31, 2026
 
-Worksheet PDF and Header Logo correction.
+Data Accuracy Correction.
 
 Changes:
-- Replaces the blank worksheet direct-print action with a generated printable PDF.
-- Includes a current-inventory matrix and a separate blank quilts-needed page.
-- Integrates the custom logo beside the title in the shared header on every main tab.
-- Preserves all 7.8.47 totals, Audit History, Firebase data, and custom-logo synchronization.
+- Removes the four historical deleted Unassigned/Storage test transactions from active operational data.
+- Retains each removed record in synchronized Audit History.
+- Prevents unlinked Unassigned/Storage removals from increasing Quilts Distributed.
+- Keeps legitimate active Unassigned/Storage inventory in current storage totals.
+- Restores the verified July 29 totals: Made 282, Distributed 108, Storage 166, Still to Make 192, Projected 474.
