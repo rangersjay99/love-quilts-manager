@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.56';
+const VERSION='7.8.57';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -14,6 +14,7 @@ const DEFAULT_ORG='Faithful Circle Quilters';
 const DEFAULT_APP='Love Quilts Manager';
 const DEFAULT_ITEM='Love Quilts';
 const DEFAULT_SPLASH_TAG='MADE WITH LOVE, SHARED WITH CARE';
+const DEFAULT_HEADER_TAGLINE='Available quilts, requests, and quilts still to complete';
 const DEFAULT_HOME_AT_A_GLANCE='At a Glance';
 const DEFAULT_HOME_STORAGE_LABEL='Available in Storage';
 const DEFAULT_HOME_NEEDED_LABEL='Quilts Requested';
@@ -143,7 +144,7 @@ function normalizeData(d={}){
   });
   return{
     orgName:String(d.orgName||DEFAULT_ORG),appName:String(d.appName||DEFAULT_APP),itemName:String(d.itemName||DEFAULT_ITEM),
-    reportTitle:String(d.reportTitle||''),splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
+    reportTitle:String(d.reportTitle||''),headerTagline:String(d.headerTagline||DEFAULT_HEADER_TAGLINE),splashTag:String(d.splashTag||''),splashMessage:String(d.splashMessage||''),
     futureMessage:String(d.futureMessage||DEFAULT_FUTURE_MESSAGE),
     navHomeLabel:String(d.navHomeLabel||DEFAULT_NAV_HOME_LABEL),navInventoryLabel:String(d.navInventoryLabel||DEFAULT_NAV_INVENTORY_LABEL),
     navNeedsLabel:String(d.navNeedsLabel||DEFAULT_NAV_NEEDS_LABEL),navReportsLabel:String(d.navReportsLabel||DEFAULT_NAV_REPORTS_LABEL),
@@ -209,6 +210,7 @@ function applyNames(){
   data.orgName=(data.orgName||DEFAULT_ORG).trim()||DEFAULT_ORG;
   data.appName=(data.appName||DEFAULT_APP).trim()||DEFAULT_APP;
   data.itemName=(data.itemName||DEFAULT_ITEM).trim()||DEFAULT_ITEM;
+  data.headerTagline=String(data.headerTagline||DEFAULT_HEADER_TAGLINE).trim()||DEFAULT_HEADER_TAGLINE;
   data.splashTag=String(data.splashTag||'').trim();
   data.splashMessage=String(data.splashMessage||'').trim();
   data.futureMessage=String(data.futureMessage||DEFAULT_FUTURE_MESSAGE).trim()||DEFAULT_FUTURE_MESSAGE;
@@ -225,13 +227,13 @@ function applyNames(){
   data.homeActionsHeading=String(data.homeActionsHeading||DEFAULT_HOME_ACTIONS_HEADING).trim()||DEFAULT_HOME_ACTIONS_HEADING;
   const automaticSplashMessage=`Keeping track of ${lowerName()}…\none quilt at a time.`;
   const shownSplashMessage=data.splashMessage||automaticSplashMessage;
-  el('headerOrg').textContent=data.orgName;el('headerAppName').textContent=data.appName;
+  el('headerOrg').textContent=data.orgName;el('headerAppName').textContent=data.appName;el('headerSubtitle').textContent=data.headerTagline;
   el('splashOrg').textContent=data.orgName;el('splashItemName').textContent=data.itemName;el('splashManager').textContent=splashSecondLine();
   el('splashTag').textContent=data.splashTag||DEFAULT_SPLASH_TAG;
   el('splashMessage').innerHTML=esc(shownSplashMessage).replace(/\n/g,'<br>');
   el('splashGrowthMessage').textContent=data.futureMessage;el('homeGrowthMessage').textContent=data.futureMessage;
   el('splashVersion').textContent=`${data.appName} · Update ${VERSION}`;
-  el('orgNameInput').value=data.orgName;el('appNameInput').value=data.appName;el('itemNameInput').value=data.itemName;
+  el('orgNameInput').value=data.orgName;el('appNameInput').value=data.appName;el('itemNameInput').value=data.itemName;el('headerTaglineInput').value=data.headerTagline;el('headerTaglineInput').placeholder=DEFAULT_HEADER_TAGLINE;
   el('homeAtAGlanceHeading').textContent=data.homeAtAGlance;el('homeStorageLabel').textContent=data.homeStorageLabel;
   el('homeNeededLabel').textContent=data.homeNeededLabel;el('homeDifferenceLabel').textContent=data.homeDifferenceLabel;
   el('homeCalendarHeading').textContent=data.homeCalendarHeading;if(el('homeActionsHeading'))el('homeActionsHeading').textContent=data.homeActionsHeading;
@@ -257,7 +259,7 @@ function applyNames(){
   setMode(mode);
 }
 function saveNames(){
-  data.orgName=el('orgNameInput').value.trim()||DEFAULT_ORG;data.appName=el('appNameInput').value.trim()||DEFAULT_APP;data.itemName=el('itemNameInput').value.trim()||DEFAULT_ITEM;
+  data.orgName=el('orgNameInput').value.trim()||DEFAULT_ORG;data.appName=el('appNameInput').value.trim()||DEFAULT_APP;data.itemName=el('itemNameInput').value.trim()||DEFAULT_ITEM;data.headerTagline=el('headerTaglineInput').value.trim()||DEFAULT_HEADER_TAGLINE;
   data.homeAtAGlance=el('homeAtAGlanceInput').value.trim()||DEFAULT_HOME_AT_A_GLANCE;data.homeStorageLabel=el('homeStorageLabelInput').value.trim()||DEFAULT_HOME_STORAGE_LABEL;
   data.homeNeededLabel=el('homeNeededLabelInput').value.trim()||DEFAULT_HOME_NEEDED_LABEL;data.homeDifferenceLabel=el('homeDifferenceLabelInput').value.trim()||DEFAULT_HOME_DIFFERENCE_LABEL;
   data.homeCalendarHeading=el('homeCalendarHeadingInput').value.trim()||DEFAULT_HOME_CALENDAR_HEADING;if(el('homeActionsHeadingInput'))data.homeActionsHeading=el('homeActionsHeadingInput').value.trim()||DEFAULT_HOME_ACTIONS_HEADING;
@@ -265,7 +267,7 @@ function saveNames(){
   data.futureMessage=el('futureMessageInput').value.trim()||DEFAULT_FUTURE_MESSAGE;
   data.navHomeLabel=el('navHomeLabelInput').value.trim()||DEFAULT_NAV_HOME_LABEL;data.navInventoryLabel=el('navInventoryLabelInput').value.trim()||DEFAULT_NAV_INVENTORY_LABEL;
   data.navNeedsLabel=el('navNeedsLabelInput').value.trim()||DEFAULT_NAV_NEEDS_LABEL;data.navReportsLabel=el('navReportsLabelInput').value.trim()||DEFAULT_NAV_REPORTS_LABEL;data.navSettingsLabel=el('navSettingsLabelInput').value.trim()||DEFAULT_NAV_SETTINGS_LABEL;
-  save('Names, Home wording, growth message, and tab labels changed');applyNames();renderAll();notice('nameNotice','Names, wording, growth message, and tab labels saved.',true);
+  save('Names, header tagline, Home wording, growth message, and tab labels changed');applyNames();renderAll();notice('nameNotice','Names, header tagline, wording, growth message, and tab labels saved.',true);
 }
 function closeSplash(){el('splash').classList.add('hidden');document.body.style.overflow=''}
 function setupSingleOpenGroups(selector){
@@ -1691,9 +1693,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.56 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.57 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.56',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.57',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2340,7 +2342,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.56';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.57';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -2369,7 +2371,7 @@ function lqmAuditSnapshot(source=data){
     needs:(source.needs||[]).map(record=>lqmAuditRecordSnapshot(record,'Charity Need')),
     charities:[...(source.charities||[])],sizes:[...(source.sizes||[])],
     settings:{
-      orgName:source.orgName||'',appName:source.appName||'',itemName:source.itemName||'',reportTitle:source.reportTitle||'',
+      orgName:source.orgName||'',appName:source.appName||'',itemName:source.itemName||'',reportTitle:source.reportTitle||'',headerTagline:source.headerTagline||'',
       splashTag:source.splashTag||'',splashMessage:source.splashMessage||'',futureMessage:source.futureMessage||'',
       navHomeLabel:source.navHomeLabel||'',navInventoryLabel:source.navInventoryLabel||'',navNeedsLabel:source.navNeedsLabel||'',
       navReportsLabel:source.navReportsLabel||'',navSettingsLabel:source.navSettingsLabel||'',homeAtAGlance:source.homeAtAGlance||'',
@@ -3365,3 +3367,9 @@ document.addEventListener('DOMContentLoaded',()=>{lqm7854UpdateQuantityLabel()},
 // Visual-only correction: restores plum branding and neutralizes blue-heavy normal surfaces.
 // No workflow, calculation, Firebase path, or saved-data schema changes.
 // ===== End Update 7.8.56 =====
+
+
+// ===== Love Quilts Manager Update 7.8.57 =====
+// Adds a synchronized editable header tagline under Names, Wording & Tabs.
+// No inventory, need, report, or calculation changes.
+// ===== End Update 7.8.57 =====

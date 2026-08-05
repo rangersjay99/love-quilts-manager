@@ -1,12 +1,10 @@
-Love Quilts Manager Update 7.8.56
+Love Quilts Manager Update 7.8.57
 Released: August 5, 2026
 
-Restored Plum Branding update.
+Editable Header Tagline update.
 
 Changes:
-- Plum-purple again anchors the splash screen and page headers.
-- Normal content backgrounds are mostly white, cream, gray, or very light lavender.
-- Blue is reduced and teal remains focused on the current-month Calendar treatment.
-- Red remains reserved for actual problems and warnings.
-
-Firebase production paths and the shared-data schema are unchanged.
+- Adds a synchronized Header Tagline field under Names, Wording & Tabs.
+- The line beneath the app title can be changed independently from the splash tagline.
+- Blank restores the standard header wording.
+- No inventory, need, report, calculation, or Firebase path changes.

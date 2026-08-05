@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 31, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.56
+IMPLEMENTED THROUGH UPDATE 7.8.57
+
+- Update 7.8.57 adds a synchronized editable Header Tagline beneath the app title. Leaving it blank restores the standard wording; no inventory, need, report, or calculation logic changed.
 
 - Update 7.8.56 restores plum-purple branding on the splash and page headers, reduces blue across normal cards and reports, and keeps the 7.8.55 Calendar clarity improvements unchanged.
 

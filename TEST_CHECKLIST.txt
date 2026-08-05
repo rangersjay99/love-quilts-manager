@@ -1,27 +1,26 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.56 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.57 TEST CHECKLIST
 
-BASIC
-[ ] App opens and shows Update 7.8.56.
-[ ] Existing inventory, needs, reports, settings, custom logo, and Audit History remain present.
-[ ] Laptop and all approved devices reach All changes synced.
+GENERAL
+[ ] App opens and shows Update 7.8.57.
+[ ] Existing inventory, needs, reports, custom logo, settings, and Audit History remain present.
+[ ] App reaches All changes synced.
 
-BRANDING
-[ ] Splash screen uses the familiar plum-purple branding.
-[ ] The header at the top of Home, Inventory, Quilts Needed, Reports, and Settings is plum-purple.
-[ ] Continue button and primary brand accents are plum rather than blue.
-[ ] Normal cards and report areas are mostly white, cream, gray, or very light lavender.
-[ ] The app no longer feels dominated by blue.
-
-COLOR MEANING
-[ ] Red appears only for shortages, negative values, errors, overdue items, failed sync, and delete warnings.
-[ ] Successful saves remain green.
-[ ] NOT SAVED YET remains muted gold.
-[ ] The current month still has its strong teal border, header band, and CURRENT MONTH badge.
-[ ] Short quantities remain bold and easy to see.
+HEADER TAGLINE
+[ ] Open Settings → Names, Wording & Tabs.
+[ ] Header Tagline appears beneath Program / Quilt Name.
+[ ] Enter a short test tagline and save.
+[ ] The new tagline appears beneath the app title at the top of Home.
+[ ] The same tagline remains visible on Inventory, Quilts Needed, Reports, and Settings.
+[ ] Reopen the app and confirm the custom tagline remains.
+[ ] Confirm the tagline synchronizes to the second approved device.
+[ ] Clear the field, save, and confirm the standard wording returns: Available quilts, requests, and quilts still to complete.
 
 REGRESSION
-[ ] Add Quilts still shows Received, Total Need, Distribute Now, then Continue.
-[ ] Confirm & Save remains visible until saving.
-[ ] YTD Quilts Distributed by Charity remains correct.
-[ ] Full, Compact, Custom, Calendar, Summary, Audit, and blank worksheet PDFs still open.
-[ ] No inventory, need, distribution, report calculation, Firebase path, or schema changed.
+[ ] Add Quilts still shows Received → Total Need → Distribute Now → Continue.
+[ ] Confirm & Save remains visible and says NOT SAVED YET until saved.
+[ ] Current Calendar month remains clearly highlighted.
+[ ] Short quantities remain bold.
+[ ] Yearly Numbers opens the yearly report directly.
+[ ] Quilts Distributed by Charity — YTD remains correct.
+[ ] Purple/plum branding remains on the splash and page headers.
+[ ] Red remains limited to shortages, errors, failed sync, overdue items, and destructive warnings.

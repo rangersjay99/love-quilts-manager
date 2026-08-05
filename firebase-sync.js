@@ -207,6 +207,7 @@ function normalizeSettings(source = {}) {
     appName: cleanString(source.appName || 'Love Quilts Manager'),
     itemName: cleanString(source.itemName || 'Love Quilts'),
     reportTitle: cleanString(source.reportTitle || ''),
+    headerTagline: cleanString(source.headerTagline || 'Available quilts, requests, and quilts still to complete'),
     splashTag: cleanString(source.splashTag || ''),
     splashMessage: cleanString(source.splashMessage || ''),
     futureMessage: cleanString(source.futureMessage || 'Designed to grow with your quilting needs.'),

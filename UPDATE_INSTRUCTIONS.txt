@@ -1,22 +1,21 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.56
+LOVE QUILTS MANAGER — UPDATE 7.8.57
 Released: August 5, 2026
 
 BEFORE UPDATING
-1. Export a current Backup from Settings.
-2. Confirm approved devices show All changes synced.
+1. Export a fresh Backup from Settings.
+2. Confirm the current app shows All changes synced.
 3. Download a ZIP backup of the GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_56.zip.
-2. Upload every extracted file to the GitHub repository main/root folder.
+1. Extract Love_Quilts_Manager_Update_7_8_57.zip.
+2. Upload every extracted file to the repository main/root folder.
 3. Replace files with the same names.
-4. Keep the existing icons and firebase-test folders.
+4. Keep the icons and firebase-test folders.
 5. Wait for GitHub Pages to publish.
-6. Completely close the app on each device.
-7. Open the laptop first and hard refresh with Ctrl + Shift + R.
-8. Confirm Update 7.8.56 and All changes synced.
-9. Open the remaining devices one at a time.
+6. Completely close and reopen the app on the laptop first.
+7. Confirm Update 7.8.57 and All changes synced.
+8. Open the other approved devices one at a time.
 
-IMPORTANT
-- This is a visual-only correction.
-- Add Quilts, Calendar calculations, Reports, Firebase paths, and the saved-data schema are unchanged.
+USE THE NEW SETTING
+Settings → Names, Wording & Tabs → Header Tagline.
+Enter the wording and press Save Names, Wording, and Tabs. Leaving it blank restores the standard tagline.

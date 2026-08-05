@@ -1,12 +1,8 @@
-LOVE QUILTS MANAGER UPDATE 7.8.56 — AUTOMATED TEST RESULTS
-Generated: August 5, 2026
+LOVE QUILTS MANAGER UPDATE 7.8.57 — AUTOMATED TEST RESULTS
 
-PASS — app.js version and cache references updated.
-PASS — manifest.json and manifest-v7.json parse correctly.
-PASS — Firebase synchronization file is byte-for-byte unchanged from Update 7.8.55.
-PASS — plum splash/header palette is present.
-PASS — neutral surface overrides are present.
-PASS — current-month badge/jump and bold Short markers remain present.
-PASS — Add Quilts guided flow and YTD charity report code remain present.
-
-This update changes presentation only and does not modify saved data or synchronization logic.
+PASS — app.js JavaScript syntax check.
+PASS — firebase-sync.js JavaScript syntax check.
+PASS — Header Tagline exists in local normalization, Firebase settings normalization, visible header rendering, settings loading, and settings saving.
+PASS — VM behavior test verified default wording, custom edit, visible rendering, local persistence, and blank-field fallback.
+PASS — Version, service-worker cache, manifest references, and app asset query references updated to 7.8.57.
+PASS — No inventory, needs, report calculations, Firebase paths, or collection logic changed.
