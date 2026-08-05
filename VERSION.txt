@@ -1,8 +1,10 @@
-Love Quilts Manager Update 7.8.52
+Love Quilts Manager Update 7.8.53
 Released: August 4, 2026
 
-Firebase Sync Label Hotfix
+Create Need & Distribute Now
 
-- Fixes the stuck Syncing/Waiting for Firebase confirmation state introduced by Update 7.8.51.
-- Normalizes legacy misspellings of Unassigned/Storage inside Firebase comparison logic.
-- Does not change inventory totals, charity needs, reports, audit records, Firebase paths, or the stored data schema.
+- Add Quilts can create a charity need and immediately distribute the incoming quilts in one save.
+- Example: 7 received against a need of 20 creates Need 20, Distributed 7, Still Needed 13, Added to Storage 0.
+- The review modal keeps Confirm & Save visible, displays NOT SAVED YET, warns before leaving, and shows success only after the save completes.
+- Keeps the 7.8.52 Firebase sync hotfix and the YTD charity distribution report.
+- No Firebase path or saved-data schema changes.

@@ -1,23 +1,21 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.52
+LOVE QUILTS MANAGER — UPDATE 7.8.53
 Released: August 4, 2026
 
-BEFORE UPDATING
-1. Do not add, edit, distribute, or delete records while devices still show Syncing.
-2. Keep one recent app backup available.
-3. Download a ZIP backup of the current GitHub repository.
+BEFORE UPLOADING
+1. Export a current app backup from Settings.
+2. Confirm the current device shows All changes synced.
+3. Download a ZIP backup of the GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_52.zip.
-2. Upload every extracted file to the repository main/root folder.
+1. Extract Love_Quilts_Manager_Update_7_8_53.zip.
+2. Upload every extracted file to the GitHub repository main/root folder.
 3. Replace files with the same names.
 4. Keep the existing icons and firebase-test folders.
 5. Wait for GitHub Pages to publish.
 
-AFTER PUBLISHING
-1. Close the app on every device.
-2. Open the laptop first and refresh the normal GitHub Pages address with Ctrl+Shift+R.
-3. Confirm the app shows Update 7.8.52 and reaches All changes synced.
-4. Open the remaining devices one at a time.
-5. Do not press Sync Now unless a device does not turn green after reopening.
-
-This hotfix changes Firebase comparison logic only. It does not initialize, replace, or erase shared inventory.
+AFTER UPLOADING
+1. Completely close the app on each device.
+2. Open the laptop first and use Ctrl + Shift + R.
+3. Confirm Update 7.8.53 and All changes synced.
+4. Test Create Need & Distribute Now with a small test entry, then delete/correct it if it was only a test.
+5. Open the other devices one at a time and confirm synchronization.

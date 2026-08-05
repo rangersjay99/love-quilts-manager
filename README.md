@@ -1,20 +1,14 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.52 — August 4, 2026
+Current release: Update 7.8.53 — August 4, 2026
 
-## Update 7.8.52 — Firebase Sync Label Hotfix
+## Update 7.8.53 — Create Need & Distribute Now
 
-- Fixes the stuck Syncing/Waiting for Firebase confirmation state introduced in 7.8.51.
-- Treats legacy spellings of Unassigned/Storage as the same canonical category during Firebase comparison.
-- Preserves all inventory, needs, reports, audit history, and account settings.
-
-## Update 7.8.51 — YTD Charity Report and No-Need Quilt Entry
-
-- Adds **Quilts Distributed by Charity — YTD** to the selected-year Reports summary.
-- Uses the actual distribution activity date, shows each charity total, and includes an overall YTD distributed total.
-- Includes the charity breakdown in the Full Report PDF and in Custom Reports that include Yearly or Distributed sections.
-- Adds **No current charity need** to Add Quilts. These entries are stored as **Unassigned/Storage** until a charity is chosen later.
-- Unassigned/Storage quilts count in Available in Storage and Quilts Made, but do not reduce another charity-and-size shortage.
+- Adds **Create Need & Distribute Now** to Add Quilts for incoming quilts that belong to a charity whose need has not yet been entered.
+- Creates the full charity need, records the incoming quilts as made, and immediately applies them as distributed in one protected save.
+- Example: 7 incoming quilts with a total need of 20 produce Need 20, Distributed 7, Still Needed 13, and Added to Storage 0.
+- Keeps **Confirm & Save** visible in a fixed footer, displays **NOT SAVED YET**, warns before leaving an unsaved review, and shows a success banner only after the records are saved.
+- Preserves Update 7.8.52 Firebase synchronization compatibility and the selected-year Quilts Distributed by Charity YTD report.
 - Existing Firebase production paths and saved-data schema remain unchanged.
 
 Copyright © 2026 Jay. Love Quilts Manager. All rights reserved.

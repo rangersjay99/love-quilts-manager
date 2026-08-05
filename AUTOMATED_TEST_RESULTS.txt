@@ -1,19 +1,24 @@
-LOVE QUILTS MANAGER UPDATE 7.8.52 — AUTOMATED VALIDATION
+LOVE QUILTS MANAGER UPDATE 7.8.53 — AUTOMATED VALIDATION
 
-Passed 15 of 15 checks.
+Passed all static, browser-logic, mobile-layout, and production-backup simulations.
 
-[PASS] app version 7.8.52
-[PASS] visible change log 7.8.52
-[PASS] script cache references 7.8.52
-[PASS] service worker cache 7.8.52
-[PASS] Firebase canonical storage label
-[PASS] Firebase charity list canonicalization
-[PASS] transactions, needs, and holds canonicalized
-[PASS] YTD charity report retained
-[PASS] no-current-need entry retained
-[PASS] no stale 7.8.51 cache refs in app.js
-[PASS] no stale 7.8.51 cache refs in sw.js
-[PASS] no stale 7.8.51 cache refs in manifest.json
-[PASS] no stale 7.8.51 cache refs in manifest-v7.json
-[PASS] legacy storage spellings converge
-[PASS] manifest JSON valid
+[PASS] JavaScript syntax: app.js and firebase-sync.js
+[PASS] app version and cache references 7.8.53
+[PASS] service worker and both manifests reference 7.8.53
+[PASS] Create Need & Distribute Now controls appear only for incoming quilts
+[PASS] Store as Unassigned/Storage and Create Need & Distribute Now are mutually exclusive
+[PASS] 7 received / need 20 preview shows distributed 7, still needed 13, storage 0
+[PASS] confirmation creates one need plus linked IN and OUT transactions
+[PASS] incoming transaction counts as Quilts Made
+[PASS] linked OUT transaction counts as Quilts Distributed and YTD charity distribution
+[PASS] combined entry leaves Available in Storage unchanged
+[PASS] Calendar renders Need 20, Sent 7, Still Needed 13
+[PASS] Audit History records all three created records
+[PASS] NOT SAVED YET and Confirm & Save All remain within a 390 x 844 mobile viewport
+[PASS] leaving an unsaved review displays a warning and can keep the modal open
+[PASS] success banner appears only after save completion
+[PASS] real August 4 production-backup simulation preserved existing records and totals, then added the linked records correctly
+[PASS] legacy Unassigned/Storage spelling normalized to the canonical label
+[PASS] Firebase code retains writeBatch commit behavior for transactions and needs
+
+Live Firestore credentials were not used in automated testing. Confirm All changes synced and second-device receipt after deployment.

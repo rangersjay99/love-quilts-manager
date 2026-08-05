@@ -1,21 +1,36 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.52 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.53 TEST CHECKLIST
 
-SYNC HOTFIX
-[ ] App opens and shows Update 7.8.52.
-[ ] Laptop changes from Syncing/Waiting for Firebase confirmation to All changes synced.
-[ ] Each additional device reaches All changes synced when opened one at a time.
-[ ] The charity list shows one Unassigned/Storage option, not duplicate spellings.
-[ ] No sign-in prompt appears for an already approved signed-in device.
+BASIC
+[ ] App opens and shows Update 7.8.53.
+[ ] Laptop reaches All changes synced.
+[ ] Other approved devices reach All changes synced one at a time.
+[ ] Existing inventory, needs, reports, custom logo, and settings remain present.
 
-DATA SAFETY
-[ ] Existing inventory and needs remain present.
-[ ] Home totals are unchanged from before the update.
-[ ] Audit History remains present.
-[ ] No deleted Unassigned/Storage test transaction returns to operational totals.
+CREATE NEED & DISTRIBUTE NOW
+[ ] Tap Add Quilts and select a real charity and size.
+[ ] Enter 7 quilts received.
+[ ] Select Create Need & Distribute Now.
+[ ] Enter a total need of 20, month needed, and distribution date.
+[ ] Preview says: made/distributed 7, need 20, still needed 13, added to storage 0.
+[ ] Review screen shows NOT SAVED YET.
+[ ] Confirm & Save All remains visible without scrolling to the bottom.
+[ ] Closing or going back before confirmation warns that the entry is unsaved.
+[ ] After confirmation, a green success banner appears.
+[ ] Calendar shows Need 20, Sent 7, Still Needed 13.
+[ ] Quilts Made increases by 7.
+[ ] Quilts Distributed increases by 7.
+[ ] Available in Storage does not increase.
+[ ] Audit History contains the incoming transaction, distribution transaction, and charity need.
+[ ] A second device receives all linked records together.
 
-7.8.51 FEATURES
-[ ] Reports shows Quilts Distributed by Charity — YTD.
-[ ] The YTD overall total matches Quilts Distributed for the selected year.
-[ ] Add Quilts offers No current charity need.
-[ ] That option stores the entry as Unassigned/Storage.
-[ ] A no-need entry increases Available in Storage and Quilts Made without reducing another charity shortage.
+OTHER ADD QUILTS PATHS
+[ ] Normal Add Quilts still adds to the selected charity inventory.
+[ ] Store as Unassigned/Storage still works and does not reduce a charity shortage.
+[ ] Create Need & Distribute Now and Store as Unassigned/Storage cannot both be selected.
+[ ] Love Quilts Out, Adjust, and Set Current Count remain unchanged.
+
+REPORTS AND REGRESSION
+[ ] Yearly Numbers still opens the Yearly Quilt Summary directly.
+[ ] Quilts Distributed by Charity YTD includes the immediate distribution under the actual charity and date.
+[ ] Full, Compact, Custom, Calendar, Home Summary, Audit, and blank worksheet PDFs still open.
+[ ] iPhone print/PDF behavior remains unchanged from 7.8.52.
