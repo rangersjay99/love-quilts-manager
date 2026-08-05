@@ -1,10 +1,6 @@
-Love Quilts Manager Update 7.8.50
-Released: August 1, 2026
+Love Quilts Manager Update 7.8.51
+Released: August 4, 2026
 
-iPhone PDF Printing Correction.
+YTD Charity Report and No-Need Quilt Entry.
 
-Changes:
-- Replaces native iPhone print-dialog calls with direct PDF output.
-- Adds dedicated Home Summary and 12-Month Calendar PDFs.
-- Routes Full, Compact, Custom, and Audit print actions through PDF output.
-- Leaves all Update 7.8.49 accuracy rules and verified totals unchanged.
+Adds a selected-year Quilts Distributed by Charity YTD report using actual distribution dates, plus a No current charity need option that records new quilts in Unassigned/Storage.

@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 31, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.50
+IMPLEMENTED THROUGH UPDATE 7.8.51
+
+- Update 7.8.51 adds a selected-year Quilts Distributed by Charity YTD breakdown using actual distribution dates and adds a No current charity need entry option that stores quilts under Unassigned/Storage without changing the data schema.
 
 - Update 7.8.50 replaces unreliable native iPhone print-dialog calls with direct PDF output for Home Summary, Calendar, Full, Compact, Custom, and Audit reports while preserving all verified 7.8.49 totals and data rules.
 

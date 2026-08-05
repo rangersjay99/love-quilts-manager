@@ -1,12 +1,20 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.50 AUTOMATED CHECKS
-Released: August 1, 2026
+LOVE QUILTS MANAGER UPDATE 7.8.51 — AUTOMATED VALIDATION
+Tested: August 4, 2026
 
-PASS — JavaScript syntax check.
-PASS — Version and service-worker cache references updated to 7.8.50.
-PASS — Native print actions overridden with PDF-output functions.
-PASS — Home Summary, Calendar, Custom Report, and Audit PDF builders present.
-PASS — Existing Full and Compact PDF builders retained.
-PASS — Update 7.8.49 data-accuracy correction code retained unchanged.
-PASS — ZIP archive integrity check.
+PASSED
+- app.js JavaScript syntax validation.
+- Update version, service-worker cache, manifest, and script cache references all use 7.8.51.
+- Browser DOM test completed with no page-script errors.
+- Sample distribution test correctly netted a correction and excluded an unlinked Unassigned/Storage OUT:
+  Alpha Charity 2 + Beta Charity 2 = Overall YTD 4.
+- No current charity need option selected and locked Unassigned/Storage.
+- Saving a No current charity need entry created an Unassigned/Storage IN transaction.
+- The saved storage entry increased Quilts Made but did not reduce an exact charity-and-size shortage.
+- Full Report PDF was generated and contained the YTD charity section and total.
+- Custom Report items included the YTD charity breakdown.
+- Current August 4 backup loaded with no script errors.
+- Current backup YTD distribution results: Grassroots 32, SHP 30, Project Linus 26, St. Agnes 20; overall 108.
 
-Physical iPhone testing is still required because the native print-dialog failure is device-specific.
+DEVICE TESTING STILL REQUIRED
+- Run TEST_CHECKLIST.txt on the laptop and iPhone after GitHub Pages publishes.
+- Confirm Firebase synchronization remains green before and after one test entry.

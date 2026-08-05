@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.50';
+const VERSION='7.8.51';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1532,6 +1532,12 @@ function makeFullPDF(){
   addParagraph(`${stats.stillToMake} still to be made = ${stats.remainingCalendarNeed} remaining calendar need - ${stats.inventoryApplied} inventory matching the exact charity and size. ${stats.unmatchedInventory||0} other current quilts remain in storage but do not reduce this exact-match shortage.`,{size:8.2,after:3});
   addParagraph(`Projected year-end made = ${stats.made} made so far + ${stats.stillToMake} still to be made = ${stats.projectedYearEndMade} | Current usable inventory: ${stats.usableInventory} | Charities Served: ${stats.charitiesServed} | Lifetime Quilts Distributed: ${stats.lifetimeDistributed}`,{size:8.5,after:9});
 
+  const ytdByCharity=lqm7851DistributionByCharity(stats.year);
+  beginSection(`QUILTS DISTRIBUTED BY CHARITY - ${stats.year} YTD`);
+  addParagraph(`Through ${fmtDate(ytdByCharity.cutoff)} | Overall YTD Distributed: ${ytdByCharity.total}`,{size:8.5,bold:true,after:5});
+  if(!ytdByCharity.rows.length)addParagraph('No distributed quilts recorded for this period.');
+  ytdByCharity.rows.forEach(row=>addParagraph(`${row.charity}: ${row.amount}`,{indent:16,after:3}));
+
   beginSection(`${data.homeStorageLabel.toUpperCase()} AND ${data.homeNeededLabel.toUpperCase()}`);
   const comparisonRows=reportComparisonRows(),diffColor=n=>n>0?'0.18 0.49 0.29':n<0?'0.71 0.23 0.28':'';
   const drawComparisonHeader=()=>{
@@ -1677,9 +1683,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.50 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.51 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.50',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.51',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2326,7 +2332,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.49';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.51';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -2919,3 +2925,115 @@ printAuditHistory=function(){
   }catch(error){console.error(error);notice('auditNotice','The Audit History PDF could not be created. Refresh and try again.')}
 };
 // ===== End Update 7.8.50 =====
+
+
+// ===== Love Quilts Manager Update 7.8.51 =====
+// Adds a clear no-current-need inventory entry path and a selected-year
+// Quilts Distributed by Charity YTD report. Existing data paths and schemas
+// remain unchanged; Unassigned/Storage continues to use exact-match rules.
+
+const LQM_UNASSIGNED_STORAGE='Unassigned/Storage';
+
+function lqm7851NormalizeStorageLabels(target){
+  if(!target)return target;
+  const canonical=value=>lqm7849IsUnassignedStorageCharity(value)?LQM_UNASSIGNED_STORAGE:value;
+  target.charities=unique((target.charities||[]).map(canonical));
+  (target.transactions||[]).forEach(record=>{record.charity=canonical(record.charity)});
+  (target.needs||[]).forEach(record=>{record.charity=canonical(record.charity)});
+  (target.holds||[]).forEach(record=>{record.charity=canonical(record.charity)});
+  return target;
+}
+const lqm7851BaseNormalizeData=normalizeData;
+normalizeData=function(source={}){return lqm7851NormalizeStorageLabels(lqm7851BaseNormalizeData(source))};
+lqm7851NormalizeStorageLabels(data);
+if(typeof lqm7847AuditBaseline!=='undefined')lqm7847AuditBaseline=lqmAuditSnapshot();
+if(typeof lqm7847AuditHistoryBaseline!=='undefined')lqm7847AuditHistoryBaseline=clone(data.auditLog||[]);
+
+function lqm7851CanonicalStorageCharity(){return LQM_UNASSIGNED_STORAGE}
+
+function lqm7851EnsureStorageOption(){
+  const select=el('txCharity');if(!select)return LQM_UNASSIGNED_STORAGE;
+  let name=lqm7851CanonicalStorageCharity();
+  if(!data.charities.some(item=>item===name))data.charities.push(name);
+  [...select.options].filter(option=>lqm7849IsUnassignedStorageCharity(option.value)&&option.value!==name).forEach(option=>option.remove());
+  if(![...select.options].some(option=>option.value===name))select.add(new Option(name,name));
+  return name;
+}
+function toggleNoCurrentNeed(force){
+  const checkbox=el('txNoCurrentNeed'),select=el('txCharity'),wrap=el('txNoCurrentNeedWrap');if(!checkbox||!select)return;
+  if(typeof force==='boolean')checkbox.checked=force;
+  const active=checkbox.checked&&mode==='IN';
+  wrap?.classList.toggle('is-active',active);
+  if(active){
+    if(!select.dataset.previousCharity&&!lqm7849IsUnassignedStorageCharity(select.value))select.dataset.previousCharity=select.value||'';
+    const storage=lqm7851EnsureStorageOption();select.value=storage;select.disabled=true;
+  }else{
+    select.disabled=false;
+    if(lqm7849IsUnassignedStorageCharity(select.value))select.value=select.dataset.previousCharity||'';
+    delete select.dataset.previousCharity;
+  }
+}
+function lqm7851SyncNoNeedVisibility(){
+  const wrap=el('txNoCurrentNeedWrap'),checkbox=el('txNoCurrentNeed');if(!wrap||!checkbox)return;
+  const allowed=mode==='IN';wrap.classList.toggle('is-hidden',!allowed);
+  if(!allowed&&checkbox.checked)toggleNoCurrentNeed(false);
+}
+const lqm7851BaseRefreshSelects=refreshSelects;
+refreshSelects=function(){
+  lqm7851BaseRefreshSelects();
+  if(el('txNoCurrentNeed')?.checked){const storage=lqm7851EnsureStorageOption();el('txCharity').value=storage;el('txCharity').disabled=true}
+};
+const lqm7851BaseSetMode=setMode;
+setMode=function(nextMode){lqm7851BaseSetMode(nextMode);lqm7851SyncNoNeedVisibility()};
+const lqm7851BaseOpenAddQuilts=openAddQuilts;
+openAddQuilts=function(){lqm7851BaseOpenAddQuilts();toggleNoCurrentNeed(false);lqm7851SyncNoNeedVisibility()};
+const lqm7851BaseCancelTxEdit=cancelTxEdit;
+cancelTxEdit=function(){lqm7851BaseCancelTxEdit();toggleNoCurrentNeed(false);lqm7851SyncNoNeedVisibility()};
+const lqm7851BaseEditTx=editTx;
+editTx=function(id){
+  lqm7851BaseEditTx(id);
+  const record=data.transactions.find(item=>item.id===id);
+  if(record?.type==='IN'&&lqm7849IsUnassignedStorageCharity(record.charity)){toggleNoCurrentNeed(true)}else{toggleNoCurrentNeed(false)}
+  lqm7851SyncNoNeedVisibility();
+};
+
+function lqm7851DistributionCutoff(year){
+  const selected=Number(year)||Number(monthNow().slice(0,4)),current=Number(today().slice(0,4));
+  if(selected===current)return today();
+  return `${selected}-12-31`;
+}
+function lqm7851DistributionByCharity(year=selectedStatisticsYear()){
+  const selected=Number(year)||Number(monthNow().slice(0,4)),cutoff=lqm7851DistributionCutoff(selected),totals={};
+  data.transactions.forEach(record=>{
+    if(yearOf(record.date)!==selected||String(record.date||'')>cutoff)return;
+    const amount=distributionActivityValue(record);if(!amount||!record.charity)return;
+    totals[record.charity]=(totals[record.charity]||0)+amount;
+  });
+  const rows=Object.entries(totals).filter(([,amount])=>amount>0).map(([charity,amount])=>({charity,amount:Math.round(amount)})).sort((a,b)=>b.amount-a.amount||a.charity.localeCompare(b.charity));
+  return{year:selected,cutoff,rows,total:rows.reduce((sum,row)=>sum+row.amount,0)};
+}
+function lqm7851RenderDistributionByCharity(){
+  const target=el('reportDistributionByCharity'),total=el('reportDistributionByCharityTotal'),range=el('reportDistributionByCharityRange');if(!target||!total)return;
+  const report=lqm7851DistributionByCharity(selectedStatisticsYear());
+  total.textContent=String(report.total);
+  if(range)range.textContent=`${report.year} through ${fmtDate(report.cutoff)} · Uses the actual distribution activity date`;
+  target.innerHTML=report.rows.length?report.rows.map(row=>`<div class="ytd-charity-row"><span>${esc(row.charity)}</span><span>${row.amount}</span></div>`).join(''):`<div class="empty">No quilts distributed in ${report.year} through ${fmtDate(report.cutoff)}.</div>`;
+}
+const lqm7851BaseRenderReports=renderReports;
+renderReports=function(){lqm7851BaseRenderReports();lqm7851RenderDistributionByCharity()};
+
+const lqm7851BaseCustomReportItems=lqm7850CustomReportItems;
+lqm7850CustomReportItems=function(options){
+  const items=lqm7851BaseCustomReportItems(options),sections=new Set(options.sections||[]);
+  if(sections.has('yearly')||sections.has('distributed')){
+    const report=lqm7851DistributionByCharity(lqmCustomReportYear(options));
+    items.push({type:'section',text:`${report.year} Quilts Distributed by Charity YTD`});
+    items.push({text:`Through ${fmtDate(report.cutoff)} | Overall YTD Distributed: ${report.total}`,bold:true});
+    if(!report.rows.length)items.push({text:'No distributed quilts are recorded for this period.'});
+    report.rows.forEach(row=>items.push({text:`${row.charity}: ${row.amount}`,after:3}));
+  }
+  return items;
+};
+
+document.addEventListener('DOMContentLoaded',()=>{lqm7851SyncNoNeedVisibility();lqm7851RenderDistributionByCharity()},{once:true});
+// ===== End Update 7.8.51 =====

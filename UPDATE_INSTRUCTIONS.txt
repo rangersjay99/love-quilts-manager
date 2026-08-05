@@ -1,19 +1,12 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.50
-Released: August 1, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.51
+Released: August 4, 2026
 
-BEFORE UPDATING
-1. Export a current app backup.
-2. Confirm Update 7.8.49 totals are still correct.
-3. Download a ZIP backup of the current GitHub repository.
+1. Export a current backup from Settings.
+2. Confirm approved devices show green synchronization.
+3. Extract Love_Quilts_Manager_Update_7_8_51.zip.
+4. Upload every extracted file to the GitHub repository main/root folder and replace files with the same names.
+5. Keep the icons and firebase-test folders.
+6. After GitHub Pages publishes, close and reopen the app on each device.
+7. Confirm the app shows Update 7.8.51, then run TEST_CHECKLIST.txt.
 
-UPLOAD
-1. Extract this ZIP.
-2. Upload every extracted file to the repository root and replace matching files.
-3. Keep the icons and firebase-test folders.
-4. Wait for GitHub Pages to publish.
-5. Close and reopen the installed iPhone app. Refresh once if 7.8.49 remains cached.
-
-IMPORTANT
-- This update changes report output only.
-- It does not migrate, clear, or recalculate stored data.
-- Do not create the shared inventory again.
+Do not initialize or replace the shared Firebase inventory.
