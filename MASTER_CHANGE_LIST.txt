@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 31, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.55
+IMPLEMENTED THROUGH UPDATE 7.8.56
+
+- Update 7.8.56 restores plum-purple branding on the splash and page headers, reduces blue across normal cards and reports, and keeps the 7.8.55 Calendar clarity improvements unchanged.
 
 - Update 7.8.55 reserves red/pink for problems, moves normal backgrounds to teal/blue/sage/neutral colors, strengthens the current-month Calendar highlight, adds a Current Month badge and jump button, and makes Short quantities bold.
 

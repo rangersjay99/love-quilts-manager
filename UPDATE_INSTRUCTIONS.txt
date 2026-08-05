@@ -1,22 +1,22 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.55
+LOVE QUILTS MANAGER — UPDATE 7.8.56
 Released: August 5, 2026
 
 BEFORE UPDATING
-1. In the app, export a current Backup from Settings.
-2. Confirm approved devices show all changes synced.
-3. Download a ZIP backup of the current GitHub repository.
+1. Export a current Backup from Settings.
+2. Confirm approved devices show All changes synced.
+3. Download a ZIP backup of the GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_55.zip.
+1. Extract Love_Quilts_Manager_Update_7_8_56.zip.
 2. Upload every extracted file to the GitHub repository main/root folder.
 3. Replace files with the same names.
 4. Keep the existing icons and firebase-test folders.
 5. Wait for GitHub Pages to publish.
 6. Completely close the app on each device.
 7. Open the laptop first and hard refresh with Ctrl + Shift + R.
-8. Confirm Update 7.8.55 and All changes synced.
+8. Confirm Update 7.8.56 and All changes synced.
 9. Open the remaining devices one at a time.
 
 IMPORTANT
-- This update does not change Firebase collection paths or the saved-data schema.
-- The working Add Quilts flow and Reports calculations remain unchanged.
+- This is a visual-only correction.
+- Add Quilts, Calendar calculations, Reports, Firebase paths, and the saved-data schema are unchanged.

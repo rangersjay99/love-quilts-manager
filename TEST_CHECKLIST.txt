@@ -1,33 +1,27 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.55 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.56 TEST CHECKLIST
 
 BASIC
-[ ] App opens and shows Update 7.8.55.
+[ ] App opens and shows Update 7.8.56.
 [ ] Existing inventory, needs, reports, settings, custom logo, and Audit History remain present.
-[ ] Laptop reaches All changes synced before opening other devices.
-[ ] Other approved devices also reach All changes synced.
+[ ] Laptop and all approved devices reach All changes synced.
+
+BRANDING
+[ ] Splash screen uses the familiar plum-purple branding.
+[ ] The header at the top of Home, Inventory, Quilts Needed, Reports, and Settings is plum-purple.
+[ ] Continue button and primary brand accents are plum rather than blue.
+[ ] Normal cards and report areas are mostly white, cream, gray, or very light lavender.
+[ ] The app no longer feels dominated by blue.
 
 COLOR MEANING
-[ ] Normal page backgrounds are neutral gray, white, teal, blue, or sage—not red or pink.
-[ ] Standard buttons and informational panels do not look like warnings.
-[ ] Red remains visible for actual shortages, negative values, errors, overdue needs, and Delete warnings.
-[ ] NOT SAVED YET remains a muted gold reminder, not a red error.
+[ ] Red appears only for shortages, negative values, errors, overdue items, failed sync, and delete warnings.
 [ ] Successful saves remain green.
-
-CURRENT MONTH
-[ ] The current Calendar month has a thick teal border.
-[ ] The current month header has a pale blue/teal band.
-[ ] The CURRENT MONTH label is immediately visible.
-[ ] Jump to Current Month scrolls directly to the current month on phone, tablet, and desktop.
-[ ] Current-month styling does not hide Covered, Shortage, Partial, or Distributed status.
-
-SHORT QUANTITY
-[ ] The monthly Short number is larger and bold.
-[ ] Short quantities inside charity details are bold.
-[ ] A zero Short value is not displayed as a red warning.
+[ ] NOT SAVED YET remains muted gold.
+[ ] The current month still has its strong teal border, header band, and CURRENT MONTH badge.
+[ ] Short quantities remain bold and easy to see.
 
 REGRESSION
 [ ] Add Quilts still shows Received, Total Need, Distribute Now, then Continue.
-[ ] Confirm & Save remains visible and shows NOT SAVED YET until saved.
-[ ] YTD Quilts Distributed by Charity still displays correct totals.
+[ ] Confirm & Save remains visible until saving.
+[ ] YTD Quilts Distributed by Charity remains correct.
 [ ] Full, Compact, Custom, Calendar, Summary, Audit, and blank worksheet PDFs still open.
-[ ] No inventory, need, distribution, report calculation, or Firebase schema changed.
+[ ] No inventory, need, distribution, report calculation, Firebase path, or schema changed.

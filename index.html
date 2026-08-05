@@ -4,27 +4,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#184f58">
+<meta name="theme-color" content="#4f2859">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Love Quilts Manager">
-<link rel="manifest" href="manifest-v7.json?v=7.8.55">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.55">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.55">
+<link rel="manifest" href="manifest-v7.json?v=7.8.56">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/love-quilts-manager-180-v7818.png?v=7.8.56">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/love-quilts-manager-192-v7818.png?v=7.8.56">
 <title>Love Quilts Manager</title>
 <style>
 :root{
-  --plum:#236f75;--plum-dark:#184f58;--teal:#2f8f8a;--green:#2f7d4a;
-  --red:#b53b47;--gold:#c99026;--blue:#2563a6;--ink:#25202a;
-  --muted:#66737a;--bg:#f3f7f8;--card:#fff;--line:#d7e2e5;--soft:#eaf2f3;
-  --rose:#3f7fa8;--lavender:#6f8fa2;--cream:#fffaf5;
+  --plum:#6d3a78;--plum-dark:#4f2859;--teal:#2f8f8a;--green:#2f7d4a;
+  --red:#b53b47;--gold:#c99026;--blue:#55758c;--ink:#25202a;
+  --muted:#706a73;--bg:#f7f5f3;--card:#fff;--line:#e2dde2;--soft:#f3f0f2;
+  --rose:#7a4b86;--lavender:#9b78ad;--cream:#fffaf5;
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
 body{margin:0;padding:0 0 calc(112px + env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button,input,select,textarea{font:inherit}
 button{touch-action:manipulation}
-header{position:sticky;top:0;z-index:20;padding:calc(12px + env(safe-area-inset-top)) 16px 13px;color:#fff;background:linear-gradient(135deg,var(--plum-dark),var(--blue));box-shadow:0 3px 14px rgba(24,79,88,.20)}
+header{position:sticky;top:0;z-index:20;padding:calc(12px + env(safe-area-inset-top)) 16px 13px;color:#fff;background:linear-gradient(135deg,var(--plum),var(--plum-dark));box-shadow:0 3px 14px rgba(55,30,60,.18)}
 header .org{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.86}
 header h1{margin:2px 0 0;font-size:25px}
 header p{margin:4px 0 0;font-size:13px;opacity:.88}
@@ -490,6 +490,42 @@ header p{grid-area:subtitle;align-self:start}
 .home-section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}.current-month-jump{min-height:36px;padding:7px 10px;border:1px solid #9fcbd2;border-radius:10px;background:#edf7f9;color:#1f6570;font-size:11px;font-weight:900;cursor:pointer}.current-month-jump:hover,.current-month-jump:focus{background:#dff1f5;outline:2px solid rgba(35,127,138,.18)}
 @media(max-width:520px){.home-section-heading{align-items:flex-start}.current-month-jump{max-width:145px;line-height:1.15}}
 
+/* Update 7.8.56 — restored plum branding with quieter neutral content areas */
+body{background:#f7f5f3}
+header{background:linear-gradient(135deg,var(--plum),var(--plum-dark));box-shadow:0 3px 14px rgba(55,30,60,.18)}
+.card,.settings-group,.report-group{box-shadow:0 2px 10px rgba(55,30,60,.055)}
+tfoot td{background:#f1edf2;border-top-color:var(--plum)}
+.metric-add-button.distribute-button{border-color:rgba(109,58,120,.30);background:rgba(109,58,120,.10);color:var(--plum-dark)}
+.metric-add-button:hover,.metric-add-button:focus{background:rgba(109,58,120,.14);outline-color:rgba(109,58,120,.13)}
+.entry-review-distribution-note{background:#f5f1f6;color:var(--plum-dark);border-color:#ded1e1}
+.future-modules-badge{border-color:#ded1e1;background:#f7f3f8;color:var(--plum-dark)}
+.future-module-card.show,.future-module-card.collection,.future-module-card.analytics{background:#faf8fa;border-left-color:var(--plum)}
+.future-module-icon{background:rgba(109,58,120,.10)}
+.future-module-status{background:rgba(109,58,120,.08);color:var(--plum-dark)}
+.splash{background:radial-gradient(circle at 18% 18%,rgba(109,58,120,.08),transparent 27%),radial-gradient(circle at 82% 72%,rgba(47,143,138,.08),transparent 30%),repeating-linear-gradient(45deg,rgba(155,120,173,.035) 0 1px,transparent 1px 24px),var(--cream)}
+.splash-app-logo{box-shadow:0 8px 22px rgba(79,40,89,.16)}
+.continue-btn{background:var(--plum);box-shadow:0 7px 18px rgba(79,40,89,.22)}
+.splash-growth-button:hover,.splash-growth-button:focus{background:rgba(109,58,120,.08)}
+.home-growth-button{border-color:rgba(109,58,120,.25);background:#faf8fa}.home-growth-button:hover,.home-growth-button:focus{background:#f3eef4;border-color:rgba(109,58,120,.42)}
+.settings-overview{border-color:#e0d9df;background:#faf8f8}
+.settings-group[open]>summary{background:#f5f2f4}
+.report-group>summary::after{color:var(--plum)}
+.mode-row .active-set{background:var(--plum);border-color:var(--plum)}
+.yearly-stat.yearly-primary{border-color:#d9cddd;background:#faf7fa}
+.yearly-stat.year-end-projection{background:#f1edf3;border-color:var(--plum);box-shadow:0 3px 10px rgba(79,40,89,.12)}
+.yearly-formula-note{background:#f7f4f7;color:#514a52}
+#reports table tbody tr:nth-child(even) td,#meetingReport table tbody tr:nth-child(even) td,.home-summary-report table tbody tr:nth-child(even) td{background:#f7f5f6}
+#reportAdjustments .report-shaded-item:nth-child(even){background:#f7f5f6}
+.newsletter-highlights>div,.newsletter-year-grid>div{background:#f8f6f7;border-color:#ded9de}
+.newsletter-year-grid .projection{background:#f1edf3;border-color:#8b6795}
+.newsletter-formula{background:#f7f4f7}
+.newsletter-report th{background:#f1edf2;color:var(--plum-dark)}
+.blank-inventory-table thead th,.blank-needs-table thead th,.audit-print-sheet th{background:#f1edf2}
+.no-current-need-option{border-color:#dfd9df;background:#faf8f8}.no-current-need-option.is-active{border-color:var(--plum);background:#f3eef4}
+.incoming-action-wrap{background:#faf9f8}
+.entry-review-save-bar{box-shadow:0 -7px 18px rgba(79,40,89,.10)}
+.current-month-jump{border-color:#9fcbd2;background:#edf7f9;color:#1f6570}
+
 </style>
 </head>
 <body>
@@ -514,7 +550,7 @@ header p{grid-area:subtitle;align-self:start}
 <div id="splash" class="splash" role="dialog" aria-modal="true" aria-label="Quilt manager welcome screen">
   <div class="splash-panel">
     <div id="splashOrg" class="splash-org">Faithful Circle Quilters</div>
-    <img id="splashAppLogo" class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.55" alt="Patchwork heart logo">
+    <img id="splashAppLogo" class="splash-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.56" alt="Patchwork heart logo">
     <div id="splashItemName" class="splash-title">Love Quilts</div>
     <div id="splashManager" class="splash-manager">Manager</div>
     <div id="splashTag" class="splash-tag">MADE WITH LOVE, SHARED WITH CARE</div>
@@ -528,7 +564,7 @@ header p{grid-area:subtitle;align-self:start}
 </div>
 
 <header>
-  <img id="headerAppLogo" class="header-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.55" alt="Organization logo">
+  <img id="headerAppLogo" class="header-app-logo" src="icons/love-quilts-manager-512-v7818.png?v=7.8.56" alt="Organization logo">
   <div id="headerOrg" class="org">Faithful Circle Quilters</div>
   <h1 id="headerAppName">Love Quilts Manager</h1>
   <p id="headerSubtitle">Available quilts, requests, and quilts still to complete</p>
@@ -882,7 +918,7 @@ one quilt at a time."></textarea>
 </div><div class="card">
 <h2>Custom Logo</h2>
 <p class="small">Choose a logo for the splash screen, app header, and printable reports. The app safely resizes the image before saving and synchronizing it.</p>
-<div class="custom-logo-panel"><img id="customLogoPreview" class="custom-logo-preview" src="icons/love-quilts-manager-512-v7818.png?v=7.8.55" alt="Current logo preview"><div><div id="customLogoStatus" class="custom-logo-status">The original Love Quilts logo is active.</div><div class="custom-logo-actions"><button class="primary" type="button" onclick="document.getElementById('customLogoFile').click()">Choose Custom Logo</button><button class="ghost" type="button" onclick="resetCustomLogo()">Restore Original Logo</button></div><input id="customLogoFile" type="file" hidden accept="image/png,image/jpeg,image/webp" onchange="handleCustomLogoUpload(event)"><div id="customLogoNotice" class="notice"></div></div></div>
+<div class="custom-logo-panel"><img id="customLogoPreview" class="custom-logo-preview" src="icons/love-quilts-manager-512-v7818.png?v=7.8.56" alt="Current logo preview"><div><div id="customLogoStatus" class="custom-logo-status">The original Love Quilts logo is active.</div><div class="custom-logo-actions"><button class="primary" type="button" onclick="document.getElementById('customLogoFile').click()">Choose Custom Logo</button><button class="ghost" type="button" onclick="resetCustomLogo()">Restore Original Logo</button></div><input id="customLogoFile" type="file" hidden accept="image/png,image/jpeg,image/webp" onchange="handleCustomLogoUpload(event)"><div id="customLogoNotice" class="notice"></div></div></div>
 </div><div class="card">
 <h2>Manage Lists</h2><p class="small">Add, rename, or remove charity and quilt-size choices. Renaming keeps every present quantity, date, need, and distribution connected to the new name. Items already used in records cannot be deleted.</p>
 <h3>Charities</h3>
@@ -977,7 +1013,7 @@ one quilt at a time."></textarea>
     <summary><b>Change Log & About</b><span>See the newest updates, full history, app version, and license.</span></summary>
     <div class="settings-group-body"><div class="card" id="changeLogCard">
 <h2>Change Log</h2>
-<div class="change-log-current"><b>Current version: Update 7.8.55</b><span class="small">Meaningful Colors &amp; Clearer Calendar · August 5, 2026</span></div><div class="change-log-entry"><h4>7.8.55</h4><p>Reserves red and pink for shortages, errors, and destructive warnings. Normal screens now use teal, blue, sage, and neutral backgrounds. The current Calendar month has a stronger teal frame, highlighted header, CURRENT MONTH badge, and a quick jump button. Short quantities are larger and bold.</p></div><div class="change-log-entry"><h4>7.8.54</h4><p>Simplifies Create Need &amp; Distribute into a clear sequence: Quilts Received, Total Quilts Needed, and Quilts to Distribute Now, followed by Continue. The distributed amount can differ from the received amount; any difference is correctly added to or taken from matching charity-and-size storage.</p></div><div class="change-log-entry"><h4>7.8.53</h4><p>Add Quilts can now create a charity need and immediately distribute the incoming quilts in one protected save. The Calendar shows the full need, quantity sent, and balance still needed. Review screens keep Confirm &amp; Save visible, show NOT SAVED YET, warn before leaving, and display a clear success banner only after saving.</p></div><div class="change-log-entry"><h4>7.8.52</h4><p>Fixes the shared-device sync indicator introduced by 7.8.51. Firebase now treats the older misspelled Unassigned/Storage label and the corrected label as the same category, allowing every device to complete verification without changing inventory totals or deleting records.</p></div><div class="change-log-entry"><h4>7.8.51</h4><p>Adds a selected-year Quilts Distributed by Charity — YTD breakdown using the actual distribution activity date, with charity totals and an overall total. Add Quilts now also includes a No current charity need option that stores the entry under Unassigned/Storage without changing existing inventory, planning, or Firebase data rules.</p></div><div class="change-log-entry"><h4>7.8.50</h4><p>Replaces every native iPhone print-dialog action with the same direct PDF-opening method already proven to work on iPhone. Home Summary, Calendar, Full, Compact, Custom, and Audit reports now open PDFs for printing without changing any totals or records.</p></div><div class="change-log-entry"><h4>7.8.49</h4><p>Removes the four historical deleted Unassigned/Storage test records from every operational total and retains them only in Audit History. Active Unassigned/Storage inventory remains countable, while an unlinked storage removal cannot be counted as a charity distribution.</p></div><div class="change-log-entry"><h4>7.8.48</h4><p>Changes the blank inventory-and-needs worksheet to a reliable printable PDF and integrates the custom logo beside the title so it displays consistently on every main tab.</p></div><div class="change-log-entry"><h4>7.8.47</h4><p>Removes the remaining asynchronous iPhone print delay, counts active Unassigned/Storage records, keeps deleted records out of every operational total while retaining an Audit History, adds a printable blank inventory-and-needs worksheet, and adds a synchronized custom logo.</p></div><div class="change-log-entry"><h4>7.8.46</h4><p>Uses only inventory matching the exact charity and quilt size when calculating Quilts Still to Be Made. Other usable inventory remains in storage and is shown separately, but it does not automatically reduce demand for another size.</p></div><div class="change-log-entry"><h4>7.8.45</h4><p>Counts current usable inventory pooled across sizes within each charity toward the remaining calendar need because the guild may swap sizes within a charity. Unassigned/Storage test activity is excluded from official made, distributed, storage, and yearly totals.</p></div><div class="change-log-entry"><h4>7.8.44</h4><p>Updated the Yearly Quilt Summary to clearly show the guild’s projected total quilts made by year end. The projection equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains a separate activity total.</p></div><div class="change-log-entry"><h4>7.8.43</h4><p>Improved iPhone and iPad printing with a prepared print snapshot and added Custom Newsletter Reports with selectable content and saved presets.</p></div><div class="change-log-entry"><h4>7.8.41</h4><p>Fixed Firebase synchronization for the customizable Future Modules message and bottom navigation labels, including existing customized wording saved before this update.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.40</h4><p>Added a customizable Future Modules message on the splash and Home screens, plus customizable wording for all five bottom navigation tabs. Icons, colors, order, and destinations remain fixed.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.39</h4><p>The Reports headline summary cards now match the Home screen cards in size, spacing, three-card layout, buttons, and tap behavior.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div>
+<div class="change-log-current"><b>Current version: Update 7.8.56</b><span class="small">Restored Plum Branding · August 5, 2026</span></div><div class="change-log-entry"><h4>7.8.56</h4><p>Restores the original plum-purple branding on the splash screen and page headers, reduces blue across normal cards and reports, and keeps red reserved for genuine shortages, errors, and warnings. Calendar clarity improvements from 7.8.55 remain unchanged.</p></div><div class="change-log-entry"><h4>7.8.55</h4><p>Reserves red and pink for shortages, errors, and destructive warnings. Normal screens now use teal, blue, sage, and neutral backgrounds. The current Calendar month has a stronger teal frame, highlighted header, CURRENT MONTH badge, and a quick jump button. Short quantities are larger and bold.</p></div><div class="change-log-entry"><h4>7.8.54</h4><p>Simplifies Create Need &amp; Distribute into a clear sequence: Quilts Received, Total Quilts Needed, and Quilts to Distribute Now, followed by Continue. The distributed amount can differ from the received amount; any difference is correctly added to or taken from matching charity-and-size storage.</p></div><div class="change-log-entry"><h4>7.8.53</h4><p>Add Quilts can now create a charity need and immediately distribute the incoming quilts in one protected save. The Calendar shows the full need, quantity sent, and balance still needed. Review screens keep Confirm &amp; Save visible, show NOT SAVED YET, warn before leaving, and display a clear success banner only after saving.</p></div><div class="change-log-entry"><h4>7.8.52</h4><p>Fixes the shared-device sync indicator introduced by 7.8.51. Firebase now treats the older misspelled Unassigned/Storage label and the corrected label as the same category, allowing every device to complete verification without changing inventory totals or deleting records.</p></div><div class="change-log-entry"><h4>7.8.51</h4><p>Adds a selected-year Quilts Distributed by Charity — YTD breakdown using the actual distribution activity date, with charity totals and an overall total. Add Quilts now also includes a No current charity need option that stores the entry under Unassigned/Storage without changing existing inventory, planning, or Firebase data rules.</p></div><div class="change-log-entry"><h4>7.8.50</h4><p>Replaces every native iPhone print-dialog action with the same direct PDF-opening method already proven to work on iPhone. Home Summary, Calendar, Full, Compact, Custom, and Audit reports now open PDFs for printing without changing any totals or records.</p></div><div class="change-log-entry"><h4>7.8.49</h4><p>Removes the four historical deleted Unassigned/Storage test records from every operational total and retains them only in Audit History. Active Unassigned/Storage inventory remains countable, while an unlinked storage removal cannot be counted as a charity distribution.</p></div><div class="change-log-entry"><h4>7.8.48</h4><p>Changes the blank inventory-and-needs worksheet to a reliable printable PDF and integrates the custom logo beside the title so it displays consistently on every main tab.</p></div><div class="change-log-entry"><h4>7.8.47</h4><p>Removes the remaining asynchronous iPhone print delay, counts active Unassigned/Storage records, keeps deleted records out of every operational total while retaining an Audit History, adds a printable blank inventory-and-needs worksheet, and adds a synchronized custom logo.</p></div><div class="change-log-entry"><h4>7.8.46</h4><p>Uses only inventory matching the exact charity and quilt size when calculating Quilts Still to Be Made. Other usable inventory remains in storage and is shown separately, but it does not automatically reduce demand for another size.</p></div><div class="change-log-entry"><h4>7.8.45</h4><p>Counts current usable inventory pooled across sizes within each charity toward the remaining calendar need because the guild may swap sizes within a charity. Unassigned/Storage test activity is excluded from official made, distributed, storage, and yearly totals.</p></div><div class="change-log-entry"><h4>7.8.44</h4><p>Updated the Yearly Quilt Summary to clearly show the guild’s projected total quilts made by year end. The projection equals Quilts Made So Far plus Quilts Still to Be Made; Quilts Distributed remains a separate activity total.</p></div><div class="change-log-entry"><h4>7.8.43</h4><p>Improved iPhone and iPad printing with a prepared print snapshot and added Custom Newsletter Reports with selectable content and saved presets.</p></div><div class="change-log-entry"><h4>7.8.41</h4><p>Fixed Firebase synchronization for the customizable Future Modules message and bottom navigation labels, including existing customized wording saved before this update.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.40</h4><p>Added a customizable Future Modules message on the splash and Home screens, plus customizable wording for all five bottom navigation tabs. Icons, colors, order, and destinations remain fixed.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.39</h4><p>The Reports headline summary cards now match the Home screen cards in size, spacing, three-card layout, buttons, and tap behavior.</p></div><div class="change-log-entry change-log-extra"><h4>7.8.38</h4><p>Reports keeps the three headline totals visible and places Yearly Statistics, Inventory &amp; Quilts Requested, Distributed &amp; Adjustments, and Report Downloads into collapsed tap-to-open sections. Only one report section stays open at a time.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.37</h4><p>Inventory and Quilts Needed now start with both record sections collapsed for a cleaner, less cluttered screen. Tapping a section opens it, and Home shortcuts or edit actions still open the needed section automatically.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.36</h4><p>Added tap-to-open sections to Inventory and Quilts Needed. Inventory separates Current Inventory from Inventory History, while Quilts Needed separates active requests from completed Needs History. Only one section stays open at a time.</p></div>
 <div class="change-log-entry change-log-extra"><h4>7.8.35</h4><p>Made the splash growth message open Future Modules, grouped Settings into short tap-to-open sections, limited Change Log to the newest two entries until Show All is selected, and removed the duplicate Calendar from Quilts Needed. The Home Calendar remains the single calendar view.</p></div>
@@ -1087,7 +1123,7 @@ one quilt at a time."></textarea>
   <button data-view="settings" class="nav-settings" onclick="showView('settings')"><b>⚙</b><span id="navSettingsLabel">Settings</span></button>
 </nav>
 
-<script type="module" src="firebase-sync.js?v=7.8.55"></script>
-<script src="app.js?v=7.8.55"></script>
+<script type="module" src="firebase-sync.js?v=7.8.56"></script>
+<script src="app.js?v=7.8.56"></script>
 </body>
 </html>

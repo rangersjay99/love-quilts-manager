@@ -1,13 +1,12 @@
-Love Quilts Manager Update 7.8.55
+Love Quilts Manager Update 7.8.56
 Released: August 5, 2026
 
-Meaningful Colors and Clearer Calendar update.
+Restored Plum Branding update.
 
 Changes:
-- Normal backgrounds use teal, blue, sage, white, and neutral gray.
-- Red and pink are reserved for negative conditions and warnings.
-- Current month has a stronger teal frame, highlighted header, and CURRENT MONTH badge.
-- Short quantities are larger and bold.
-- Home Calendar includes Jump to Current Month.
+- Plum-purple again anchors the splash screen and page headers.
+- Normal content backgrounds are mostly white, cream, gray, or very light lavender.
+- Blue is reduced and teal remains focused on the current-month Calendar treatment.
+- Red remains reserved for actual problems and warnings.
 
 Firebase production paths and the shared-data schema are unchanged.

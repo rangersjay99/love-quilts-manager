@@ -1,15 +1,12 @@
-LOVE QUILTS MANAGER UPDATE 7.8.55 — AUTOMATED TEST RESULTS
+LOVE QUILTS MANAGER UPDATE 7.8.56 — AUTOMATED TEST RESULTS
 Generated: August 5, 2026
 
-PASS — app.js JavaScript syntax check.
-PASS — manifest.json and manifest-v7.json parse as valid JSON.
-PASS — version, manifest, service-worker cache, and cache-busting references are 7.8.55.
-PASS — firebase-sync.js is byte-for-byte unchanged from Update 7.8.54.
-PASS — Add Quilts guided-flow and protected confirmation markers remain present.
-PASS — YTD Quilts Distributed by Charity report markers remain present.
-PASS — current-month badge, teal highlight, jump control, and bold Short styles are present.
-PASS — normal decorative pink/purple backgrounds were removed from screen and Custom Report styling.
-PASS — red remains available for shortages, errors, failed synchronization, and destructive warnings.
-PASS — mobile and desktop calendar preview rendered successfully in Chromium.
+PASS — app.js version and cache references updated.
+PASS — manifest.json and manifest-v7.json parse correctly.
+PASS — Firebase synchronization file is byte-for-byte unchanged from Update 7.8.55.
+PASS — plum splash/header palette is present.
+PASS — neutral surface overrides are present.
+PASS — current-month badge/jump and bold Short markers remain present.
+PASS — Add Quilts guided flow and YTD charity report code remain present.
 
-This update changes presentation and calendar navigation only. It does not modify Firebase paths or the saved-data schema.
+This update changes presentation only and does not modify saved data or synchronization logic.
