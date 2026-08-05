@@ -1,16 +1,16 @@
 // Copyright © 2026 Jay. All rights reserved. See LICENSE.txt.
-const CACHE_NAME = "love-quilts-v7-8-51";
+const CACHE_NAME = "love-quilts-v7-8-52";
 const APP_SHELL = [
   "./",
-  "./index.html?v=7.8.51",
-  "./app.js?v=7.8.51",
-  "./firebase-sync.js?v=7.8.51",
-  "./manifest-v7.json?v=7.8.51",
+  "./index.html?v=7.8.52",
+  "./app.js?v=7.8.52",
+  "./firebase-sync.js?v=7.8.52",
+  "./manifest-v7.json?v=7.8.52",
   "./GOOGLE_BACKUP_SETUP.txt",
   "./LICENSE.txt",
-  "./icons/love-quilts-manager-180-v7818.png?v=7.8.51",
-  "./icons/love-quilts-manager-192-v7818.png?v=7.8.51",
-  "./icons/love-quilts-manager-512-v7818.png?v=7.8.51"
+  "./icons/love-quilts-manager-180-v7818.png?v=7.8.52",
+  "./icons/love-quilts-manager-192-v7818.png?v=7.8.52",
+  "./icons/love-quilts-manager-512-v7818.png?v=7.8.52"
 ];
 
 self.addEventListener("install", event => {
@@ -36,10 +36,10 @@ self.addEventListener("fetch", event => {
       fetch(request, {cache:"no-store"})
         .then(response => {
           const copy=response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.8.51",copy));
+          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=7.8.52",copy));
           return response;
         })
-        .catch(() => caches.match("./index.html?v=7.8.51"))
+        .catch(() => caches.match("./index.html?v=7.8.52"))
     );
     return;
   }

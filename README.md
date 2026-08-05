@@ -1,6 +1,12 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.51 — August 4, 2026
+Current release: Update 7.8.52 — August 4, 2026
+
+## Update 7.8.52 — Firebase Sync Label Hotfix
+
+- Fixes the stuck Syncing/Waiting for Firebase confirmation state introduced in 7.8.51.
+- Treats legacy spellings of Unassigned/Storage as the same canonical category during Firebase comparison.
+- Preserves all inventory, needs, reports, audit history, and account settings.
 
 ## Update 7.8.51 — YTD Charity Report and No-Need Quilt Entry
 

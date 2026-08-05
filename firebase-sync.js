@@ -63,6 +63,17 @@ function stableData(value) {
   return stable(copy);
 }
 const cleanString = value => String(value ?? '');
+const CANONICAL_STORAGE_CHARITY = 'Unassigned/Storage';
+function normalizeStorageCharity(value) {
+  const clean = cleanString(value).trim();
+  const normalized = clean.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return normalized.startsWith('unas') && normalized.includes('storage')
+    ? CANONICAL_STORAGE_CHARITY
+    : clean;
+}
+function uniqueStrings(values = []) {
+  return [...new Set(values.map(normalizeStorageCharity).filter(Boolean))];
+}
 pendingSave = loadPendingSave();
 
 function blankRemote() {
@@ -212,7 +223,7 @@ function normalizeSettings(source = {}) {
     homeActionsHeading: cleanString(source.homeActionsHeading || 'Choose an Action'),
     customLogo: cleanString(source.customLogo || ''),
     auditLog: Array.isArray(source.auditLog) ? source.auditLog.map(normalizeAuditEntry).filter(x => x.id).sort((a, b) => cleanString(b.timestamp).localeCompare(cleanString(a.timestamp))).slice(0, 200) : [],
-    charities: Array.isArray(source.charities) ? source.charities.map(cleanString) : [],
+    charities: Array.isArray(source.charities) ? uniqueStrings(source.charities) : [],
     sizes: Array.isArray(source.sizes) ? source.sizes.map(cleanString) : [],
     // Legacy deferred records are preserved for backward compatibility.
     holds: Array.isArray(source.holds) ? source.holds.map(normalizeHold).filter(x => x.id) : []
@@ -224,7 +235,7 @@ function normalizeTransaction(source = {}) {
     id: cleanString(source.id),
     date: cleanString(source.date),
     type: ['IN', 'OUT', 'ADJUST'].includes(source.type) ? source.type : 'IN',
-    charity: cleanString(source.charity),
+    charity: normalizeStorageCharity(source.charity),
     size: cleanString(source.size),
     qty: Math.max(1, Number(source.qty || 1)),
     adjustment: Number(source.adjustment || 0),
@@ -249,7 +260,7 @@ function normalizeNeed(source = {}) {
   return {
     id: cleanString(source.id),
     month: cleanString(source.month),
-    charity: cleanString(source.charity),
+    charity: normalizeStorageCharity(source.charity),
     size: cleanString(source.size),
     qty,
     note: cleanString(source.note || ''),
@@ -275,7 +286,7 @@ function normalizeHold(source = {}) {
   return {
     id: cleanString(source.id),
     date: cleanString(source.date),
-    charity: cleanString(source.charity),
+    charity: normalizeStorageCharity(source.charity),
     size: cleanString(source.size),
     qty,
     location: cleanString(source.location || source.reason || ''),

@@ -1,6 +1,8 @@
-Love Quilts Manager Update 7.8.51
+Love Quilts Manager Update 7.8.52
 Released: August 4, 2026
 
-YTD Charity Report and No-Need Quilt Entry.
+Firebase Sync Label Hotfix
 
-Adds a selected-year Quilts Distributed by Charity YTD report using actual distribution dates, plus a No current charity need option that records new quilts in Unassigned/Storage.
+- Fixes the stuck Syncing/Waiting for Firebase confirmation state introduced by Update 7.8.51.
+- Normalizes legacy misspellings of Unassigned/Storage inside Firebase comparison logic.
+- Does not change inventory totals, charity needs, reports, audit records, Firebase paths, or the stored data schema.

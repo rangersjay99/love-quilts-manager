@@ -1,30 +1,21 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.51 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.52 TEST CHECKLIST
 
-GENERAL
-[ ] App opens and shows Update 7.8.51.
-[ ] Existing inventory, needs, custom logo, settings, Audit History, and approved-device synchronization remain intact.
+SYNC HOTFIX
+[ ] App opens and shows Update 7.8.52.
+[ ] Laptop changes from Syncing/Waiting for Firebase confirmation to All changes synced.
+[ ] Each additional device reaches All changes synced when opened one at a time.
+[ ] The charity list shows one Unassigned/Storage option, not duplicate spellings.
+[ ] No sign-in prompt appears for an already approved signed-in device.
 
-QUILTS DISTRIBUTED BY CHARITY — YTD
-[ ] Open Reports > Yearly Quilt Summary.
-[ ] The selected year controls the charity distribution breakdown.
-[ ] Each charity shows its distributed total for that year through the displayed cutoff date.
-[ ] The overall YTD total equals the sum of the charity rows.
-[ ] Changing an actual distribution date moves that quantity to the correct year.
-[ ] Distribution corrections reduce the proper charity total without double counting.
-[ ] Unlinked Unassigned/Storage OUT activity is not counted as a charity distribution.
-[ ] Full Report PDF includes the same charity-by-charity YTD breakdown.
-[ ] Custom Reports with Yearly or Distributed selected include the breakdown.
+DATA SAFETY
+[ ] Existing inventory and needs remain present.
+[ ] Home totals are unchanged from before the update.
+[ ] Audit History remains present.
+[ ] No deleted Unassigned/Storage test transaction returns to operational totals.
 
-NO CURRENT CHARITY NEED ENTRY
-[ ] Tap Add Quilts and select No current charity need.
-[ ] Charity changes to Unassigned/Storage and cannot be changed while checked.
-[ ] Enter date, size, quantity, and save after reviewing Before/After totals.
-[ ] The entry increases Available in Storage and Quilts Made for its activity year.
-[ ] The entry does not reduce another charity-and-size shortage.
-[ ] Editing an Unassigned/Storage IN record reopens with No current charity need checked.
-[ ] Unchecking the option restores normal charity selection.
-
-REGRESSION
-[ ] Verified 7.8.49/7.8.50 inventory and distribution totals remain unchanged before adding new test data.
-[ ] Home Summary, Calendar, Full, Compact, Custom, Audit, and Blank Worksheet PDFs still open correctly on iPhone and desktop.
-[ ] Backup and Restore preserve the new Unassigned/Storage entries.
+7.8.51 FEATURES
+[ ] Reports shows Quilts Distributed by Charity — YTD.
+[ ] The YTD overall total matches Quilts Distributed for the selected year.
+[ ] Add Quilts offers No current charity need.
+[ ] That option stores the entry as Unassigned/Storage.
+[ ] A no-need entry increases Available in Storage and Quilts Made without reducing another charity shortage.
