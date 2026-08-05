@@ -1,34 +1,31 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.58 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.59 TEST CHECKLIST
 
 BASIC
-[ ] App opens and shows Update 7.8.58.
+[ ] App opens and shows Update 7.8.59.
 [ ] Existing inventory, needs, settings, custom logo, and Audit History remain present.
 [ ] Laptop and approved mobile devices reach All changes synced.
 
-HOME REPORTS SNAPSHOT
-[ ] Reports Snapshot heading appears above This Year and By Charity.
-[ ] This Year and By Charity cards share the same polished plum/neutral styling.
-[ ] View Full Yearly Statistics still opens the selected Yearly Quilt Summary directly.
-[ ] Open Reports goes to the Reports screen.
+HOME CLEANUP
+[ ] The added Reports Snapshot heading is gone.
+[ ] This Year remains visible and View Full Yearly Statistics still opens the yearly report directly.
+[ ] By Charity remains available without an extra Reports Snapshot heading.
+[ ] Beneath the calendar there is one compact Print & PDF toolbar.
+[ ] Summary and 12-Month Calendar buttons both remain one-tap actions.
+[ ] Home is visibly less crowded on desktop and phone.
 
-REPORTS SCREEN
-[ ] The Report Center has a plum branded header, logo, report title, and generated information.
-[ ] Headline totals and action buttons still work.
-[ ] Yearly, Inventory & Quilts Requested, Distributed & Adjustments, Custom, and Downloads sections open normally.
-[ ] Tables, section headings, totals, and spacing look coordinated.
-[ ] Quilts Distributed by Charity YTD figures are unchanged.
-
-OUTPUT REPORTS
-[ ] Home Summary PDF has the standard organization/app/report heading.
-[ ] 12-Month Calendar PDF has the same heading order and footer style.
-[ ] Full PDF and Compact PDF retain all existing totals and sections.
-[ ] Custom Report preview/PDF uses the coordinated header and report title.
-[ ] Audit History PDF and blank worksheet retain all content and use the shared format.
-[ ] Red is still limited to shortages, errors, and warnings.
+ACTUAL PDF FILES
+[ ] Home Summary PDF has a plum branded header, organization/app/report title, generated date, and version.
+[ ] Home Summary PDF has clear summary cards, yearly figures, charity table, upcoming-needs table, and consistent footer.
+[ ] 12-Month Calendar PDF has the matching plum header and yearly total cards.
+[ ] Each month has a clear section band and detailed table.
+[ ] Current month uses teal; red appears only for shortages, past-due items, or other attention conditions.
+[ ] Short quantities are bold and easy to identify.
+[ ] Long reports continue onto additional pages without losing rows.
 
 REGRESSION
+[ ] Reports screen and Yearly Numbers remain unchanged.
 [ ] Add Quilts Received → Total Need → Distribute Now workflow still works.
-[ ] Confirm & Save remains visible and clearly says NOT SAVED YET before saving.
-[ ] Current Calendar month remains prominent and Short quantities remain bold.
 [ ] Header Tagline remains editable and synchronized.
-[ ] No inventory, need, report calculation, Firebase path, or saved-data schema changed.
+[ ] No inventory, need, report calculation, Firebase path, sync logic, or saved-data schema changed.
+
+After this update is confirmed, hold additional feature/design changes for now.

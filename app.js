@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.58';
+const VERSION='7.8.59';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1696,9 +1696,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.58 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.59 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.58',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.59',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2345,7 +2345,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.58';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.59';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -3463,3 +3463,207 @@ blankInventorySheetHTML=function(){return lqm7858BaseBlankInventorySheetHTML().r
 
 lqm7858ApplyHomeReportStyle();lqm7858ApplyReportScreenStyle();
 // ===== End Update 7.8.58 =====
+
+
+// ===== Love Quilts Manager Update 7.8.59 =====
+// Focused Home/PDF cleanup. Removes the added Reports Snapshot heading,
+// compacts the Home PDF controls, and gives the actual Home Summary and
+// 12-Month Calendar PDF files a coordinated plum-branded layout.
+// Calculations, navigation, Firebase paths, and saved-data schema are unchanged.
+
+lqm7858ApplyHomeReportStyle=function(){
+  el('homeReportSnapshotHeading')?.remove();
+  const yearCard=el('homeStatsYear')?.closest('.card'),charityCard=el('homeCharityBreakdown')?.closest('.card');
+  [yearCard,charityCard].forEach(card=>card?.classList.remove('home-report-card'));
+};
+lqm7858ApplyHomeReportStyle();
+
+function lqm7859PdfDownload(filename,pages,width,height){
+  pages.forEach((page,index)=>{
+    page.commands.push(`0.78 0.75 0.79 RG 0.45 w 30 34 m ${width-30} 34 l S`);
+    page.commands.push(`0.38 0.35 0.40 rg BT /F1 6.2 Tf 1 0 0 1 30 22 Tm (${pdfEscape(pdfFit(COPYRIGHT_PDF,width>700?112:82))}) Tj ET`);
+    page.commands.push(`0.38 0.35 0.40 rg BT /F1 6.2 Tf 1 0 0 1 30 12 Tm (${pdfEscape('Personal and authorized guild use only.')}) Tj ET`);
+    page.commands.push(`0.38 0.35 0.40 rg BT /F1 6.2 Tf 1 0 0 1 ${width-126} 12 Tm (${pdfEscape(`Page ${index+1} of ${pages.length} - Update ${VERSION}`)}) Tj ET`);
+  });
+  const pageIds=pages.map((_,i)=>5+i*2),objects=[];
+  objects[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objects[2]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(' ')}] /Count ${pages.length} >>`;
+  objects[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  objects[4]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+  pages.forEach((page,i)=>{
+    const pageId=5+i*2,contentId=pageId+1,content=page.commands.join('\n')+'\n';
+    objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId]=`<< /Length ${content.length} >>\nstream\n${content}endstream`;
+  });
+  let pdf='%PDF-1.4\n%1234\n';const offsets=[0];
+  for(let i=1;i<objects.length;i++){offsets[i]=pdf.length;pdf+=`${i} 0 obj\n${objects[i]}\nendobj\n`}
+  const xref=pdf.length;pdf+=`xref\n0 ${objects.length}\n0000000000 65535 f \n`;
+  for(let i=1;i<objects.length;i++)pdf+=`${String(offsets[i]).padStart(10,'0')} 00000 n \n`;
+  pdf+=`trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  const bytes=new Uint8Array(pdf.length);for(let i=0;i<pdf.length;i++)bytes[i]=pdf.charCodeAt(i)&255;
+  downloadBlob(filename,new Blob([bytes],{type:'application/pdf'}));return bytes;
+}
+
+function lqm7859PdfEngine({title,subtitle='',landscape=false}){
+  const width=landscape?792:612,height=landscape?612:792,left=30,right=width-30,bottom=46;
+  const C={plum:'0.42 0.21 0.47',plumDark:'0.29 0.13 0.34',lavender:'0.96 0.94 0.97',cream:'0.99 0.98 0.95',gray:'0.95 0.95 0.96',line:'0.80 0.76 0.82',text:'0.16 0.14 0.17',muted:'0.40 0.37 0.42',white:'1 1 1',teal:'0.14 0.44 0.46',green:'0.20 0.49 0.30',red:'0.72 0.23 0.28',gold:'0.72 0.52 0.15'};
+  const pages=[];let page=null,y=0;
+  const cmd=value=>page.commands.push(value);
+  const fillRect=(x,py,w,h,color)=>cmd(`${color} rg ${x} ${py} ${w} ${h} re f`);
+  const strokeRect=(x,py,w,h,color=C.line,lineWidth=.55)=>cmd(`${color} RG ${lineWidth} w ${x} ${py} ${w} ${h} re S`);
+  const line=(x1,y1,x2,y2,color=C.line,lineWidth=.55)=>cmd(`${color} RG ${lineWidth} w ${x1} ${y1} m ${x2} ${y2} l S`);
+  const text=(x,py,value,size=8,bold=false,color=C.text)=>cmd(`${color} rg BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${py} Tm (${pdfEscape(value)}) Tj ET`);
+  const wrapped=(value,maxChars)=>pdfWrap(String(value??''),Math.max(6,maxChars));
+  const drawHeader=()=>{
+    fillRect(0,height-82,width,82,C.plumDark);
+    fillRect(0,height-82,7,82,C.plum);
+    text(left,height-25,pdfFit(data.orgName.toUpperCase(),landscape?120:82),7.4,true,C.white);
+    text(left,height-44,pdfFit(data.appName,landscape?100:72),16,true,C.white);
+    text(left,height-62,pdfFit(title,landscape?118:88),10,true,C.white);
+    text(width-205,height-28,pdfFit(`Generated ${new Date().toLocaleString()}`,31),6.4,false,C.white);
+    text(width-205,height-43,pdfFit(`Update ${VERSION}`,31),6.4,true,C.white);
+    if(subtitle)text(left,height-96,pdfFit(subtitle,landscape?124:92),7.3,false,C.muted);
+    line(left,height-103,right,height-103,C.line,.65);
+    y=height-118;
+  };
+  const newPage=()=>{page={commands:[]};pages.push(page);drawHeader();return page};
+  const ensure=needed=>{if(!page)newPage();if(y-needed<bottom){newPage();return true}return false};
+  const paragraph=(value,{size=8,bold=false,color=C.text,indent=0,after=4,lineHeight=10,maxChars=null}={})=>{
+    const chars=maxChars||Math.max(18,Math.floor((right-left-indent)/(size*.54))),lines=wrapped(value,chars);ensure(lines.length*lineHeight+after);
+    lines.forEach((part,i)=>text(left+indent,y-i*lineHeight,part,size,bold,color));y-=lines.length*lineHeight+after;
+  };
+  const section=(label,{accent=C.plum,current=false}={})=>{
+    ensure(29);fillRect(left,y-17,right-left,23,C.lavender);fillRect(left,y-17,5,23,accent);strokeRect(left,y-17,right-left,23,C.line,.45);
+    text(left+12,y-3,pdfFit(String(label).toUpperCase(),landscape?100:72),9.5,true,C.plumDark);
+    if(current){fillRect(right-90,y-13,80,15,C.teal);text(right-82,y-8,'CURRENT MONTH',6.2,true,C.white)}
+    y-=31;
+  };
+  const metricCards=(items,{compact=false}={})=>{
+    const gap=8,count=items.length,w=(right-left-gap*(count-1))/count,h=compact?42:54;ensure(h+12);
+    items.forEach((item,i)=>{
+      const x=left+i*(w+gap),fill=item.fill||C.cream,border=item.border||C.line,valueColor=item.valueColor||C.plumDark;
+      fillRect(x,y-h,w,h,fill);strokeRect(x,y-h,w,h,border,.65);
+      text(x+10,y-(compact?18:22),String(item.value),compact?13:17,true,valueColor);
+      const labelLines=wrapped(item.label,Math.max(10,Math.floor((w-56)/5))).slice(0,2);
+      labelLines.forEach((part,j)=>text(x+(compact?38:47),y-(compact?15:18)-j*9,pdfFit(part,28),compact?6.5:7,true,C.muted));
+    });
+    y-=h+12;
+  };
+  const table=({title:tableTitle,headers,rows,widths,align=[],rowAccent=null,showSection=true,sectionOptions={}})=>{
+    const xPositions=[left];for(let i=0;i<widths.length-1;i++)xPositions.push(xPositions[i]+widths[i]);
+    const total=widths.reduce((s,n)=>s+n,0),font=7.1,lineHeight=8.5;
+    const drawTableHeader=()=>{
+      fillRect(left,y-19,total,19,C.plumDark);strokeRect(left,y-19,total,19,C.plumDark,.5);
+      headers.forEach((header,i)=>{
+        const tx=xPositions[i]+5;text(tx,y-12,pdfFit(String(header).toUpperCase(),Math.max(7,Math.floor((widths[i]-8)/4.6))),6.1,true,C.white);
+      });
+      y-=19;
+    };
+    const continued=()=>{section(`${tableTitle} (continued)`);drawTableHeader()};
+    if(showSection)section(tableTitle,sectionOptions);drawTableHeader();
+    if(!rows.length){paragraph('No records.',{indent:7,after:8});return}
+    rows.forEach((row,rowIndex)=>{
+      const cells=row.map(cell=>typeof cell==='object'&&cell!==null?cell:{text:String(cell??'')});
+      const lineSets=cells.map((cell,i)=>wrapped(cell.text,Math.max(5,Math.floor((widths[i]-10)/(font*.53)))));
+      const rowH=Math.max(19,Math.max(...lineSets.map(lines=>lines.length))*lineHeight+8);
+      if(y-rowH<bottom){newPage();continued()}
+      const bg=rowIndex%2?C.cream:C.white;fillRect(left,y-rowH,total,rowH,bg);strokeRect(left,y-rowH,total,rowH,C.line,.35);
+      if(rowAccent){const accent=rowAccent(row,rowIndex);if(accent)fillRect(left,y-rowH,4,rowH,accent)}
+      cells.forEach((cell,i)=>{
+        lineSets[i].forEach((part,j)=>{
+          const color=cell.color||C.text,bold=!!cell.bold;
+          let tx=xPositions[i]+6;
+          if(align[i]==='right')tx=xPositions[i]+widths[i]-6-Math.min(widths[i]-12,pdfPlain(part).length*font*.50);
+          text(tx,y-12-j*lineHeight,pdfFit(part,Math.max(5,Math.floor((widths[i]-10)/(font*.50)))),font,bold,color);
+        });
+      });
+      y-=rowH;
+    });
+    y-=10;
+  };
+  newPage();
+  return{C,pages,width,height,left,right,bottom,get y(){return y},set y(v){y=v},newPage,ensure,text,line,fillRect,strokeRect,paragraph,section,metricCards,table,download(filename){return lqm7859PdfDownload(filename,pages,width,height)}};
+}
+
+function lqm7859HomeSummaryPDF(){
+  const stats=yearlyStatistics(Number(monthNow().slice(0,4))),short=quiltsToCompleteTotal();
+  const pdf=lqm7859PdfEngine({title:'Home Summary',subtitle:`${data.homeAtAGlance} - Current inventory, needs, and charity overview`}),C=pdf.C;
+  pdf.metricCards([
+    {label:data.homeStorageLabel,value:totalOnHand()},
+    {label:data.homeNeededLabel,value:totalNeeded()},
+    {label:data.homeDifferenceLabel,value:short,valueColor:short?C.red:C.green,border:short?C.red:C.green,fill:short?'0.99 0.94 0.95':'0.93 0.98 0.95'}
+  ]);
+  pdf.metricCards([
+    {label:'Made This Year',value:stats.made,fill:C.lavender},
+    {label:'Distributed This Year',value:stats.distributed,fill:C.lavender},
+    {label:'Still to Make',value:stats.stillToMake,valueColor:stats.stillToMake?C.red:C.green,fill:C.lavender},
+    {label:'Projected Made by Year End',value:stats.projectedYearEndMade,fill:C.lavender}
+  ],{compact:true});
+  const charityRows=homeCharitySummaries().map(row=>[
+    {text:row.charity,bold:true},
+    {text:String(row.onHand),bold:true},
+    {text:String(row.requested),bold:true},
+    {text:String(row.toComplete),bold:true,color:row.toComplete?C.red:C.green}
+  ]);
+  pdf.table({title:'Charity Summary',headers:['Charity','In Storage','Requested','Still to Make'],rows:charityRows,widths:[250,96,96,110],align:['left','right','right','right'],rowAccent:row=>Number(row[3]?.text)>0?C.red:null});
+  const needs=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
+  const needRows=needs.map(item=>[
+    {text:fmtMonthShort(item.n.month),bold:true},
+    {text:`${item.n.charity} / ${item.n.size}`,bold:true},
+    {text:String(item.n.qty)},
+    {text:String(item.fulfilled)},
+    {text:String(item.available)},
+    {text:String(item.shortage),bold:true,color:item.shortage?C.red:C.green}
+  ]);
+  pdf.table({title:'Upcoming Needs',headers:['Month','Charity / Size','Need','Sent','Available','Short'],rows:needRows,widths:[74,232,58,58,70,60],align:['left','left','right','right','right','right'],rowAccent:row=>Number(row[5]?.text)>0?C.red:null});
+  return pdf.download(`${filePart(data.itemName)}_Home_Summary_${today()}.pdf`);
+}
+
+function lqm7859CalendarPDF(source='needs'){
+  const home=source==='home',year=home?Number(monthNow().slice(0,4)):(Number(el('calendarYear')?.value)||Number(monthNow().slice(0,4)));
+  const charity=home?(el('homeCalendarCharity')?.value||''):(el('calendarCharity')?.value||'');
+  const size=home?'':(el('calendarSize')?.value||'');
+  const allocations=allocateNeedsForPlanning(),byId=new Map(allocations.map(item=>[item.n.id,item]));
+  const records=sortedNeedsForPlanning(data.needs.filter(n=>yearOf(n.month)===year&&(!charity||n.charity===charity)&&(!size||n.size===size)));
+  const requested=records.reduce((sum,n)=>sum+(Number(n.qty)||0),0),sent=records.reduce((sum,n)=>sum+fulfilledQty(n),0),remaining=records.reduce((sum,n)=>sum+remainingNeed(n),0),short=records.reduce((sum,n)=>sum+(byId.get(n.id)||allocationForNeed(n)).shortage,0);
+  const filters=[charity?`Charity: ${charity}`:'All charities',size?`Size: ${size}`:'All sizes'].join(' - ');
+  const pdf=lqm7859PdfEngine({title:`${year} 12-Month Needs Calendar`,subtitle:filters,landscape:true}),C=pdf.C;
+  pdf.metricCards([
+    {label:'Total Requested',value:requested},
+    {label:'Distributed',value:sent},
+    {label:'Still Needed',value:remaining,valueColor:remaining?C.red:C.green},
+    {label:'Short',value:short,valueColor:short?C.red:C.green,border:short?C.red:C.green,fill:short?'0.99 0.94 0.95':'0.93 0.98 0.95'}
+  ],{compact:true});
+  for(let month=1;month<=12;month++){
+    const key=`${year}-${String(month).padStart(2,'0')}`,monthRows=records.filter(n=>n.month===key),current=key===monthNow();
+    const monthRemaining=monthRows.reduce((sum,n)=>sum+remainingNeed(n),0),monthShort=monthRows.reduce((sum,n)=>sum+(byId.get(n.id)||allocationForNeed(n)).shortage,0);
+    let accent=C.gold;if(current)accent=C.teal;else if(monthRows.length&&!monthRemaining)accent=C.green;else if(monthRows.length&&key<monthNow()&&monthRemaining)accent=C.red;
+    pdf.ensure(monthRows.length?90:48);
+    pdf.section(`${fmtMonth(key)}${monthRows.length?` - Need ${monthRows.reduce((s,n)=>s+(Number(n.qty)||0),0)} - Sent ${monthRows.reduce((s,n)=>s+fulfilledQty(n),0)} - Still ${monthRemaining} - Short ${monthShort}`:''}`,{accent,current});
+    if(!monthRows.length){pdf.paragraph('No requests.',{indent:8,color:C.muted,after:9});continue}
+    const rows=monthRows.map(n=>{
+      const info=byId.get(n.id)||allocationForNeed(n),sentQty=fulfilledQty(n),left=remainingNeed(n),status=left===0?'Completed':(needIsPastDue(n)?'Past due':(info.shortage>0?'Short':'Covered'));
+      return[
+        {text:n.charity,bold:true},
+        {text:n.size},
+        {text:String(n.qty)},
+        {text:String(sentQty)},
+        {text:String(info.available)},
+        {text:String(info.shortage),bold:true,color:info.shortage?C.red:C.green},
+        {text:status,bold:true,color:status==='Past due'||status==='Short'?C.red:(status==='Completed'?C.green:C.teal)}
+      ];
+    });
+    pdf.table({title:`${fmtMonth(key)} Details`,headers:['Charity','Size','Need','Sent','Available','Short','Status'],rows,widths:[190,155,58,58,70,58,112],align:['left','left','right','right','right','right','left'],rowAccent:row=>Number(row[5]?.text)>0?C.red:null,showSection:false});
+  }
+  return pdf.download(`${filePart(data.itemName)}_${year}_Calendar_${today()}.pdf`);
+}
+
+printHomeSummary=function(){
+  try{lqm7859HomeSummaryPDF();notice('reportNotice','Home Summary PDF opened. Use the PDF share menu to print.',true)}
+  catch(error){console.error(error);notice('reportNotice','The Home Summary PDF could not be created. Refresh and try again.')}
+};
+printCalendar=function(source='needs'){
+  try{lqm7859CalendarPDF(source);notice('reportNotice','Calendar PDF opened. Use the PDF share menu to print.',true)}
+  catch(error){console.error(error);notice('reportNotice','The Calendar PDF could not be created. Refresh and try again.')}
+};
+// ===== End Update 7.8.59 =====

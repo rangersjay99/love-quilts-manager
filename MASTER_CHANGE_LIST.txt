@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated August 5, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.58
+IMPLEMENTED THROUGH UPDATE 7.8.59
+
+- Update 7.8.59 removes the added Home Reports Snapshot heading, compacts the Home PDF controls, and professionally restyles the actual Home Summary and 12-Month Calendar PDF files without changing calculations, navigation, Firebase paths, or saved records.
 
 - Update 7.8.58 coordinates the Home Reports Snapshot, Reports screen, previews, print layouts, and PDF headings with consistent plum-branded headers, report titles, generated dates, section headings, tables, totals, spacing, and footers. Existing calculations and one-tap navigation remain unchanged.
 

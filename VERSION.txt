@@ -1,4 +1,4 @@
-Love Quilts Manager Update 7.8.58
+Love Quilts Manager Update 7.8.59
 Released: August 5, 2026
 
-Coordinated Report Design
+Home PDF Cleanup and Polished Quick Reports

@@ -1,21 +1,22 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.58
+LOVE QUILTS MANAGER — UPDATE 7.8.59
 Released: August 5, 2026
 
 BEFORE UPDATING
 1. Export a fresh app backup from Settings.
-2. Confirm the current devices show All changes synced.
-3. Keep a ZIP backup of the current GitHub repository.
+2. Confirm current devices show All changes synced.
+3. Keep a ZIP backup of the GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_58.zip.
+1. Extract Love_Quilts_Manager_Update_7_8_59.zip.
 2. Upload every extracted file to the repository main/root folder.
 3. Replace files with matching names.
 4. Keep the icons and firebase-test folders.
 5. Wait for GitHub Pages to publish.
-6. Open the laptop first and confirm Update 7.8.58 and All changes synced.
+6. Open the laptop first and confirm Update 7.8.59 and All changes synced.
 7. Open the remaining devices one at a time.
 
 WHAT CHANGED
-- Coordinated report headers, titles, date blocks, sections, tables, totals, and footers.
-- Polished Home Reports Snapshot and Reports screen.
-- Existing calculations, navigation, Firebase paths, and saved records are unchanged.
+- Removed the added Reports Snapshot heading from Home.
+- Replaced the two large Home PDF buttons with a compact Print & PDF toolbar.
+- Professionally restyled the actual Home Summary and 12-Month Calendar PDFs.
+- Existing calculations, one-tap Yearly Numbers navigation, Firebase paths, and saved records are unchanged.

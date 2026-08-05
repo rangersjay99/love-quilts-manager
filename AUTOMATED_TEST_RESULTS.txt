@@ -1,13 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.58 AUTOMATED TEST RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.59 AUTOMATED TEST RESULTS
 Run: August 5, 2026
 
 PASS — app.js JavaScript syntax check (Node.js --check).
-PASS — index.html parsed with 257 unique element IDs and no duplicate IDs.
-PASS — manifest.json and manifest-v7.json parse successfully and reference Update 7.8.58.
-PASS — Firebase synchronization logic matches Update 7.8.57 except for version/cache references.
-PASS — Core inventory, needs, audit, Header Tagline, combined Add Quilts, YTD charity, and Unassigned/Storage markers remain present.
-PASS — New Home Reports Snapshot, Report Center, standard report header/title band, and coordinated report styling markers are present.
-PASS — Static visual rendering reviewed for Home report cards, Reports screen, Yearly/YTD content, and a standard report page.
-PASS — ZIP structure contains the required root app files, icons, documentation, manifests, and service worker.
+PASS — index.html contains unique element IDs and the compact Print & PDF toolbar.
+PASS — the added Home Reports Snapshot heading is removed by the active Home rendering logic.
+PASS — manifest.json, manifest-v7.json, service worker, and script cache references point to Update 7.8.59.
+PASS — Firebase synchronization code is byte-for-byte unchanged from Update 7.8.58.
+PASS — Home Summary PDF generated successfully using the August 4 production backup (1 letter-size page).
+PASS — 12-Month Calendar PDF generated successfully using the August 4 production backup (3 landscape letter-size pages).
+PASS — PDF visual render confirms plum headers, summary cards, section bands, tables, page footers, current-month teal, and attention-only red.
+PASS — production-backup totals passed through unchanged during PDF generation.
+PASS — This Year, By Charity, one-tap Yearly Numbers navigation, Add Quilts, Header Tagline, and report calculations remain present.
+PASS — no database path or saved-data schema marker changed.
 
 Manual device testing is still required for iPhone/iPad PDF opening, GitHub Pages cache refresh, and live Firebase synchronization.
