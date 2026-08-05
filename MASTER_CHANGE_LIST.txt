@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated July 31, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.53
+IMPLEMENTED THROUGH UPDATE 7.8.54
+
+- Update 7.8.54 simplifies the combined Add Quilts entry to Received, Total Need, and Distribute Now, then Continue; received and distributed quantities may differ, with the exact net difference applied safely to matching storage.
 
 - Update 7.8.53 adds Create Need & Distribute Now to Add Quilts, saving the incoming transaction, linked distribution, and full charity need together; review screens now keep Confirm & Save visible, show NOT SAVED YET, warn before leaving, and show success only after saving.
 

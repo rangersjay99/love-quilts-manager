@@ -1,24 +1,22 @@
-LOVE QUILTS MANAGER UPDATE 7.8.53 — AUTOMATED VALIDATION
+LOVE QUILTS MANAGER UPDATE 7.8.54 — AUTOMATED VALIDATION
 
-Passed all static, browser-logic, mobile-layout, and production-backup simulations.
+Passed static syntax, browser-logic, mobile-layout, and production-backup simulations.
 
 [PASS] JavaScript syntax: app.js and firebase-sync.js
-[PASS] app version and cache references 7.8.53
-[PASS] service worker and both manifests reference 7.8.53
-[PASS] Create Need & Distribute Now controls appear only for incoming quilts
-[PASS] Store as Unassigned/Storage and Create Need & Distribute Now are mutually exclusive
-[PASS] 7 received / need 20 preview shows distributed 7, still needed 13, storage 0
-[PASS] confirmation creates one need plus linked IN and OUT transactions
-[PASS] incoming transaction counts as Quilts Made
-[PASS] linked OUT transaction counts as Quilts Distributed and YTD charity distribution
-[PASS] combined entry leaves Available in Storage unchanged
-[PASS] Calendar renders Need 20, Sent 7, Still Needed 13
-[PASS] Audit History records all three created records
-[PASS] NOT SAVED YET and Confirm & Save All remain within a 390 x 844 mobile viewport
-[PASS] leaving an unsaved review displays a warning and can keep the modal open
-[PASS] success banner appears only after save completion
-[PASS] real August 4 production-backup simulation preserved existing records and totals, then added the linked records correctly
-[PASS] legacy Unassigned/Storage spelling normalized to the canonical label
-[PASS] Firebase code retains writeBatch commit behavior for transactions and needs
+[PASS] app, service worker, manifests, and cache references use 7.8.54
+[PASS] expanded panel shows Received, Total Need, and Distribute Now together
+[PASS] Continue opens the protected review step
+[PASS] 7 received / need 20 / distribute 7 leaves 13 needed and storage unchanged
+[PASS] 7 received / need 20 / distribute 5 leaves 15 needed and adds 2 to storage
+[PASS] 7 received with 2 matching quilts already stored / distribute 9 uses the 2 stored quilts and leaves 11 needed
+[PASS] distribution beyond received plus matching inventory is blocked
+[PASS] 0 distributed creates the need, stores all received quilts, and creates no OUT record
+[PASS] a later distribution correctly removes the earlier stored balance
+[PASS] YTD charity distribution uses the Distribute Now quantity and actual distribution date
+[PASS] review still shows NOT SAVED YET and Confirm & Save All
+[PASS] mobile 390 x 844 layout shows the numbered flow clearly
+[PASS] August 4 production-backup simulation preserved all records, then applied +7 made, +5 distributed, +2 storage, and +15 remaining need correctly
+[PASS] 7.8.52 Unassigned/Storage synchronization compatibility remains present
+[PASS] Firebase write-batch synchronization code remains unchanged
 
 Live Firestore credentials were not used in automated testing. Confirm All changes synced and second-device receipt after deployment.

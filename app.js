@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.53';
+const VERSION='7.8.54';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1683,9 +1683,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.53 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.54 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.53',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.54',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2332,7 +2332,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.53';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.54';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -3202,3 +3202,146 @@ document.addEventListener('DOMContentLoaded',()=>{
   lqm7853ResetImmediateNeed();lqm7853SyncIncomingChoices();
 },{once:true});
 // ===== End Update 7.8.53 =====
+
+
+// ===== Love Quilts Manager Update 7.8.54 =====
+// Simplifies the combined entry to Received -> Total Need -> Distribute Now.
+// The distributed quantity may differ from the received quantity. Any net
+// difference is applied to the exact charity-and-size inventory.
+
+function lqm7854NumberField(id){
+  const raw=String(el(id)?.value??'').trim();
+  if(raw==='')return Number.NaN;
+  return Math.floor(Number(raw));
+}
+function lqm7854StorageWording(change){
+  if(change>0)return`${change} ${change===1?'quilt':'quilts'} added to storage`;
+  if(change<0)return`${Math.abs(change)} ${Math.abs(change)===1?'quilt':'quilts'} taken from existing storage`;
+  return'no storage change';
+}
+function lqm7854UpdateQuantityLabel(){
+  const label=el('txQtyLabel'),active=lqm7853ImmediateNeedActive();
+  if(label)label.textContent=mode==='SET'?'Current Count':'Quantity';
+  el('txQtyStepWrap')?.classList.toggle('guided-source-hidden',active);
+}
+function lqm7854SyncReceivedFromGuided(){
+  const guided=el('txCreateNeedReceivedQty'),source=el('qtyInput');if(!guided||!source)return;
+  source.value=guided.value;syncQtyInput();lqm7853UpdateNeedPreview();
+}
+
+lqm7853UpdateNeedPreview=function(){
+  const target=el('txCreateNeedPreview');if(!target)return;
+  syncQtyInput();
+  const received=Math.max(0,Math.floor(Number(qty)||0));
+  const needed=lqm7854NumberField('txCreateNeedQty');
+  const distribute=lqm7854NumberField('txCreateNeedDistributeQty');
+  if(!received||!Number.isFinite(needed)||needed<1||!Number.isFinite(distribute)||distribute<0){
+    target.textContent='Enter Received, Total Need, and Distribute Now to see the result.';return;
+  }
+  const remaining=Math.max(0,needed-distribute),storageChange=received-distribute;
+  target.innerHTML=`<strong>Received ${received} · Need ${needed} · Distribute ${distribute}</strong><br>Still needed ${remaining} · ${esc(lqm7854StorageWording(storageChange))}.`;
+};
+
+lqm7853ResetImmediateNeed=function(){
+  const checkbox=el('txCreateNeed'),fields=el('txCreateNeedFields'),wrap=el('txCreateNeedWrap'),date=el('txCreateNeedDate');
+  if(checkbox)checkbox.checked=false;if(fields)fields.hidden=true;if(wrap)wrap.classList.remove('is-active');
+  if(el('txCreateNeedReceivedQty'))el('txCreateNeedReceivedQty').value='';
+  if(el('txCreateNeedQty'))el('txCreateNeedQty').value='';
+  if(el('txCreateNeedDistributeQty'))el('txCreateNeedDistributeQty').value='';
+  if(el('txCreateNeedMonth'))el('txCreateNeedMonth').value=monthNow();
+  if(date){date.value=el('txDate')?.value||today();delete date.dataset.changed}
+  if(el('txCreateNeedNote'))el('txCreateNeedNote').value='';
+  lqm7853UpdateNeedPreview();lqm7854UpdateQuantityLabel();
+};
+
+const lqm7854BaseToggleCreateNeedNow=toggleCreateNeedNow;
+toggleCreateNeedNow=function(force){
+  lqm7854BaseToggleCreateNeedNow(force);
+  const active=lqm7853ImmediateNeedActive(),received=el('txCreateNeedReceivedQty');
+  if(active){
+    if(received&&!String(received.value||'').trim()&&qty>0)received.value=qty;
+    if(!String(el('txCreateNeedDistributeQty')?.value||'').trim()&&qty>0)el('txCreateNeedDistributeQty').value=qty;
+    requestAnimationFrame(()=>received?.focus());
+  }
+  lqm7853UpdateNeedPreview();lqm7854UpdateQuantityLabel();
+};
+
+lqm7853UpdateInventoryActionLabel=function(){
+  const button=el('saveTxBtn');if(!button)return;
+  if(lqm7853ImmediateNeedActive())button.textContent='Continue';
+  else if(!editTxId&&mode==='IN')button.textContent='Add to Inventory';
+  lqm7854UpdateQuantityLabel();
+};
+
+lqm7853ImmediateNeedDraft=function(){
+  syncQtyInput();
+  return{
+    incomingQty:Math.floor(Number(qty)),charity:String(el('txCharity')?.value||''),size:String(el('txSize')?.value||''),
+    dateIn:String(el('txDate')?.value||today()),incomingNote:String(el('txNote')?.value||'').trim(),
+    needQty:lqm7854NumberField('txCreateNeedQty'),distributedQty:lqm7854NumberField('txCreateNeedDistributeQty'),
+    month:String(el('txCreateNeedMonth')?.value||monthNow()),distributedDate:String(el('txCreateNeedDate')?.value||''),
+    needNote:String(el('txCreateNeedNote')?.value||'').trim()
+  };
+};
+
+lqm7853ValidateImmediateNeed=function(draft){
+  if(!Number.isFinite(draft.incomingQty)||draft.incomingQty<1)return'Please enter the number of quilts received.';
+  if(!draft.charity||!draft.size)return'Please select the charity and size.';
+  if(lqm7849IsUnassignedStorageCharity(draft.charity))return'Select the actual charity before creating its need.';
+  if(!Number.isFinite(draft.needQty)||draft.needQty<1)return'Please enter the total number of quilts needed.';
+  if(!Number.isFinite(draft.distributedQty)||draft.distributedQty<0)return'Please enter how many quilts should be distributed now, including 0 if none are going out today.';
+  if(!draft.month)return'Please select the month needed.';
+  if(draft.distributedQty>0&&!draft.distributedDate)return'Please enter the distribution date.';
+  const availableAfterReceipt=onHand(draft.charity,draft.size)+draft.incomingQty;
+  if(draft.distributedQty>availableAfterReceipt)return`Only ${availableAfterReceipt} ${availableAfterReceipt===1?'quilt is':'quilts are'} available for ${draft.charity} — ${draft.size} after adding the received quilts.`;
+  const duplicate=data.needs.find(n=>n.charity===draft.charity&&n.size===draft.size&&n.month===draft.month&&remainingNeed(n)>0);
+  if(duplicate)return`A current need already exists for ${draft.charity} — ${draft.size} in ${fmtMonth(draft.month)}. Open that Calendar entry and use Distribute Quilts instead.`;
+  return'';
+};
+
+lqm7853ImmediateNeedReview=function(draft){
+  const remaining=Math.max(0,draft.needQty-draft.distributedQty),inventoryChange=draft.incomingQty-draft.distributedQty;
+  const activeChange=draft.month>=monthNow()?remaining:0;
+  const metrics=homePreviewMetrics(draft.charity,draft.size,inventoryChange,activeChange),category=onHand(draft.charity,draft.size),activeBefore=totalNeeded();
+  const distributionDate=draft.distributedQty>0?fmtDate(draft.distributedDate):'None now';
+  return[
+    homeReviewBubbles(metrics),
+    '<div class="entry-review-details-heading">Received, Need, and Distribution</div>',
+    reviewLine('Charity',draft.charity),reviewLine('Size',draft.size),reviewLine('Month needed',fmtMonth(draft.month)),
+    reviewLine('1. Quilts received / made',String(draft.incomingQty)),reviewLine('2. Total quilts needed',String(draft.needQty)),
+    reviewLine('3. Quilts to distribute now',String(draft.distributedQty)),reviewLine('Still needed',String(remaining)),
+    reviewLine('Storage result',lqm7854StorageWording(inventoryChange)),
+    reviewLine('Date received',fmtDate(draft.dateIn)),reviewLine('Date distributed',distributionDate),
+    draft.incomingNote?reviewLine('Inventory note',draft.incomingNote):'',draft.needNote?reviewLine('Need note',draft.needNote):'',
+    reviewTotals(`Inventory for ${draft.charity} — ${draft.size}`,category,category+inventoryChange),
+    reviewTotals('Total active quilts still needed',activeBefore,activeBefore+activeChange),
+    `<div class="entry-review-note">One save will record ${draft.incomingQty} received, create the need for ${draft.needQty}, distribute ${draft.distributedQty} now, and leave ${remaining} still needed on the Calendar.</div>`
+  ].join('');
+};
+
+lqm7853SaveImmediateNeed=function(reviewed=false){
+  const draft=lqm7853ImmediateNeedDraft(),problem=lqm7853ValidateImmediateNeed(draft);
+  if(problem){notice('txNotice',problem);return false}
+  if(!reviewed){
+    openEntryReview('Review Received, Need & Distribution',lqm7853ImmediateNeedReview(draft),'Confirm & Save All',()=>lqm7853SaveImmediateNeed(true));
+    return false;
+  }
+  const currentProblem=lqm7853ValidateImmediateNeed(draft);if(currentProblem){notice('txNotice',currentProblem);return false}
+  const stamp=nowIso(),email=currentUserEmail(),needId=uid();
+  const incoming={id:uid(),date:draft.dateIn,type:'IN',charity:draft.charity,size:draft.size,qty:draft.incomingQty,adjustment:0,note:draft.incomingNote||`Received for ${fmtMonth(draft.month)} charity request`,sourceNeedId:needId,sourceHoldId:'',sourceType:'NEED_IMMEDIATE_IN',createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp};
+  const outgoing=draft.distributedQty>0?{id:uid(),date:draft.distributedDate,type:'OUT',charity:draft.charity,size:draft.size,qty:draft.distributedQty,adjustment:0,note:`Distributed for ${fmtMonth(draft.month)} charity request`,sourceNeedId:needId,sourceHoldId:'',sourceType:'NEED_DISTRIBUTION',createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp}:null;
+  const need={id:needId,month:draft.month,charity:draft.charity,size:draft.size,qty:draft.needQty,note:draft.needNote,fulfilledQty:draft.distributedQty,fulfilledDate:draft.distributedQty>0?draft.distributedDate:'',fulfilledBy:draft.distributedQty>0?email:'',fulfilledAt:draft.distributedQty>0?stamp:'',fulfilledHighWater:draft.distributedQty,autoOutQty:draft.distributedQty,createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp};
+  const backup=clone(data);
+  data.transactions.push(incoming);if(outgoing)data.transactions.push(outgoing);data.needs.push(need);
+  if(!save('Need created with received and distributed quantities')){data=backup;renderAll();notice('txNotice','Nothing was saved. Please check browser storage and try again.');return false}
+  const stillNeeded=Math.max(0,draft.needQty-draft.distributedQty),storageChange=draft.incomingQty-draft.distributedQty;
+  cancelTxEdit();renderAll();showView('home');
+  lqm7853ShowSuccess(`${draft.incomingQty} received, ${draft.distributedQty} distributed for ${draft.charity}. ${stillNeeded} still needed; ${lqm7854StorageWording(storageChange)}.`);
+  return true;
+};
+
+const lqm7854BaseSetMode=setMode;
+setMode=function(nextMode){lqm7854BaseSetMode(nextMode);lqm7854UpdateQuantityLabel()};
+
+document.addEventListener('DOMContentLoaded',()=>{lqm7854UpdateQuantityLabel()},{once:true});
+// ===== End Update 7.8.54 =====

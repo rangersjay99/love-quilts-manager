@@ -1,15 +1,17 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.53 — August 4, 2026
+Current release: Update 7.8.54 — August 4, 2026
 
-## Update 7.8.53 — Create Need & Distribute Now
+## Update 7.8.54 — Clear Received, Need & Distribute Flow
 
-- Adds **Create Need & Distribute Now** to Add Quilts for incoming quilts that belong to a charity whose need has not yet been entered.
-- Creates the full charity need, records the incoming quilts as made, and immediately applies them as distributed in one protected save.
-- Example: 7 incoming quilts with a total need of 20 produce Need 20, Distributed 7, Still Needed 13, and Added to Storage 0.
-- Keeps **Confirm & Save** visible in a fixed footer, displays **NOT SAVED YET**, warns before leaving an unsaved review, and shows a success banner only after the records are saved.
-- Preserves Update 7.8.52 Firebase synchronization compatibility and the selected-year Quilts Distributed by Charity YTD report.
-- Existing Firebase production paths and saved-data schema remain unchanged.
+- Simplifies the combined Add Quilts workflow into: Quilts Received, Total Quilts Needed, Quilts to Distribute Now, then Continue.
+- Allows the distributed quantity to differ from the received quantity.
+- If fewer quilts are distributed than received, the balance stays in the selected charity-and-size inventory.
+- If more quilts are distributed than received, the difference may come from existing matching inventory, but the app prevents negative inventory.
+- Keeps the fixed NOT SAVED YET review footer and final Confirm & Save All button.
+- Preserves the 7.8.52 synchronization fix and the YTD Quilts Distributed by Charity report.
+
+Existing Firebase production paths and backup formats are unchanged.
 
 Copyright © 2026 Jay. Love Quilts Manager. All rights reserved.
 Personal and authorized guild use only. See LICENSE.txt.

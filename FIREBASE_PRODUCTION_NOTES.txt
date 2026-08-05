@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER UPDATE 7.8.53 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.54 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules, collection paths, indexes, or saved-data schema changes are required.
 
@@ -9,18 +9,19 @@ UNCHANGED PATHS
 - organizations/faithful-circle-love-quilts/needs
 
 COMBINED ENTRY SAFETY
-- Create Need & Distribute Now changes local data in one save operation.
-- The incoming inventory transaction, linked OUT distribution, and charity need share the same sourceNeedId.
-- Firebase Sync already sends changed transaction and need documents through one Firestore write batch when the queued save is flushed, so the normal three-record entry is committed together.
+- Create Need & Distribute changes local data in one save operation.
+- The incoming transaction, optional linked OUT distribution, and charity need share the same sourceNeedId.
+- Firebase Sync sends changed transaction and need documents through one Firestore write batch when the queued save is flushed.
+- If Distribute Now is 0, only the incoming transaction and need are created.
 - If internet service is unavailable, the complete entry remains saved locally and the existing pending-save queue retries it.
 
 SYNC COMPATIBILITY
 - Update 7.8.52 canonical handling for legacy Unassigned/Storage spellings is retained.
-- The new NEED_IMMEDIATE_IN source type is stored as a normal transaction field and requires no rule change.
-- The linked NEED_DISTRIBUTION OUT record continues to drive yearly and YTD distribution totals.
+- NEED_IMMEDIATE_IN and NEED_DISTRIBUTION remain normal transaction fields and require no rule change.
+- The linked OUT quantity and actual distribution date continue to drive yearly and YTD distribution totals.
 
 DEPLOYMENT CHECK
 1. Open the laptop first after GitHub Pages publishes.
-2. Confirm Update 7.8.53 and All changes synced.
-3. Create one small test entry with Create Need & Distribute Now.
-4. Confirm the second approved device receives the need and both linked transactions together.
+2. Confirm Update 7.8.54 and All changes synced.
+3. Create one small test entry using different Received and Distribute Now quantities.
+4. Confirm the second approved device receives all linked records together.
