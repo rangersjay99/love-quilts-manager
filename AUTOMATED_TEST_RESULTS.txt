@@ -1,22 +1,15 @@
-LOVE QUILTS MANAGER UPDATE 7.8.54 — AUTOMATED VALIDATION
+LOVE QUILTS MANAGER UPDATE 7.8.55 — AUTOMATED TEST RESULTS
+Generated: August 5, 2026
 
-Passed static syntax, browser-logic, mobile-layout, and production-backup simulations.
+PASS — app.js JavaScript syntax check.
+PASS — manifest.json and manifest-v7.json parse as valid JSON.
+PASS — version, manifest, service-worker cache, and cache-busting references are 7.8.55.
+PASS — firebase-sync.js is byte-for-byte unchanged from Update 7.8.54.
+PASS — Add Quilts guided-flow and protected confirmation markers remain present.
+PASS — YTD Quilts Distributed by Charity report markers remain present.
+PASS — current-month badge, teal highlight, jump control, and bold Short styles are present.
+PASS — normal decorative pink/purple backgrounds were removed from screen and Custom Report styling.
+PASS — red remains available for shortages, errors, failed synchronization, and destructive warnings.
+PASS — mobile and desktop calendar preview rendered successfully in Chromium.
 
-[PASS] JavaScript syntax: app.js and firebase-sync.js
-[PASS] app, service worker, manifests, and cache references use 7.8.54
-[PASS] expanded panel shows Received, Total Need, and Distribute Now together
-[PASS] Continue opens the protected review step
-[PASS] 7 received / need 20 / distribute 7 leaves 13 needed and storage unchanged
-[PASS] 7 received / need 20 / distribute 5 leaves 15 needed and adds 2 to storage
-[PASS] 7 received with 2 matching quilts already stored / distribute 9 uses the 2 stored quilts and leaves 11 needed
-[PASS] distribution beyond received plus matching inventory is blocked
-[PASS] 0 distributed creates the need, stores all received quilts, and creates no OUT record
-[PASS] a later distribution correctly removes the earlier stored balance
-[PASS] YTD charity distribution uses the Distribute Now quantity and actual distribution date
-[PASS] review still shows NOT SAVED YET and Confirm & Save All
-[PASS] mobile 390 x 844 layout shows the numbered flow clearly
-[PASS] August 4 production-backup simulation preserved all records, then applied +7 made, +5 distributed, +2 storage, and +15 remaining need correctly
-[PASS] 7.8.52 Unassigned/Storage synchronization compatibility remains present
-[PASS] Firebase write-batch synchronization code remains unchanged
-
-Live Firestore credentials were not used in automated testing. Confirm All changes synced and second-device receipt after deployment.
+This update changes presentation and calendar navigation only. It does not modify Firebase paths or the saved-data schema.

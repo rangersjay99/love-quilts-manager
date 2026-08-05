@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.54';
+const VERSION='7.8.55';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -863,15 +863,16 @@ function calendarMarkup(year,charity='',size='',showAddButtons=true,interactive=
         const n=item.n,nSent=fulfilledQty(n),nRemaining=remainingNeed(n);
         let summary;
         if(nRemaining===0)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed 0${n.fulfilledDate?' · '+fmtDate(n.fulfilledDate):''}`;
-        else if(nSent>0||isPast)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed ${nRemaining} · Available in Storage ${item.available} · Short ${item.shortage}`;
-        else summary=`Quilts Needed ${n.qty} · Available in Storage ${item.available} · Short ${item.shortage}`;
+        else if(nSent>0||isPast)summary=`Quilts Needed ${n.qty} · Sent ${nSent} · Quilts Still Needed ${nRemaining} · Available in Storage ${item.available} · Short <strong class="calendar-short-number">${item.shortage}</strong>`;
+        else summary=`Quilts Needed ${n.qty} · Available in Storage ${item.available} · Short <strong class="calendar-short-number">${item.shortage}</strong>`;
         return interactive?`<button type="button" class="month-need-line" onclick="openCalendarNeedActions('${n.id}')"><span class="month-need-size">${esc(n.size)}</span> · ${summary}</button>`:`<div class="month-need-line"><span class="month-need-size">${esc(n.size)}</span> · ${summary}</div>`;
       }).join('');
       return`<div class="month-charity-status ${groupMet?'charity-met':'charity-short'}"><div class="month-charity-heading"><b>${esc(group.charity)}</b><span>${groupMet?'Met':'Short'}</span></div>${lines}</div>`;
     }).join(''):'<div class="month-need">No quilts needed</div>';
-    const totals=(allComplete||isPast||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b class="${shortage?'negative':''}">${shortage}</b><span>Short</span></div></div>`;
+    const totals=(allComplete||isPast||sent>0)?`<div class="month-totals three"><div><b>${needed}</b><span>Quilts Needed</span></div><div><b>${sent}</b><span>Sent</span></div><div><b class="${remainingTotal?'negative':'positive'}">${remainingTotal}</b><span>Still Needed</span></div></div>`:`<div class="month-totals"><div><b>${needed}</b><span>Quilts Needed</span></div><div class="short-total"><b class="${shortage?'short-number negative':''}">${shortage}</b><span>Short</span></div></div>`;
     const editHint=interactive?'<div class="month-edit-hint">Tap charity to edit</div>':'';
-    return`<div class="month-card ${state}${isCurrent?' current-month':''}"><h4><span>${name}</span><span class="month-status">${label}</span></h4>${totals}${details}${editHint}</div>`;
+    const currentBadge=isCurrent?'<span class="current-month-label">Current Month</span>':'';
+    return`<div class="month-card ${state}${isCurrent?' current-month':''}" data-month="${month}"><h4><span class="month-name"><span>${name}</span>${currentBadge}</span><span class="month-status">${label}</span></h4>${totals}${details}${editHint}</div>`;
   }).join('');
 }
 function renderNeedsCalendar(){
@@ -883,6 +884,13 @@ function renderHomeCalendar(){
   const box=el('homeNeedsCalendar');if(!box)return;
   const year=Number(monthNow().slice(0,4)),charity=el('homeCalendarCharity')?.value||'';
   box.innerHTML=calendarMarkup(year,charity,'',true);
+}
+function jumpToCurrentMonth(){
+  const card=el('homeNeedsCalendar')?.querySelector(`[data-month="${monthNow()}"]`);
+  if(!card)return;
+  card.scrollIntoView({behavior:'smooth',block:'center'});
+  card.setAttribute('tabindex','-1');
+  window.setTimeout(()=>card.focus({preventScroll:true}),350);
 }
 function modalOpen(id){const modal=el(id);if(!modal)return;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function modalClose(id){const modal=el(id);if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');if(!document.querySelector('.calendar-modal-backdrop.open'))document.body.style.overflow=''}
@@ -1683,9 +1691,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.54 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.55 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.54',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.55',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -1967,7 +1975,7 @@ function renderCustomReportPreview(showNotice=true){
   return true;
 }
 function customReportStandaloneCSS(){
-  return`*{box-sizing:border-box}body{margin:0;background:#f5f1f5;color:#2b2530;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.newsletter-report{max-width:900px;margin:24px auto;background:#fff;padding:34px;border:1px solid #ddcfdd}.newsletter-header{border-bottom:5px solid #6d3a78;padding-bottom:18px;margin-bottom:22px}.newsletter-kicker{font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#6d3a78}.newsletter-header h1{font-family:Georgia,"Times New Roman",serif;font-size:34px;line-height:1.08;margin:8px 0}.newsletter-range,.newsletter-small{color:#6b626d;font-size:12px;line-height:1.5}.newsletter-highlights,.newsletter-year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.newsletter-highlights>div,.newsletter-year-grid>div{border:1px solid #d9cbd9;border-radius:12px;padding:13px;text-align:center;background:#faf7fb}.newsletter-highlights b,.newsletter-year-grid b{display:block;font-size:25px;color:#4f2859}.newsletter-highlights span,.newsletter-year-grid span{display:block;font-size:11px;font-weight:800;margin-top:4px}.newsletter-year-grid .annual{background:#f4e9f6;border-color:#b98cc1}.newsletter-section{margin:24px 0;break-inside:auto}.newsletter-section-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;border-bottom:2px solid #6d3a78;margin-bottom:9px}.newsletter-section-heading h2{font:700 21px Georgia,"Times New Roman",serif;margin:0 0 6px}.newsletter-section-heading span{font-size:11px;color:#6b626d;margin-bottom:7px}.newsletter-formula{background:#f5edf7;border-left:5px solid #6d3a78;padding:10px 12px;font-size:12px;line-height:1.5}table{width:100%;border-collapse:collapse;font-size:12px}th{text-align:left;background:#eee5f0;color:#4f2859}th,td{padding:7px 6px;border-bottom:1px solid #ddd}tr{break-inside:avoid}.negative{color:#a83442}.positive{color:#267a44}.custom-empty{padding:18px;text-align:center;border:1px dashed #cab9ca;color:#6b626d}footer{margin-top:28px;border-top:1px solid #d9cbd9;padding-top:10px;font-size:9px;color:#6b626d}@media(max-width:650px){.newsletter-highlights,.newsletter-year-grid{grid-template-columns:repeat(2,1fr)}.newsletter-report{margin:0;padding:20px}.newsletter-header h1{font-size:28px}}@media print{@page{size:letter portrait;margin:.4in}body{background:#fff}.newsletter-report{max-width:none;margin:0;padding:0;border:0}.newsletter-header h1{font-size:28px}.newsletter-highlights,.newsletter-year-grid{grid-template-columns:repeat(4,1fr)}.newsletter-section-heading h2{font-size:17px}table{font-size:9px}th,td{padding:4px}.newsletter-section{break-inside:auto}}`;
+  return`*{box-sizing:border-box}body{margin:0;background:#f3f7f8;color:#253238;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.newsletter-report{max-width:900px;margin:24px auto;background:#fff;padding:34px;border:1px solid #cfdfe2}.newsletter-header{border-bottom:5px solid #236f75;padding-bottom:18px;margin-bottom:22px}.newsletter-kicker{font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#236f75}.newsletter-header h1{font-family:Georgia,"Times New Roman",serif;font-size:34px;line-height:1.08;margin:8px 0}.newsletter-range,.newsletter-small{color:#66737a;font-size:12px;line-height:1.5}.newsletter-highlights,.newsletter-year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.newsletter-highlights>div,.newsletter-year-grid>div{border:1px solid #cedee1;border-radius:12px;padding:13px;text-align:center;background:#f5f8f9}.newsletter-highlights b,.newsletter-year-grid b{display:block;font-size:25px;color:#184f58}.newsletter-highlights span,.newsletter-year-grid span{display:block;font-size:11px;font-weight:800;margin-top:4px}.newsletter-year-grid .annual{background:#e9f4f6;border-color:#70a9b3}.newsletter-section{margin:24px 0;break-inside:auto}.newsletter-section-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;border-bottom:2px solid #236f75;margin-bottom:9px}.newsletter-section-heading h2{font:700 21px Georgia,"Times New Roman",serif;margin:0 0 6px}.newsletter-section-heading span{font-size:11px;color:#66737a;margin-bottom:7px}.newsletter-formula{background:#edf6f8;border-left:5px solid #236f75;padding:10px 12px;font-size:12px;line-height:1.5}table{width:100%;border-collapse:collapse;font-size:12px}th{text-align:left;background:#e7f1f3;color:#184f58}th,td{padding:7px 6px;border-bottom:1px solid #ddd}tr{break-inside:avoid}.negative{color:#a83442}.positive{color:#267a44}.custom-empty{padding:18px;text-align:center;border:1px dashed #b8ccd0;color:#66737a}footer{margin-top:28px;border-top:1px solid #cedee1;padding-top:10px;font-size:9px;color:#66737a}@media(max-width:650px){.newsletter-highlights,.newsletter-year-grid{grid-template-columns:repeat(2,1fr)}.newsletter-report{margin:0;padding:20px}.newsletter-header h1{font-size:28px}}@media print{@page{size:letter portrait;margin:.4in}body{background:#fff}.newsletter-report{max-width:none;margin:0;padding:0;border:0}.newsletter-header h1{font-size:28px}.newsletter-highlights,.newsletter-year-grid{grid-template-columns:repeat(4,1fr)}.newsletter-section-heading h2{font-size:17px}table{font-size:9px}th,td{padding:4px}.newsletter-section{break-inside:auto}}`;
 }
 function downloadCustomReport(){
   if(!renderCustomReportPreview(false))return notice('customReportNotice','Preview the report before downloading it.');
@@ -2332,7 +2340,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.54';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.55';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -3345,3 +3353,9 @@ setMode=function(nextMode){lqm7854BaseSetMode(nextMode);lqm7854UpdateQuantityLab
 
 document.addEventListener('DOMContentLoaded',()=>{lqm7854UpdateQuantityLabel()},{once:true});
 // ===== End Update 7.8.54 =====
+
+
+// ===== Love Quilts Manager Update 7.8.55 =====
+// Visual-only clarity update: meaningful colors, stronger current-month calendar treatment,
+// bold Short values, and a quick jump to the current month. No data-schema or Firebase changes.
+// ===== End Update 7.8.55 =====

@@ -1,11 +1,13 @@
-Love Quilts Manager Update 7.8.54
-Released: August 4, 2026
+Love Quilts Manager Update 7.8.55
+Released: August 5, 2026
 
-Clear Received, Need & Distribute Flow.
+Meaningful Colors and Clearer Calendar update.
 
 Changes:
-- Guided numbers: Received, Total Need, Distribute Now, Continue.
-- Received and distributed quantities can differ.
-- Net difference is applied to exact matching storage.
-- Negative inventory is prevented.
-- Fixed final confirmation remains visible.
+- Normal backgrounds use teal, blue, sage, white, and neutral gray.
+- Red and pink are reserved for negative conditions and warnings.
+- Current month has a stronger teal frame, highlighted header, and CURRENT MONTH badge.
+- Short quantities are larger and bold.
+- Home Calendar includes Jump to Current Month.
+
+Firebase production paths and the shared-data schema are unchanged.

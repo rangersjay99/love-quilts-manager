@@ -1,32 +1,33 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.54 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.55 TEST CHECKLIST
 
 BASIC
-[ ] App opens and shows Update 7.8.54.
-[ ] Laptop and other approved devices reach All changes synced.
-[ ] Existing inventory, needs, reports, custom logo, and settings remain present.
+[ ] App opens and shows Update 7.8.55.
+[ ] Existing inventory, needs, reports, settings, custom logo, and Audit History remain present.
+[ ] Laptop reaches All changes synced before opening other devices.
+[ ] Other approved devices also reach All changes synced.
 
-CLEAR COMBINED ENTRY
-[ ] Tap Add Quilts and select a real charity and size.
-[ ] Select Create Need & Distribute.
-[ ] The expanded panel shows 1. Quilts Received, 2. Total Quilts Needed, and 3. Quilts to Distribute Now together.
-[ ] Enter 7 received.
-[ ] Enter 20 under 2. Total Quilts Needed.
-[ ] Enter 7 under 3. Quilts to Distribute Now.
-[ ] The main button says Continue.
-[ ] Preview shows Received 7, Need 20, Distribute 7, Still Needed 13, and no storage change.
-[ ] Review shows NOT SAVED YET and Confirm & Save All without scrolling.
-[ ] After saving, Calendar shows Need 20, Distributed 7, Still Needed 13.
+COLOR MEANING
+[ ] Normal page backgrounds are neutral gray, white, teal, blue, or sage—not red or pink.
+[ ] Standard buttons and informational panels do not look like warnings.
+[ ] Red remains visible for actual shortages, negative values, errors, overdue needs, and Delete warnings.
+[ ] NOT SAVED YET remains a muted gold reminder, not a red error.
+[ ] Successful saves remain green.
 
-DIFFERENT RECEIVED AND DISTRIBUTED AMOUNTS
-[ ] Test 7 received, need 20, distribute 5: storage increases 2 and still needed is 15.
-[ ] Test 7 received with at least 2 already in matching storage, need 20, distribute 9: storage decreases 2 and still needed is 11.
-[ ] Trying to distribute more than received plus matching storage is blocked.
-[ ] Distribution can exceed the total need when enough matching inventory exists; still needed stays 0 and the full distributed amount is reported.
-[ ] Entering 0 to distribute creates the need and stores all received quilts without a distribution record.
+CURRENT MONTH
+[ ] The current Calendar month has a thick teal border.
+[ ] The current month header has a pale blue/teal band.
+[ ] The CURRENT MONTH label is immediately visible.
+[ ] Jump to Current Month scrolls directly to the current month on phone, tablet, and desktop.
+[ ] Current-month styling does not hide Covered, Shortage, Partial, or Distributed status.
+
+SHORT QUANTITY
+[ ] The monthly Short number is larger and bold.
+[ ] Short quantities inside charity details are bold.
+[ ] A zero Short value is not displayed as a red warning.
 
 REGRESSION
-[ ] Normal Add Quilts and Store as Unassigned/Storage still work.
-[ ] Love Quilts Out, Adjust, and Set Current Count remain unchanged.
-[ ] Yearly Numbers opens the Yearly Quilt Summary directly.
-[ ] YTD Quilts Distributed by Charity uses the entered Distribute Now quantity and actual distribution date.
-[ ] Full, Compact, Custom, Calendar, Home Summary, Audit, and blank worksheet PDFs still open.
+[ ] Add Quilts still shows Received, Total Need, Distribute Now, then Continue.
+[ ] Confirm & Save remains visible and shows NOT SAVED YET until saved.
+[ ] YTD Quilts Distributed by Charity still displays correct totals.
+[ ] Full, Compact, Custom, Calendar, Summary, Audit, and blank worksheet PDFs still open.
+[ ] No inventory, need, distribution, report calculation, or Firebase schema changed.
