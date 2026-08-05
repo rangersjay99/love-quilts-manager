@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
-Updated July 31, 2026
+Updated August 5, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.57
+IMPLEMENTED THROUGH UPDATE 7.8.58
+
+- Update 7.8.58 coordinates the Home Reports Snapshot, Reports screen, previews, print layouts, and PDF headings with consistent plum-branded headers, report titles, generated dates, section headings, tables, totals, spacing, and footers. Existing calculations and one-tap navigation remain unchanged.
 
 - Update 7.8.57 adds a synchronized editable Header Tagline beneath the app title. Leaving it blank restores the standard wording; no inventory, need, report, or calculation logic changed.
 

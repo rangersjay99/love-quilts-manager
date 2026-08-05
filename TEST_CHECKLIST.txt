@@ -1,26 +1,34 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.57 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.58 TEST CHECKLIST
 
-GENERAL
-[ ] App opens and shows Update 7.8.57.
-[ ] Existing inventory, needs, reports, custom logo, settings, and Audit History remain present.
-[ ] App reaches All changes synced.
+BASIC
+[ ] App opens and shows Update 7.8.58.
+[ ] Existing inventory, needs, settings, custom logo, and Audit History remain present.
+[ ] Laptop and approved mobile devices reach All changes synced.
 
-HEADER TAGLINE
-[ ] Open Settings → Names, Wording & Tabs.
-[ ] Header Tagline appears beneath Program / Quilt Name.
-[ ] Enter a short test tagline and save.
-[ ] The new tagline appears beneath the app title at the top of Home.
-[ ] The same tagline remains visible on Inventory, Quilts Needed, Reports, and Settings.
-[ ] Reopen the app and confirm the custom tagline remains.
-[ ] Confirm the tagline synchronizes to the second approved device.
-[ ] Clear the field, save, and confirm the standard wording returns: Available quilts, requests, and quilts still to complete.
+HOME REPORTS SNAPSHOT
+[ ] Reports Snapshot heading appears above This Year and By Charity.
+[ ] This Year and By Charity cards share the same polished plum/neutral styling.
+[ ] View Full Yearly Statistics still opens the selected Yearly Quilt Summary directly.
+[ ] Open Reports goes to the Reports screen.
+
+REPORTS SCREEN
+[ ] The Report Center has a plum branded header, logo, report title, and generated information.
+[ ] Headline totals and action buttons still work.
+[ ] Yearly, Inventory & Quilts Requested, Distributed & Adjustments, Custom, and Downloads sections open normally.
+[ ] Tables, section headings, totals, and spacing look coordinated.
+[ ] Quilts Distributed by Charity YTD figures are unchanged.
+
+OUTPUT REPORTS
+[ ] Home Summary PDF has the standard organization/app/report heading.
+[ ] 12-Month Calendar PDF has the same heading order and footer style.
+[ ] Full PDF and Compact PDF retain all existing totals and sections.
+[ ] Custom Report preview/PDF uses the coordinated header and report title.
+[ ] Audit History PDF and blank worksheet retain all content and use the shared format.
+[ ] Red is still limited to shortages, errors, and warnings.
 
 REGRESSION
-[ ] Add Quilts still shows Received → Total Need → Distribute Now → Continue.
-[ ] Confirm & Save remains visible and says NOT SAVED YET until saved.
-[ ] Current Calendar month remains clearly highlighted.
-[ ] Short quantities remain bold.
-[ ] Yearly Numbers opens the yearly report directly.
-[ ] Quilts Distributed by Charity — YTD remains correct.
-[ ] Purple/plum branding remains on the splash and page headers.
-[ ] Red remains limited to shortages, errors, failed sync, overdue items, and destructive warnings.
+[ ] Add Quilts Received → Total Need → Distribute Now workflow still works.
+[ ] Confirm & Save remains visible and clearly says NOT SAVED YET before saving.
+[ ] Current Calendar month remains prominent and Short quantities remain bold.
+[ ] Header Tagline remains editable and synchronized.
+[ ] No inventory, need, report calculation, Firebase path, or saved-data schema changed.
