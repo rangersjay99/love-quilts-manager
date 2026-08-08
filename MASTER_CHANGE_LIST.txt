@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
-Updated August 5, 2026
+Updated August 8, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.60
+IMPLEMENTED THROUGH UPDATE 7.8.61
+
+- Update 7.8.61 adds unsaved-entry protection across supported data-entry workflows and automatically selects the size when a charity has exactly one eligible size. No Firebase paths, saved record schemas, or calculations changed.
 
 - Update 7.8.60 adds reviewed Bulk Quilt Intake / Storage Entry and synchronized charity-specific Eligible Sizes while preserving historical records and the existing combined Add Quilts workflow.
 

@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.60';
+const VERSION='7.8.61';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1685,7 +1685,7 @@ function printFullReport(){renderReports();runPrintMode('print-full','letter por
 function printMeetingReport(){renderReports();runPrintMode('print-compact','letter portrait','.3in')}
 function exportMeetingPDF(){exportCompactPDF()}
 window.addEventListener('afterprint',clearPrintMode);
-document.addEventListener('keydown',event=>{if(event.key!=='Escape')return;if(el('entryReviewModal')?.classList.contains('open'))closeEntryReview();else if(el('calendarDistributionModal')?.classList.contains('open'))closeCalendarDistributionModal();else if(el('calendarActionModal')?.classList.contains('open'))closeCalendarActionModal();else if(el('calendarNeedModal')?.classList.contains('open'))closeCalendarNeedModal()});
+document.addEventListener('keydown',event=>{if(event.key!=='Escape')return;if(el('unsavedEntryModal')?.classList.contains('open'))lqm7861StayUnsaved();else if(el('entryReviewModal')?.classList.contains('open'))closeEntryReview();else if(el('calendarDistributionModal')?.classList.contains('open'))closeCalendarDistributionModal();else if(el('calendarActionModal')?.classList.contains('open'))closeCalendarActionModal();else if(el('calendarNeedModal')?.classList.contains('open'))closeCalendarNeedModal()});
 window.addEventListener('online',()=>queueExternalBackup('Internet connection restored'));
 function renderAll(){refreshSelects();applyNames();renderHome();renderInventory();renderHistory();renderNeeds();renderReports();renderRecoveryList();updateSaveStatus()}
 
@@ -1709,9 +1709,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.60 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.61 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.60',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.61',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2358,7 +2358,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.60';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.61';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -3853,3 +3853,229 @@ needInlineEditor=function(n,stateClass,stateLabel,info,editorMode='details'){
 // Keep dynamic size selectors correct after full renders and on first load.
 document.addEventListener('DOMContentLoaded',()=>{refreshSelects();if(!el('bulkIntakeRows')?.children.length)lqm7860ResetBulkRows(3)},{once:true});
 // ===== End Update 7.8.60 =====
+
+
+// ===== Love Quilts Manager Update 7.8.61 =====
+// Adds unsaved-entry protection across the main data-entry workflows and
+// automatically selects the quilt size when a charity has exactly one eligible
+// size. No Firebase paths, saved record schema, inventory math, or report math
+// are changed.
+
+let lqm7861Baselines=Object.create(null);
+let lqm7861UnsavedContinuation=null;
+let lqm7861UnsavedDiscard=null;
+let lqm7861ReturnFocus=null;
+let lqm7861SuppressProtection=0;
+
+function lqm7861FieldState(id){
+  const node=el(id);if(!node)return null;
+  if(node.type==='checkbox'||node.type==='radio')return !!node.checked;
+  return String(node.value??'');
+}
+function lqm7861SnapshotIds(ids,extra={}){
+  const values={};ids.forEach(id=>{values[id]=lqm7861FieldState(id)});return JSON.stringify({...extra,values});
+}
+const LQM7861_INVENTORY_FIELDS=['txAdjustmentDirection','txDate','txCharity','txSize','qtyInput','txNoCurrentNeed','txCreateNeed','txCreateNeedReceivedQty','txCreateNeedQty','txCreateNeedDistributeQty','txCreateNeedMonth','txCreateNeedDate','txCreateNeedNote','txNote'];
+const LQM7861_NEED_FIELDS=['needMonth','needCharity','needSize','needQty','needNote'];
+const LQM7861_CALENDAR_NEED_FIELDS=['calendarNeedMonth','calendarNeedCharity','calendarNeedSize','calendarNeedQty','calendarNeedNote'];
+const LQM7861_DISTRIBUTION_FIELDS=['calendarDistributionQty','calendarDistributionDate','calendarDistributionRecordOut'];
+function lqm7861InventorySnapshot(){return lqm7861SnapshotIds(LQM7861_INVENTORY_FIELDS,{editing:String(editTxId||'')})}
+function lqm7861NeedSnapshot(){return lqm7861SnapshotIds(LQM7861_NEED_FIELDS)}
+function lqm7861CalendarNeedSnapshot(){return lqm7861SnapshotIds(LQM7861_CALENDAR_NEED_FIELDS,{record:String(calendarModalNeedId||'')})}
+function lqm7861DistributionSnapshot(){return lqm7861SnapshotIds(LQM7861_DISTRIBUTION_FIELDS,{record:String(calendarDistributionNeedId||''),mode:String(calendarDistributionMode||'full')})}
+function lqm7861BulkSnapshot(){
+  const rows=[...document.querySelectorAll('#bulkIntakeRows .bulk-intake-row')].map(row=>({
+    charity:String(row.querySelector('.bulk-charity')?.value||''),size:String(row.querySelector('.bulk-size')?.value||''),qty:String(row.querySelector('.bulk-qty')?.value||'')
+  })).filter(row=>row.charity||row.size||row.qty);
+  return JSON.stringify({date:String(el('bulkIntakeDate')?.value||''),note:String(el('bulkIntakeNote')?.value||''),rows});
+}
+function lqm7861InlineSnapshot(form){
+  if(!form)return'';const values=[];
+  [...form.querySelectorAll('input,select,textarea')].forEach(field=>{if(!field.name)return;values.push([field.name,field.type==='checkbox'||field.type==='radio'?!!field.checked:String(field.value??'')])});
+  return JSON.stringify(values);
+}
+function lqm7861Capture(name){
+  if(name==='inventory')lqm7861Baselines.inventory=lqm7861InventorySnapshot();
+  else if(name==='needs')lqm7861Baselines.needs=lqm7861NeedSnapshot();
+  else if(name==='bulk')lqm7861Baselines.bulk=lqm7861BulkSnapshot();
+  else if(name==='calendarNeed')lqm7861Baselines.calendarNeed=lqm7861CalendarNeedSnapshot();
+  else if(name==='distribution')lqm7861Baselines.distribution=lqm7861DistributionSnapshot();
+}
+function lqm7861Changed(name){
+  const current=name==='inventory'?lqm7861InventorySnapshot():name==='needs'?lqm7861NeedSnapshot():name==='bulk'?lqm7861BulkSnapshot():name==='calendarNeed'?lqm7861CalendarNeedSnapshot():name==='distribution'?lqm7861DistributionSnapshot():'';
+  if(!(name in lqm7861Baselines)){lqm7861Baselines[name]=current;return false}
+  return current!==lqm7861Baselines[name];
+}
+function lqm7861InlineChanged(){
+  const form=document.querySelector('.need-inline-editor');if(!form)return false;
+  const current=lqm7861InlineSnapshot(form),baseline=form.dataset.lqm7861Baseline;
+  if(!baseline){form.dataset.lqm7861Baseline=current;return false}
+  return current!==baseline;
+}
+function lqm7861CaptureInline(){const form=document.querySelector('.need-inline-editor');if(form)form.dataset.lqm7861Baseline=lqm7861InlineSnapshot(form)}
+function lqm7861ViewUnsaved(viewId){
+  if(viewId==='inventory'){
+    const inventory=lqm7861Changed('inventory'),bulk=lqm7861Changed('bulk');
+    if(inventory&&bulk)return{label:'Inventory entry and Bulk Intake',discard:()=>{cancelTxEdit();lqm7860ResetBulkRows();lqm7861Capture('inventory');lqm7861Capture('bulk')}};
+    if(inventory)return{label:'Inventory entry',discard:()=>{cancelTxEdit();lqm7861Capture('inventory')}};
+    if(bulk)return{label:'Bulk Quilt Intake',discard:()=>{lqm7860ResetBulkRows();lqm7861Capture('bulk')}};
+  }
+  if(viewId==='needs'){
+    const inline=lqm7861InlineChanged(),main=lqm7861Changed('needs');
+    if(inline&&main)return{label:'Add Quilts Needed entry and charity need edit',discard:()=>{lqm7861BaseCancelNeedEdit();resetNeedEntryForm();lqm7860SyncNeedSize('needCharity','needSize');lqm7861Capture('needs')}};
+    if(inline)return{label:'charity need edit',discard:()=>{lqm7861BaseCancelNeedEdit();lqm7861CaptureInline()}};
+    if(main)return{label:'Add Quilts Needed entry',discard:()=>{resetNeedEntryForm();lqm7860SyncNeedSize('needCharity','needSize');lqm7861Capture('needs')}};
+  }
+  return null;
+}
+function lqm7861ModalUnsaved(){
+  if(el('calendarNeedModal')?.classList.contains('open')&&lqm7861Changed('calendarNeed'))return{label:'Calendar need entry',discard:()=>lqm7861BaseCloseCalendarNeedModal()};
+  if(el('calendarDistributionModal')?.classList.contains('open')&&lqm7861Changed('distribution'))return{label:'distribution entry',discard:()=>lqm7861BaseCloseCalendarDistributionModal()};
+  return null;
+}
+function lqm7861AnyUnsaved(){
+  if(entryReviewAction&&el('entryReviewModal')?.classList.contains('open'))return true;
+  if(lqm7861ModalUnsaved())return true;
+  if(lqm7861Changed('inventory')||lqm7861Changed('bulk')||lqm7861Changed('needs')||lqm7861InlineChanged())return true;
+  return false;
+}
+function lqm7861OpenUnsaved(label,continuation,discard){
+  if(lqm7861SuppressProtection)return false;
+  lqm7861UnsavedContinuation=typeof continuation==='function'?continuation:null;lqm7861UnsavedDiscard=typeof discard==='function'?discard:null;lqm7861ReturnFocus=document.activeElement;
+  const detail=el('unsavedEntryDetail');if(detail)detail.textContent=`You have changes in ${label} that have not been saved. Do you want to continue without saving?`;
+  modalOpen('unsavedEntryModal');requestAnimationFrame(()=>el('unsavedEntryStay')?.focus());return true;
+}
+function lqm7861StayUnsaved(){
+  modalClose('unsavedEntryModal');const focus=lqm7861ReturnFocus;lqm7861UnsavedContinuation=null;lqm7861UnsavedDiscard=null;lqm7861ReturnFocus=null;
+  requestAnimationFrame(()=>{try{focus?.focus?.()}catch(_){}});return false;
+}
+function lqm7861DiscardAndContinue(){
+  const continuation=lqm7861UnsavedContinuation,discard=lqm7861UnsavedDiscard;modalClose('unsavedEntryModal');lqm7861UnsavedContinuation=null;lqm7861UnsavedDiscard=null;lqm7861ReturnFocus=null;
+  lqm7861SuppressProtection++;
+  try{discard?.();continuation?.()}finally{lqm7861SuppressProtection=Math.max(0,lqm7861SuppressProtection-1)}
+  return true;
+}
+
+// Auto-select the only eligible size. Multiple-size charities still require a choice.
+const lqm7861BaseSetSizeSelect=lqm7860SetSizeSelect;
+lqm7860SetSizeSelect=function(select,charity,choices,preserve='',placeholder='Select size'){
+  lqm7861BaseSetSizeSelect(select,charity,choices,preserve,placeholder);
+  if(select&&!select.disabled&&!select.value&&Array.isArray(choices)&&choices.length===1)select.value=choices[0];
+};
+
+// Protect bottom-tab and other in-app navigation away from dirty entry screens.
+const lqm7861BaseShowView=showView;
+showView=function(id){
+  if(lqm7861SuppressProtection)return lqm7861BaseShowView(id);
+  const current=document.querySelector('.view.active')?.id||'';
+  if(current&&id!==current){const unsaved=lqm7861ViewUnsaved(current);if(unsaved){lqm7861OpenUnsaved(unsaved.label,()=>lqm7861BaseShowView(id),unsaved.discard);return false}}
+  return lqm7861BaseShowView(id);
+};
+
+// Main form reset/cancel paths. Programmatic resets after a successful save stay clean;
+// user-triggered cancel/start-over actions go through the warning helpers below.
+const lqm7861BaseCancelTxEdit=cancelTxEdit;
+cancelTxEdit=function(){const result=lqm7861BaseCancelTxEdit();lqm7861Capture('inventory');return result};
+function lqm7861RequestCancelTxEdit(){
+  if(lqm7861Changed('inventory'))return lqm7861OpenUnsaved('Inventory entry',()=>cancelTxEdit(),()=>{});
+  return cancelTxEdit();
+}
+const lqm7861BaseResetNeedEntryForm=resetNeedEntryForm;
+resetNeedEntryForm=function(){const result=lqm7861BaseResetNeedEntryForm();lqm7860SyncNeedSize('needCharity','needSize');lqm7861Capture('needs');return result};
+const lqm7861BaseOpenAddQuilts=openAddQuilts;
+openAddQuilts=function(){
+  if(!lqm7861SuppressProtection&&document.querySelector('.view.active')?.id==='inventory'){
+    const unsaved=lqm7861ViewUnsaved('inventory');if(unsaved)return lqm7861OpenUnsaved(unsaved.label,()=>lqm7861BaseOpenAddQuilts(),unsaved.discard);
+  }
+  const result=lqm7861BaseOpenAddQuilts();lqm7861Capture('inventory');return result;
+};
+const lqm7861BaseOpenAddNeed=openAddNeed;
+openAddNeed=function(){
+  if(!lqm7861SuppressProtection&&document.querySelector('.view.active')?.id==='needs'){
+    const unsaved=lqm7861ViewUnsaved('needs');if(unsaved)return lqm7861OpenUnsaved(unsaved.label,()=>lqm7861BaseOpenAddNeed(),unsaved.discard);
+  }
+  const result=lqm7861BaseOpenAddNeed();lqm7861Capture('needs');return result;
+};
+function lqm7861RequestBulkReset(){
+  if(lqm7861Changed('bulk'))return lqm7861OpenUnsaved('Bulk Quilt Intake',()=>{lqm7860ResetBulkRows();lqm7861Capture('bulk')},()=>{});
+  lqm7860ResetBulkRows();lqm7861Capture('bulk');return true;
+}
+
+// Inline need edits are generated dynamically, so store their original form values
+// on the form itself and protect Cancel / switching to another need.
+const lqm7861BaseCancelNeedEdit=cancelNeedEdit;
+cancelNeedEdit=function(){
+  if(!lqm7861SuppressProtection&&lqm7861InlineChanged())return lqm7861OpenUnsaved('charity need edit',()=>lqm7861BaseCancelNeedEdit(),()=>{});
+  return lqm7861BaseCancelNeedEdit();
+};
+const lqm7861BaseEditNeed=editNeed;
+editNeed=function(id,distribution=false){
+  if(!lqm7861SuppressProtection&&!editNeedId&&lqm7861Changed('needs'))return lqm7861OpenUnsaved('Add Quilts Needed entry',()=>{resetNeedEntryForm();lqm7861BaseEditNeed(id,distribution);requestAnimationFrame(lqm7861CaptureInline)},()=>{});
+  if(!lqm7861SuppressProtection&&editNeedId&&editNeedId!==id&&lqm7861InlineChanged())return lqm7861OpenUnsaved('charity need edit',()=>{lqm7861BaseEditNeed(id,distribution);requestAnimationFrame(lqm7861CaptureInline)},()=>{});
+  const result=lqm7861BaseEditNeed(id,distribution);requestAnimationFrame(lqm7861CaptureInline);return result;
+};
+
+// Protect Calendar entry and distribution dialogs when X, Cancel, backdrop, or Escape is used.
+const lqm7861BaseOpenCalendarNeedEditor=openCalendarNeedEditor;
+openCalendarNeedEditor=function(id='',month=''){const result=lqm7861BaseOpenCalendarNeedEditor(id,month);lqm7861Capture('calendarNeed');return result};
+const lqm7861BaseCloseCalendarNeedModal=closeCalendarNeedModal;
+closeCalendarNeedModal=function(force=false){
+  if(!force&&!lqm7861SuppressProtection&&el('calendarNeedModal')?.classList.contains('open')&&lqm7861Changed('calendarNeed'))return lqm7861OpenUnsaved('Calendar need entry',()=>lqm7861BaseCloseCalendarNeedModal(),()=>{});
+  const result=lqm7861BaseCloseCalendarNeedModal();delete lqm7861Baselines.calendarNeed;return result;
+};
+const lqm7861BaseOpenCalendarDistributionModal=openCalendarDistributionModal;
+openCalendarDistributionModal=function(id,source='calendar'){const result=lqm7861BaseOpenCalendarDistributionModal(id,source);lqm7861Capture('distribution');return result};
+const lqm7861BaseCloseCalendarDistributionModal=closeCalendarDistributionModal;
+closeCalendarDistributionModal=function(force=false){
+  if(!force&&!lqm7861SuppressProtection&&el('calendarDistributionModal')?.classList.contains('open')&&lqm7861Changed('distribution'))return lqm7861OpenUnsaved('distribution entry',()=>lqm7861BaseCloseCalendarDistributionModal(),()=>{});
+  const result=lqm7861BaseCloseCalendarDistributionModal();delete lqm7861Baselines.distribution;return result;
+};
+
+// Saving is an intentional exit. Suppress the warning only during the confirmed save call,
+// then capture the now-clean entry state.
+const lqm7861BaseSaveTransaction=saveTransaction;
+saveTransaction=function(reviewed=false,reviewedAdjustment=null){
+  if(reviewed)lqm7861SuppressProtection++;let result;
+  try{result=lqm7861BaseSaveTransaction(reviewed,reviewedAdjustment)}finally{if(reviewed)lqm7861SuppressProtection=Math.max(0,lqm7861SuppressProtection-1)}
+  return result;
+};
+const lqm7861BaseImmediateNeedSave=lqm7853SaveImmediateNeed;
+lqm7853SaveImmediateNeed=function(reviewed=false){
+  if(reviewed)lqm7861SuppressProtection++;let result;
+  try{result=lqm7861BaseImmediateNeedSave(reviewed)}finally{if(reviewed)lqm7861SuppressProtection=Math.max(0,lqm7861SuppressProtection-1)}
+  return result;
+};
+const lqm7861BaseSaveNeed=saveNeed;
+saveNeed=function(reviewed=false){
+  if(reviewed)lqm7861SuppressProtection++;let result;
+  try{result=lqm7861BaseSaveNeed(reviewed)}finally{if(reviewed)lqm7861SuppressProtection=Math.max(0,lqm7861SuppressProtection-1)}
+  if(result)lqm7861Capture('needs');return result;
+};
+const lqm7861BaseSaveCalendarNeed=saveCalendarNeed;
+saveCalendarNeed=function(reviewed=false){
+  if(reviewed)lqm7861SuppressProtection++;let result;
+  try{result=lqm7861BaseSaveCalendarNeed(reviewed)}finally{if(reviewed)lqm7861SuppressProtection=Math.max(0,lqm7861SuppressProtection-1)}
+  if(result)delete lqm7861Baselines.calendarNeed;return result;
+};
+const lqm7861BaseSaveCalendarDistribution=saveCalendarDistribution;
+saveCalendarDistribution=function(reviewed=false){
+  if(reviewed)lqm7861SuppressProtection++;let result;
+  try{result=lqm7861BaseSaveCalendarDistribution(reviewed)}finally{if(reviewed)lqm7861SuppressProtection=Math.max(0,lqm7861SuppressProtection-1)}
+  if(result)delete lqm7861Baselines.distribution;return result;
+};
+const lqm7861BaseSaveBulkIntake=lqm7860SaveBulkIntake;
+lqm7860SaveBulkIntake=function(date,note){
+  lqm7861SuppressProtection++;let result;
+  try{result=lqm7861BaseSaveBulkIntake(date,note)}finally{lqm7861SuppressProtection=Math.max(0,lqm7861SuppressProtection-1)}
+  if(result)lqm7861Capture('bulk');return result;
+};
+
+// Browser/tab close or refresh uses the browser's native leave-page warning.
+window.addEventListener('beforeunload',event=>{if(lqm7861AnyUnsaved()){event.preventDefault();event.returnValue=''}});
+
+document.addEventListener('DOMContentLoaded',()=>{
+  lqm7861Capture('inventory');lqm7861Capture('needs');lqm7861Capture('bulk');
+  // Re-run the dynamic selectors so a one-size charity is auto-selected immediately.
+  lqm7860SyncTxSize();lqm7860SyncNeedSize('needCharity','needSize');lqm7860SyncNeedSize('calendarNeedCharity','calendarNeedSize');
+},{once:true});
+// ===== End Update 7.8.61 =====

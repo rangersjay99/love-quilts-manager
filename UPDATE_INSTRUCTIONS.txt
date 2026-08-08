@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.60
+LOVE QUILTS MANAGER — UPDATE 7.8.61
 Released: August 8, 2026
 
 BEFORE UPDATING
@@ -7,14 +7,15 @@ BEFORE UPDATING
 3. Download a ZIP backup of the current GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_60.zip.
-2. Upload every extracted file to the main/root folder of the Love Quilts Manager GitHub repository and replace files with the same names.
-3. Do not delete or replace the firebase-test folder.
+1. Extract Love_Quilts_Manager_Update_7_8_61.zip.
+2. In the GitHub repository main/root folder, upload every extracted file and replace files with the same names.
+3. Do not delete or replace the firebase-test folder if it exists in the repository.
 4. Wait for GitHub Pages to publish.
 5. Close and reopen the installed app on each device. Refresh once if an older version remains cached.
 
 IMPORTANT
-- Update 7.8.60 adds one backward-compatible synchronized settings field for charity-specific eligible sizes.
-- Firebase collection/document paths are unchanged.
-- Existing inventory, needs, distributions, settings, audit history, and report calculations are not migrated or cleared.
-- If no Eligible Sizes have been configured for a charity, all current sizes remain allowed.
+- This full package is based on Update 7.8.60.
+- It does not clear, migrate, or reinitialize shared inventory.
+- Do not choose Create Real Shared Inventory again.
+- Firebase production collection paths and transaction/need saved-data schemas are unchanged.
+- Update 7.8.61 adds no new synchronized data fields.

@@ -1,16 +1,14 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.60 — August 8, 2026
+Current release: Update 7.8.61 — August 8, 2026
 
-## Update 7.8.60 — Bulk Quilt Intake and Eligible Sizes
+## Update 7.8.61 — Unsaved Entry Protection & One-Size Auto-Fill
 
-- Adds Bulk Quilt Intake / Storage Entry for multiple charity, size, and quantity rows in one reviewed save.
-- Bulk rows can use an assigned charity or Unassigned/Storage.
-- Adds charity-specific Eligible Sizes under Settings > Manage Lists.
-- New inventory and charity-need entries show only sizes eligible for the selected charity.
-- Existing historical records remain editable even if a size is later removed from a charity’s eligible list.
-- Eligible-size settings synchronize through the existing Firebase settings document. No Firebase collection paths changed.
-- Preserves the Add Quilts Received → Total Need → Distribute Now workflow, reports, PDFs, calculations, and existing data.
+- Adds unsaved-entry protection to Inventory entry, Add Quilts Needed, Bulk Quilt Intake, Calendar need editing, Calendar distribution editing, and inline need edits.
+- Leaving/canceling a dirty entry shows **Entry not saved** with **Stay and Finish Entry** or **Discard & Continue**.
+- Refreshing or closing the page while an entry is dirty invokes the browser's native leave-page warning when supported.
+- If a charity has exactly one eligible quilt size, that size is automatically selected. Multiple-size charities continue to require an explicit choice.
+- Existing 7.8.60 Bulk Intake, Eligible Sizes, reports, calculations, Firebase paths, synchronization, and saved records are preserved.
 
 Copyright © 2026 Jay. Love Quilts Manager. All rights reserved.
 Personal and authorized guild use only. See LICENSE.txt.

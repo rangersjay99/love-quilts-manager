@@ -1,42 +1,36 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.60 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.61 TEST CHECKLIST
 
 BASIC
-[ ] App opens and shows Update 7.8.60.
-[ ] Existing inventory, needs, settings, custom logo, and Audit History remain present.
-[ ] Laptop and approved mobile devices reach All changes synced.
+[ ] App opens and shows Update 7.8.61.
+[ ] Existing inventory, needs, Eligible Sizes, Bulk Intake, reports, settings, and custom logo remain present.
+[ ] Approved devices still reach All changes synced.
 
-ELIGIBLE SIZES
-[ ] Settings > Manage Lists shows Eligible Sizes by Charity.
-[ ] Before configuring a charity, all current sizes are checked by default.
-[ ] Configure one charity with only one or two allowed sizes and save.
-[ ] Add Quilts: selecting that charity shows only its eligible sizes.
-[ ] Add Quilts Needed: selecting that charity shows only its eligible sizes.
-[ ] Calendar Add/Edit Need uses the same eligible-size choices.
-[ ] Another unconfigured charity still shows all current sizes.
-[ ] Allow All Sizes restores all current sizes for the selected charity.
-[ ] Renaming a charity preserves its eligible-size setup.
-[ ] Renaming a size updates the eligible-size setup.
-[ ] Existing historical records remain editable even if their old size is no longer eligible for new entries.
-[ ] Eligible-size settings appear on the second synced device.
+SAFE TEST — NO LIVE NUMBER CHANGES REQUIRED
+[ ] Open Add Quilts, choose a charity/size and type a pretend quantity, then tap Home.
+[ ] “Entry not saved” appears with Stay and Finish Entry / Discard & Continue.
+[ ] Tap Stay and Finish Entry; the pretend fields remain exactly as entered.
+[ ] Try leaving again and tap Discard & Continue; Home opens and no inventory transaction was created.
+[ ] Open Add Quilts Needed, enter pretend values, leave the tab, choose Stay, then Discard. No need record is created.
+[ ] Enter pretend Bulk Intake rows and try leaving Inventory. The same warning appears. Discarding does not change inventory.
+[ ] With an existing Calendar need, change a field but do not save; Cancel/X/backdrop warns. Stay keeps the edit; Discard closes without changing the saved need.
+[ ] With an existing distribution, change quantity/date but do not save; Cancel/X/backdrop warns and Discard leaves the saved record unchanged.
+[ ] Start an inline need edit, change a field, and tap Cancel. The warning appears and Stay preserves the edit.
 
-BULK QUILT INTAKE
-[ ] Inventory shows Bulk Quilt Intake / Storage Entry.
-[ ] Add at least three rows using different charities/sizes/quantities.
-[ ] One row can use Unassigned/Storage.
-[ ] Bulk size choices follow the selected charity’s Eligible Sizes.
-[ ] Incomplete rows are blocked with a clear message.
-[ ] Review shows Home before/after totals, every row, and the total quilt count.
-[ ] Closing the review without confirming does not save anything.
-[ ] Confirm & Save Batch saves every row together.
-[ ] Inventory totals increase by the exact quantities entered.
-[ ] Audit History contains the newly created inventory records.
-[ ] The second device receives the batch after sync.
+ONE ELIGIBLE SIZE AUTO-FILL
+[ ] In Settings > Manage Lists, configure one charity with exactly one eligible size.
+[ ] In Add Quilts, selecting that charity automatically fills the single eligible size.
+[ ] In Add Quilts Needed, selecting that charity automatically fills the single eligible size.
+[ ] In Bulk Intake, selecting that charity automatically fills the single eligible size.
+[ ] In Calendar Add/Edit Need, selecting that charity automatically fills the single eligible size.
+[ ] A charity with two or more eligible sizes still shows Select size until the user chooses one.
+[ ] Unassigned/Storage continues to allow all sizes and does not force a size when more than one exists.
 
-REGRESSION
-[ ] Normal Add Quilts still works.
-[ ] Store as Unassigned/Storage still works.
-[ ] Create Need & Distribute still works with Received, Total Need, and Distribute Now.
-[ ] Love Quilts Out, Adjust, and Set Current Count still work.
-[ ] Needs editing/distribution still works.
-[ ] YTD Quilts Distributed by Charity is unchanged.
-[ ] Home Summary, Calendar, Full, Compact, Custom, Audit, and blank worksheet PDFs still open.
+REVIEW / SAVE REGRESSION
+[ ] Final review screens still show NOT SAVED YET and warn before Go Back.
+[ ] A real confirmed save, when intentionally tested, does not show a false unsaved warning after saving.
+[ ] Received → Total Need → Distribute Now still saves correctly.
+[ ] Bulk Intake still saves the whole reviewed batch once.
+[ ] YTD charity distribution and all PDF/report outputs remain unchanged.
+
+BROWSER LEAVE WARNING
+[ ] With pretend unsaved data entered, refreshing/closing the page invokes the browser leave-page warning where that browser supports beforeunload.

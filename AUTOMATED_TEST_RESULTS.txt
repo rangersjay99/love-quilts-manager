@@ -1,18 +1,18 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.60 AUTOMATED TEST RESULTS
-Run: August 8, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.61 AUTOMATED TEST RESULTS
+Released: August 8, 2026
 
-PASS — app.js JavaScript syntax check (Node.js --check).
-PASS — firebase-sync.js JavaScript syntax check (Node.js --check).
-PASS — manifest.json and manifest-v7.json parse as valid JSON.
-PASS — index.html contains the Bulk Quilt Intake / Storage Entry controls and Eligible Sizes by Charity controls.
-PASS — required new element IDs are present.
-PASS — charity-specific size settings normalize into app data and into Firebase settings synchronization.
-PASS — unconfigured charities retain backward-compatible all-size eligibility.
-PASS — code preserves a historical record's existing size when that size is no longer eligible for new entries.
-PASS — bulk intake uses one reviewed save and records each row as an IN transaction with source type BULK_INTAKE.
-PASS — bulk intake supports Unassigned/Storage and validates charity, size, and quantity before save.
-PASS — the existing Received → Total Need → Distribute Now workflow remains present.
-PASS — Update 7.8.60 script, manifest, icon-query, and service-worker cache references are consistent.
-PASS — Firebase production collection paths are unchanged; Update 7.8.60 adds only the charitySizes settings field.
+PASS — app.js JavaScript syntax validation.
+PASS — firebase-sync.js JavaScript syntax validation.
+PASS — App/version references show 7.8.61.
+PASS — Service-worker cache name and active app-shell query references use 7.8.61.
+PASS — Both manifest files use 7.8.61 cache-busting references.
+PASS — Unsaved-entry modal contains Stay and Finish Entry / Discard & Continue actions.
+PASS — In-app navigation protection is installed for dirty Inventory, Needs, and Bulk Intake workflows.
+PASS — Calendar Need and Calendar Distribution close/cancel protection is installed.
+PASS — Inventory edit Cancel, Bulk Clear/Start Over, and inline Need Cancel protection is installed.
+PASS — Browser beforeunload protection is installed for dirty entries.
+PASS — Single-eligible-size auto-selection hook is installed.
+PASS — firebase-sync.js is byte-for-byte unchanged from the 7.8.60 base package.
+PASS — No stale active 7.8.60 cache references remain in service worker or manifests.
 
-Manual testing is still required for live Firebase synchronization, device cache refresh, and the user-facing workflows listed in TEST_CHECKLIST.txt.
+A headless Chromium interaction run was attempted, but this execution environment blocks localhost/file navigation by organization policy, so device/browser interaction remains covered by TEST_CHECKLIST.txt rather than being claimed as automated.
