@@ -1,4 +1,4 @@
-Love Quilts Manager Update 7.8.59
-Released: August 5, 2026
+Love Quilts Manager Update 7.8.60
+Released: August 8, 2026
 
-Home PDF Cleanup and Polished Quick Reports
+Bulk Quilt Intake and Charity-Specific Eligible Sizes

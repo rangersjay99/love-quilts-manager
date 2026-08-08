@@ -1,7 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated August 5, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.59
+IMPLEMENTED THROUGH UPDATE 7.8.60
+
+- Update 7.8.60 adds reviewed Bulk Quilt Intake / Storage Entry and synchronized charity-specific Eligible Sizes while preserving historical records and the existing combined Add Quilts workflow.
 
 - Update 7.8.59 removes the added Home Reports Snapshot heading, compacts the Home PDF controls, and professionally restyles the actual Home Summary and 12-Month Calendar PDF files without changing calculations, navigation, Firebase paths, or saved records.
 

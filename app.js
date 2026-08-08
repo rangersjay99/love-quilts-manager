@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.59';
+const VERSION='7.8.60';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -90,6 +90,16 @@ function syncLinkedNeedDistributionDates(needId,effectiveDate,email='',stamp='')
   return changed;
 }
 
+function normalizeCharitySizeMap(source={},charities=[],sizes=[]){
+  const result={},validCharities=new Set((charities||[]).map(String)),validSizes=new Set((sizes||[]).map(String));
+  if(!source||typeof source!=='object'||Array.isArray(source))return result;
+  Object.entries(source).forEach(([charity,list])=>{
+    if(!validCharities.has(String(charity))||!Array.isArray(list))return;
+    result[String(charity)]=unique(list).filter(size=>validSizes.has(size));
+  });
+  return result;
+}
+
 function normalizeData(d={}){
   let tx=Array.isArray(d.transactions)?d.transactions.map(t=>({
     id:t.id||uid(),date:t.date||today(),type:['IN','OUT','ADJUST'].includes(t.type)?t.type:'IN',
@@ -157,6 +167,7 @@ function normalizeData(d={}){
     // Once a list exists, keep it authoritative so renamed default choices do not reappear on the next load.
     charities:unique([...(Array.isArray(d.charities)&&d.charities.length?d.charities:DEFAULT_CHARITIES),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...holds.map(h=>h.charity)]),
     sizes:unique([...(Array.isArray(d.sizes)&&d.sizes.length?d.sizes:DEFAULT_SIZES),...tx.map(t=>t.size),...needs.map(n=>n.size),...holds.map(h=>h.size)]),
+    charitySizes:normalizeCharitySizeMap(d.charitySizes,unique([...(Array.isArray(d.charities)&&d.charities.length?d.charities:DEFAULT_CHARITIES),...tx.map(t=>t.charity),...needs.map(n=>n.charity),...holds.map(h=>h.charity)]),unique([...(Array.isArray(d.sizes)&&d.sizes.length?d.sizes:DEFAULT_SIZES),...tx.map(t=>t.size),...needs.map(n=>n.size),...holds.map(h=>h.size)])),
     customLogo:String(d.customLogo||''),
     auditLog:(Array.isArray(d.auditLog)?d.auditLog.map(normalizeAuditEntry):[]).sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp))).slice(0,200),
     transactions:tx,needs,holds
@@ -1232,6 +1243,7 @@ function renameCharity(){
     const conflict=data.charities.find(name=>name!==oldName&&sameName(name,newName));if(conflict){notice('listNotice',`A charity named “${conflict}” now exists. Nothing was renamed.`);return}
     createRecoverySnapshot('Before renaming a charity');
     data.charities=unique(data.charities.map(name=>name===oldName?newName:name));
+    if(data.charitySizes&&Object.prototype.hasOwnProperty.call(data.charitySizes,oldName)){data.charitySizes[newName]=data.charitySizes[oldName];delete data.charitySizes[oldName]}
     data.transactions.forEach(t=>{if(t.charity===oldName)t.charity=newName});
     data.needs.forEach(n=>{if(n.charity===oldName)n.charity=newName});
     (data.holds||[]).forEach(h=>{if(h.charity===oldName)h.charity=newName});
@@ -1259,6 +1271,7 @@ function renameSize(){
     const conflict=data.sizes.find(name=>name!==oldName&&sameName(name,newName));if(conflict){notice('listNotice',`A quilt size named “${conflict}” now exists. Nothing was renamed.`);return}
     createRecoverySnapshot('Before renaming a quilt size');
     data.sizes=unique(data.sizes.map(name=>name===oldName?newName:name));
+    Object.keys(data.charitySizes||{}).forEach(charity=>{data.charitySizes[charity]=unique((data.charitySizes[charity]||[]).map(name=>name===oldName?newName:name))});
     data.transactions.forEach(t=>{if(t.size===oldName)t.size=newName});
     data.needs.forEach(n=>{if(n.size===oldName)n.size=newName});
     (data.holds||[]).forEach(h=>{if(h.size===oldName)h.size=newName});
@@ -1268,12 +1281,12 @@ function renameSize(){
 function addCharity(){const n=el('newCharity').value.trim();if(!n)return;if(data.charities.some(x=>x.toLocaleLowerCase()===n.toLocaleLowerCase()))return alert('That charity is already in the list.');data.charities.push(n);el('newCharity').value='';save('Charity added');renderAll()}
 function removeCharity(){
   const n=el('deleteCharity').value;if(!n)return;if(data.transactions.some(t=>t.charity===n)||data.needs.some(x=>x.charity===n)||(data.holds||[]).some(h=>h.charity===n))return alert('This charity is being used in inventory, needs, or preserved deferred records. Remove those entries first.');
-  if(confirm(`Delete the charity “${n}”?\n\nThis removes it from the choices. A recovery copy will be kept.`)){createRecoverySnapshot('Before deleting a charity');data.charities=data.charities.filter(x=>x!==n);save('Charity deleted');renderAll()}
+  if(confirm(`Delete the charity “${n}”?\n\nThis removes it from the choices. A recovery copy will be kept.`)){createRecoverySnapshot('Before deleting a charity');data.charities=data.charities.filter(x=>x!==n);if(data.charitySizes)delete data.charitySizes[n];save('Charity deleted');renderAll()}
 }
 function addSize(){const n=el('newSize').value.trim();if(!n)return;if(data.sizes.some(x=>x.toLocaleLowerCase()===n.toLocaleLowerCase()))return alert('That size is already in the list.');data.sizes.push(n);el('newSize').value='';save('Quilt size added');renderAll()}
 function removeSize(){
   const n=el('deleteSize').value;if(!n)return;if(data.transactions.some(t=>t.size===n)||data.needs.some(x=>x.size===n)||(data.holds||[]).some(h=>h.size===n))return alert('This size is being used in inventory, needs, or preserved deferred records. Remove those entries first.');
-  if(confirm(`Delete the size “${n}”?\n\nThis removes it from the choices. A recovery copy will be kept.`)){createRecoverySnapshot('Before deleting a quilt size');data.sizes=data.sizes.filter(x=>x!==n);save('Quilt size deleted');renderAll()}
+  if(confirm(`Delete the size “${n}”?\n\nThis removes it from the choices. A recovery copy will be kept.`)){createRecoverySnapshot('Before deleting a quilt size');data.sizes=data.sizes.filter(x=>x!==n);Object.keys(data.charitySizes||{}).forEach(charity=>{data.charitySizes[charity]=(data.charitySizes[charity]||[]).filter(size=>size!==n)});save('Quilt size deleted');renderAll()}
 }
 function downloadBlob(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 function download(name,text,type){downloadBlob(name,new Blob([text],{type}))}
@@ -1696,9 +1709,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.59 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.60 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.59',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.60',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2345,7 +2358,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.59';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.60';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -2379,7 +2392,8 @@ function lqmAuditSnapshot(source=data){
       navHomeLabel:source.navHomeLabel||'',navInventoryLabel:source.navInventoryLabel||'',navNeedsLabel:source.navNeedsLabel||'',
       navReportsLabel:source.navReportsLabel||'',navSettingsLabel:source.navSettingsLabel||'',homeAtAGlance:source.homeAtAGlance||'',
       homeStorageLabel:source.homeStorageLabel||'',homeNeededLabel:source.homeNeededLabel||'',homeDifferenceLabel:source.homeDifferenceLabel||'',
-      homeCalendarHeading:source.homeCalendarHeading||'',homeActionsHeading:source.homeActionsHeading||'',customLogo:!!source.customLogo
+      homeCalendarHeading:source.homeCalendarHeading||'',homeActionsHeading:source.homeActionsHeading||'',customLogo:!!source.customLogo,
+      charitySizes:clone(source.charitySizes||{})
     }
   };
 }
@@ -3667,3 +3681,175 @@ printCalendar=function(source='needs'){
   catch(error){console.error(error);notice('reportNotice','The Calendar PDF could not be created. Refresh and try again.')}
 };
 // ===== End Update 7.8.59 =====
+
+
+// ===== Love Quilts Manager Update 7.8.60 =====
+// Adds charity-specific eligible quilt sizes and a reviewed Bulk Quilt Intake /
+// Bulk Storage Entry workflow. Existing records remain editable and the new
+// charity-size settings are additive and synchronized through the existing
+// settings document; Firebase collection paths are unchanged.
+
+function lqm7860IsStorageCharity(charity){return typeof lqm7849IsUnassignedStorageCharity==='function'&&lqm7849IsUnassignedStorageCharity(charity)}
+function lqm7860ManagedCharities(){return unique((data.charities||[]).filter(charity=>!lqm7860IsStorageCharity(charity))).sort((a,b)=>a.localeCompare(b))}
+function lqm7860EligibleSizes(charity){
+  if(!charity||lqm7860IsStorageCharity(charity))return [...data.sizes].sort((a,b)=>a.localeCompare(b));
+  const configured=data.charitySizes&&Object.prototype.hasOwnProperty.call(data.charitySizes,charity)?data.charitySizes[charity]:null;
+  return unique(Array.isArray(configured)?configured:data.sizes).filter(size=>data.sizes.includes(size)).sort((a,b)=>a.localeCompare(b));
+}
+function lqm7860SizeIsEligible(charity,size){return !!size&&lqm7860EligibleSizes(charity).includes(size)}
+function lqm7860InventorySizeChoices(charity,preserve=''){
+  let choices=lqm7860EligibleSizes(charity);
+  if(charity&&mode!=='IN')data.sizes.forEach(size=>{if(onHand(charity,size)!==0&&!choices.includes(size))choices.push(size)});
+  if(preserve&&data.sizes.includes(preserve)&&!choices.includes(preserve))choices.push(preserve);
+  return unique(choices).sort((a,b)=>a.localeCompare(b));
+}
+function lqm7860SetSizeSelect(select,charity,choices,preserve='',placeholder='Select size'){
+  if(!select)return;
+  const old=preserve||select.value||'';
+  if(!charity){select.innerHTML='<option value="">Select charity first</option>';select.value='';select.disabled=true;return}
+  select.disabled=false;
+  select.innerHTML=`<option value="">${esc(placeholder)}</option>`+choices.map(size=>`<option value="${esc(size)}">${esc(size)}</option>`).join('');
+  if(old&&choices.includes(old))select.value=old;else select.value='';
+  if(!choices.length){select.innerHTML='<option value="">No eligible sizes configured</option>';select.disabled=true}
+}
+function lqm7860SyncTxSize(preserve=''){
+  const charity=el('txCharity')?.value||'',select=el('txSize');
+  lqm7860SetSizeSelect(select,charity,lqm7860InventorySizeChoices(charity,preserve),preserve);
+}
+function lqm7860SyncNeedSize(charityId,sizeId,preserve=''){
+  const charity=el(charityId)?.value||'',select=el(sizeId),choices=lqm7860EligibleSizes(charity);
+  if(preserve&&data.sizes.includes(preserve)&&!choices.includes(preserve))choices.push(preserve);
+  lqm7860SetSizeSelect(select,charity,unique(choices).sort((a,b)=>a.localeCompare(b)),preserve);
+}
+function lqm7860SyncInlineNeedSize(form,preserve=''){
+  if(!form)return;const charity=form.querySelector('[name="charity"]')?.value||'',select=form.querySelector('[name="size"]'),old=preserve||select?.value||'';
+  const choices=lqm7860EligibleSizes(charity);if(old&&data.sizes.includes(old)&&!choices.includes(old))choices.push(old);
+  lqm7860SetSizeSelect(select,charity,unique(choices).sort((a,b)=>a.localeCompare(b)),old);
+}
+function lqm7860RenderEligibleSizeEditor(){
+  const select=el('eligibleSizeCharity'),box=el('eligibleSizeChecklist'),summary=el('eligibleSizeSummary');if(!select||!box)return;
+  const charities=lqm7860ManagedCharities(),old=select.value;
+  select.innerHTML='<option value="">Select charity</option>'+charities.map(charity=>`<option value="${esc(charity)}">${esc(charity)}</option>`).join('');
+  if(charities.includes(old))select.value=old;
+  const charity=select.value;if(!charity){box.innerHTML='<div class="empty">Select a charity to choose its eligible quilt sizes.</div>';if(summary)summary.textContent='';return}
+  const configured=data.charitySizes&&Object.prototype.hasOwnProperty.call(data.charitySizes,charity),eligible=lqm7860EligibleSizes(charity);
+  box.innerHTML=data.sizes.length?data.sizes.map(size=>`<label class="eligible-size-option"><input type="checkbox" value="${esc(size)}" ${eligible.includes(size)?'checked':''}><span>${esc(size)}</span></label>`).join(''):'<div class="empty">Add quilt sizes above first.</div>';
+  if(summary)summary.textContent=configured?`${eligible.length} of ${data.sizes.length} sizes are eligible for ${charity}.`:`All ${data.sizes.length} current sizes are eligible by default.`;
+}
+function saveEligibleSizes(){
+  const charity=el('eligibleSizeCharity')?.value||'';if(!charity)return notice('listNotice','Select a charity first.');
+  const selected=[...document.querySelectorAll('#eligibleSizeChecklist input[type="checkbox"]:checked')].map(input=>input.value).filter(size=>data.sizes.includes(size));
+  if(!selected.length)return notice('listNotice',`Select at least one eligible quilt size for ${charity}.`);
+  if(!data.charitySizes||typeof data.charitySizes!=='object')data.charitySizes={};data.charitySizes[charity]=unique(selected);
+  save(`Eligible sizes updated for ${charity}`);refreshSelects();el('eligibleSizeCharity').value=charity;lqm7860RenderEligibleSizeEditor();notice('listNotice',`Eligible sizes saved for ${charity}.`,true);
+}
+function resetEligibleSizes(){
+  const charity=el('eligibleSizeCharity')?.value||'';if(!charity)return notice('listNotice','Select a charity first.');
+  if(data.charitySizes)delete data.charitySizes[charity];save(`Eligible sizes reset for ${charity}`);refreshSelects();el('eligibleSizeCharity').value=charity;lqm7860RenderEligibleSizeEditor();notice('listNotice',`${charity} now allows all current quilt sizes.`,true);
+}
+
+const lqm7860BaseRefreshSelects=refreshSelects;
+refreshSelects=function(){
+  lqm7860BaseRefreshSelects();
+  const managed=lqm7860ManagedCharities();
+  fill('needCharity',managed,'<option value="">Select charity</option>');
+  fill('calendarNeedCharity',managed,'<option value="">Select charity</option>');
+  lqm7860SyncTxSize();lqm7860SyncNeedSize('needCharity','needSize');lqm7860SyncNeedSize('calendarNeedCharity','calendarNeedSize');lqm7860RenderEligibleSizeEditor();
+};
+const lqm7860BaseSetMode=setMode;
+setMode=function(nextMode){const preserve=el('txSize')?.value||'';lqm7860BaseSetMode(nextMode);lqm7860SyncTxSize(preserve)};
+const lqm7860BaseToggleNoCurrentNeed=toggleNoCurrentNeed;
+toggleNoCurrentNeed=function(force){lqm7860BaseToggleNoCurrentNeed(force);lqm7860SyncTxSize()};
+const lqm7860BaseToggleCreateNeedNow=toggleCreateNeedNow;
+toggleCreateNeedNow=function(force){lqm7860BaseToggleCreateNeedNow(force);lqm7860SyncTxSize()};
+const lqm7860BaseOpenAddQuilts=openAddQuilts;
+openAddQuilts=function(){lqm7860BaseOpenAddQuilts();lqm7860SyncTxSize()};
+const lqm7860BaseOpenAddNeed=openAddNeed;
+openAddNeed=function(){lqm7860BaseOpenAddNeed();lqm7860SyncNeedSize('needCharity','needSize')};
+const lqm7860BaseEditTx=editTx;
+editTx=function(id){lqm7860BaseEditTx(id);const record=data.transactions.find(item=>item.id===id);lqm7860SyncTxSize(record?.size||'')};
+const lqm7860BaseOpenCalendarNeedEditor=openCalendarNeedEditor;
+openCalendarNeedEditor=function(id='',month=''){lqm7860BaseOpenCalendarNeedEditor(id,month);const record=id?data.needs.find(item=>item.id===id):null;lqm7860SyncNeedSize('calendarNeedCharity','calendarNeedSize',record?.size||'')};
+
+const lqm7860BasePersistNeedRecord=persistNeedRecord;
+persistNeedRecord=function(values,id=null,messageTarget='needNotice',options={}){
+  const previous=id?data.needs.find(item=>item.id===id):null,charity=String(values?.charity||''),size=String(values?.size||'');
+  const changed=!previous||previous.charity!==charity||previous.size!==size;
+  if(changed&&charity&&size&&!lqm7860SizeIsEligible(charity,size)){showNeedSaveMessage(messageTarget,`${size} is not an eligible size for ${charity}. Choose one of that charity’s eligible sizes.`);return false}
+  return lqm7860BasePersistNeedRecord(values,id,messageTarget,options);
+};
+const lqm7860BaseSaveTransaction=saveTransaction;
+saveTransaction=function(reviewed=false,reviewedAdjustment=null){
+  const charity=String(el('txCharity')?.value||''),size=String(el('txSize')?.value||''),previous=editTxId?data.transactions.find(item=>item.id===editTxId):null;
+  const changed=!previous||previous.charity!==charity||previous.size!==size;
+  if(mode==='IN'&&changed&&charity&&size&&!lqm7860SizeIsEligible(charity,size)){notice('txNotice',`${size} is not an eligible size for ${charity}. Choose one of that charity’s eligible sizes.`);return false}
+  return lqm7860BaseSaveTransaction(reviewed,reviewedAdjustment);
+};
+
+let lqm7860BulkRowCounter=0;
+function lqm7860BulkCharityOptions(selected=''){
+  const charities=unique([...lqm7860ManagedCharities(),LQM_UNASSIGNED_STORAGE]);
+  return '<option value="">Select charity / storage</option>'+charities.map(charity=>`<option value="${esc(charity)}"${charity===selected?' selected':''}>${esc(charity)}</option>`).join('');
+}
+function lqm7860BulkRowHTML(values={}){
+  const id=++lqm7860BulkRowCounter,charity=String(values.charity||''),size=String(values.size||''),qty=values.qty||'';
+  return`<div class="bulk-intake-row" data-bulk-row="${id}"><div class="bulk-row-number">${id}</div><label>Charity / Storage<select class="bulk-charity" onchange="lqm7860SyncBulkRow(this.closest('.bulk-intake-row'))">${lqm7860BulkCharityOptions(charity)}</select></label><label>Size<select class="bulk-size"><option value="">${charity?'Select size':'Select charity first'}</option></select></label><label>Quantity<input class="bulk-qty" type="number" inputmode="numeric" min="1" step="1" value="${esc(qty)}" placeholder="0" oninput="lqm7860UpdateBulkTotal()"></label><button type="button" class="bulk-remove" aria-label="Remove row" onclick="lqm7860RemoveBulkRow(this.closest('.bulk-intake-row'))">×</button></div>`;
+}
+function lqm7860SyncBulkRow(row,preserve=''){
+  if(!row)return;const charity=row.querySelector('.bulk-charity')?.value||'',select=row.querySelector('.bulk-size'),old=preserve||select?.value||'',choices=lqm7860EligibleSizes(charity);
+  lqm7860SetSizeSelect(select,charity,choices,old);lqm7860UpdateBulkTotal();
+}
+function lqm7860AddBulkRow(values={}){const box=el('bulkIntakeRows');if(!box)return;box.insertAdjacentHTML('beforeend',lqm7860BulkRowHTML(values));const row=box.lastElementChild;lqm7860SyncBulkRow(row,String(values.size||''));lqm7860UpdateBulkTotal()}
+function lqm7860RemoveBulkRow(row){if(!row)return;row.remove();if(!el('bulkIntakeRows')?.children.length)lqm7860AddBulkRow();lqm7860UpdateBulkTotal()}
+function lqm7860ResetBulkRows(count=3){const box=el('bulkIntakeRows');if(!box)return;box.innerHTML='';lqm7860BulkRowCounter=0;for(let i=0;i<count;i++)lqm7860AddBulkRow();if(el('bulkIntakeDate'))el('bulkIntakeDate').value=today();if(el('bulkIntakeNote'))el('bulkIntakeNote').value='';lqm7860UpdateBulkTotal()}
+function lqm7860UpdateBulkTotal(){
+  const rows=[...document.querySelectorAll('#bulkIntakeRows .bulk-intake-row')],total=rows.reduce((sum,row)=>sum+Math.max(0,Math.floor(Number(row.querySelector('.bulk-qty')?.value)||0)),0),target=el('bulkIntakeTotal');
+  if(target)target.textContent=`${total} ${total===1?'quilt':'quilts'} in ${rows.filter(row=>Math.floor(Number(row.querySelector('.bulk-qty')?.value)||0)>0).length} filled ${rows.filter(row=>Math.floor(Number(row.querySelector('.bulk-qty')?.value)||0)>0).length===1?'row':'rows'}`;
+}
+function openBulkIntake(){
+  showView('inventory');const section=el('bulkIntakeSection');if(section)section.open=true;if(!el('bulkIntakeRows')?.children.length)lqm7860ResetBulkRows();
+  requestAnimationFrame(()=>{section?.scrollIntoView({behavior:'smooth',block:'start'});el('bulkIntakeDate')?.focus()});
+}
+function lqm7860ReadBulkRows(){
+  const result=[],problems=[];
+  [...document.querySelectorAll('#bulkIntakeRows .bulk-intake-row')].forEach((row,index)=>{
+    const charity=String(row.querySelector('.bulk-charity')?.value||''),size=String(row.querySelector('.bulk-size')?.value||''),raw=String(row.querySelector('.bulk-qty')?.value||'').trim(),qty=Math.floor(Number(raw));
+    const empty=!charity&&!size&&!raw;if(empty)return;
+    if(!charity||!size||!Number.isFinite(qty)||qty<1){problems.push(`Row ${index+1}: choose charity/storage, size, and a quantity of 1 or more.`);return}
+    if(!lqm7860SizeIsEligible(charity,size)){problems.push(`Row ${index+1}: ${size} is not eligible for ${charity}.`);return}
+    result.push({charity,size,qty});
+  });
+  return{rows:result,problems};
+}
+function reviewBulkIntake(){
+  const date=el('bulkIntakeDate')?.value||today(),note=String(el('bulkIntakeNote')?.value||'').trim(),parsed=lqm7860ReadBulkRows();
+  if(parsed.problems.length)return notice('bulkIntakeNotice',parsed.problems[0]);if(!parsed.rows.length)return notice('bulkIntakeNotice','Enter at least one complete bulk-intake row.');
+  const inventory=invMap(),requested=requestedNeedsMap();parsed.rows.forEach(row=>{const key=row.charity+'|'+row.size;inventory[key]=(Number(inventory[key])||0)+row.qty});
+  const metrics=homeMetricsFromMaps(inventory,requested),total=parsed.rows.reduce((sum,row)=>sum+row.qty,0);
+  const details=parsed.rows.map((row,index)=>reviewLine(`Row ${index+1}`,`${row.charity} · ${row.size} · ${row.qty}`)).join('');
+  const summary=[homeReviewBubbles(metrics),'<div class="entry-review-details-heading">Bulk intake details</div>',reviewLine('Date received',fmtDate(date)),reviewLine('Rows',String(parsed.rows.length)),reviewLine('Total quilts',String(total)),note?reviewLine('Batch note',note):'',details,'<div class="entry-review-note">Nothing has been saved yet. Confirm once to add every row to inventory together.</div>'].join('');
+  openEntryReview('Review Bulk Quilt Intake',summary,'Confirm & Save Batch',()=>lqm7860SaveBulkIntake(date,note));
+}
+function lqm7860SaveBulkIntake(date,note){
+  const parsed=lqm7860ReadBulkRows();if(parsed.problems.length||!parsed.rows.length){notice('bulkIntakeNotice',parsed.problems[0]||'The bulk intake is empty. Nothing was saved.');return false}
+  const stamp=nowIso(),email=currentUserEmail(),records=parsed.rows.map(row=>({id:uid(),date:date||today(),type:'IN',charity:row.charity,size:row.size,qty:row.qty,adjustment:0,note:note||'Bulk quilt intake',sourceNeedId:'',sourceHoldId:'',sourceType:'BULK_INTAKE',createdBy:email,createdAt:stamp,updatedBy:email,updatedAt:stamp}));
+  const backup=clone(data);data.transactions.push(...records);const total=records.reduce((sum,row)=>sum+row.qty,0);
+  if(!save(`Bulk quilt intake: ${records.length} rows, ${total} quilts`)){data=backup;renderAll();notice('bulkIntakeNotice','Nothing was saved. Please check browser storage and try again.');return false}
+  lqm7860ResetBulkRows();renderAll();const section=el('bulkIntakeSection');if(section)section.open=false;notice('txNotice',`${total} quilts saved from ${records.length} bulk-intake ${records.length===1?'row':'rows'}.`,true);lqm7853ShowSuccess(`${total} quilts saved in one bulk intake.`);return true;
+}
+
+// Update generated inline need editors so charity changes immediately refresh eligible sizes.
+const lqm7860BaseNeedInlineEditor=needInlineEditor;
+needInlineEditor=function(n,stateClass,stateLabel,info,editorMode='details'){
+  let html=lqm7860BaseNeedInlineEditor(n,stateClass,stateLabel,info,editorMode);
+  const managed=lqm7860ManagedCharities(),charityOptions=managed.map(c=>`<option value="${esc(c)}"${c===n.charity?' selected':''}>${esc(c)}</option>`).join('');
+  const eligible=lqm7860EligibleSizes(n.charity);if(!eligible.includes(n.size)&&data.sizes.includes(n.size))eligible.push(n.size);
+  const sizeOptions=unique(eligible).sort((a,b)=>a.localeCompare(b)).map(size=>`<option value="${esc(size)}"${size===n.size?' selected':''}>${esc(size)}</option>`).join('');
+  html=html.replace(/<select class="direct-charity" name="charity" required aria-label="Charity">[\s\S]*?<\/select>/,`<select class="direct-charity" name="charity" required aria-label="Charity" onchange="lqm7860SyncInlineNeedSize(this.form)">${charityOptions}</select>`);
+  html=html.replace(/<select name="size" required aria-label="Size">[\s\S]*?<\/select>/,`<select name="size" required aria-label="Size">${sizeOptions}</select>`);
+  return html;
+};
+
+// Keep dynamic size selectors correct after full renders and on first load.
+document.addEventListener('DOMContentLoaded',()=>{refreshSelects();if(!el('bulkIntakeRows')?.children.length)lqm7860ResetBulkRows(3)},{once:true});
+// ===== End Update 7.8.60 =====

@@ -201,6 +201,16 @@ function normalizeAuditEntry(source = {}) {
   };
 }
 
+function normalizeCharitySizes(source = {}) {
+  const result = {};
+  if (!source || typeof source !== 'object' || Array.isArray(source)) return result;
+  Object.entries(source).forEach(([charity, sizes]) => {
+    if (!cleanString(charity) || !Array.isArray(sizes)) return;
+    result[cleanString(charity)] = uniqueStrings(sizes);
+  });
+  return result;
+}
+
 function normalizeSettings(source = {}) {
   return {
     orgName: cleanString(source.orgName || 'Faithful Circle Quilters'),
@@ -226,6 +236,7 @@ function normalizeSettings(source = {}) {
     auditLog: Array.isArray(source.auditLog) ? source.auditLog.map(normalizeAuditEntry).filter(x => x.id).sort((a, b) => cleanString(b.timestamp).localeCompare(cleanString(a.timestamp))).slice(0, 200) : [],
     charities: Array.isArray(source.charities) ? uniqueStrings(source.charities) : [],
     sizes: Array.isArray(source.sizes) ? source.sizes.map(cleanString) : [],
+    charitySizes: normalizeCharitySizes(source.charitySizes),
     // Legacy deferred records are preserved for backward compatibility.
     holds: Array.isArray(source.holds) ? source.holds.map(normalizeHold).filter(x => x.id) : []
   };

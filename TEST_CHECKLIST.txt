@@ -1,31 +1,42 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.59 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.60 TEST CHECKLIST
 
 BASIC
-[ ] App opens and shows Update 7.8.59.
+[ ] App opens and shows Update 7.8.60.
 [ ] Existing inventory, needs, settings, custom logo, and Audit History remain present.
 [ ] Laptop and approved mobile devices reach All changes synced.
 
-HOME CLEANUP
-[ ] The added Reports Snapshot heading is gone.
-[ ] This Year remains visible and View Full Yearly Statistics still opens the yearly report directly.
-[ ] By Charity remains available without an extra Reports Snapshot heading.
-[ ] Beneath the calendar there is one compact Print & PDF toolbar.
-[ ] Summary and 12-Month Calendar buttons both remain one-tap actions.
-[ ] Home is visibly less crowded on desktop and phone.
+ELIGIBLE SIZES
+[ ] Settings > Manage Lists shows Eligible Sizes by Charity.
+[ ] Before configuring a charity, all current sizes are checked by default.
+[ ] Configure one charity with only one or two allowed sizes and save.
+[ ] Add Quilts: selecting that charity shows only its eligible sizes.
+[ ] Add Quilts Needed: selecting that charity shows only its eligible sizes.
+[ ] Calendar Add/Edit Need uses the same eligible-size choices.
+[ ] Another unconfigured charity still shows all current sizes.
+[ ] Allow All Sizes restores all current sizes for the selected charity.
+[ ] Renaming a charity preserves its eligible-size setup.
+[ ] Renaming a size updates the eligible-size setup.
+[ ] Existing historical records remain editable even if their old size is no longer eligible for new entries.
+[ ] Eligible-size settings appear on the second synced device.
 
-ACTUAL PDF FILES
-[ ] Home Summary PDF has a plum branded header, organization/app/report title, generated date, and version.
-[ ] Home Summary PDF has clear summary cards, yearly figures, charity table, upcoming-needs table, and consistent footer.
-[ ] 12-Month Calendar PDF has the matching plum header and yearly total cards.
-[ ] Each month has a clear section band and detailed table.
-[ ] Current month uses teal; red appears only for shortages, past-due items, or other attention conditions.
-[ ] Short quantities are bold and easy to identify.
-[ ] Long reports continue onto additional pages without losing rows.
+BULK QUILT INTAKE
+[ ] Inventory shows Bulk Quilt Intake / Storage Entry.
+[ ] Add at least three rows using different charities/sizes/quantities.
+[ ] One row can use Unassigned/Storage.
+[ ] Bulk size choices follow the selected charity’s Eligible Sizes.
+[ ] Incomplete rows are blocked with a clear message.
+[ ] Review shows Home before/after totals, every row, and the total quilt count.
+[ ] Closing the review without confirming does not save anything.
+[ ] Confirm & Save Batch saves every row together.
+[ ] Inventory totals increase by the exact quantities entered.
+[ ] Audit History contains the newly created inventory records.
+[ ] The second device receives the batch after sync.
 
 REGRESSION
-[ ] Reports screen and Yearly Numbers remain unchanged.
-[ ] Add Quilts Received → Total Need → Distribute Now workflow still works.
-[ ] Header Tagline remains editable and synchronized.
-[ ] No inventory, need, report calculation, Firebase path, sync logic, or saved-data schema changed.
-
-After this update is confirmed, hold additional feature/design changes for now.
+[ ] Normal Add Quilts still works.
+[ ] Store as Unassigned/Storage still works.
+[ ] Create Need & Distribute still works with Received, Total Need, and Distribute Now.
+[ ] Love Quilts Out, Adjust, and Set Current Count still work.
+[ ] Needs editing/distribution still works.
+[ ] YTD Quilts Distributed by Charity is unchanged.
+[ ] Home Summary, Calendar, Full, Compact, Custom, Audit, and blank worksheet PDFs still open.

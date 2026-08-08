@@ -1,22 +1,20 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.59
-Released: August 5, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.60
+Released: August 8, 2026
 
 BEFORE UPDATING
-1. Export a fresh app backup from Settings.
-2. Confirm current devices show All changes synced.
-3. Keep a ZIP backup of the GitHub repository.
+1. In the app, export a current Backup from Settings.
+2. Confirm approved devices show All changes synced.
+3. Download a ZIP backup of the current GitHub repository.
 
 UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_59.zip.
-2. Upload every extracted file to the repository main/root folder.
-3. Replace files with matching names.
-4. Keep the icons and firebase-test folders.
-5. Wait for GitHub Pages to publish.
-6. Open the laptop first and confirm Update 7.8.59 and All changes synced.
-7. Open the remaining devices one at a time.
+1. Extract Love_Quilts_Manager_Update_7_8_60.zip.
+2. Upload every extracted file to the main/root folder of the Love Quilts Manager GitHub repository and replace files with the same names.
+3. Do not delete or replace the firebase-test folder.
+4. Wait for GitHub Pages to publish.
+5. Close and reopen the installed app on each device. Refresh once if an older version remains cached.
 
-WHAT CHANGED
-- Removed the added Reports Snapshot heading from Home.
-- Replaced the two large Home PDF buttons with a compact Print & PDF toolbar.
-- Professionally restyled the actual Home Summary and 12-Month Calendar PDFs.
-- Existing calculations, one-tap Yearly Numbers navigation, Firebase paths, and saved records are unchanged.
+IMPORTANT
+- Update 7.8.60 adds one backward-compatible synchronized settings field for charity-specific eligible sizes.
+- Firebase collection/document paths are unchanged.
+- Existing inventory, needs, distributions, settings, audit history, and report calculations are not migrated or cleared.
+- If no Eligible Sizes have been configured for a charity, all current sizes remain allowed.

@@ -1,16 +1,18 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.59 AUTOMATED TEST RESULTS
-Run: August 5, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.60 AUTOMATED TEST RESULTS
+Run: August 8, 2026
 
 PASS — app.js JavaScript syntax check (Node.js --check).
-PASS — index.html contains unique element IDs and the compact Print & PDF toolbar.
-PASS — the added Home Reports Snapshot heading is removed by the active Home rendering logic.
-PASS — manifest.json, manifest-v7.json, service worker, and script cache references point to Update 7.8.59.
-PASS — Firebase synchronization code is byte-for-byte unchanged from Update 7.8.58.
-PASS — Home Summary PDF generated successfully using the August 4 production backup (1 letter-size page).
-PASS — 12-Month Calendar PDF generated successfully using the August 4 production backup (3 landscape letter-size pages).
-PASS — PDF visual render confirms plum headers, summary cards, section bands, tables, page footers, current-month teal, and attention-only red.
-PASS — production-backup totals passed through unchanged during PDF generation.
-PASS — This Year, By Charity, one-tap Yearly Numbers navigation, Add Quilts, Header Tagline, and report calculations remain present.
-PASS — no database path or saved-data schema marker changed.
+PASS — firebase-sync.js JavaScript syntax check (Node.js --check).
+PASS — manifest.json and manifest-v7.json parse as valid JSON.
+PASS — index.html contains the Bulk Quilt Intake / Storage Entry controls and Eligible Sizes by Charity controls.
+PASS — required new element IDs are present.
+PASS — charity-specific size settings normalize into app data and into Firebase settings synchronization.
+PASS — unconfigured charities retain backward-compatible all-size eligibility.
+PASS — code preserves a historical record's existing size when that size is no longer eligible for new entries.
+PASS — bulk intake uses one reviewed save and records each row as an IN transaction with source type BULK_INTAKE.
+PASS — bulk intake supports Unassigned/Storage and validates charity, size, and quantity before save.
+PASS — the existing Received → Total Need → Distribute Now workflow remains present.
+PASS — Update 7.8.60 script, manifest, icon-query, and service-worker cache references are consistent.
+PASS — Firebase production collection paths are unchanged; Update 7.8.60 adds only the charitySizes settings field.
 
-Manual device testing is still required for iPhone/iPad PDF opening, GitHub Pages cache refresh, and live Firebase synchronization.
+Manual testing is still required for live Firebase synchronization, device cache refresh, and the user-facing workflows listed in TEST_CHECKLIST.txt.
