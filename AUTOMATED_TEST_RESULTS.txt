@@ -1,18 +1,26 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.63 AUTOMATED TEST RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.64 AUTOMATED TEST RESULTS
 Released: August 9, 2026
+Final 7.8.64 release package (supersedes unused 7.8.63 build)
 
 PASS — app.js and firebase-sync.js pass Node JavaScript syntax validation.
 PASS — Both manifest files parse as valid JSON.
-PASS — App/version references, service-worker cache name, and app-shell query references use 7.8.63.
+PASS — HTML parses without duplicate element IDs; required Home, Reports, and Daily Activity targets are present.
+PASS — Visible app/version and asset query references remain Update 7.8.64.
+PASS — Service-worker cache uses a fresh 7.8.64 cache name and asset query version, preventing reuse of 7.8.62/7.8.63 cached assets.
 PASS — Home Summary by Charity is a details section with no open attribute, so it starts collapsed.
-PASS — Home Quilts Distributed This Year is an accessible button wired to openHomeCharitySummary().
-PASS — The current runtime homeCharitySummaries override includes Distributed This Year by charity while preserving the existing exact-size inventory/need shortage calculation.
-PASS — Home charity cards retain storage, requested, and still-to-make totals and add Distributed This Year.
-PASS — Today’s Activity contains the new dailyActivityCharityTotals target and rendering path.
-PASS — Daily charity aggregation was logic-tested with created receipts, distributions, need-only changes, edited receipts, deleted distributions, charity moves, and Unassigned/Storage exclusion.
-PASS — Daily effect tests confirmed corrections/deletions are represented as signed net effects instead of being double-counted.
-PASS — HTML parses without duplicate element IDs; required Home and Daily Activity targets are present.
-PASS — No Firebase path, saved operational schema, or firebase-sync.js logic was changed for 7.8.63.
+PASS — Home charity cards are restored to the original three metrics: storage, requested, and still to make.
+PASS — Home Quilts Distributed This Year is an accessible button wired to openHomeDistributionSummary().
+PASS — The Home distributed drill-down uses the existing Reports lqm7851DistributionByCharity() calculation and the same YTD row presentation classes.
+PASS — Home distributed drill-down starts hidden and includes an explicit Hide Distributed Breakdown control.
+PASS — Calendar month-summary markup no longer switches to Still Needed after a distribution; the month-level metric is consistently Short and displays the calculated shortage value.
+PASS — Detailed request text still retains Still Needed where it represents remaining request quantity.
+PASS — Today’s Activity retains the 7.8.64 daily Totals by Charity target and rendering path.
+PASS — firebase-sync.js is byte-for-byte unchanged from Update 7.8.62.
+PASS — No Firebase path, saved operational schema, inventory transaction, need record, or distribution-write logic was changed by these corrections.
+
+LOGIC SPOT CHECKS
+PASS — A partially fulfilled month with remaining request greater than usable inventory reports the shortage as Short rather than the larger raw remaining-request quantity.
+PASS — The Home distributed breakdown calls the same YTD calculation used by Reports, so charity rows and Overall YTD use one shared source.
 
 BROWSER NOTE
-The installed headless Chromium process did not produce a usable dump-DOM result in this build environment, matching the limitation noted for 7.8.62. Final interaction testing should be performed after GitHub Pages deployment using TEST_CHECKLIST.txt.
+Final tap/scroll/layout verification should be performed after GitHub Pages deployment using TEST_CHECKLIST.txt, especially on iPhone/iPad.

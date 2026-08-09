@@ -1,19 +1,20 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.63
+LOVE QUILTS MANAGER — UPDATE 7.8.64
 Released: August 9, 2026
 
 WHAT CHANGED
 - Home > Summary by Charity now starts collapsed to reduce Home Screen clutter.
-- Tap Summary by Charity to expand/collapse it.
-- Home > Quilts Distributed This Year is now a shortcut that opens that charity summary automatically.
-- Each Home charity row now includes the number distributed during the current year.
-- Reports > Today’s Activity / Daily Changes now includes Totals by Charity for the selected day.
+- Tap Summary by Charity to expand/collapse the existing storage/request/still-to-make summary.
+- Home > Quilts Distributed This Year now opens its own YTD distributed-by-charity breakdown, styled like the same report under Reports.
+- The dedicated distributed breakdown shows each charity's current-year distributed total plus the overall YTD total.
+- Calendar month summary cards now consistently use Short for the shortage amount. Detailed request information still uses Still Needed where that wording describes the remaining request quantity.
+- Reports > Today’s Activity / Daily Changes includes Totals by Charity for the selected day.
 - Daily charity totals show saved change count, made/received effect, distributed effect, net inventory effect, and an overall total row.
 
 UPDATE
 1. Replace the existing GitHub Pages app files with the files in this package.
 2. Commit and push the changes.
-3. On each device, fully close and reopen Love Quilts Manager once so Update 7.8.63 refreshes the service-worker cache.
-4. Confirm the splash screen shows Update 7.8.63.
+3. On each device, fully close and reopen Love Quilts Manager once so Update 7.8.64 refreshes the service-worker cache.
+4. Confirm the splash screen shows Update 7.8.64.
 5. Run TEST_CHECKLIST.txt before normal use.
 
 DATA / SYNC SAFETY

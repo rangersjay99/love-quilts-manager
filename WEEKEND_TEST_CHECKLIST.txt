@@ -1,12 +1,13 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.63 EXTENDED TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.64 EXTENDED TEST CHECKLIST
 
 Use TEST_CHECKLIST.txt for the main verification. During normal weekend use, also spot-check:
 
 [ ] Laptop: Home Summary by Charity stays compact until opened.
-[ ] iPhone: tapping Quilts Distributed This Year opens and scrolls to Summary by Charity.
-[ ] iPad: four charity metrics remain readable when the summary is expanded.
+[ ] iPhone: tapping Quilts Distributed This Year reveals the dedicated YTD distributed-by-charity breakdown.
+[ ] iPad: the distributed breakdown remains readable and agrees with Reports.
+[ ] Calendar: month summary wording remains Short whether a month has no distributions, a partial distribution, or is completed.
 [ ] After adding quilts: Today’s Activity Totals by Charity shows the correct Made / Received and Net Inventory effect.
 [ ] After distributing quilts: the same charity shows the correct Distributed and Net Inventory effect.
 [ ] After correcting or deleting an entry: daily charity effects reverse appropriately rather than double-counting.
 [ ] A Need-only change appears as a charity change even when inventory effects are zero.
-[ ] Existing reports, PDFs, calendar, bulk intake, and unsaved-entry protection continue to behave normally.
+[ ] Existing reports, PDFs, bulk intake, and unsaved-entry protection continue to behave normally.

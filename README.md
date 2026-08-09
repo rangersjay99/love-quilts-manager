@@ -1,12 +1,13 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.63 — August 9, 2026
+Current release: Update 7.8.64 — August 9, 2026
 
-## Update 7.8.63 — Faster Home access + daily charity totals
+## Update 7.8.64 — Home quick-access reporting + daily charity totals
 
 - Compacts the Home **Summary by Charity** into a tap-to-expand section so the Home Screen stays cleaner.
-- Keeps the charity detail available on demand and adds **Distributed This Year** to each charity row.
-- Makes **Quilts Distributed This Year** on Home a shortcut that opens and scrolls directly to the charity summary.
+- Keeps the regular charity detail focused on storage, requested, and still-to-make totals.
+- Makes **Quilts Distributed This Year** on Home reveal a dedicated YTD distributed-by-charity breakdown matching Reports.
+- Standardizes Calendar month summary wording to **Short** while keeping **Still Needed** in detailed request information where appropriate.
 - Adds **Totals by Charity** to Reports > Today’s Activity / Daily Changes for the selected date.
 - Daily charity totals show change count, made/received effect, distributed effect, and net inventory effect, plus an overall row.
 - Uses the existing synchronized Audit History and remains read-only.

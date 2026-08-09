@@ -1,18 +1,26 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.63 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.64 TEST CHECKLIST
 
 VERSION / STARTUP
-[ ] App opens and shows Update 7.8.63.
+[ ] App opens and shows Update 7.8.64.
 [ ] Shared Device Sync signs in and finishes normally.
 
 HOME SCREEN
 [ ] Summary by Charity is closed when Home first opens.
 [ ] Tap Summary by Charity and confirm it expands.
 [ ] Tap it again and confirm it collapses.
-[ ] Expanded charity rows still show Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
-[ ] Each charity row also shows Distributed This Year.
-[ ] The total of Distributed This Year across charity rows agrees with the Home Quilts Distributed This Year number for official charities.
-[ ] Tap Home Quilts Distributed This Year and confirm Summary by Charity opens automatically and scrolls into view.
-[ ] Tap a charity row and confirm its Needs/Calendar details still open correctly.
+[ ] Expanded charity rows show Available in Storage, Quilts Requested, and Quilts Needed to be Completed only.
+[ ] Tap Home Quilts Distributed This Year.
+[ ] Confirm a dedicated Quilts Distributed by Charity — YTD breakdown appears directly under This Year.
+[ ] Confirm the charity amounts and Overall YTD match Reports > Quilts Distributed by Charity — YTD.
+[ ] Tap Hide Distributed Breakdown and confirm it closes.
+[ ] Tap a regular Summary by Charity row and confirm its Needs/Calendar details still open correctly.
+
+CALENDAR WORDING
+[ ] On Home, inspect months with no distributions and months with partial distributions.
+[ ] Confirm the month summary metric consistently says Short rather than switching between Still Needed and Short.
+[ ] Confirm the displayed Short number reflects the actual shortage after available matching inventory is considered.
+[ ] Open the full Needs Calendar and confirm its month summary cards use the same Short wording.
+[ ] Open an individual request/detail and confirm Still Needed remains available where it describes the remaining request quantity.
 
 TODAY’S ACTIVITY / DAILY CHANGES
 [ ] Open Reports > Today’s Activity / Daily Changes.
@@ -29,6 +37,5 @@ REGRESSION
 [ ] Bulk Quilt Intake still saves normally.
 [ ] Add/Edit Need still works, including eligible-size filtering/auto-select.
 [ ] Distribute Quilts still deducts inventory correctly.
-[ ] Home Calendar and Reports still render correctly.
 [ ] Home Summary and Calendar PDFs still open correctly.
 [ ] iPhone/iPad layout remains readable.
