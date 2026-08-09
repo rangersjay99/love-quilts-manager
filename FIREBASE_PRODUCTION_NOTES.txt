@@ -1,27 +1,14 @@
-LOVE QUILTS MANAGER UPDATE 7.8.54 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.62 — FIREBASE PRODUCTION NOTES
 
-No Firestore Rules, collection paths, indexes, or saved-data schema changes are required.
+No Firestore Rules, collection paths, indexes, or new synchronized data fields are required.
 
-UNCHANGED PATHS
-- organizations/faithful-circle-love-quilts
-- organizations/faithful-circle-love-quilts/settings/main
-- organizations/faithful-circle-love-quilts/transactions
-- organizations/faithful-circle-love-quilts/needs
+UNCHANGED
+- firebase-sync.js is byte-for-byte unchanged from Update 7.8.61.
+- Existing production organization and record paths remain unchanged.
+- Existing inventory, needs, settings, charity-size eligibility, audit history, and synchronization behavior remain unchanged.
 
-COMBINED ENTRY SAFETY
-- Create Need & Distribute changes local data in one save operation.
-- The incoming transaction, optional linked OUT distribution, and charity need share the same sourceNeedId.
-- Firebase Sync sends changed transaction and need documents through one Firestore write batch when the queued save is flushed.
-- If Distribute Now is 0, only the incoming transaction and need are created.
-- If internet service is unavailable, the complete entry remains saved locally and the existing pending-save queue retries it.
-
-SYNC COMPATIBILITY
-- Update 7.8.52 canonical handling for legacy Unassigned/Storage spellings is retained.
-- NEED_IMMEDIATE_IN and NEED_DISTRIBUTION remain normal transaction fields and require no rule change.
-- The linked OUT quantity and actual distribution date continue to drive yearly and YTD distribution totals.
-
-DEPLOYMENT CHECK
-1. Open the laptop first after GitHub Pages publishes.
-2. Confirm Update 7.8.54 and All changes synced.
-3. Create one small test entry using different Received and Distribute Now quantities.
-4. Confirm the second approved device receives all linked records together.
+TODAY’S ACTIVITY / DAILY CHANGES
+- Uses the existing synchronized Audit History (data.auditLog) as a read-only source.
+- Does not create, edit, delete, or migrate operational records.
+- Does not write a second daily-history collection or data field.
+- Audit History continues to retain the latest 200 synchronized entries. The Daily Changes screen displays an accuracy note when that retention limit has been reached, because an older selected date could then be incomplete.

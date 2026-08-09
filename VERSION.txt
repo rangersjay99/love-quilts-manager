@@ -1,13 +1,12 @@
-Love Quilts Manager Update 7.8.61
+Love Quilts Manager Update 7.8.62
 Released: August 8, 2026
 
-Unsaved Entry Protection & One-Size Auto-Fill
+Today’s Activity / Daily Changes
 
-Changes:
-- Warns before leaving or canceling supported data-entry workflows when entered/changed information has not been saved.
-- Uses clear Stay and Finish Entry / Discard & Continue choices inside the app.
-- Browser refresh/close also requests the browser's native leave-page confirmation while an entry is dirty.
-- Automatically selects a quilt size when the chosen charity has exactly one eligible size.
-- Charities with multiple eligible sizes still require an explicit size choice.
-
-No Firebase paths, inventory calculations, needs calculations, reports, or saved transaction/need schemas changed.
+- Read-only daily verification report under Reports.
+- Date selector defaults to Today.
+- Chronological saved-change list with time and user.
+- Net inventory, made/received, and distributed effects.
+- Need-change and action-category counts.
+- Daily CSV download.
+- Uses existing synchronized Audit History; no new operational data fields or Firebase paths.

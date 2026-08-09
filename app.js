@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.61';
+const VERSION='7.8.62';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1709,9 +1709,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.61 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.62 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.61',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.62',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2358,7 +2358,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.61';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.62';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -4079,3 +4079,109 @@ document.addEventListener('DOMContentLoaded',()=>{
   lqm7860SyncTxSize();lqm7860SyncNeedSize('needCharity','needSize');lqm7860SyncNeedSize('calendarNeedCharity','calendarNeedSize');
 },{once:true});
 // ===== End Update 7.8.61 =====
+
+// ===== Love Quilts Manager Update 7.8.62 =====
+// Read-only Today's Activity / Daily Changes report built from synchronized Audit History.
+// No operational record, Firebase path, or calculation schema changes are introduced here.
+function lqm7862LocalDateKey(timestamp){
+  const d=new Date(timestamp);if(Number.isNaN(d.getTime()))return'';
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${day}`;
+}
+function lqm7862Time(timestamp){
+  const d=new Date(timestamp);if(Number.isNaN(d.getTime()))return'';
+  return d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+}
+function lqm7862Signed(number){const n=Number(number)||0;return`${n>0?'+':''}${n}`}
+function lqm7862Record(entry){return entry?.after||entry?.before||null}
+function lqm7862InventoryValue(record){return record?value(record):0}
+function lqm7862MadeValue(record){
+  if(!record||record.type!=='IN'||['NEED_DISTRIBUTION_CORRECTION','HOLD_RETURN'].includes(String(record.sourceType||'')))return 0;
+  return Math.max(0,Number(record.qty)||0);
+}
+function lqm7862DistributionValue(record){return record?distributionActivityValue(record):0}
+function lqm7862Effects(entry){
+  if(entry?.recordType!=='Inventory')return{inventory:0,made:0,distributed:0};
+  const before=entry.before||null,after=entry.after||null;
+  return{
+    inventory:lqm7862InventoryValue(after)-lqm7862InventoryValue(before),
+    made:lqm7862MadeValue(after)-lqm7862MadeValue(before),
+    distributed:lqm7862DistributionValue(after)-lqm7862DistributionValue(before)
+  };
+}
+function lqm7862ActivityEntries(dateKey){
+  return [...(data.auditLog||[])].filter(entry=>lqm7862LocalDateKey(entry.timestamp)===dateKey).sort((a,b)=>String(a.timestamp).localeCompare(String(b.timestamp)));
+}
+function lqm7862EntryLabel(entry){
+  const record=lqm7862Record(entry),action=String(entry?.action||'Changed'),type=String(entry?.recordType||'Record');
+  if(type==='Charity Need')return action==='Created'?'Need Added':action==='Deleted'?'Need Deleted':'Need Edited';
+  if(type==='Inventory'&&record){
+    const source=String(record.sourceType||'');
+    if(source==='BULK_INTAKE')return action==='Created'?'Bulk Intake':`Bulk Intake ${action}`;
+    if(record.type==='ADJUST')return action==='Created'?'Inventory Adjustment':`Adjustment ${action}`;
+    if(source==='HOLD_TRANSFER_OUT')return action==='Deleted'?'Hold / Storage Move Deleted':'Moved to Hold / Storage';
+    if(source==='HOLD_RETURN')return action==='Deleted'?'Hold Return Deleted':'Returned from Hold / Storage';
+    if(source==='NEED_DISTRIBUTION_CORRECTION')return`Distribution Correction ${action}`;
+    if(lqm7862DistributionValue(record)>0||source==='HOLD_DISTRIBUTION')return action==='Created'?'Quilts Distributed':`Distribution ${action}`;
+    if(record.type==='IN')return action==='Created'?'Quilts Added':action==='Deleted'?'Quilts Added Record Deleted':'Inventory In Edited';
+    if(record.type==='OUT')return action==='Created'?'Quilts Out':action==='Deleted'?'Quilts Out Record Deleted':'Inventory Out Edited';
+  }
+  if(type==='Settings')return entry.action==='List Changed'?'Charity / Size List Changed':'Settings Changed';
+  if(type==='System')return String(entry.summary||entry.action||'System Change');
+  return`${action} ${type}`;
+}
+function lqm7862BadgeClass(entry){
+  const record=lqm7862Record(entry),label=lqm7862EntryLabel(entry).toLowerCase();
+  if(String(record?.sourceType||'')==='BULK_INTAKE')return'bulk';
+  if(label.includes('distribut'))return'distributed';
+  if(label.includes('adjust')||label.includes('correction'))return'adjust';
+  if(String(entry?.action||'').toLowerCase().includes('deleted'))return'deleted';return'';
+}
+function lqm7862RecordMeta(entry){
+  const r=lqm7862Record(entry);if(!r)return esc(entry?.summary||'Recorded change');
+  if(entry.recordType==='Inventory'){
+    const amount=r.type==='ADJUST'?(Number(r.adjustment)||Number(r.qty)||0):Number(r.qty||0),parts=[];
+    if(r.charity)parts.push(esc(r.charity));if(r.size)parts.push(esc(r.size));
+    parts.push(`${r.type==='ADJUST'?'Change':'Quantity'} ${esc(String(amount))}`);if(r.date)parts.push(`Activity date ${esc(fmtDate(r.date))}`);if(r.note)parts.push(esc(r.note));
+    return parts.join(' · ');
+  }
+  if(entry.recordType==='Charity Need'){
+    const parts=[];if(r.charity)parts.push(esc(r.charity));if(r.size)parts.push(esc(r.size));if(r.qty!=null)parts.push(`${esc(String(r.qty))} requested`);if(r.month)parts.push(`Needed ${esc(fmtMonth(r.month))}`);if(Number(r.fulfilledQty)||r.fulfilledDate)parts.push(`${esc(String(Number(r.fulfilledQty)||0))} distributed${r.fulfilledDate?' · '+esc(fmtDate(r.fulfilledDate)):''}`);if(r.note)parts.push(esc(r.note));return parts.join(' · ');
+  }
+  return esc(entry?.summary||'Recorded change');
+}
+function lqm7862ChangedFields(entry){
+  const before=entry?.before,after=entry?.after;if(!before||!after)return'';
+  const changes=[],add=(label,a,b,formatter=v=>String(v??''))=>{if(String(a??'')!==String(b??''))changes.push(`${label}: ${esc(formatter(a)||'—')} → ${esc(formatter(b)||'—')}`)};
+  if(entry.recordType==='Inventory'){
+    add('Date',before.date,after.date,v=>v?fmtDate(v):'');add('Charity',before.charity,after.charity);add('Size',before.size,after.size);add('Type',before.type,after.type);
+    const b=before.type==='ADJUST'?(Number(before.adjustment)||Number(before.qty)||0):Number(before.qty||0),c=after.type==='ADJUST'?(Number(after.adjustment)||Number(after.qty)||0):Number(after.qty||0);add('Quantity',b,c);add('Note',before.note,after.note);
+  }else if(entry.recordType==='Charity Need'){
+    add('Month',before.month,after.month,v=>v?fmtMonth(v):'');add('Charity',before.charity,after.charity);add('Size',before.size,after.size);add('Requested',before.qty,after.qty);add('Distributed',before.fulfilledQty,after.fulfilledQty);add('Distribution date',before.fulfilledDate,after.fulfilledDate,v=>v?fmtDate(v):'');add('Note',before.note,after.note);
+  }
+  return changes.slice(0,5).join(' · ')+(changes.length>5?' · …':'');
+}
+function renderDailyActivity(){
+  const dateInput=el('dailyActivityDate'),summary=el('dailyActivitySummary'),breakdown=el('dailyActivityBreakdown'),listTarget=el('dailyActivityList'),retention=el('dailyActivityRetention');
+  if(!dateInput||!summary||!listTarget)return;
+  if(!dateInput.value)dateInput.value=today();const selected=dateInput.value,entries=lqm7862ActivityEntries(selected);
+  const totals=entries.reduce((acc,entry)=>{const effects=lqm7862Effects(entry);acc.inventory+=effects.inventory;acc.made+=effects.made;acc.distributed+=effects.distributed;if(entry.recordType==='Charity Need')acc.needs++;return acc},{inventory:0,made:0,distributed:0,needs:0});
+  const metric=(number,label,signed=false)=>{const n=Number(number)||0,cls=signed?(n>0?'daily-positive':n<0?'daily-negative':''):'';return`<div class="daily-activity-metric"><b class="${cls}">${esc(signed?lqm7862Signed(n):String(n))}</b><span>${esc(label)}</span></div>`};
+  summary.innerHTML=metric(entries.length,'Record Changes')+metric(totals.inventory,'Net Inventory Effect',true)+metric(totals.made,'Quilts Made / Received Effect',true)+metric(totals.distributed,'Distributed Effect',true)+metric(totals.needs,'Need Records Changed');
+  const counts={bulk:0,needAdd:0,needEdit:0,needDelete:0,adjust:0,settings:0,distribution:0};
+  entries.forEach(entry=>{const r=lqm7862Record(entry),effect=lqm7862Effects(entry);if(r?.sourceType==='BULK_INTAKE')counts.bulk++;if(entry.recordType==='Charity Need'){if(entry.action==='Created')counts.needAdd++;else if(entry.action==='Deleted')counts.needDelete++;else counts.needEdit++}if(entry.recordType==='Inventory'&&r?.type==='ADJUST')counts.adjust++;if(entry.recordType==='Settings')counts.settings++;if(effect.distributed)counts.distribution++});
+  if(breakdown)breakdown.innerHTML=`<b>Change breakdown:</b> Bulk intake rows ${counts.bulk} · Needs added ${counts.needAdd} · Needs edited ${counts.needEdit} · Needs deleted ${counts.needDelete} · Distribution changes ${counts.distribution} · Adjustments ${counts.adjust} · Settings/list changes ${counts.settings}`;
+  listTarget.innerHTML=entries.length?entries.map(entry=>{const label=lqm7862EntryLabel(entry),badge=lqm7862BadgeClass(entry),diff=lqm7862ChangedFields(entry),effect=lqm7862Effects(entry),effects=[];if(effect.inventory)effects.push(`Inventory ${lqm7862Signed(effect.inventory)}`);if(effect.made)effects.push(`Made/received ${lqm7862Signed(effect.made)}`);if(effect.distributed)effects.push(`Distributed ${lqm7862Signed(effect.distributed)}`);const effectText=effects.length?`<div class="daily-activity-entry-diff">Net effect: ${esc(effects.join(' · '))}</div>`:'';return`<div class="daily-activity-entry"><div class="daily-activity-entry-head"><div><div class="daily-activity-entry-title"><span class="daily-activity-badge ${badge}">${esc(entry.action||'Changed')}</span><b>${esc(label)}</b></div><div class="daily-activity-entry-meta">${lqm7862RecordMeta(entry)}</div>${diff?`<div class="daily-activity-entry-diff">${diff}</div>`:''}${effectText}</div><div class="daily-activity-entry-who"><b>${esc(lqm7862Time(entry.timestamp))}</b><br>${esc(entry.user||'This device')}</div></div></div>`}).join(''):`<div class="daily-activity-empty">No saved changes are present in retained Audit History for ${esc(fmtDate(selected))}.</div>`;
+  if(retention){const retained=(data.auditLog||[]).length,limit=typeof LQM_AUDIT_LIMIT==='number'?LQM_AUDIT_LIMIT:200;retention.textContent=retained>=limit?`Accuracy note: Audit History currently retains the latest ${limit} synchronized entries. An older selected date may be incomplete after that limit is reached.`:`Based on all ${retained} currently retained synchronized Audit History ${retained===1?'entry':'entries'}.`;}
+}
+function lqm7862UseToday(){const input=el('dailyActivityDate');if(input)input.value=today();renderDailyActivity()}
+function downloadDailyActivity(){
+  const input=el('dailyActivityDate');if(!input)return;const selected=input.value||today(),entries=lqm7862ActivityEntries(selected);
+  const rows=[['Saved Time','User','Action','Record Type','Summary','Net Inventory Effect','Net Made/Received Effect','Net Distributed Effect']];
+  entries.forEach(entry=>{const effect=lqm7862Effects(entry);rows.push([entry.timestamp,entry.user||'',lqm7862EntryLabel(entry),entry.recordType||'',entry.summary||'',effect.inventory,effect.made,effect.distributed])});
+  const csv=rows.map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');download(`${filePart(data.itemName)}_Daily_Changes_${selected}.csv`,csv,'text/csv');notice('dailyActivityNotice',`Daily changes for ${fmtDate(selected)} downloaded.`,true);
+}
+const lqm7862BaseRenderReports=renderReports;
+renderReports=function(){const result=lqm7862BaseRenderReports();renderDailyActivity();return result};
+document.addEventListener('DOMContentLoaded',()=>{if(el('dailyActivityDate'))el('dailyActivityDate').value=today();renderDailyActivity()},{once:true});
+// ===== End Update 7.8.62 =====
+

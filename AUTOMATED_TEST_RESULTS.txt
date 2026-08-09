@@ -1,18 +1,19 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.61 AUTOMATED TEST RESULTS
+LOVE QUILTS MANAGER — UPDATE 7.8.62 AUTOMATED TEST RESULTS
 Released: August 8, 2026
 
 PASS — app.js JavaScript syntax validation.
 PASS — firebase-sync.js JavaScript syntax validation.
-PASS — App/version references show 7.8.61.
-PASS — Service-worker cache name and active app-shell query references use 7.8.61.
-PASS — Both manifest files use 7.8.61 cache-busting references.
-PASS — Unsaved-entry modal contains Stay and Finish Entry / Discard & Continue actions.
-PASS — In-app navigation protection is installed for dirty Inventory, Needs, and Bulk Intake workflows.
-PASS — Calendar Need and Calendar Distribution close/cancel protection is installed.
-PASS — Inventory edit Cancel, Bulk Clear/Start Over, and inline Need Cancel protection is installed.
-PASS — Browser beforeunload protection is installed for dirty entries.
-PASS — Single-eligible-size auto-selection hook is installed.
-PASS — firebase-sync.js is byte-for-byte unchanged from the 7.8.60 base package.
-PASS — No stale active 7.8.60 cache references remain in service worker or manifests.
+PASS — firebase-sync.js is byte-for-byte unchanged from Update 7.8.61.
+PASS — App/version references show 7.8.62.
+PASS — Service-worker cache name and app-shell query references use 7.8.62.
+PASS — Both manifest files parse as valid JSON and use 7.8.62 cache-busting references.
+PASS — Reports contains Today’s Activity / Daily Changes and its required date, summary, breakdown, list, retention note, and CSV controls.
+PASS — Daily Changes reads from synchronized auditLog and contains no save call or operational record mutation.
+PASS — Daily net-effect tests passed for: inventory IN, distribution OUT, edited distribution quantity, deleted inventory IN, distribution correction, and hold/storage transfer.
+PASS — Bulk Intake entries are labeled correctly in Daily Changes.
+PASS — Existing 7.8.61 unsaved-entry protection code remains installed.
+PASS — Existing single-eligible-size auto-fill code remains installed.
+PASS — No duplicate HTML element IDs were introduced.
 
-A headless Chromium interaction run was attempted, but this execution environment blocks localhost/file navigation by organization policy, so device/browser interaction remains covered by TEST_CHECKLIST.txt rather than being claimed as automated.
+NOTE
+A full Chromium dump-DOM run was not usable in this build environment because the installed headless Chromium process did not terminate normally. JavaScript syntax, HTML structure, version/cache consistency, Firebase immutability, and targeted Daily Changes logic were validated separately. Final interaction testing should be performed after GitHub Pages deployment using the included checklist.

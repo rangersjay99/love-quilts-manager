@@ -1,32 +1,16 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.54 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.62 EXTENDED TEST CHECKLIST
 
-BASIC
-[ ] App opens and shows Update 7.8.54.
-[ ] Laptop and other approved devices reach All changes synced.
-[ ] Existing inventory, needs, reports, custom logo, and settings remain present.
+Use TEST_CHECKLIST.txt for the main 7.8.62 verification.
 
-CLEAR COMBINED ENTRY
-[ ] Tap Add Quilts and select a real charity and size.
-[ ] Select Create Need & Distribute.
-[ ] The expanded panel shows 1. Quilts Received, 2. Total Quilts Needed, and 3. Quilts to Distribute Now together.
-[ ] Enter 7 received.
-[ ] Enter 20 under 2. Total Quilts Needed.
-[ ] Enter 7 under 3. Quilts to Distribute Now.
-[ ] The main button says Continue.
-[ ] Preview shows Received 7, Need 20, Distribute 7, Still Needed 13, and no storage change.
-[ ] Review shows NOT SAVED YET and Confirm & Save All without scrolling.
-[ ] After saving, Calendar shows Need 20, Distributed 7, Still Needed 13.
-
-DIFFERENT RECEIVED AND DISTRIBUTED AMOUNTS
-[ ] Test 7 received, need 20, distribute 5: storage increases 2 and still needed is 15.
-[ ] Test 7 received with at least 2 already in matching storage, need 20, distribute 9: storage decreases 2 and still needed is 11.
-[ ] Trying to distribute more than received plus matching storage is blocked.
-[ ] Distribution can exceed the total need when enough matching inventory exists; still needed stays 0 and the full distributed amount is reported.
-[ ] Entering 0 to distribute creates the need and stores all received quilts without a distribution record.
+EXTENDED DEVICE CHECK
+[ ] Laptop: Today’s Activity opens and defaults to today.
+[ ] iPhone: Today’s Activity layout remains readable and the date selector works.
+[ ] iPad: Today’s Activity layout remains readable and chronological rows show time/user.
+[ ] A saved legitimate change appears on each approved device after sync.
+[ ] Reviewing/changing dates on one device does not create a new Audit History entry.
+[ ] Daily CSV downloads successfully on a supported device.
 
 REGRESSION
-[ ] Normal Add Quilts and Store as Unassigned/Storage still work.
-[ ] Love Quilts Out, Adjust, and Set Current Count remain unchanged.
-[ ] Yearly Numbers opens the Yearly Quilt Summary directly.
-[ ] YTD Quilts Distributed by Charity uses the entered Distribute Now quantity and actual distribution date.
-[ ] Full, Compact, Custom, Calendar, Home Summary, Audit, and blank worksheet PDFs still open.
+[ ] 7.8.61 unsaved-entry protection still works on laptop and mobile.
+[ ] Single eligible size still auto-fills.
+[ ] Bulk Intake still performs one reviewed final save.
