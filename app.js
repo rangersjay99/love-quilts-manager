@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.62';
+const VERSION='7.8.63';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1004,13 +1004,18 @@ function renderHomeCharityBreakdown(){
   const rows=homeCharitySummaries();
   box.innerHTML=rows.length?rows.map(row=>{
     const state=row.toComplete>0?'has-shortage':row.onHand>row.requested?'has-surplus':'balanced';
-    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View details ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div><b>${row.requested}</b><span>${esc(data.homeNeededLabel)}</span></div><div><b class="${row.toComplete?'negative':'positive'}">${row.toComplete}</b><span>${esc(data.homeDifferenceLabel)}</span></div></div></button>`;
+    return`<button type="button" class="home-charity-card ${state}" data-charity="${esc(row.charity)}" onclick="openHomeCharity(this.dataset.charity)"><div class="home-charity-heading"><strong>${esc(row.charity)}</strong><span>View needs ›</span></div><div class="home-charity-metrics"><div><b>${row.onHand}</b><span>${esc(data.homeStorageLabel)}</span></div><div><b>${row.requested}</b><span>${esc(data.homeNeededLabel)}</span></div><div><b class="${row.toComplete?'negative':'positive'}">${row.toComplete}</b><span>${esc(data.homeDifferenceLabel)}</span></div><div><b>${row.distributedYtd||0}</b><span>Distributed This Year</span></div></div></button>`;
   }).join(''):'<div class="empty">No charities have been entered yet.</div>';
 }
 function openHomeCharity(charity){
   const filter=el('calendarCharity');if(filter)filter.value=charity;
   showView('needs');
   if(filter){filter.value=charity;renderNeedsCalendar()}
+}
+function openHomeCharitySummary(){
+  const section=el('homeCharitySection');if(!section)return;
+  section.open=true;
+  requestAnimationFrame(()=>section.scrollIntoView({behavior:'smooth',block:'start'}));
 }
 function renderHomeSummaryReport(){
   const target=el('homeSummaryReport');if(!target)return;
@@ -1709,9 +1714,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.62 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.63 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.62',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.63',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2109,18 +2114,20 @@ quiltsToCompleteTotal=function(){return lqmPlanningTotalsByCharity().reduce((sum
 shortageTotal=function(){return quiltsToCompleteTotal()};
 
 homeCharitySummaries=function(){
-  const inventory=invMap(),remaining=requestedNeedsMap();
+  const inventory=invMap(),remaining=requestedNeedsMap(),year=Number(monthNow().slice(0,4)),distributedByCharity={};
+  data.transactions.filter(t=>yearOf(t.date)===year).forEach(t=>{const amount=distributionActivityValue(t);if(amount&&t.charity&&!lqmIsTestingStorageCharity(t.charity))distributedByCharity[t.charity]=(distributedByCharity[t.charity]||0)+amount});
   const names=unique([
     ...data.charities,
     ...Object.keys(inventory).map(key=>key.slice(0,key.lastIndexOf('|'))),
-    ...Object.keys(remaining).map(key=>key.slice(0,key.lastIndexOf('|')))
+    ...Object.keys(remaining).map(key=>key.slice(0,key.lastIndexOf('|'))),
+    ...Object.keys(distributedByCharity)
   ]).filter(charity=>!lqmIsTestingStorageCharity(charity)).sort((a,b)=>a.localeCompare(b));
   return names.map(charity=>{
     const prefix=charity+'|';
     const keys=unique([...Object.keys(inventory),...Object.keys(remaining)]).filter(key=>key.startsWith(prefix));
     const onHand=keys.reduce((sum,key)=>sum+Number(inventory[key]||0),0);
     const requested=keys.reduce((sum,key)=>sum+Number(remaining[key]||0),0);
-    return{charity,onHand,requested,toComplete:Math.max(0,requested-onHand)};
+    return{charity,onHand,requested,toComplete:Math.max(0,requested-onHand),distributedYtd:Math.max(0,Number(distributedByCharity[charity]||0))};
   });
 };
 
@@ -2250,11 +2257,13 @@ quiltsToCompleteTotal=function(){
 shortageTotal=function(){return quiltsToCompleteTotal()};
 
 homeCharitySummaries=function(){
-  const inventory=lqmOfficialInvMap(),requested=lqmExactRequestedMap(upcoming());
+  const inventory=lqmOfficialInvMap(),requested=lqmExactRequestedMap(upcoming()),year=Number(monthNow().slice(0,4)),distributedByCharity={};
+  data.transactions.filter(t=>yearOf(t.date)===year).forEach(t=>{const amount=distributionActivityValue(t);if(amount&&t.charity&&!lqmIsTestingStorageCharity(t.charity))distributedByCharity[t.charity]=(distributedByCharity[t.charity]||0)+amount});
   const names=unique([
     ...data.charities,
     ...Object.keys(inventory).map(key=>key.slice(0,key.lastIndexOf('|'))),
-    ...Object.keys(requested).map(key=>key.slice(0,key.lastIndexOf('|')))
+    ...Object.keys(requested).map(key=>key.slice(0,key.lastIndexOf('|'))),
+    ...Object.keys(distributedByCharity)
   ]).filter(charity=>!lqmIsTestingStorageCharity(charity)).sort((a,b)=>a.localeCompare(b));
   return names.map(charity=>{
     const prefix=charity+'|';
@@ -2262,7 +2271,7 @@ homeCharitySummaries=function(){
     const onHand=keys.reduce((sum,key)=>sum+Number(inventory[key]||0),0);
     const requestedTotal=keys.reduce((sum,key)=>sum+Number(requested[key]||0),0);
     const toComplete=keys.reduce((sum,key)=>sum+Math.max(0,Number(requested[key]||0)-Math.max(0,Number(inventory[key]||0))),0);
-    return{charity,onHand,requested:requestedTotal,toComplete};
+    return{charity,onHand,requested:requestedTotal,toComplete,distributedYtd:Math.max(0,Number(distributedByCharity[charity]||0))};
   });
 };
 
@@ -2358,7 +2367,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.62';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.63';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -4185,3 +4194,32 @@ renderReports=function(){const result=lqm7862BaseRenderReports();renderDailyActi
 document.addEventListener('DOMContentLoaded',()=>{if(el('dailyActivityDate'))el('dailyActivityDate').value=today();renderDailyActivity()},{once:true});
 // ===== End Update 7.8.62 =====
 
+
+
+// ===== Love Quilts Manager Update 7.8.63 =====
+// Home charity summary is collapsed by default, includes current-year distributions,
+// and Today's Activity adds a read-only per-charity daily roll-up.
+// No Firebase paths, operational schemas, or inventory/need calculations are changed.
+function lqm7863CharityDailyTotals(entries){
+  const totals={};
+  const ensure=charity=>{if(!charity||lqmIsTestingStorageCharity(charity))return null;return totals[charity]||(totals[charity]={charity,changes:0,made:0,distributed:0,inventory:0})};
+  const addSide=(record,sign)=>{if(!record)return;const row=ensure(record.charity);if(!row)return;row.inventory+=sign*lqm7862InventoryValue(record);row.made+=sign*lqm7862MadeValue(record);row.distributed+=sign*lqm7862DistributionValue(record)};
+  entries.forEach(entry=>{
+    const before=entry?.before||null,after=entry?.after||null;
+    if(entry.recordType==='Inventory'){addSide(before,-1);addSide(after,1)}
+    const charities=unique([before?.charity,after?.charity,lqm7862Record(entry)?.charity].filter(Boolean)).filter(c=>!lqmIsTestingStorageCharity(c));
+    charities.forEach(charity=>{const row=ensure(charity);if(row)row.changes++});
+  });
+  return Object.values(totals).sort((x,y)=>x.charity.localeCompare(y.charity));
+}
+function lqm7863RenderDailyCharityTotals(entries){
+  const target=el('dailyActivityCharityTotals');if(!target)return;const rows=lqm7863CharityDailyTotals(entries);
+  if(!rows.length){target.innerHTML='<div class="daily-charity-totals-head"><b>Totals by Charity</b><span>Quick daily roll-up from saved activity.</span></div><div class="daily-charity-empty">No charity-specific saved changes for this date.</div>';return}
+  const sum=key=>rows.reduce((total,row)=>total+Number(row[key]||0),0),signed=n=>esc(lqm7862Signed(Number(n)||0));
+  const body=rows.map(row=>`<tr><td>${esc(row.charity)}</td><td>${row.changes}</td><td class="${row.made>0?'daily-positive':row.made<0?'daily-negative':''}">${signed(row.made)}</td><td class="${row.distributed>0?'daily-positive':row.distributed<0?'daily-negative':''}">${signed(row.distributed)}</td><td class="${row.inventory>0?'daily-positive':row.inventory<0?'daily-negative':''}">${signed(row.inventory)}</td></tr>`).join('');
+  target.innerHTML=`<div class="daily-charity-totals-head"><b>Totals by Charity</b><span>Only charities with saved activity on the selected day are shown.</span></div><table class="daily-charity-table"><thead><tr><th>Charity</th><th>Changes</th><th>Made / Received</th><th>Distributed</th><th>Net Inventory</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Overall</td><td>${sum('changes')}</td><td>${signed(sum('made'))}</td><td>${signed(sum('distributed'))}</td><td>${signed(sum('inventory'))}</td></tr></tfoot></table>`;
+}
+const lqm7863BaseRenderDailyActivity=renderDailyActivity;
+renderDailyActivity=function(){const result=lqm7863BaseRenderDailyActivity();const selected=el('dailyActivityDate')?.value||today();lqm7863RenderDailyCharityTotals(lqm7862ActivityEntries(selected));return result};
+document.addEventListener('DOMContentLoaded',()=>{renderDailyActivity()},{once:true});
+// ===== End Update 7.8.63 =====

@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER UPDATE 7.8.62 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.63 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules, collection paths, indexes, or new synchronized data fields are required.
 
@@ -12,3 +12,6 @@ TODAY’S ACTIVITY / DAILY CHANGES
 - Does not create, edit, delete, or migrate operational records.
 - Does not write a second daily-history collection or data field.
 - Audit History continues to retain the latest 200 synchronized entries. The Daily Changes screen displays an accuracy note when that retention limit has been reached, because an older selected date could then be incomplete.
+
+UPDATE 7.8.63 NOTE
+- Home charity-summary behavior and daily charity roll-up are presentation/read-only calculations only. No Firebase collection/path/schema changes were introduced.

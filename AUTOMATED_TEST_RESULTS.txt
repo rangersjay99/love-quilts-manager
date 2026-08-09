@@ -1,19 +1,18 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.62 AUTOMATED TEST RESULTS
-Released: August 8, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.63 AUTOMATED TEST RESULTS
+Released: August 9, 2026
 
-PASS — app.js JavaScript syntax validation.
-PASS — firebase-sync.js JavaScript syntax validation.
-PASS — firebase-sync.js is byte-for-byte unchanged from Update 7.8.61.
-PASS — App/version references show 7.8.62.
-PASS — Service-worker cache name and app-shell query references use 7.8.62.
-PASS — Both manifest files parse as valid JSON and use 7.8.62 cache-busting references.
-PASS — Reports contains Today’s Activity / Daily Changes and its required date, summary, breakdown, list, retention note, and CSV controls.
-PASS — Daily Changes reads from synchronized auditLog and contains no save call or operational record mutation.
-PASS — Daily net-effect tests passed for: inventory IN, distribution OUT, edited distribution quantity, deleted inventory IN, distribution correction, and hold/storage transfer.
-PASS — Bulk Intake entries are labeled correctly in Daily Changes.
-PASS — Existing 7.8.61 unsaved-entry protection code remains installed.
-PASS — Existing single-eligible-size auto-fill code remains installed.
-PASS — No duplicate HTML element IDs were introduced.
+PASS — app.js and firebase-sync.js pass Node JavaScript syntax validation.
+PASS — Both manifest files parse as valid JSON.
+PASS — App/version references, service-worker cache name, and app-shell query references use 7.8.63.
+PASS — Home Summary by Charity is a details section with no open attribute, so it starts collapsed.
+PASS — Home Quilts Distributed This Year is an accessible button wired to openHomeCharitySummary().
+PASS — The current runtime homeCharitySummaries override includes Distributed This Year by charity while preserving the existing exact-size inventory/need shortage calculation.
+PASS — Home charity cards retain storage, requested, and still-to-make totals and add Distributed This Year.
+PASS — Today’s Activity contains the new dailyActivityCharityTotals target and rendering path.
+PASS — Daily charity aggregation was logic-tested with created receipts, distributions, need-only changes, edited receipts, deleted distributions, charity moves, and Unassigned/Storage exclusion.
+PASS — Daily effect tests confirmed corrections/deletions are represented as signed net effects instead of being double-counted.
+PASS — HTML parses without duplicate element IDs; required Home and Daily Activity targets are present.
+PASS — No Firebase path, saved operational schema, or firebase-sync.js logic was changed for 7.8.63.
 
-NOTE
-A full Chromium dump-DOM run was not usable in this build environment because the installed headless Chromium process did not terminate normally. JavaScript syntax, HTML structure, version/cache consistency, Firebase immutability, and targeted Daily Changes logic were validated separately. Final interaction testing should be performed after GitHub Pages deployment using the included checklist.
+BROWSER NOTE
+The installed headless Chromium process did not produce a usable dump-DOM result in this build environment, matching the limitation noted for 7.8.62. Final interaction testing should be performed after GitHub Pages deployment using TEST_CHECKLIST.txt.

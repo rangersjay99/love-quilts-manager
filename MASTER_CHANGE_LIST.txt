@@ -1,8 +1,9 @@
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated August 8, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.62
+IMPLEMENTED THROUGH UPDATE 7.8.63
 
+- Update 7.8.63 compacts the Home Summary by Charity into a collapsed section, adds current-year distributed totals to each charity row, makes the Home distributed total open that summary directly, and adds daily Totals by Charity to Today’s Activity. No operational data schema or Firebase path changes.
 - Update 7.8.62 adds a read-only Today’s Activity / Daily Changes report under Reports with date selection, chronological time/user details, net daily effects, category counts, and CSV download. It uses existing synchronized Audit History and does not change operational calculations or Firebase paths.
 
 - Update 7.8.61 adds unsaved-entry protection across supported data-entry workflows and automatically selects the size when a charity has exactly one eligible size. No Firebase paths, saved record schemas, or calculations changed.

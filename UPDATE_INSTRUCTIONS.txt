@@ -1,20 +1,22 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.62
-Released: August 8, 2026
+LOVE QUILTS MANAGER — UPDATE 7.8.63
+Released: August 9, 2026
 
-BEFORE UPDATING
-1. In Love Quilts Manager, confirm Shared Device Sync says all changes are synced.
-2. Export a current app Backup from Settings.
-3. Download a ZIP backup of the current GitHub repository.
+WHAT CHANGED
+- Home > Summary by Charity now starts collapsed to reduce Home Screen clutter.
+- Tap Summary by Charity to expand/collapse it.
+- Home > Quilts Distributed This Year is now a shortcut that opens that charity summary automatically.
+- Each Home charity row now includes the number distributed during the current year.
+- Reports > Today’s Activity / Daily Changes now includes Totals by Charity for the selected day.
+- Daily charity totals show saved change count, made/received effect, distributed effect, net inventory effect, and an overall total row.
 
-UPLOAD
-1. Extract Love_Quilts_Manager_Update_7_8_62.zip.
-2. Upload all extracted files to the main/root folder of the Love Quilts Manager GitHub repository and replace files with the same names.
-3. Do not delete or replace a separate firebase-test folder if it exists in the repository.
-4. Wait for GitHub Pages to publish.
-5. Close and reopen the app. Refresh once if Update 7.8.61 remains cached.
+UPDATE
+1. Replace the existing GitHub Pages app files with the files in this package.
+2. Commit and push the changes.
+3. On each device, fully close and reopen Love Quilts Manager once so Update 7.8.63 refreshes the service-worker cache.
+4. Confirm the splash screen shows Update 7.8.63.
+5. Run TEST_CHECKLIST.txt before normal use.
 
-IMPORTANT
-- Update 7.8.62 adds no new operational data fields or Firebase paths.
-- Today’s Activity is read-only and uses the existing synchronized Audit History.
-- Audit History retains the latest 200 entries; the app clearly notes when that retention limit could make an older selected date incomplete.
-- Existing inventory, needs, calculations, combined entry, bulk intake, eligible sizes, and unsaved-entry protection remain unchanged.
+DATA / SYNC SAFETY
+- No new operational data fields or Firebase paths are added.
+- Existing inventory, needs, distribution calculations, sync rules, and saved records are unchanged.
+- Today’s Activity remains read-only and uses existing synchronized Audit History.

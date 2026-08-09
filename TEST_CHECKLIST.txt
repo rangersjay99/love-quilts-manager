@@ -1,37 +1,34 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.62 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.63 TEST CHECKLIST
 
-BASIC
-[ ] App opens and shows Update 7.8.62.
-[ ] Existing inventory, needs, settings, eligible sizes, custom logo, and reports remain present.
-[ ] Shared Device Sync reaches All changes synced.
+VERSION / STARTUP
+[ ] App opens and shows Update 7.8.63.
+[ ] Shared Device Sync signs in and finishes normally.
 
-TODAY’S ACTIVITY / DAILY CHANGES — SAFE READ-ONLY TESTS
+HOME SCREEN
+[ ] Summary by Charity is closed when Home first opens.
+[ ] Tap Summary by Charity and confirm it expands.
+[ ] Tap it again and confirm it collapses.
+[ ] Expanded charity rows still show Available in Storage, Quilts Requested, and Quilts Needed to be Completed.
+[ ] Each charity row also shows Distributed This Year.
+[ ] The total of Distributed This Year across charity rows agrees with the Home Quilts Distributed This Year number for official charities.
+[ ] Tap Home Quilts Distributed This Year and confirm Summary by Charity opens automatically and scrolls into view.
+[ ] Tap a charity row and confirm its Needs/Calendar details still open correctly.
+
+TODAY’S ACTIVITY / DAILY CHANGES
 [ ] Open Reports > Today’s Activity / Daily Changes.
-[ ] Activity Date defaults to today.
-[ ] The screen clearly says it is read-only.
-[ ] Changing the date updates the list without changing any inventory or need totals.
-[ ] Today button returns the selector to today.
-[ ] Existing saved activity for the selected date appears in chronological order with time and user.
-[ ] Inventory rows show charity, size, quantity/change, and activity date where available.
-[ ] Need rows show charity, size, requested quantity, and month where available.
-[ ] Edited records show concise Before → After field changes.
-[ ] Daily summary shows Record Changes, Net Inventory Effect, Made/Received Effect, Distributed Effect, and Need Records Changed.
-[ ] Change breakdown shows bulk intake, needs added/edited/deleted, distribution changes, adjustments, and settings/list changes.
-[ ] Download Daily CSV creates a CSV for the selected date.
-
-OPTIONAL LIVE VERIFICATION
-[ ] Make one legitimate real entry you intended to make anyway.
-[ ] Return to Today’s Activity and confirm the new saved change appears with the correct time/user and net effect.
-[ ] On a second synced device, confirm the same daily activity appears after sync.
+[ ] Confirm Totals by Charity appears below the daily summary/breakdown.
+[ ] Confirm only charities with saved activity for the selected day are shown.
+[ ] Confirm Made / Received, Distributed, and Net Inventory effects agree with the listed saved changes.
+[ ] Confirm the Overall row matches the sum of the displayed charity rows.
+[ ] Change the date and confirm the charity totals change with the activity list.
+[ ] A date with no charity activity shows a clear empty message.
+[ ] Merely reviewing Today’s Activity creates no new audit entries and changes no operational records.
 
 REGRESSION
-[ ] Unsaved-entry warning from 7.8.61 still appears when leaving a dirty form.
-[ ] A charity with exactly one eligible size still auto-selects that size.
-[ ] Bulk Quilt Intake review works and no data saves before final confirmation.
-[ ] Add Quilts Received → Total Need → Distribute Now still works.
-[ ] Yearly Numbers and Quilts Distributed by Charity — YTD remain unchanged.
-[ ] Home Summary, Calendar, Full, Compact, Custom, Audit, and blank worksheet PDFs still open.
-
-DATA SAFETY
-[ ] Merely opening/reviewing Today’s Activity creates no new Audit History entries.
-[ ] No inventory, need, distribution, or settings values change from using the Daily Changes screen.
+[ ] Add Quilts still saves normally.
+[ ] Bulk Quilt Intake still saves normally.
+[ ] Add/Edit Need still works, including eligible-size filtering/auto-select.
+[ ] Distribute Quilts still deducts inventory correctly.
+[ ] Home Calendar and Reports still render correctly.
+[ ] Home Summary and Calendar PDFs still open correctly.
+[ ] iPhone/iPad layout remains readable.

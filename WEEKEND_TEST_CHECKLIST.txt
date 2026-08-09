@@ -1,16 +1,12 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.62 EXTENDED TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.63 EXTENDED TEST CHECKLIST
 
-Use TEST_CHECKLIST.txt for the main 7.8.62 verification.
+Use TEST_CHECKLIST.txt for the main verification. During normal weekend use, also spot-check:
 
-EXTENDED DEVICE CHECK
-[ ] Laptop: Today’s Activity opens and defaults to today.
-[ ] iPhone: Today’s Activity layout remains readable and the date selector works.
-[ ] iPad: Today’s Activity layout remains readable and chronological rows show time/user.
-[ ] A saved legitimate change appears on each approved device after sync.
-[ ] Reviewing/changing dates on one device does not create a new Audit History entry.
-[ ] Daily CSV downloads successfully on a supported device.
-
-REGRESSION
-[ ] 7.8.61 unsaved-entry protection still works on laptop and mobile.
-[ ] Single eligible size still auto-fills.
-[ ] Bulk Intake still performs one reviewed final save.
+[ ] Laptop: Home Summary by Charity stays compact until opened.
+[ ] iPhone: tapping Quilts Distributed This Year opens and scrolls to Summary by Charity.
+[ ] iPad: four charity metrics remain readable when the summary is expanded.
+[ ] After adding quilts: Today’s Activity Totals by Charity shows the correct Made / Received and Net Inventory effect.
+[ ] After distributing quilts: the same charity shows the correct Distributed and Net Inventory effect.
+[ ] After correcting or deleting an entry: daily charity effects reverse appropriately rather than double-counting.
+[ ] A Need-only change appears as a charity change even when inventory effects are zero.
+[ ] Existing reports, PDFs, calendar, bulk intake, and unsaved-entry protection continue to behave normally.

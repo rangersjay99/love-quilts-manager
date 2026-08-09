@@ -1,12 +1,10 @@
-Love Quilts Manager Update 7.8.62
-Released: August 8, 2026
+Love Quilts Manager Update 7.8.63
+Released: August 9, 2026
 
-Today’s Activity / Daily Changes
+Home Screen charity summary cleanup + daily totals by charity
 
-- Read-only daily verification report under Reports.
-- Date selector defaults to Today.
-- Chronological saved-change list with time and user.
-- Net inventory, made/received, and distributed effects.
-- Need-change and action-category counts.
-- Daily CSV download.
-- Uses existing synchronized Audit History; no new operational data fields or Firebase paths.
+- Summary by Charity is collapsed by default on Home.
+- Quilts Distributed This Year opens the charity summary automatically.
+- Each charity summary row includes Distributed This Year.
+- Today’s Activity / Daily Changes includes a quick Totals by Charity table.
+- No new Firebase paths or operational data fields.
