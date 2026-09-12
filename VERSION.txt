@@ -1,11 +1,12 @@
-Love Quilts Manager Update 7.8.64
-Released: August 9, 2026
+Love Quilts Manager Update 7.8.65
+Released: September 12, 2026
 
-Home quick-access reporting + daily totals by charity
+Polished reports + direct sharing + sync-status recovery
 
-- Summary by Charity is collapsed by default on Home.
-- Quilts Distributed This Year opens a dedicated YTD distributed-by-charity breakdown, matching the Reports presentation.
-- Home charity summary rows remain focused on storage, requested, and still-to-make totals.
-- Calendar month summaries consistently use Short; detailed request information can still show Still Needed.
-- Today’s Activity / Daily Changes includes a quick Totals by Charity table.
+- Inventory & Quilts Requested has its own polished PDF and one-tap Share This Report button.
+- Yearly Summary and Distributed & Adjustments also have direct section-specific sharing.
+- The most recently created report remains at the top of Reports with Share Again and Open Again.
+- Full reports use a cleaner plum-branded layout with summary cards, section bands, readable tables, totals, and page footers.
+- Sync status clearly distinguishes syncing, saved locally, offline, synced, and errors.
+- A successful Firebase save no longer stays stuck on Syncing when listener confirmation is delayed.
 - No new Firebase paths or operational data fields.

@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.64';
+const VERSION='7.8.65';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1709,9 +1709,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.64 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.65 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.64',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.65',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2358,7 +2358,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.64';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.65';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -4231,3 +4231,157 @@ renderHome=function(){const result=lqm7863BaseRenderHome();if(el('homeDistributi
 
 document.addEventListener('DOMContentLoaded',()=>{renderDailyActivity()},{once:true});
 // ===== End Update 7.8.64 =====
+
+
+
+// ===== Love Quilts Manager Update 7.8.65 =====
+// Polished section-specific PDFs, direct sharing, and a persistent recent-report
+// shortcut. Report generation is read-only and does not change operational data.
+const LQM_7865_RECENT_REPORT_KEY='love_quilts_recent_report_v1';
+let lqm7865LastReport=null;
+
+function lqm7865PdfDocument({title,subtitle='',metrics=[],sections=[]}){
+  const width=612,height=792,left=36,right=576,bottom=48,usable=right-left;
+  const colors={plum:'.31 .16 .35',plum2:'.43 .25 .48',plumSoft:'.95 .93 .96',teal:'.20 .51 .54',tealSoft:'.91 .96 .96',sageSoft:'.93 .96 .91',ink:'.19 .17 .20',muted:'.39 .36 .41',line:'.82 .79 .83',red:'.66 .18 .23',redSoft:'.99 .93 .94',white:'1 1 1'};
+  const pages=[];let page=null,y=0;
+  const fill=(x,py,w,h,color)=>page.commands.push(`${color} rg ${x} ${py} ${w} ${h} re f`);
+  const stroke=(x,py,w,h,color=colors.line,lineWidth=.5)=>page.commands.push(`${color} RG ${lineWidth} w ${x} ${py} ${w} ${h} re S`);
+  const line=(x1,y1,x2,y2,color=colors.line,lineWidth=.5)=>page.commands.push(`${color} RG ${lineWidth} w ${x1} ${y1} m ${x2} ${y2} l S`);
+  const put=(x,py,value,size=8,bold=false,color=colors.ink)=>page.commands.push(`${color} rg BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${x} ${py} Tm (${pdfEscape(value)}) Tj ET`);
+  const header=()=>{
+    fill(0,height-72,width,72,colors.plum);
+    put(left,height-25,pdfFit(data.orgName.toUpperCase(),80),7.5,true,colors.white);
+    put(left,height-45,pdfFit(title,64),17,true,colors.white);
+    put(left,height-61,pdfFit(`${data.appName}  |  ${subtitle||effectiveReportTitle()}`,92),7.5,false,colors.white);
+    put(left,height-88,`Prepared ${new Date().toLocaleString()}  |  Update ${VERSION}`,7,false,colors.muted);
+    line(left,height-96,right,height-96,colors.plum2,1.1);
+    y=height-112;
+  };
+  const newPage=()=>{page={commands:[]};pages.push(page);header()};
+  const ensure=needed=>{if(!page)newPage();if(y-needed<bottom){newPage();return true}return false};
+  const sectionBand=(label,continued=false)=>{
+    ensure(34);fill(left,y-5,usable,25,colors.plumSoft);fill(left,y-5,5,25,colors.plum2);put(left+13,y+3,`${String(label).toUpperCase()}${continued?' (CONTINUED)':''}`,9.5,true,colors.plum);y-=35;
+  };
+  const paragraph=(value,{bold=false,size=8,color=colors.ink,after=7}={})=>{
+    const lines=pdfWrap(value,Math.max(25,Math.floor(usable/(size*.53))));ensure(lines.length*(size+3)+after);
+    lines.forEach((part,index)=>put(left,y-index*(size+3),part,size,bold,color));y-=lines.length*(size+3)+after;
+  };
+  const metricCards=()=>{
+    if(!metrics.length)return;
+    ensure(62);const gap=9,cardWidth=(usable-gap*(metrics.length-1))/metrics.length,cardY=y-48;
+    metrics.forEach((metric,index)=>{const x=left+index*(cardWidth+gap),fillColor=index%3===0?colors.tealSoft:index%3===1?colors.sageSoft:colors.plumSoft;fill(x,cardY,cardWidth,48,fillColor);stroke(x,cardY,cardWidth,48,colors.line,.55);put(x+10,cardY+25,String(metric.value),17,true,index===2&&Number(metric.value)>0?colors.red:colors.plum);pdfWrap(metric.label,24).slice(0,2).forEach((part,lineIndex)=>put(x+44,cardY+29-lineIndex*9,part,6.8,true,colors.muted))});
+    y=cardY-17;
+  };
+  const table=(section)=>{
+    const headers=section.headers||[],rows=section.rows||[],widths=section.widths||[],aligns=section.aligns||headers.map(()=> 'left');
+    sectionBand(section.title);
+    if(section.note)paragraph(section.note,{size:7.2,color:colors.muted,after:8});
+    if(!rows.length){paragraph(section.empty||'No records to show.',{color:colors.muted,after:10});return}
+    const drawHeader=()=>{const h=25;fill(left,y-h+5,usable,h,colors.plum2);let x=left;headers.forEach((label,index)=>{const w=widths[index];pdfWrap(label,Math.max(5,Math.floor((w-8)/4))).slice(0,2).forEach((part,lineIndex)=>put(x+5,y-5-lineIndex*7,part,6.2,true,colors.white));x+=w});y-=h};
+    if(y-25<bottom){newPage();sectionBand(section.title,true)}
+    drawHeader();
+    rows.forEach((row,rowIndex)=>{
+      const cells=row.cells||row;const cellLines=cells.map((cell,index)=>pdfWrap(cell,Math.max(5,Math.floor((widths[index]-9)/(7.1*.51)))).slice(0,3));const rowHeight=Math.max(20,Math.max(...cellLines.map(parts=>parts.length))*9+7);
+      if(y-rowHeight<bottom){newPage();sectionBand(section.title,true);drawHeader()}
+      const style=row.style||'';if(style==='total')fill(left,y-rowHeight+4,usable,rowHeight,colors.plumSoft);else if(style==='warning')fill(left,y-rowHeight+4,usable,rowHeight,colors.redSoft);else if(rowIndex%2===1)fill(left,y-rowHeight+4,usable,rowHeight,'.985 .98 .987');
+      let x=left;cellLines.forEach((parts,index)=>{const w=widths[index],numeric=aligns[index]==='right';parts.forEach((part,lineIndex)=>{const fontSize=7.1,estimated=pdfPlain(part).length*fontSize*.49,textX=numeric?Math.max(x+5,x+w-6-estimated):x+5;put(textX,y-9-lineIndex*9,part,fontSize,style==='total',style==='warning'&&index===cells.length-1?colors.red:colors.ink)});x+=w});
+      line(left,y-rowHeight+4,right,y-rowHeight+4,colors.line,.35);y-=rowHeight;
+    });
+    y-=12;
+  };
+
+  newPage();metricCards();
+  sections.forEach(section=>{if(section.headers)table(section);else{sectionBand(section.title);(section.paragraphs||[]).forEach(item=>paragraph(typeof item==='string'?item:item.text,typeof item==='string'?{}:item));}});
+  pages.forEach((p,index)=>{
+    p.commands.push(`${colors.line} RG .5 w ${left} 35 m ${right} 35 l S`);
+    p.commands.push(`${colors.muted} rg BT /F1 6.2 Tf 1 0 0 1 ${left} 22 Tm (${pdfEscape(pdfFit(COPYRIGHT_PDF,82))}) Tj ET`);
+    p.commands.push(`${colors.muted} rg BT /F1 6.2 Tf 1 0 0 1 ${left} 12 Tm (${pdfEscape('Personal and authorized guild use only.')}) Tj ET`);
+    p.commands.push(`${colors.muted} rg BT /F1 6.2 Tf 1 0 0 1 500 12 Tm (${pdfEscape(`Page ${index+1} of ${pages.length}`)}) Tj ET`);
+  });
+  const pageIds=pages.map((_,index)=>5+index*2),objects=[];
+  objects[1]='<< /Type /Catalog /Pages 2 0 R >>';objects[2]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(' ')}] /Count ${pages.length} >>`;objects[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';objects[4]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+  pages.forEach((p,index)=>{const pageId=5+index*2,contentId=pageId+1,content=p.commands.join('\n')+'\n';objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`;objects[contentId]=`<< /Length ${content.length} >>\nstream\n${content}endstream`});
+  let pdf='%PDF-1.4\n%1234\n';const offsets=[0];for(let index=1;index<objects.length;index++){offsets[index]=pdf.length;pdf+=`${index} 0 obj\n${objects[index]}\nendobj\n`}const xref=pdf.length;pdf+=`xref\n0 ${objects.length}\n0000000000 65535 f \n`;for(let index=1;index<objects.length;index++)pdf+=`${String(offsets[index]).padStart(10,'0')} 00000 n \n`;pdf+=`trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  const bytes=new Uint8Array(pdf.length);for(let index=0;index<pdf.length;index++)bytes[index]=pdf.charCodeAt(index)&255;return bytes;
+}
+
+function lqm7865InventoryNeedsSections(){
+  const comparison=reportComparisonRows();
+  const inventoryRows=comparison.map(row=>({cells:[row.charity,row.type==='detail'?row.size:'',row.onHand,row.requestedNeeds,row.toComplete],style:row.type==='grand'?'total':row.toComplete>0?'warning':''}));
+  const needs=allocateNeedsForPlanning().filter(item=>item.n.month>=monthNow()&&item.remaining>0);
+  const needRows=needs.map(item=>({cells:[fmtMonthShort(item.n.month),item.n.charity,item.n.size,item.n.qty,item.fulfilled,item.available,item.shortage],style:item.shortage>0?'warning':''}));
+  return[
+    {title:`${data.homeStorageLabel} and ${data.homeNeededLabel}`,headers:['Charity','Quilt Size',data.homeStorageLabel,data.homeNeededLabel,data.homeDifferenceLabel],widths:[138,112,88,88,114],aligns:['left','left','right','right','right'],rows:inventoryRows,note:'Charity totals summarize current storage and requests. Size rows show exact current assignments.'},
+    {title:'Upcoming Requests Still Open',headers:['Month','Charity','Size','Requested','Sent','Available','Short'],widths:[67,103,105,70,55,70,70],aligns:['left','left','left','right','right','right','right'],rows:needRows,empty:'No upcoming requests still need quilts.'}
+  ];
+}
+function lqm7865YearlySections(){
+  const stats=yearlyStatistics(selectedStatisticsYear()),ytd=lqm7851DistributionByCharity(stats.year);
+  return[
+    {title:`${stats.year} Planning Details`,headers:['Measure','Total'],widths:[420,120],aligns:['left','right'],rows:[
+      {cells:['Projected total quilts made by year end',stats.projectedYearEndMade],style:'total'},['Quilts made so far',stats.made],['Quilts still to be made',stats.stillToMake],['Remaining calendar need',stats.remainingCalendarNeed],['Matching inventory applied',stats.inventoryApplied],['Other quilts currently in storage',stats.unmatchedInventory||0],['Quilts distributed',stats.distributed]
+    ],note:`Projected year-end made = ${stats.made} made so far + ${stats.stillToMake} still to be made.`},
+    {title:`Quilts Distributed by Charity - ${stats.year} YTD`,headers:['Charity','Distributed'],widths:[420,120],aligns:['left','right'],rows:[...ytd.rows.map(row=>[row.charity,row.amount]),{cells:['Overall YTD',ytd.total],style:'total'}],note:`Through ${fmtDate(ytd.cutoff)}. Uses the actual distribution activity date.`}
+  ];
+}
+function lqm7865DistributedSections(){
+  const needs=distributedNeedsForReport();
+  const distributedRows=needs.map(n=>[n.fulfilledDate?fmtDate(n.fulfilledDate):'Not entered',n.charity,n.size,fulfilledQty(n),distributionReportStatus(n)]);
+  holdDistributionsForReport().forEach(t=>distributedRows.push([t.date?fmtDate(t.date):'Not entered',t.charity,t.size,Math.max(0,Number(t.qty)||0),'From On Hold / Storage']));
+  distributedRows.sort((a,b)=>String(b[0]).localeCompare(String(a[0])));
+  const adjustments=data.transactions.filter(t=>t.type==='ADJUST').sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(t=>[fmtDate(t.date),t.charity,t.size,`${value(t)>0?'+':''}${value(t)}`,t.note||'']);
+  return[
+    {title:'Distributed Quilts',headers:['Date','Charity','Size','Sent','Status'],widths:[85,128,112,55,160],aligns:['left','left','left','right','left'],rows:distributedRows,empty:'No distributed quilts are recorded.'},
+    {title:'Inventory Adjustments',headers:['Date','Charity','Size','Change','Note'],widths:[85,128,112,60,155],aligns:['left','left','left','right','left'],rows:adjustments,empty:'No inventory adjustments are recorded.'}
+  ];
+}
+function lqm7865Metrics(){return[{label:data.homeStorageLabel,value:totalOnHand()},{label:data.homeNeededLabel,value:totalNeeded()},{label:data.homeDifferenceLabel,value:quiltsToCompleteTotal()}]}
+function lqm7865MakeFullPDF(){return lqm7865PdfDocument({title:effectiveReportTitle(),subtitle:'Complete inventory, requests, yearly totals, distributions, and adjustments',metrics:lqm7865Metrics(),sections:[...lqm7865YearlySections(),...lqm7865InventoryNeedsSections(),...lqm7865DistributedSections()]})}
+function lqm7865MakeInventoryNeedsPDF(){return lqm7865PdfDocument({title:'Inventory & Quilts Requested',subtitle:effectiveReportTitle(),metrics:lqm7865Metrics(),sections:lqm7865InventoryNeedsSections()})}
+function lqm7865MakeYearlyPDF(){const stats=yearlyStatistics(selectedStatisticsYear());return lqm7865PdfDocument({title:`${stats.year} Yearly Quilt Summary`,subtitle:effectiveReportTitle(),metrics:[{label:'Projected Made by Year End',value:stats.projectedYearEndMade},{label:'Made So Far',value:stats.made},{label:'Still to Be Made',value:stats.stillToMake}],sections:lqm7865YearlySections()})}
+function lqm7865MakeDistributedPDF(){const stats=yearlyStatistics(selectedStatisticsYear()),adjustments=data.transactions.filter(t=>t.type==='ADJUST').length;return lqm7865PdfDocument({title:'Distributed Quilts & Adjustments',subtitle:effectiveReportTitle(),metrics:[{label:`${stats.year} Distributed`,value:stats.distributed},{label:'Lifetime Distributed',value:stats.lifetimeDistributed},{label:'Adjustments on Record',value:adjustments}],sections:lqm7865DistributedSections()})}
+
+function lqm7865ReportSpec(kind){
+  renderReports();const base=filePart(data.itemName),date=today();
+  if(kind==='inventory-needs')return{kind,title:'Inventory & Quilts Requested',filename:`${base}_Inventory_and_Quilts_Requested_${date}.pdf`,bytes:lqm7865MakeInventoryNeedsPDF()};
+  if(kind==='yearly'){const year=selectedStatisticsYear();return{kind,title:`${year} Yearly Quilt Summary`,filename:`${base}_${year}_Yearly_Quilt_Summary_${date}.pdf`,bytes:lqm7865MakeYearlyPDF()}}
+  if(kind==='distributed')return{kind,title:'Distributed Quilts & Adjustments',filename:`${base}_Distributed_and_Adjustments_${date}.pdf`,bytes:lqm7865MakeDistributedPDF()};
+  if(kind==='compact')return{kind,title:'One-Page Meeting Report',filename:`${base}_One_Page_Report_${date}.pdf`,bytes:makeOnePagePDF()};
+  return{kind:'full',title:'Full Love Quilts Report',filename:`${base}_Full_Report_${date}.pdf`,bytes:lqm7865MakeFullPDF()};
+}
+function lqm7865BytesToBase64(bytes){let binary='';for(let start=0;start<bytes.length;start+=8192)binary+=String.fromCharCode(...bytes.subarray(start,start+8192));return btoa(binary)}
+function lqm7865Base64ToBytes(value){const binary=atob(value),bytes=new Uint8Array(binary.length);for(let index=0;index<binary.length;index++)bytes[index]=binary.charCodeAt(index);return bytes}
+function lqm7865RememberReport(spec){
+  const saved={kind:spec.kind,title:spec.title,filename:spec.filename,createdAt:new Date().toISOString(),base64:lqm7865BytesToBase64(spec.bytes)};lqm7865LastReport=saved;
+  try{localStorage.setItem(LQM_7865_RECENT_REPORT_KEY,JSON.stringify(saved))}catch(error){console.warn('The recent report could not be retained after the app closes.',error)}
+  lqm7865RenderRecentReport();return saved;
+}
+function lqm7865LoadRecentReport(){
+  if(lqm7865LastReport)return lqm7865LastReport;
+  try{const saved=parse(localStorage.getItem(LQM_7865_RECENT_REPORT_KEY));if(saved?.filename&&saved?.kind){lqm7865LastReport=saved;return saved}}catch(error){console.warn('The recent report shortcut could not be loaded.',error)}return null;
+}
+function lqm7865RecentBytes(saved){if(saved?.base64)return lqm7865Base64ToBytes(saved.base64);const spec=lqm7865ReportSpec(saved?.kind||'full');lqm7865RememberReport(spec);return spec.bytes}
+function lqm7865RenderRecentReport(){
+  const saved=lqm7865LoadRecentReport(),card=el('recentReportCard'),title=el('recentReportTitle'),meta=el('recentReportMeta');if(!card)return;
+  card.classList.toggle('show',!!saved);if(!saved)return;if(title)title.textContent=saved.title;if(meta){const created=saved.createdAt?new Date(saved.createdAt):null;meta.textContent=`Created ${created&&!Number.isNaN(created.getTime())?created.toLocaleString():'recently'} · Kept here for quick access`;}
+}
+function lqm7865OpenSavedReport(saved){const bytes=lqm7865RecentBytes(saved),blob=new Blob([bytes],{type:'application/pdf'});downloadBlob(saved.filename,blob);notice('reportNotice',`${saved.title} opened. It remains at the top of Reports for quick access.`,true)}
+async function lqm7865ShareSavedReport(saved){
+  const bytes=lqm7865RecentBytes(saved),blob=new Blob([bytes],{type:'application/pdf'});
+  if(navigator.share&&typeof File==='function'){
+    const file=new File([blob],saved.filename,{type:'application/pdf'});
+    let canShareFile=!navigator.canShare;try{if(navigator.canShare)canShareFile=navigator.canShare({files:[file]})}catch(error){console.warn('File sharing capability check failed.',error)}
+    if(canShareFile){try{await navigator.share({title:saved.title,text:`${data.orgName} - ${saved.title}`,files:[file]});notice('reportNotice',`${saved.title} shared.`,true);return}catch(error){if(error?.name==='AbortError')return;console.warn('Direct report sharing was unavailable.',error)}}
+  }
+  downloadBlob(saved.filename,blob);notice('reportNotice','The PDF opened instead. Use the Share button in the PDF viewer to send it.');
+}
+function lqm7865OpenReport(kind){try{const saved=lqm7865RememberReport(lqm7865ReportSpec(kind));lqm7865OpenSavedReport(saved)}catch(error){console.error('Report creation failed',error);notice('reportNotice','The report could not be created. Refresh the app and try again.')}}
+async function lqm7865ShareReport(kind){try{const saved=lqm7865RememberReport(lqm7865ReportSpec(kind));await lqm7865ShareSavedReport(saved)}catch(error){console.error('Report sharing failed',error);notice('reportNotice','The report could not be shared. Refresh the app and try again.')}}
+function lqm7865OpenRecentReport(){const saved=lqm7865LoadRecentReport();if(saved)lqm7865OpenSavedReport(saved)}
+async function lqm7865ShareRecentReport(){const saved=lqm7865LoadRecentReport();if(saved)await lqm7865ShareSavedReport(saved)}
+
+makeFullPDF=lqm7865MakeFullPDF;
+exportFullPDF=function(){lqm7865OpenReport('full')};exportCompactPDF=function(){lqm7865OpenReport('compact')};shareFullReport=function(){lqm7865ShareReport('full')};shareCompactReport=function(){lqm7865ShareReport('compact')};printFullReport=function(){lqm7865OpenReport('full')};printMeetingReport=function(){lqm7865OpenReport('compact')};
+const lqm7865BaseRenderReports=renderReports;renderReports=function(){const result=lqm7865BaseRenderReports();lqm7865RenderRecentReport();return result};
+document.addEventListener('DOMContentLoaded',lqm7865RenderRecentReport,{once:true});
+// ===== End Update 7.8.65 =====

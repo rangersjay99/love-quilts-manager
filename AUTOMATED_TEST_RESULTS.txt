@@ -1,26 +1,31 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.64 AUTOMATED TEST RESULTS
-Released: August 9, 2026
-Final 7.8.64 release package (supersedes unused 7.8.63 build)
+LOVE QUILTS MANAGER — UPDATE 7.8.65 AUTOMATED TEST RESULTS
+Released: September 12, 2026
 
-PASS — app.js and firebase-sync.js pass Node JavaScript syntax validation.
+CORE VALIDATION
+PASS — app.js, firebase-sync.js, and sw.js pass Node JavaScript syntax validation.
 PASS — Both manifest files parse as valid JSON.
-PASS — HTML parses without duplicate element IDs; required Home, Reports, and Daily Activity targets are present.
-PASS — Visible app/version and asset query references remain Update 7.8.64.
-PASS — Service-worker cache uses a fresh 7.8.64 cache name and asset query version, preventing reuse of 7.8.62/7.8.63 cached assets.
-PASS — Home Summary by Charity is a details section with no open attribute, so it starts collapsed.
-PASS — Home charity cards are restored to the original three metrics: storage, requested, and still to make.
-PASS — Home Quilts Distributed This Year is an accessible button wired to openHomeDistributionSummary().
-PASS — The Home distributed drill-down uses the existing Reports lqm7851DistributionByCharity() calculation and the same YTD row presentation classes.
-PASS — Home distributed drill-down starts hidden and includes an explicit Hide Distributed Breakdown control.
-PASS — Calendar month-summary markup no longer switches to Still Needed after a distribution; the month-level metric is consistently Short and displays the calculated shortage value.
-PASS — Detailed request text still retains Still Needed where it represents remaining request quantity.
-PASS — Today’s Activity retains the 7.8.64 daily Totals by Charity target and rendering path.
-PASS — firebase-sync.js is byte-for-byte unchanged from Update 7.8.62.
-PASS — No Firebase path, saved operational schema, inventory transaction, need record, or distribution-write logic was changed by these corrections.
+PASS — HTML parses without duplicate element IDs; all recent-report and direct-share targets are present.
+PASS — Every new inline report action resolves to a defined JavaScript function.
+PASS — Visible version, app assets, manifests, service-worker registration, and cache name consistently use Update 7.8.65.
 
-LOGIC SPOT CHECKS
-PASS — A partially fulfilled month with remaining request greater than usable inventory reports the shortage as Short rather than the larger raw remaining-request quantity.
-PASS — The Home distributed breakdown calls the same YTD calculation used by Reports, so charity rows and Overall YTD use one shared source.
+REPORTS
+PASS — Inventory & Quilts Requested generates its own valid letter-size PDF.
+PASS — Yearly Quilt Summary generates its own valid letter-size PDF.
+PASS — Distributed & Adjustments generates its own valid letter-size PDF.
+PASS — Full Report generates a valid multi-page letter-size PDF using the new plum-branded layout.
+PASS — Generated PDFs include headers, summary cards, section bands, repeating table headers, totals, page numbers, and footers.
+PASS — A stress test with 72 inventory rows, 28 open requests, 35 distributions, and 26 adjustments produced valid page-broken PDFs with final rows retained.
+PASS — The recent-report shortcut retains and reloads the exact generated PDF bytes and report title.
+PASS — Direct file sharing retains a safe PDF-open fallback when the device cannot attach a file through the native share sheet.
 
-BROWSER NOTE
-Final tap/scroll/layout verification should be performed after GitHub Pages deployment using TEST_CHECKLIST.txt, especially on iPhone/iPad.
+SYNC STATUS / SAFETY
+PASS — Status mapping distinguishes syncing, saved locally, offline, synced, and error presentation states.
+PASS — Offline pending changes display “Offline — saved here and waiting to sync.”
+PASS — A server-acknowledged Firebase batch recovers from delayed listener confirmation instead of remaining indefinitely on Syncing.
+PASS — The verification target remains protected until live listener data matches, preventing an older snapshot from overwriting the acknowledged local save.
+PASS — Manual Sync Now is guarded while an acknowledged save is waiting for listener confirmation.
+PASS — Reconnecting automatically requests another shared-data comparison and retries a pending save.
+PASS — No Firebase collection path, operational record schema, inventory/need calculation, or distribution-write rule changed.
+
+DEVICE NOTE
+Final native share-sheet, installed-PWA cache refresh, and live Firebase reconnect checks should be completed after GitHub Pages deployment using TEST_CHECKLIST.txt, especially on the iPhone/iPad that experienced the stale Syncing display.

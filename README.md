@@ -1,19 +1,20 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.64 — August 9, 2026
+Current release: Update 7.8.65 — September 12, 2026
 
-## Update 7.8.64 — Home quick-access reporting + daily charity totals
+## Update 7.8.65 — polished reports, easier sharing, and sync recovery
 
-- Compacts the Home **Summary by Charity** into a tap-to-expand section so the Home Screen stays cleaner.
-- Keeps the regular charity detail focused on storage, requested, and still-to-make totals.
-- Makes **Quilts Distributed This Year** on Home reveal a dedicated YTD distributed-by-charity breakdown matching Reports.
-- Standardizes Calendar month summary wording to **Short** while keeping **Still Needed** in detailed request information where appropriate.
-- Adds **Totals by Charity** to Reports > Today’s Activity / Daily Changes for the selected date.
-- Daily charity totals show change count, made/received effect, distributed effect, and net inventory effect, plus an overall row.
-- Uses the existing synchronized Audit History and remains read-only.
-- Existing inventory, needs, report calculations, Firebase production paths, sync rules, and saved operational records are unchanged.
+- Adds a prominent **Share This Report** button directly inside Inventory & Quilts Requested, Yearly Quilt Summary, and Distributed & Adjustments.
+- Creates a separate polished PDF for each of those report sections.
+- Keeps the exact most recently created PDF at the top of Reports with **Share Again** and **Open Again**, including after the app is reopened when device storage allows.
+- Gives the complete report a cleaner plum-branded header, summary cards, section bands, readable tables, totals, and page footers.
+- Reorganizes Report Downloads around the two common choices: share immediately or open the PDF.
+- Clearly separates sync states: syncing, saved on this device, offline and waiting, synced, and error.
+- Recovers from a delayed Firebase confirmation after the server has already acknowledged the save, preventing a stale “Syncing…” display.
+- Automatically checks shared data again when the internet connection returns.
+- Does not change inventory totals, needs logic, operational records, or Firebase paths.
 
-Update 7.8.62 Today’s Activity / Daily Changes, 7.8.61 unsaved-entry protection, and one-size auto-fill remain in place.
+Update 7.8.64 Home quick-access reporting and daily charity totals remain in place.
 
 Copyright © 2026 Jay. Love Quilts Manager. All rights reserved.
 Personal and authorized guild use only. See LICENSE.txt.

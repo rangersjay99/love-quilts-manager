@@ -1,4 +1,4 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.64 EXTENDED TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.65 EXTENDED TEST CHECKLIST
 
 Use TEST_CHECKLIST.txt for the main verification. During normal weekend use, also spot-check:
 
@@ -11,3 +11,7 @@ Use TEST_CHECKLIST.txt for the main verification. During normal weekend use, als
 [ ] After correcting or deleting an entry: daily charity effects reverse appropriately rather than double-counting.
 [ ] A Need-only change appears as a charity change even when inventory effects are zero.
 [ ] Existing reports, PDFs, bulk intake, and unsaved-entry protection continue to behave normally.
+[ ] iPhone: Inventory & Quilts Requested opens the share sheet with the correct section-only PDF attached.
+[ ] iPad: Your Most Recent Report remains visible and Share Again reuses the same report.
+[ ] Weak signal: the banner shows a safe local/offline status instead of remaining indefinitely on Syncing.
+[ ] After signal returns: the app automatically retries and reaches All changes synced without needing to close the app.

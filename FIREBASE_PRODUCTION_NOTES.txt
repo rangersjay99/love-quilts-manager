@@ -1,11 +1,10 @@
-LOVE QUILTS MANAGER UPDATE 7.8.64 — FIREBASE PRODUCTION NOTES
+LOVE QUILTS MANAGER UPDATE 7.8.65 — FIREBASE PRODUCTION NOTES
 
 No Firestore Rules, collection paths, indexes, or new synchronized data fields are required.
 
 UNCHANGED
-- firebase-sync.js is byte-for-byte unchanged from Update 7.8.61.
 - Existing production organization and record paths remain unchanged.
-- Existing inventory, needs, settings, charity-size eligibility, audit history, and synchronization behavior remain unchanged.
+- Existing inventory, needs, settings, charity-size eligibility, and audit history remain unchanged.
 
 TODAY’S ACTIVITY / DAILY CHANGES
 - Uses the existing synchronized Audit History (data.auditLog) as a read-only source.
@@ -13,5 +12,9 @@ TODAY’S ACTIVITY / DAILY CHANGES
 - Does not write a second daily-history collection or data field.
 - Audit History continues to retain the latest 200 synchronized entries. The Daily Changes screen displays an accuracy note when that retention limit has been reached, because an older selected date could then be incomplete.
 
-UPDATE 7.8.64 NOTE
-- Home charity-summary behavior, the Home distributed-by-charity drill-down, Calendar wording, and the daily charity roll-up are presentation/read-only changes only. No Firebase collection/path/schema changes were introduced.
+UPDATE 7.8.65 NOTE
+- Sync presentation now distinguishes active syncing, saved locally, offline/waiting, synced, and error states.
+- A 14-second status watchdog prevents delayed listener metadata from leaving the app indefinitely on Syncing.
+- A completed batch.commit() is treated as a server acknowledgement, while the verification target remains protected until live listeners match it.
+- Reconnecting automatically retries a pending save or requests another shared-data comparison.
+- No Firebase collection, document path, rule, index, or synchronized field change is required.

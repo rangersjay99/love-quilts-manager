@@ -1,8 +1,26 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.64 TEST CHECKLIST
+LOVE QUILTS MANAGER — UPDATE 7.8.65 TEST CHECKLIST
 
 VERSION / STARTUP
-[ ] App opens and shows Update 7.8.64.
+[ ] App opens and shows Update 7.8.65.
 [ ] Shared Device Sync signs in and finishes normally.
+
+REPORTS / SHARING
+[ ] Open Reports > Inventory & Quilts Requested.
+[ ] Tap Share This Report and confirm the device share sheet opens with an Inventory & Quilts Requested PDF attached.
+[ ] Cancel sharing, then confirm Your Most Recent Report appears near the top of Reports.
+[ ] Tap Share Again and confirm the same PDF is attached.
+[ ] Tap Open Again and confirm the PDF opens with a plum header, summary cards, clear section bands, tables, and footer.
+[ ] Confirm that Inventory & Quilts Requested does not include Distributed or Adjustments sections.
+[ ] Repeat the Share This Report check in Yearly Quilt Summary and Distributed & Adjustments.
+[ ] Open Report Downloads and confirm Share Full Report, Open Full Report, Share One-Page Report, and Open One-Page Report work.
+[ ] Fully close and reopen the app; confirm the most recent report shortcut remains available.
+
+SYNC STATUS / RECOVERY
+[ ] With a good connection, save a small test change and confirm the banner moves from blue Syncing to green All changes synced.
+[ ] With Airplane Mode on, make a test change and confirm the banner says it is saved here and waiting to sync.
+[ ] Restore the connection and confirm the app automatically retries and reaches green All changes synced.
+[ ] If Firebase listener confirmation is delayed, confirm the status stops showing Syncing after roughly 14 seconds and says the local copy is safe or shows synced after Firebase acknowledged the save.
+[ ] Confirm red appears only for a genuine sync error, not normal connecting or offline states.
 
 HOME SCREEN
 [ ] Summary by Charity is closed when Home first opens.

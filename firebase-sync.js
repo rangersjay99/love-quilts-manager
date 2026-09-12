@@ -52,6 +52,9 @@ let remote = blankRemote();
 let lastRemoteData = null;
 let authStateResolved = false;
 let verificationTarget = null;
+let syncStateTimer = null;
+let lastServerCommitAt = 0;
+const SYNC_STALE_MS = 14000;
 
 const byId = id => document.getElementById(id);
 const clone = value => JSON.parse(JSON.stringify(value));
@@ -141,21 +144,67 @@ function setState(message, kind = 'normal') {
   const verified = message === 'All changes synced';
   const displayMessage = verified ? '✓ Shared data verified · All changes synced' : message;
   const previous = window.lqFirebaseState || {};
-  window.lqFirebaseState = {message:displayMessage,rawMessage:message,kind,email:currentUser?.email || '',verified,verifiedAt:verified?new Date().toISOString():(previous.verifiedAt||'')};
+  const busy = /syncing|waiting to sync|loading shared|saving changes|waiting for firebase confirmation|saved to shared data.*checking|applying latest shared|connecting to firebase|uploading changes|checking shared data/i.test(message);
+  const resolvedKind = verified ? 'synced' : kind === 'error' ? 'error' : /offline/i.test(message) ? 'offline' : busy ? 'syncing' : /saved/i.test(message) ? 'saved' : kind;
+  window.lqFirebaseState = {message:displayMessage,rawMessage:message,kind:resolvedKind,email:currentUser?.email || '',verified,verifiedAt:verified?new Date().toISOString():(previous.verifiedAt||''),changedAt:new Date().toISOString()};
   const banner = byId('firebaseBannerStatus');
   if (banner) banner.textContent = currentUser ? `${displayMessage} · ${currentUser.email}` : displayMessage;
   const bannerBox = byId('firebaseBanner');
   if (bannerBox) {
     bannerBox.classList.toggle('synced', verified);
     bannerBox.classList.toggle('not-synced', !verified);
+    bannerBox.classList.toggle('syncing', resolvedKind === 'syncing');
+    bannerBox.classList.toggle('offline', resolvedKind === 'offline');
+    bannerBox.classList.toggle('saved', resolvedKind === 'saved');
+    bannerBox.classList.toggle('error', resolvedKind === 'error');
   }
   const account = byId('firebaseAccountStatus');
   if (account) account.textContent = currentUser?.email || 'Not signed in';
   const loadingStatus = byId('firebaseLoadingStatus');
   if (loadingStatus && !byId('firebaseGate')?.classList.contains('hidden')) loadingStatus.textContent = displayMessage;
-  const syncBusy = /syncing|waiting to sync|loading shared|saving changes|waiting for firebase confirmation|applying latest shared/i.test(displayMessage);
-  document.querySelectorAll('[data-sync-now]').forEach(button => { button.disabled = syncBusy || !currentUser; button.textContent = syncBusy ? 'Syncing…' : 'Sync Now'; });
+  document.querySelectorAll('[data-sync-now]').forEach(button => { button.disabled = busy || !currentUser; button.textContent = busy ? 'Syncing…' : 'Sync Now'; });
+  clearTimeout(syncStateTimer);
+  if (busy) {
+    const expectedMessage = message;
+    syncStateTimer = setTimeout(() => handleStaleSyncState(expectedMessage), SYNC_STALE_MS);
+  }
   if (typeof window.lqRefreshSaveStatus === 'function') window.lqRefreshSaveStatus();
+}
+
+function handleStaleSyncState(expectedMessage) {
+  if ((window.lqFirebaseState?.rawMessage || '') !== expectedMessage || !currentUser) return;
+  if (!navigator.onLine) {
+    setState(pendingSave ? 'Offline — saved here and waiting to sync' : 'Offline — showing the last saved data', 'offline');
+    releaseGate();
+    return;
+  }
+  // A resolved batch.commit() is a server acknowledgement. If listener metadata
+  // is slow to refresh, stop showing an endless Syncing state once that write is safe.
+  if (lastServerCommitAt && verificationTarget && !pendingSave) {
+    setState('All changes synced');
+    showNotice('firebaseSettingsNotice', 'Changes were saved to shared data. The status display recovered from a delayed confirmation.', true);
+    releaseGate();
+    return;
+  }
+  if (allRemoteReady() && !hasPendingWrites() && typeof window.lqGetData === 'function') {
+    const localData = normalizeAppData(window.lqGetData());
+    const cloudData = normalizeAppData(composeRemoteData());
+    if (stableData(localData) === stableData(cloudData)) {
+      lastRemoteData = clone(cloudData);
+      setState('All changes synced');
+      releaseGate();
+      return;
+    }
+  }
+  if (pendingSave && !syncing) {
+    setState('Saved on this device — tap Sync Now to retry', 'saved');
+    showNotice('firebaseSettingsNotice', 'Your changes are safe on this device. Tap Sync Now to retry the shared-device update.');
+  } else if (syncing) {
+    setState('Taking longer than expected — changes are safe on this device', 'saved');
+  } else {
+    setState('Sync check delayed — tap Sync Now to retry', 'saved');
+  }
+  releaseGate();
 }
 
 function showNotice(id, message, good = false) {
@@ -468,6 +517,11 @@ function scheduleRemoteApply(reason = 'a shared-device update') {
       if (remoteConfirmedByServer() && stableData(cloudData) === stableData(verificationTarget)) {
         lastRemoteData = clone(cloudData);
         verificationTarget = null;
+        lastServerCommitAt = 0;
+        setState('All changes synced');
+      } else if (lastServerCommitAt && !pendingSave) {
+        // batch.commit() has already acknowledged the save. Keep the target until
+        // listeners catch up so an older snapshot can never overwrite this device.
         setState('All changes synced');
       } else {
         setState('Waiting for Firebase confirmation…');
@@ -512,6 +566,8 @@ function stopRealtime() {
   remote = blankRemote();
   lastRemoteData = null;
   verificationTarget = null;
+  lastServerCommitAt = 0;
+  clearTimeout(syncStateTimer);
   initialCloudReady = false;
   cloudInitialized = false;
   updateInitializationPanel();
@@ -655,11 +711,12 @@ async function flushSave() {
     });
 
     await commitOperations(operations);
+    lastServerCommitAt = Date.now();
     pendingSave = null;
     persistPendingSave();
     cloudInitialized = true;
     verificationTarget = clone(localData);
-    setState('Waiting for Firebase confirmation…');
+    setState('Saved to shared data — checking other devices…');
     updateInitializationPanel();
     if (task.initialize) showNotice('firebaseSettingsNotice', 'Real shared inventory created.', true);
   } catch (error) {
@@ -688,6 +745,7 @@ async function flushSave() {
 
 window.lqFirebaseQueueSave = (snapshot, reason = 'Saved from Love Quilts Manager') => {
   if (applyingRemote) return;
+  lastServerCommitAt = 0;
   pendingSave = { data: normalizeAppData(snapshot), reason, force: false, initialize: false };
   persistPendingSave();
   if (!currentUser) {
@@ -722,7 +780,18 @@ window.lqFirebaseForceSync = () => {
     updateInitializationPanel();
     return;
   }
+  if (syncing) {
+    showNotice('firebaseSettingsNotice', 'A save is already in progress. Your local copy is safe; the status will update automatically.');
+    return;
+  }
   if (typeof window.lqGetData !== 'function') return;
+
+  if (verificationTarget && lastServerCommitAt && !pendingSave) {
+    setState('All changes synced');
+    showNotice('firebaseSettingsNotice', 'The save was acknowledged by Firebase. Listener confirmation is still catching up.', true);
+    scheduleRemoteApply('manual verification check');
+    return;
+  }
 
   const localData = normalizeAppData(window.lqGetData());
   const cloudData = normalizeAppData(composeRemoteData());
@@ -730,6 +799,7 @@ window.lqFirebaseForceSync = () => {
   // Preserve a real unsent local edit. Otherwise, Sync Now is safe on a second
   // device: it downloads the server copy instead of blindly uploading stale data.
   if (pendingSave || localHasAuthoritativeDistributionRepair(localData, cloudData)) {
+    lastServerCommitAt = 0;
     pendingSave = { data: localData, reason: 'Manual Sync Now', force: true, initialize: false };
     persistPendingSave();
     flushSave();
@@ -825,10 +895,16 @@ async function initializeProduction() {
 
 window.addEventListener('online', () => {
   if (pendingSave && cloudInitialized) flushSave();
-  else if (currentUser) setState('Online — Firebase connected');
+  else if (currentUser) {
+    setState('Online — checking shared data…');
+    scheduleRemoteApply('internet connection restored');
+  }
 });
 window.addEventListener('offline', () => {
-  if (currentUser) setState('Offline — changes stay on this device');
+  if (currentUser) {
+    setState(pendingSave ? 'Offline — saved here and waiting to sync' : 'Offline — showing the last saved data', 'offline');
+    releaseGate();
+  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
