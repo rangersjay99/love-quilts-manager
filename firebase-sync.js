@@ -8,6 +8,7 @@ import {
   setPersistence,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut
 } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js';
 import {
@@ -869,6 +870,37 @@ async function handleLogin(event) {
   }
 }
 
+async function handlePasswordReset() {
+  const emailInput = byId('firebaseEmail');
+  const email = emailInput?.value.trim() || '';
+  if (!email || !emailInput.checkValidity()) {
+    showNotice('firebaseLoginNotice', 'Enter your account email above, then tap Forgot password?');
+    emailInput?.focus();
+    return;
+  }
+  const button = byId('firebaseResetBtn');
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Sending reset email…';
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showNotice('firebaseLoginNotice', 'If this email has an approved account, check its inbox and spam folder for a password reset link. Then return here and sign in.', true);
+  } catch (error) {
+    if (error?.code === 'auth/network-request-failed') showNotice('firebaseLoginNotice', 'No connection. Connect to the internet and try again.');
+    else if (error?.code === 'auth/too-many-requests') showNotice('firebaseLoginNotice', 'Too many requests. Wait a little and try again.');
+    else {
+      console.error('Firebase password reset error:', error);
+      showNotice('firebaseLoginNotice', 'Could not send the reset email. Check the address and try again.');
+    }
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Forgot password?';
+    }
+  }
+}
+
 async function initializeProduction() {
   if (!currentUser || !initialCloudReady || cloudInitialized || syncing) return;
   await waitForBridge();
@@ -910,6 +942,8 @@ window.addEventListener('offline', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const form = byId('firebaseLoginForm');
   if (form) form.addEventListener('submit', handleLogin);
+  const resetButton = byId('firebaseResetBtn');
+  if (resetButton) resetButton.addEventListener('click', handlePasswordReset);
   const initializeButton = byId('firebaseInitializeButton');
   if (initializeButton) initializeButton.addEventListener('click', initializeProduction);
   showGate(authStateResolved && !currentUser ? 'signin' : 'loading', authStateResolved ? 'Loading shared inventory…' : 'Checking saved sign-in…');

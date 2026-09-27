@@ -1,3 +1,7 @@
+Update 7.8.66 — September 27, 2026
+- Added Forgot password? on the sign-in screen to request a Firebase password reset email for the entered account address.
+- Kept existing login persistence, Firebase data paths, inventory, needs, and reports intact.
+
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
 Updated September 12, 2026
 

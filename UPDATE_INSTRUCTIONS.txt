@@ -1,22 +1,5 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.65
-Released: September 12, 2026
+Love Quilts Manager Update 7.8.66
 
-WHAT CHANGED
-- Major report sections now have a one-tap Share This Report button.
-- Inventory & Quilts Requested sends only that section as a polished PDF.
-- The most recent PDF remains easy to find at the top of Reports.
-- Full PDFs have a cleaner professional layout.
-- Sync status no longer remains indefinitely on Syncing after a successful Firebase save.
-- Offline, saved locally, syncing, synced, and error states are visually distinct.
+Upload the full contents of this folder to the existing GitHub Pages repository, replacing the old files, including sw.js. Do not upload the enclosing folder itself. Wait for GitHub Pages to finish publishing, then reopen the app while online. The new sign-in screen shows Forgot password? below Sign In.
 
-UPDATE
-1. Replace the existing GitHub Pages app files with the files in this package.
-2. Commit and push the changes.
-3. On each device, fully close and reopen Love Quilts Manager once so Update 7.8.65 refreshes the service-worker cache.
-4. Confirm the splash screen shows Update 7.8.65.
-5. Run TEST_CHECKLIST.txt before normal use.
-
-DATA / SYNC SAFETY
-- No new operational data fields or Firebase paths are added.
-- Existing inventory, needs, distribution calculations, sync rules, and saved records are unchanged.
-- Reports and the recent-report shortcut are read-only.
+This update changes only the sign-in reset flow and version/cache labels; no shared inventory data needs to be migrated.

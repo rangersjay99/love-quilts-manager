@@ -1,59 +1,8 @@
-LOVE QUILTS MANAGER — UPDATE 7.8.65 TEST CHECKLIST
+Love Quilts Manager 7.8.66 — sign-in check
 
-VERSION / STARTUP
-[ ] App opens and shows Update 7.8.65.
-[ ] Shared Device Sync signs in and finishes normally.
-
-REPORTS / SHARING
-[ ] Open Reports > Inventory & Quilts Requested.
-[ ] Tap Share This Report and confirm the device share sheet opens with an Inventory & Quilts Requested PDF attached.
-[ ] Cancel sharing, then confirm Your Most Recent Report appears near the top of Reports.
-[ ] Tap Share Again and confirm the same PDF is attached.
-[ ] Tap Open Again and confirm the PDF opens with a plum header, summary cards, clear section bands, tables, and footer.
-[ ] Confirm that Inventory & Quilts Requested does not include Distributed or Adjustments sections.
-[ ] Repeat the Share This Report check in Yearly Quilt Summary and Distributed & Adjustments.
-[ ] Open Report Downloads and confirm Share Full Report, Open Full Report, Share One-Page Report, and Open One-Page Report work.
-[ ] Fully close and reopen the app; confirm the most recent report shortcut remains available.
-
-SYNC STATUS / RECOVERY
-[ ] With a good connection, save a small test change and confirm the banner moves from blue Syncing to green All changes synced.
-[ ] With Airplane Mode on, make a test change and confirm the banner says it is saved here and waiting to sync.
-[ ] Restore the connection and confirm the app automatically retries and reaches green All changes synced.
-[ ] If Firebase listener confirmation is delayed, confirm the status stops showing Syncing after roughly 14 seconds and says the local copy is safe or shows synced after Firebase acknowledged the save.
-[ ] Confirm red appears only for a genuine sync error, not normal connecting or offline states.
-
-HOME SCREEN
-[ ] Summary by Charity is closed when Home first opens.
-[ ] Tap Summary by Charity and confirm it expands.
-[ ] Tap it again and confirm it collapses.
-[ ] Expanded charity rows show Available in Storage, Quilts Requested, and Quilts Needed to be Completed only.
-[ ] Tap Home Quilts Distributed This Year.
-[ ] Confirm a dedicated Quilts Distributed by Charity — YTD breakdown appears directly under This Year.
-[ ] Confirm the charity amounts and Overall YTD match Reports > Quilts Distributed by Charity — YTD.
-[ ] Tap Hide Distributed Breakdown and confirm it closes.
-[ ] Tap a regular Summary by Charity row and confirm its Needs/Calendar details still open correctly.
-
-CALENDAR WORDING
-[ ] On Home, inspect months with no distributions and months with partial distributions.
-[ ] Confirm the month summary metric consistently says Short rather than switching between Still Needed and Short.
-[ ] Confirm the displayed Short number reflects the actual shortage after available matching inventory is considered.
-[ ] Open the full Needs Calendar and confirm its month summary cards use the same Short wording.
-[ ] Open an individual request/detail and confirm Still Needed remains available where it describes the remaining request quantity.
-
-TODAY’S ACTIVITY / DAILY CHANGES
-[ ] Open Reports > Today’s Activity / Daily Changes.
-[ ] Confirm Totals by Charity appears below the daily summary/breakdown.
-[ ] Confirm only charities with saved activity for the selected day are shown.
-[ ] Confirm Made / Received, Distributed, and Net Inventory effects agree with the listed saved changes.
-[ ] Confirm the Overall row matches the sum of the displayed charity rows.
-[ ] Change the date and confirm the charity totals change with the activity list.
-[ ] A date with no charity activity shows a clear empty message.
-[ ] Merely reviewing Today’s Activity creates no new audit entries and changes no operational records.
-
-REGRESSION
-[ ] Add Quilts still saves normally.
-[ ] Bulk Quilt Intake still saves normally.
-[ ] Add/Edit Need still works, including eligible-size filtering/auto-select.
-[ ] Distribute Quilts still deducts inventory correctly.
-[ ] Home Summary and Calendar PDFs still open correctly.
-[ ] iPhone/iPad layout remains readable.
+1. On a signed-out device, confirm Forgot password? appears below Sign In.
+2. Tap it with an empty/invalid email; confirm the app asks for an account email and sends nothing.
+3. Enter the approved email and tap Forgot password?; confirm the success instruction appears.
+4. Open the reset message in that email inbox, set a new password, and sign in.
+5. Close and reopen the app to confirm the sign-in remains saved; verify shared inventory appears.
+6. Test with Wi-Fi/cellular off to confirm a helpful connection message.

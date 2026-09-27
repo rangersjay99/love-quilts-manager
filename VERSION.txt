@@ -1,12 +1,8 @@
-Love Quilts Manager Update 7.8.65
-Released: September 12, 2026
+Love Quilts Manager Update 7.8.66
+Released: September 27, 2026
 
-Polished reports + direct sharing + sync-status recovery
+Sign-in password reset
 
-- Inventory & Quilts Requested has its own polished PDF and one-tap Share This Report button.
-- Yearly Summary and Distributed & Adjustments also have direct section-specific sharing.
-- The most recently created report remains at the top of Reports with Share Again and Open Again.
-- Full reports use a cleaner plum-branded layout with summary cards, section bands, readable tables, totals, and page footers.
-- Sync status clearly distinguishes syncing, saved locally, offline, synced, and errors.
-- A successful Firebase save no longer stays stuck on Syncing when listener confirmation is delayed.
-- No new Firebase paths or operational data fields.
+- Forgot password? sends Firebase a password reset request for the email entered on the sign-in screen.
+- Sign-in persistence, shared data, report features, and Firebase data paths are unchanged.
+- Based on the deployed and tested 7.8.65 release.
