@@ -1,5 +1,7 @@
-Love Quilts Manager Update 7.8.66
+Love Quilts Manager Update 7.8.67
 
-Upload the full contents of this folder to the existing GitHub Pages repository, replacing the old files, including sw.js. Do not upload the enclosing folder itself. Wait for GitHub Pages to finish publishing, then reopen the app while online. The new sign-in screen shows Forgot password? below Sign In.
+Upload the extracted update files to the root of the existing rangersjay99/love-quilts-manager GitHub repository on the main branch, replacing files with the same names. Do not upload the enclosing folder. Leave the firebase-test folder unchanged.
 
-This update changes only the sign-in reset flow and version/cache labels; no shared inventory data needs to be migrated.
+This update corrects Custom Reports current-inventory grouping. When Charity is not selected and Quilt size is selected, each size is listed once with quantities combined across charities. When Charity is selected, separate charity totals remain. No data migration is required.
+
+After GitHub Pages publishes, fully close and reopen the app while online so the updated service-worker cache loads. Confirm the splash screen shows Update 7.8.67.

@@ -1,8 +1,9 @@
-Love Quilts Manager Update 7.8.66
-Released: September 27, 2026
+Love Quilts Manager Update 7.8.67
+Released: November 14, 2026
 
-Sign-in password reset
+Custom Report inventory grouping
 
-- Forgot password? sends Firebase a password reset request for the email entered on the sign-in screen.
-- Sign-in persistence, shared data, report features, and Firebase data paths are unchanged.
-- Based on the deployed and tested 7.8.65 release.
+- Combines current inventory rows using the selected visible report fields.
+- With Charity hidden, identical quilt sizes appear once with quantities combined across charities.
+- With Charity shown, charity-specific size rows remain separate.
+- No shared data, inventory calculations, or Firebase paths changed.

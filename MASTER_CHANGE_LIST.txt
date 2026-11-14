@@ -3,9 +3,13 @@ Update 7.8.66 — September 27, 2026
 - Kept existing login persistence, Firebase data paths, inventory, needs, and reports intact.
 
 LOVE QUILTS MANAGER — MASTER CHANGE LIST
-Updated September 12, 2026
+Updated November 14, 2026
 
-IMPLEMENTED THROUGH UPDATE 7.8.65
+IMPLEMENTED THROUGH UPDATE 7.8.67
+
+- Update 7.8.67 groups Custom Report current-inventory rows by the selected visible fields. Hiding Charity while showing quilt size combines identical sizes across charities; showing Charity preserves the charity breakdown. No shared data or Firebase paths change.
+
+- Update 7.8.66 adds Forgot password? on the sign-in screen to request a Firebase password reset email.
 
 - Update 7.8.65 adds polished section-specific PDFs, direct Share This Report actions, a persistent recent-report shortcut, clearer saved/syncing/offline/synced/error states, and recovery from delayed Firebase confirmation after a server-acknowledged save. No operational schema, inventory/need calculation, or Firebase path changes.
 

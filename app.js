@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.66';
+const VERSION='7.8.67';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1709,9 +1709,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.66 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.67 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.66',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.67',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -1928,10 +1928,14 @@ function buildCustomReportHTML(options){
     ],fields,'No charity totals are available.')));
   }
   if(sections.has('inventory')){
-    const inventory=invMap(),rows=[];
-    Object.entries(inventory).filter(([,amount])=>Number(amount)!==0).sort(([a],[b])=>a.localeCompare(b)).forEach(([key,amount])=>{
-      const split=key.lastIndexOf('|');rows.push({date:'Current',charity:key.slice(0,split),size:key.slice(split+1),quantity:String(amount),status:'In storage',notes:''});
+    const inventory=invMap(),grouped=new Map(),showCharity=fields.has('charity'),showSize=fields.has('size');
+    Object.entries(inventory).filter(([,amount])=>Number(amount)!==0).forEach(([key,amount])=>{
+      const split=key.lastIndexOf('|'),charity=key.slice(0,split),size=key.slice(split+1).trim().replace(/\s+/g,' ');
+      const sizeKey=size.toLocaleLowerCase(),groupKey=JSON.stringify([showCharity?charity:'',showSize?sizeKey:'']);
+      const row=grouped.get(groupKey)||{date:'Current',charity:showCharity?charity:'',size:showSize?size:'',quantity:0,status:'In storage',notes:''};
+      row.quantity+=Number(amount)||0;grouped.set(groupKey,row);
     });
+    const rows=[...grouped.values()].filter(row=>row.quantity!==0).sort((a,b)=>a.charity.localeCompare(b.charity)||a.size.localeCompare(b.size)).map(row=>({...row,quantity:String(row.quantity)}));
     parts.push(lqmCustomSection(data.homeStorageLabel,lqmCustomTable(rows,[
       {key:'date',label:'Date'},{key:'charity',label:'Charity'},{key:'size',label:'Size'},{key:'quantity',label:'Quantity'},{key:'status',label:'Status'},{key:'notes',label:'Notes'}
     ],fields,'No quilts are currently in storage.'),'Current inventory snapshot'));
@@ -2358,7 +2362,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.66';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.67';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
