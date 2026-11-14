@@ -3,7 +3,7 @@
 // Copyright © 2026 Jay. All rights reserved.
 // Personal and authorized guild use only. See LICENSE.txt.
 
-const VERSION='7.8.67';
+const VERSION='7.8.68';
 const KEY='love_quilts_v1';
 const RECOVERY_KEY='love_quilts_v1_recovery';
 const CLOUD_KEY='love_quilts_cloud_v1';
@@ -1709,9 +1709,9 @@ window.lqRefreshSaveStatus=updateSaveStatus;
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.body.style.overflow='hidden';setupSettingsGroups();setupRecordGroups();el('continueBtn').addEventListener('click',closeSplash);el('txDate').value=today();el('needMonth').value=monthNow();
-  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.67 opened',data);
+  localStorage.setItem(KEY,JSON.stringify(data));if(!status.lastSavedAt){status.lastSavedAt=new Date().toISOString();persistStatus()}createRecoverySnapshot('Update 7.8.68 opened',data);
   loadExternalFields();renderAll();setMode('IN');
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.67',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7.8.68',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 });
 
 
@@ -2362,7 +2362,7 @@ renderReports=function(){
 // iPhone direct printing, active-record totals, shared audit history,
 // printable blank inventory sheet, and a customizable organization logo.
 
-const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.67';
+const LQM_DEFAULT_LOGO='icons/love-quilts-manager-512-v7818.png?v=7.8.68';
 const LQM_AUDIT_LIMIT=200;
 
 // Unassigned/Storage is now a valid active inventory category. It counts in
@@ -4346,7 +4346,7 @@ function lqm7865MakeYearlyPDF(){const stats=yearlyStatistics(selectedStatisticsY
 function lqm7865MakeDistributedPDF(){const stats=yearlyStatistics(selectedStatisticsYear()),adjustments=data.transactions.filter(t=>t.type==='ADJUST').length;return lqm7865PdfDocument({title:'Distributed Quilts & Adjustments',subtitle:effectiveReportTitle(),metrics:[{label:`${stats.year} Distributed`,value:stats.distributed},{label:'Lifetime Distributed',value:stats.lifetimeDistributed},{label:'Adjustments on Record',value:adjustments}],sections:lqm7865DistributedSections()})}
 
 function lqm7865ReportSpec(kind){
-  renderReports();const base=filePart(data.itemName),date=today();
+  renderReports();if(kind==='quilt-size')return quiltSizeReportSpec();const base=filePart(data.itemName),date=today();
   if(kind==='inventory-needs')return{kind,title:'Inventory & Quilts Requested',filename:`${base}_Inventory_and_Quilts_Requested_${date}.pdf`,bytes:lqm7865MakeInventoryNeedsPDF()};
   if(kind==='yearly'){const year=selectedStatisticsYear();return{kind,title:`${year} Yearly Quilt Summary`,filename:`${base}_${year}_Yearly_Quilt_Summary_${date}.pdf`,bytes:lqm7865MakeYearlyPDF()}}
   if(kind==='distributed')return{kind,title:'Distributed Quilts & Adjustments',filename:`${base}_Distributed_and_Adjustments_${date}.pdf`,bytes:lqm7865MakeDistributedPDF()};
@@ -4386,6 +4386,56 @@ async function lqm7865ShareRecentReport(){const saved=lqm7865LoadRecentReport();
 
 makeFullPDF=lqm7865MakeFullPDF;
 exportFullPDF=function(){lqm7865OpenReport('full')};exportCompactPDF=function(){lqm7865OpenReport('compact')};shareFullReport=function(){lqm7865ShareReport('full')};shareCompactReport=function(){lqm7865ShareReport('compact')};printFullReport=function(){lqm7865OpenReport('full')};printMeetingReport=function(){lqm7865OpenReport('compact')};
-const lqm7865BaseRenderReports=renderReports;renderReports=function(){const result=lqm7865BaseRenderReports();lqm7865RenderRecentReport();return result};
+const lqm7865BaseRenderReports=renderReports;renderReports=function(){const result=lqm7865BaseRenderReports();lqm7865RenderRecentReport();renderQuiltSizeSummary();return result};
 document.addEventListener('DOMContentLoaded',lqm7865RenderRecentReport,{once:true});
 // ===== End Update 7.8.65 =====
+
+function quiltSizeSummary(mode) {
+  const inventory = mode === 'inventory';
+  const totals = new Map(data.sizes.map(size => [size, 0]));
+  function add(size, qty) {
+    if (!qty) return;
+    const label = size || 'Size not recorded';
+    totals.set(label, (totals.get(label) || 0) + qty);
+  }
+  if (inventory) {
+    for (const [key, qty] of Object.entries(invMap())) {
+      add(key.slice(key.lastIndexOf('|') + 1), qty);
+    }
+  } else {
+    for (const transaction of data.transactions) {
+      if (lqmOfficialTransaction(transaction)) add(transaction.size, lqm7862MadeValue(transaction));
+    }
+  }
+  const rows = Array.from(totals).sort(([a], [b]) => a.localeCompare(b, undefined, {numeric:true}));
+  return {
+    title: inventory ? 'In inventory by size' : 'Total made by size',
+    label: inventory ? 'In inventory' : 'Total made',
+    period: inventory ? 'Currently in storage across all charities.' : 'All recorded dates across all charities.',
+    rows,
+    total: rows.reduce((sum, row) => sum + row[1], 0)
+  };
+}
+
+function selectedQuiltSizeSummary() {
+  return quiltSizeSummary(el('quiltSizeMeasure').value);
+}
+
+function renderQuiltSizeSummary() {
+  const report = selectedQuiltSizeSummary();
+  el('quiltSizeResult').innerHTML = `<p class="small">${report.period}</p>
+    <table><thead><tr><th scope="col">Quilt size</th><th scope="col">${report.label}</th></tr></thead>
+    <tbody>${report.rows.map(([size, qty]) => `<tr><td>${esc(size)}</td><td>${qty}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><th scope="row">All sizes</th><td><b>${report.total}</b></td></tr></tfoot></table>`;
+}
+
+function quiltSizeReportSpec() {
+  const report = selectedQuiltSizeSummary();
+  const bytes = lqm7865PdfDocument({
+    title: report.title, subtitle: report.period,
+    metrics: [{label: 'All sizes', value: report.total}],
+    sections: [{title: report.title, headers: ['Quilt size', report.label], widths: [340, 200],
+      aligns: ['left', 'right'], rows: [...report.rows, ['All sizes', report.total]]}]
+  });
+  return {kind: 'quilt-size', title: report.title, filename: filePart(report.title) + '_' + today() + '.pdf', bytes};
+}

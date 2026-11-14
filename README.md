@@ -1,6 +1,6 @@
 # Love Quilts Manager
 
-Current release: Update 7.8.67 — November 14, 2026
+Current release: Update 7.8.68 — November 14, 2026
 
 ## Update 7.8.65 — polished reports, easier sharing, and sync recovery
 
@@ -26,3 +26,7 @@ The sign-in screen includes Forgot password? Enter the approved account email an
 ## Update 7.8.67 — custom report totals by size
 
 When a Custom Report hides Charity and shows Quilt size and Quantity, current inventory is now grouped by size and the quantities across charities are added together. If Charity is shown, the report keeps the separate charity-size rows. Existing inventory, needs, Firebase paths, and saved data are unchanged.
+
+## Update 7.8.68
+
+Choose Total made or In inventory in Reports > Quilts by size to see counts for every size across all charities.
